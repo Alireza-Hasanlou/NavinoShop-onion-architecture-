@@ -9,9 +9,9 @@ namespace Blogs.Application.Contract.BlogCategoryService.Command
 {
     public interface IBlogCategoryCommandService
     {
-        OperationResult Create(CreateBlogCategoryCommand command);
-        OperationResult Edit(EditBlogCategoryCommand command);
-        bool ActivationChange(int id);
-        EditBlogCategoryCommand GetForEdit(int id);
+        Task<OperationResult> Create(CreateBlogCategoryCommand command);
+        Task<OperationResult> Edit(EditBlogCategoryCommand command);
+        Task<OperationResult> ActivationChange(int id);
+
     }
 }

@@ -1,10 +1,9 @@
 ﻿using Blogs.Application.Contract.BlogApplication.Command;
 using Blogs.Domain.BlogAgg;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Utility.Shared;
+using Shared.Application;
+using Shared.Application.Service;
+
 using Utility.Shared.Application;
 
 namespace Blogs.Application.Services
@@ -12,20 +11,53 @@ namespace Blogs.Application.Services
     internal class BlogService : IBlogCommandService
     {
         private readonly IBlogRepository _blogRepository;
+        private readonly IFileService _fileService;
 
-        public BlogService(IBlogRepository blogRepository)
+        public BlogService(IBlogRepository blogRepository, IFileService fileService)
         {
             _blogRepository = blogRepository;
+            _fileService = fileService;
         }
 
-        public Task<OperationResult> ChangeActivationAsync(int id)
+        public async Task<OperationResult> ChangeActivationAsync(int id)
         {
-            throw new NotImplementedException();
+
+            var blog = await _blogRepository.GetByIdAsync(id);
+            if (blog == null)
+            {
+                return new OperationResult(false, "Blog is Not found ", "Blog");
+            }
+
+            blog.ActivationChange();
+            return new OperationResult(true, "ActivationChanged ", "Blog");
         }
 
-        public Task<OperationResult> CreateAsync(CreateBlogCommand command)
+        public async Task<OperationResult> CreateAsync(CreateBlogCommand command)
         {
-            throw new NotImplementedException();
+            if (await _blogRepository.ExistByAsync(t => t.Title == command.Title.Trim()))
+            {
+                return new OperationResult(false, ValidationMessages.DuplicatedMessage, "Title");
+            }
+            var slug = SlugUtility.GenerateSlug(command.Slug);
+            if (await _blogRepository.ExistByAsync(t => t.Slug.Trim() == slug))
+            {
+                return new OperationResult(false, ValidationMessages.DuplicatedMessage, "Slug");
+            }
+            if (command.ImageFile == null || !FileSecurity.IsImage(command.ImageFile))
+            {
+                return new OperationResult(false, ValidationMessages.ImageErrorMessage, "Image");
+            }
+
+            string ImageName = _fileService.UploadImage(command.ImageFile, FileDirectories.BlogImageDirectory);
+            _fileService.ResizeImage( $"{FileDirectories.BlogImageDirectory}{ImageName}",$"{FileDirectories.BlogImageDirectory100}{ImageName}",100);
+            _fileService.ResizeImage($"{FileDirectories.BlogImageDirectory}{ImageName}", $"{FileDirectories.BlogImageDirectory400}{ImageName}", 400);
+            Blog blog = new Blog(command.Title, command.UserId, command.Writer,
+                                 command.Slug, command.ShortDescription, command.Text,
+                                 ImageName, command.ImageAlt, command.CategoryId, command.SubCategoryId);
+
+
+            return await _blogRepository.CreateAsync(blog);
+
         }
 
         public Task<OperationResult> EditAsync(EditBlogCommand command)

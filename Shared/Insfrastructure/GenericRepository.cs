@@ -2,12 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using Utility.Shared.Domain;
 using System.Linq.Expressions;
+using Utility.Shared.Application;
 
 
 
 namespace Utility.Shared.Insfrastructure
 {
-    public class GenericRepository<Tkey, T> : IGenericRepository<Tkey, T> where T : class
+    public class GenericRepository<TEntity, TKey> : IGenericRepository<TEntity, TKey> where TEntity : class
     {
         private readonly DbContext _context;
         public GenericRepository(DbContext context)
@@ -15,38 +16,82 @@ namespace Utility.Shared.Insfrastructure
             _context = context;
         }
 
-        public bool Create(T Entity)
+        public async Task<OperationResult> CreateAsync(TEntity entity)
         {
-            _context.Add<T>(Entity);
-            return Save();
+            try
+            {
+                _context.Add(entity);
+                await SaveAsync();
+                return new OperationResult(true);
+            }
+            catch (Exception ex)
+            {
+
+                return new OperationResult(false);
+            }
+
+
+
         }
 
-        public bool Delete(T Entity)
+        public async Task<OperationResult> DeleteAsync(TEntity entity)
         {
-            _context.Remove<T>(Entity);
-            return Save();
+
+            try
+            {
+                _context.Remove(entity);
+                await SaveAsync();
+                return new OperationResult(true, "Deleted");
+            }
+            catch (Exception ex)
+            {
+
+                return new OperationResult(false, "An error occurred while Deleting entity");
+            }
         }
 
-        public bool ExistBy(Expression<Func<T, bool>> expression) =>
-            _context.Set<T>().Any(expression);
+        public async Task<bool> ExistByAsync(Expression<Func<TEntity, bool>> expression)
+        {
+            return await _context.Set<TEntity>().AsNoTracking().AnyAsync(expression);
 
-        public IEnumerable<T> GetAll() =>
-             _context.Set<T>().ToList();
+        }
 
-        public IEnumerable<T> GetAllBy(Expression<Func<T, bool>> expression) =>
-             _context.Set<T>().Where(expression).ToList();
 
-        public IQueryable<T> GetAllByQuery(Expression<Func<T, bool>> expression) =>
-             _context.Set<T>().Where(expression);
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
+        {
+            return await _context.Set<TEntity>().ToListAsync();
+        }
 
-        public IQueryable<T> GetAllQuery() =>
-             _context.Set<T>();
+        public async Task<IEnumerable<TEntity>> GetAllByAsync(Expression<Func<TEntity, bool>> expression)
+        {
+            return await _context.Set<TEntity>().Where(expression).ToListAsync();
+        }
 
-        public T GetById(Tkey id) =>
-            _context.Find<T>(id);
+        public async Task<TEntity?> GetByIdAsync(TKey id)
+        {
+            return await _context.FindAsync<TEntity>(id);
+        }
 
-        public bool Save() =>
-            _context.SaveChanges() >= 0 ? true : false;
+        public async Task<OperationResult> UpdateAsync(TEntity entity)
+        {
+            try
+            {
+                _context.Update(entity);
+                await SaveAsync();
+                return new OperationResult(true, "Updated");
+            }
+            catch (Exception)
+            {
+
+                return new OperationResult(false, "An error occurred while Updating entity");
+            }
+
+        }
+
+       public async Task SaveAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
     }
 }
 

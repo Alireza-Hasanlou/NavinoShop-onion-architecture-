@@ -10,7 +10,8 @@ namespace Utility.Shared.Domain
         Task<OperationResult> CreateAsync(TEntity entity);
         Task<OperationResult> UpdateAsync(TEntity entity);
         Task<OperationResult> DeleteAsync(TEntity entity);
-        Task<OperationResult> ExistByAsync(Expression<Func<TEntity, bool>> expression);
+        Task<bool> ExistByAsync(Expression<Func<TEntity, bool>> expression);
+        Task SaveAsync();
     }
 
 }

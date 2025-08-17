@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Utility.Shared.Application;
 
 namespace Blogs.Application.Contract.BlogCategoryService.Query
 {
@@ -10,9 +11,10 @@ namespace Blogs.Application.Contract.BlogCategoryService.Query
     {
         public interface IBlogCategoryQuery
         {
-            BlogCategoryAdminPageQueryModel GetCategoriesForAdmin(int id);
-            List<BlogCategoryForCreateBlogQueryModel> GetCategoriesForAddBlog(int id);
-            bool CheckCategoryHaveParent(int id);
+            Task<BlogCategoryAdminPageQueryModel> GetCategoriesForAdminAsync(int id);
+            Task<List<BlogCategoryForCreateBlogQueryModel>> GetCategoriesForAddBlogAsync(int id);
+            Task<EditBlogCategoryDto> GetForEditAsync(int id);
+            Task<bool> CheckCategoryHaveParentAsync(int id);
         }
 
     }
