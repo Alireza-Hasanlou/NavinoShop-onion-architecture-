@@ -1,4 +1,5 @@
-﻿using Utility.Shared.Domain;
+﻿using Blogs.Domain.BlogAgg;
+using Utility.Shared.Domain;
 
 namespace Blogs.Domain.BlogCategoryAgg
 {
@@ -11,7 +12,7 @@ namespace Blogs.Domain.BlogCategoryAgg
         public int Parent { get; private set; }
         public DateTime UpdateDate { get; private set; }
         public bool Active { get; private set; }
-
+    
         public BlogCategory(string title, string slug, string imageName, string imageAlt, int parent)
         {
             Title = title;

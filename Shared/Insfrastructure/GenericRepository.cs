@@ -29,9 +29,6 @@ namespace Utility.Shared.Insfrastructure
 
                 return new OperationResult(false);
             }
-
-
-
         }
 
         public async Task<OperationResult> DeleteAsync(TEntity entity)
@@ -41,57 +38,31 @@ namespace Utility.Shared.Insfrastructure
             {
                 _context.Remove(entity);
                 await SaveAsync();
-                return new OperationResult(true, "Deleted");
-            }
-            catch (Exception ex)
-            {
-
-                return new OperationResult(false, "An error occurred while Deleting entity");
-            }
-        }
-
-        public async Task<bool> ExistByAsync(Expression<Func<TEntity, bool>> expression)
-        {
-            return await _context.Set<TEntity>().AsNoTracking().AnyAsync(expression);
-
-        }
-
-
-        public async Task<IEnumerable<TEntity>> GetAllAsync()
-        {
-            return await _context.Set<TEntity>().ToListAsync();
-        }
-
-        public async Task<IEnumerable<TEntity>> GetAllByAsync(Expression<Func<TEntity, bool>> expression)
-        {
-            return await _context.Set<TEntity>().Where(expression).ToListAsync();
-        }
-
-        public async Task<TEntity?> GetByIdAsync(TKey id)
-        {
-            return await _context.FindAsync<TEntity>(id);
-        }
-
-        public async Task<OperationResult> UpdateAsync(TEntity entity)
-        {
-            try
-            {
-                _context.Update(entity);
-                await SaveAsync();
-                return new OperationResult(true, "Updated");
+                return new OperationResult(true);
             }
             catch (Exception)
             {
 
-                return new OperationResult(false, "An error occurred while Updating entity");
+                return new OperationResult(false);
             }
-
         }
 
-       public async Task SaveAsync()
-        {
-            await _context.SaveChangesAsync();
-        }
+        public async Task<bool> ExistByAsync(Expression<Func<TEntity, bool>> expression) =>
+                    await _context.Set<TEntity>().AsNoTracking().AnyAsync(expression);
+
+        public IQueryable<TEntity> GetAllAsync() =>
+                        _context.Set<TEntity>().AsNoTracking();
+
+        public IQueryable<TEntity> GetAllBy(Expression<Func<TEntity, bool>> expression) =>
+                         _context.Set<TEntity>().Where(expression).AsNoTracking();
+
+
+        public async Task<TEntity?> GetByIdAsync(TKey id) =>
+                    await _context.FindAsync<TEntity>(id);
+
+        public async Task<bool> SaveAsync() =>
+                    await _context.SaveChangesAsync() > 0 ? true : false;
+
     }
 }
 

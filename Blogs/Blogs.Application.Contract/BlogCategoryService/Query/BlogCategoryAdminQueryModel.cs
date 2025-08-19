@@ -1,7 +1,6 @@
 ﻿namespace Blogs.Application.Contract.BlogCategoryService.Query
 {
-    public partial interface IBlogCategoryQueryService
-    {
+   
         public class BlogCategoryAdminQueryModel
         {
             public int Id { get; set; }
@@ -12,5 +11,5 @@
             public bool Active { get; set; }
         }
 
-    }
+    
 }
