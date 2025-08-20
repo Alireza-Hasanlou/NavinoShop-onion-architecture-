@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Blogs\Blogs.Query\Blogs.Query.csproj" />
+    <ProjectReference Include="..\Users\Users.Query\Users.Query.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,24 @@
+﻿
+using System.ComponentModel.DataAnnotations;
+using Utility.Shared.Application;
+using Utility.Shared.Application.Validations;
+
+namespace Users.Application.Contract.UserService.Command
+{
+    public class ChangeUserPasswordCommand
+    {
+        public int UserId { get; set; }
+        [Display(Name = "کلمه عبور فعلی")]
+        [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
+        [MaxLength(10, ErrorMessage = ValidationMessages.MaxLengthMessage)]
+        [MinLength(5, ErrorMessage = ValidationMessages.MinLengthMessage)]
+        public string OldPassword { get; set; }
+        [Display(Name = "کلمه عبور جدید")]
+        [PasswordValidation(ErrorMessage = ValidationMessages.PasswordErrorMessage)]
+        public string NewPassword { get; set; }
+        [Display(Name = "تکرار کلمه عبور جدید")]
+        [PasswordValidation(ErrorMessage = ValidationMessages.PasswordErrorMessage)]
+        [Compare("NewPassword", ErrorMessage = ValidationMessages.PasswordCompare)]
+        public string ReNewPassword { get; set; }
+    }
+}
