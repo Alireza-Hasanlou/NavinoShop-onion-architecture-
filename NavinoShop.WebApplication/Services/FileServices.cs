@@ -1,4 +1,5 @@
-﻿using Shared.Application.Service;
+﻿using Shared.Application;
+using Shared.Application.Service;
 
 namespace NavinoShop.WebApplication.Services
 {
@@ -8,6 +9,7 @@ namespace NavinoShop.WebApplication.Services
         {
             throw new NotImplementedException();
         }
+
 
         public bool ResizeImage(string imageName, string Folder, int newSize)
         {

@@ -1,5 +1,6 @@
 using Blogs.Query.Bootstrapper;
 using NavinoShop.WebApplication.Utility;
+using Users.Query.Bootstrapper;
 
 var builder = WebApplication.CreateBuilder(args);
 var Services = builder.Services;
@@ -10,8 +11,8 @@ Services.AddControllersWithViews();
 #region Bootstrappers
 
 DependencyBootstrapper.Congig(Services);
-BlogQuery_Bootstrapper.Config(Services, ConnectionString);
-
+BlogQueryBootstrapper.Config(Services, ConnectionString);
+UserQueryBootstrapper.Config(Services, ConnectionString);
 #endregion
 var app = builder.Build();
 

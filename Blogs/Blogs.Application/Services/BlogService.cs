@@ -51,8 +51,8 @@ namespace Blogs.Application.Services
             string imageName = await _fileService.UploadImage(command.ImageFile, FileDirectories.BlogImageDirectory);
             if (imageName == "")
                 return new(false, ValidationMessages.SystemErrorMessage, "Title");
-            _fileService.ResizeImage($"{FileDirectories.BlogImageDirectory}{imageName}", $"{FileDirectories.BlogImageDirectory100}{imageName}", 100);
-            _fileService.ResizeImage($"{FileDirectories.BlogImageDirectory}{imageName}", $"{FileDirectories.BlogImageDirectory400}{imageName}", 400);
+            _fileService.ResizeImage(imageName, FileDirectories.BlogImageFolder, 400);
+            _fileService.ResizeImage(imageName, FileDirectories.BlogImageFolder, 100);
             Blog blog = new Blog(command.Title, command.UserId, command.Writer,
                                  command.Slug, command.ShortDescription, command.Text,
                                  imageName, command.ImageAlt, command.CategoryId, command.SubCategoryId);
@@ -62,9 +62,11 @@ namespace Blogs.Application.Services
             if (result.Success)
                 return new(true);
 
-            try { _fileService.DeleteImage(Path.Combine(FileDirectories.BlogImageDirectory, imageName)); } catch { }
-            try { _fileService.DeleteImage(Path.Combine(FileDirectories.BlogImageDirectory400, imageName)); } catch { }
-            try { _fileService.DeleteImage(Path.Combine(FileDirectories.BlogImageDirectory100, imageName)); } catch { }
+
+
+            try { _fileService.DeleteImage($"{FileDirectories.BlogImageDirectory}{imageName}"); } catch { }
+            try { _fileService.DeleteImage($"{FileDirectories.BlogImageDirectory400}{imageName}"); } catch { }
+            try { _fileService.DeleteImage($"{FileDirectories.BlogImageDirectory100}{imageName}"); } catch { }
 
             return new(false, ValidationMessages.SystemErrorMessage, "Title");
         }
@@ -88,8 +90,8 @@ namespace Blogs.Application.Services
                 imageName = await _fileService.UploadImage(command.ImageFile, FileDirectories.BlogImageDirectory);
                 if (imageName == "")
                     return new(false, ValidationMessages.SystemErrorMessage, "Title");
-                _fileService.ResizeImage($"{FileDirectories.BlogImageDirectory}{imageName}", $"{FileDirectories.BlogImageDirectory100}{imageName}", 100);
-                _fileService.ResizeImage($"{FileDirectories.BlogImageDirectory}{imageName}", $"{FileDirectories.BlogImageDirectory400}{imageName}", 400);
+                _fileService.ResizeImage(imageName, FileDirectories.BlogImageFolder, 400);
+                _fileService.ResizeImage(imageName, FileDirectories.BlogImageFolder, 100);
             }
             var blog = await _blogRepository.GetByIdAsync(command.Id);
             blog.Edit(command.Title, command.Writer, command.Slug, command.ShortDescription,
@@ -99,15 +101,17 @@ namespace Blogs.Application.Services
             {
                 if (command.ImageFile != null)
                 {
-                    try { _fileService.DeleteImage(Path.Combine(FileDirectories.BlogImageDirectory, oldImagName)); } catch { }
-                    try { _fileService.DeleteImage(Path.Combine(FileDirectories.BlogImageDirectory400, oldImagName)); } catch { }
-                    try { _fileService.DeleteImage(Path.Combine(FileDirectories.BlogImageDirectory100, oldImagName)); } catch { }
+
+                    try { _fileService.DeleteImage($"{FileDirectories.BlogImageDirectory}{imageName}"); } catch { }
+                    try { _fileService.DeleteImage($"{FileDirectories.BlogImageDirectory400}{imageName}"); } catch { }
+                    try { _fileService.DeleteImage($"{FileDirectories.BlogImageDirectory100}{imageName}"); } catch { }
                 }
                 return new(true);
             }
-            try { _fileService.DeleteImage(Path.Combine(FileDirectories.BlogImageDirectory, imageName)); } catch { }
-            try { _fileService.DeleteImage(Path.Combine(FileDirectories.BlogImageDirectory400, imageName)); } catch { }
-            try { _fileService.DeleteImage(Path.Combine(FileDirectories.BlogImageDirectory100, imageName)); } catch { }
+
+            try { _fileService.DeleteImage($"{FileDirectories.BlogImageDirectory}{imageName}"); } catch { }
+            try { _fileService.DeleteImage($"{FileDirectories.BlogImageDirectory400}{imageName}"); } catch { }
+            try { _fileService.DeleteImage($"{FileDirectories.BlogImageDirectory100}{imageName}"); } catch { }
 
             return new(false, ValidationMessages.SystemErrorMessage, "Title");
         }

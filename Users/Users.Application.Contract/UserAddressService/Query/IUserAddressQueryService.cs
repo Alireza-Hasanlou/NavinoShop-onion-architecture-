@@ -12,4 +12,4 @@ namespace Users.Application.Contract.UserAddressService.Query
         Task<bool> IsAddressForUserAsync(int id, int userId);
     }
 }
-}
+

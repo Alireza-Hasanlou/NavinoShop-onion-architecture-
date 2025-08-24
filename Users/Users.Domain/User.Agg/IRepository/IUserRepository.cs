@@ -7,7 +7,8 @@ using Utility.Shared.Domain;
 
 namespace Users.Domain.User.Agg.IRepository
 {
-    public interface IUserRepository:IGenericRepository<User,int>
+    public interface IUserRepository : IGenericRepository<User, int>
     {
+        Task <User> GetByMobile(string mobile);
     }
 }

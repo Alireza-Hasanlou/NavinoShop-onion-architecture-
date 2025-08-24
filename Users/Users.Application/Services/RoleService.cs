@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Users.Application.Contract.RoleService.Command;
@@ -13,6 +14,7 @@ namespace Users.Application.Services
     internal class RoleService : IRoleCommandService
     {
         private readonly IRoleRepository _roleRepository;
+        private readonly IUserRepository _userRepository;
 
         public RoleService(IRoleRepository roleRepository)
         {
@@ -21,39 +23,67 @@ namespace Users.Application.Services
 
         public async Task<OperationResult> CreateAsync(CreateRoleCommand command, List<int> permissions)
         {
-            if (await _roleRepository.ExistByAsync(t => t.Title == command.Title))
+            if (await _roleRepository.ExistByAsync(t => t.Title == command.Title.Trim().ToLower()))
                 return new(false);
 
-            var result = await _roleRepository.CreateAsync(new Role(command.Title));
-            if (result.Success)
+            var role = new Role(command.Title.Trim().ToLower());
+            if (permissions.Count > 0)
             {
-                if (_roleRepository.AddPermissionsToRole(command.Title, permissions))
-                    return new(true);
-            }
+                foreach (var permission in permissions)
+                {
+                    role.AddPermission(permission);
+                }
 
-            return new(false);
+            }
+            var result = await _roleRepository.CreateAsync(role);
+
+            if (result.Success)
+                return new(true);
+
+            return new(false, ValidationMessages.SystemErrorMessage, "Role");
         }
 
         public async Task<OperationResult> EditAsync(EditRoleCommand command, List<int> permissions)
         {
             var role = await _roleRepository.GetByIdAsync(command.Id);
-            if (await _roleRepository.ExistByAsync(t => t.Title == command.Title && role.Id != command.Id))
-                return new(false,ValidationMessages.DuplicatedMessage,"Role");
 
+            if (await _roleRepository.ExistByAsync(t => t.Title == command.Title.Trim().ToLower() && role.Id != command.Id))
+                return new(false, ValidationMessages.DuplicatedMessage, "Role");
 
-            if (_roleRepository.AddPermissionsToRole(command.Title, permissions))
+            role.Edit(command.Title.Trim().ToLower());
+
+            if (permissions.Count > 0)
             {
-                role.Edit(command.Title);
-                _roleRepository.SaveAsync();
+                role.ClearPermissions();
+
+                foreach (var permission in permissions)
+                {
+                    role.AddPermission(permission);
+                }
+
             }
 
-            return new(false,ValidationMessages.SystemErrorMessage);
+            var result = await _roleRepository.SaveAsync();
+            if(result)
+            return new(true);
+
+            return new(false, ValidationMessages.SystemErrorMessage, "Role");
 
         }
 
-        public Task<OperationResult> EditUserRoleAsync(int userId, List<int> roles)
+        public async Task<OperationResult> EditUserRoleAsync(int userId, List<int> roles)
         {
-            throw new NotImplementedException();
+            var user = await _userRepository.GetByIdAsync(userId);
+            user.ClearRole();
+            foreach (var role in roles)
+            {
+                user.AddRole(role);
+            }
+            var result = await _roleRepository.SaveAsync();
+            if (result)
+                return new(true);
+
+            return new(false, ValidationMessages.SystemErrorMessage, "User");
         }
     }
 }

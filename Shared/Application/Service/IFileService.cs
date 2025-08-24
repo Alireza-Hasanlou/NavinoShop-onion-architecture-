@@ -12,5 +12,6 @@ namespace Shared.Application.Service
         Task<string> UploadImage(IFormFile file, string folder);
         bool DeleteImage(string route);
         bool ResizeImage(string imageName, string Folder, int newSize);
+      
     }
 }

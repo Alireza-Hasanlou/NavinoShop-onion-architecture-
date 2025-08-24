@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Users.Application.Contract.RoleService.Command;
+using Users.Application.Contract.UserAddressService.Command;
+using Users.Application.Contract.UserService.Command;
+using Users.Application.Services;
 
 namespace Users.Application.Bootstrapper
 {
@@ -11,7 +10,9 @@ namespace Users.Application.Bootstrapper
     {
         public static void Config(IServiceCollection services)
         {
-
+            services.AddScoped<IUserCommandService,UserService>();
+            services.AddScoped<IUserAddressCommandService, UserAddressService>();
+            services.AddScoped<IRoleCommandService, RoleService>();
         }
     }
 }

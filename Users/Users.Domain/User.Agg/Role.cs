@@ -25,10 +25,10 @@ namespace Users.Domain.User.Agg
         }
 
 
-        public void AddPermission(Permission permission)
+        public void AddPermission(int permissionId)
         {
-            if (RolePermissions.All(x => x.PermissionId != permission.Id))
-                RolePermissions.Add(new RolePermission(Id, permission.Id));
+            if (RolePermissions.All(x => x.PermissionId != permissionId))
+                RolePermissions.Add(new RolePermission(Id, permissionId));
         }
 
         public void RemovePermission(Permission permission)
@@ -36,6 +36,11 @@ namespace Users.Domain.User.Agg
             var rolePermission = RolePermissions.FirstOrDefault(x => x.PermissionId == permission.Id);
             if (rolePermission != null)
                 RolePermissions.Remove(rolePermission);
+        }
+
+        public void ClearPermissions()
+        {
+            RolePermissions.Clear();
         }
     }
 

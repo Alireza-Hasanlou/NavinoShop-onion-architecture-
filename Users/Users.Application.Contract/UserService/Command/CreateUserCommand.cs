@@ -16,7 +16,7 @@ namespace Users.Application.Contract.UserService.Command
         public string Mobile { get; set; }
         [Display(Name = "ایمیل")]
         [MaxLength(255, ErrorMessage = ValidationMessages.MaxLengthMessage)]
-        public string Email { get; set; }
+        public string? Email { get; set; }
         [Display(Name = "کلمه عبور")]
         [PasswordValidation(ErrorMessage = ValidationMessages.PasswordErrorMessage)]
         public string Password { get; set; }
