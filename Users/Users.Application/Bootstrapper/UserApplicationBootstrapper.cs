@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Users.Application.Contract.PermissionService.Command;
 using Users.Application.Contract.RoleService.Command;
 using Users.Application.Contract.UserAddressService.Command;
 using Users.Application.Contract.UserService.Command;
@@ -13,6 +14,7 @@ namespace Users.Application.Bootstrapper
             services.AddScoped<IUserCommandService,UserService>();
             services.AddScoped<IUserAddressCommandService, UserAddressService>();
             services.AddScoped<IRoleCommandService, RoleService>();
+            services.AddScoped<IPermissionCommandService, PermissionService>();
         }
     }
 }

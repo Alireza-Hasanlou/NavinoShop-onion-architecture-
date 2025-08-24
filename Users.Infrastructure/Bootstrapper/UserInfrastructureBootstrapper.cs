@@ -15,6 +15,8 @@ namespace Users.Infrastructure.Bootstrapper
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IUserAddressRepository, UserAddressRepository>();
+            services.AddScoped<IPermissionRepository, PermissionRepository>();
+
 
             services.AddDbContext<UserContext>(option =>
             {
