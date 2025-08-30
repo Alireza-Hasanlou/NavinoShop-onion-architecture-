@@ -1,12 +1,17 @@
 using Blogs.Query.Bootstrapper;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using NavinoShop.WebApplication.Utility;
 using Users.Query.Bootstrapper;
+
 
 var builder = WebApplication.CreateBuilder(args);
 var Services = builder.Services;
 var Configuration = builder.Configuration;
 var ConnectionString = Configuration.GetConnectionString("DefultConnection");
 Services.AddControllersWithViews();
+Services.AddRazorPages();
 
 #region Bootstrappers
 
@@ -27,11 +32,16 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.MapRazorPages();
 app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "MyArea",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 
 app.Run();

@@ -68,10 +68,10 @@ namespace Users.Application.Services
 
 
 
-            var HashPassword = Sha256Hasher.Hash(command.Password);
+            //var HashPassword = Sha256Hasher.Hash(command.Password);
             var Key = GenerateRandomCode.GenerateUserRegisterCode().ToString();
             var user = new User(command.FullName, command.Mobile.Trim(), command.Email.Trim().ToLower(),
-                   HashPassword, imageName, Key, true, false, command.UserGender);
+                   Key, imageName, true, false, command.UserGender);
 
             var result = await _userRepository.CreateAsync(user);
             if (result.Success)
@@ -185,10 +185,10 @@ namespace Users.Application.Services
         {
             var user = await _userRepository.GetByMobile(command.Mobile.Trim());
             if (user == null)
-                return new(false, ValidationMessages.UserNotFound, "User");
-            string hashPassword = Sha256Hasher.Hash(command.Password);
-            if (user.Password != hashPassword)
-                return new(false, ValidationMessages.PasswordLoginError, "Password");
+                return new(false, ValidationMessages.UserNotFound, nameof(user));
+           
+            if (user.Password != command.Password.Trim())
+                return new(false, ValidationMessages.PasswordLoginError, nameof(command.Password));
             var result = await _authService.LoginAsync(new AuthModel
             {
                 Avatar = user.Avatar,
@@ -200,7 +200,7 @@ namespace Users.Application.Services
             if (result)
                 return new(true);
 
-            return new(false, ValidationMessages.SystemErrorMessage, "User");
+            return new(false, ValidationMessages.SystemErrorMessage, nameof(user));
         }
 
         public async Task LogoutAsync()
@@ -211,20 +211,28 @@ namespace Users.Application.Services
 
         public async Task<OperationResult> RegisterAsync(RegisterUserCommand command)
         {
-            if (await _userRepository.ExistByAsync(m => m.Mobile == command.Mobile.Trim()))
-                return new(false, ValidationMessages.DuplicatedMessage, "Mobile");
-
             var Key = GenerateRandomCode.GenerateUserRegisterCode().ToString();
-            var HashPassword = Sha256Hasher.Hash(Key);
-
-            var user = User.Register(command.Mobile.Trim(), HashPassword, Key);
-            var res = await _userRepository.CreateAsync(user);
-            if (res.Success)
+            var user = await _userRepository.GetByMobile(command.Mobile.Trim());
+            try
             {
-                // send sms active code
+                if (user == null)
+                {
+                    var newUser = User.Register(command.Mobile.Trim(), Key);
+                    var res = await _userRepository.CreateAsync(newUser);
+                    // send sms active code
+                }
+                else
+                {
+                    user.ChangePassword(Key);
+                    await _userRepository.SaveAsync();
+                }
                 return new(true);
             }
-            return new(false, ValidationMessages.SystemErrorMessage, "User");
+            catch (Exception)
+            {
+
+                return new(false, ValidationMessages.SystemErrorMessage, "User");
+            }
         }
         private void DeleteUserImages(string imageName)
         {

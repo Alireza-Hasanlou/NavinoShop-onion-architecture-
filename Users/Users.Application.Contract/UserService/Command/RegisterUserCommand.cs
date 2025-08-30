@@ -11,6 +11,6 @@ namespace Users.Application.Contract.UserService.Command
         [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
         [MobileValidation(ErrorMessage = ValidationMessages.MobileErrorMessage)]
         public string Mobile { get; set; }
-        public string ReturnUrl { get; set; }
+
     }
 }

@@ -12,26 +12,27 @@ namespace Users.Domain.User.Agg
         public string Email { get; private set; }
         public string Password { get; private set; }
         public string Avatar { get; private set; }
-        public string Key { get; private set; }
         public bool Active { get; private set; }
-        public bool Delete { get; private set; }
+        public bool IsDelete { get; private set; }
         public Gender UserGender { get; private set; }
         public ICollection<UserAddress> Addresses { get; private set; }
         public ICollection<UserRole> UserRoles { get; private set; }
 
+        protected User()
+        {
 
+        }
         public User(string fullName, string mobile, string email,
-                    string password, string avatar, string key,
-                    bool active, bool delete, Gender gender)
+                    string password, string avatar, 
+                    bool active, bool isDelete, Gender gender)
         {
             FullName = fullName;
             Mobile = mobile;
             Email = email;
             Password = password;
             Avatar = avatar;
-            Key = key;
             Active = active;
-            Delete = delete;
+            IsDelete = isDelete;
             UserGender = gender;
             Addresses = new List<UserAddress>();
             UserRoles = new List<UserRole>();
@@ -59,15 +60,15 @@ namespace Users.Domain.User.Agg
 
         public void DeleteChange()
         {
-            if (Delete)
-                Delete = false;
+            if (IsDelete)
+                IsDelete = false;
 
-            Delete = true;
+            IsDelete = true;
         }
 
-        public static User Register(string mobile, string password, string key)
+        public static User Register(string mobile, string password)
         {
-            return new User("", mobile, "", password, "Defult.png", key, false, false, Gender.نامشخص);
+            return new User("", mobile, "", password, "Defult.png", false, false, Gender.نامشخص);
         }
 
         public void AddRole(int roleId)

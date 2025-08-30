@@ -1,0 +1,145 @@
+﻿@page
+@model NavinoShop.WebApplication.Areas.Account.Pages.RegisterModel
+@{
+    Layout = "_Layout";
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<section class="inner-page" id="contact-page">
+    <div class="container-fluid" id="page-hero">
+        <div class="row">
+            <div class="col-12">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 px-0">
+                            <h1>عضویت در سایت</h1>
+                            <p>با عضویت در سایت از همه امکانات ناوینوشاپ بهره مند شوید.</p>
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="index.html">صفحه نخست</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">عضویت</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container py-2 py-md-5">
+        <div class="row">
+            <div class="col-12 col-sm-10 offset-sm-1">
+                <div class="content">
+                    <div class="row">
+                        <div class="col-12 col-lg-5 text-center">
+                            <img src="/assets/images/login.png" alt="">
+                        </div>
+                        <div id="registerTable" class="col-12 col-lg-7 pt-5 pt-md-0 align-self-center">
+                            <div class="title">عضویت در ناوینوشاپ</div>
+                            <p>با ورود به ناحیه کاربری خود از همه امکانات سایت بهره مند شوید.</p>
+                            <form id="registerForm" asp-page="Register">
+                                <div class="form-group">
+                                    <label for="Mobile">شماره همراه :</label>
+                                    <input asp-for="registerUserModel.Mobile" autocomplete="off" type="text" class="form-control" onkeypress="return isNumber(event)" id="Mobile">
+
+                                </div>
+
+
+
+                                <div class="form-group">
+                                    <input id="btnRegister" type="button" value=" عضویت" class="btn btn-success">
+                                </div>
+                                <span asp-validation-for="registerUserModel" class="text-danger"></span>
+                            </form>
+                        </div>
+
+
+
+                        <div id="verifyTable" class=" visually-hidden col-12 col-lg-7 pt-5 pt-md-0 align-self-center">
+                            <div class="title">کد ارسال شده به شماره همراه خود را وارد کنید</div>
+                           
+                            <form asp-page="Register">
+                                <div class="form-group">
+                                  
+                                    <input autocomplete="off" type="text" class="form-control" onkeypress="return isNumber(event)" id="verifyCode">
+
+                                </div>
+
+
+
+                                <div class="form-group">
+                                    <input id="btnVerify" type="button" value=" عضویت" class="btn btn-success">
+                                </div>
+                                     <span asp-validation-for="registerUserModel" class="text-danger"></span>
+                            </form>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+       let currentMobile = "";
+
+    $("#btnRegister").click(function () {
+        const mobile = $("#Mobile").val();
+        if (!mobile) {
+            alert("لطفا شماره موبایل را وارد کنید");
+            return;
+        }
+
+        $.ajax({
+            url: "/Account/Register?handler=SendCode",
+            type: "POST",
+              data: $("#registerForm").serialize(),
+            success: function (res) {
+                console.log("response:", res);
+
+                if (res.success === true) {
+                    currentMobile = mobile;
+                    $("#registerTable").addClass("visually-hidden");
+                    $("#verifyTable").removeClass("visually-hidden");
+                } else {
+                    alert(res.message || "ارسال کد ناموفق بود");
+                }
+            },
+            error: function (xhr) {
+                console.log("xhr:", xhr.responseText);
+                alert("خطا در ارسال کد");
+            }
+        });
+    });
+
+
+    // دکمه تایید
+    $("#btnVerify").click(function () {
+        const code = $("#verifyCode").val();
+        if (!code) {
+            alert("کد را وارد کنید");
+            return;
+        }
+
+        $.ajax({
+            url: "/Account/Register?handler=VerifyCode",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ mobile: currentMobile, code: code }),
+            success: function (res) {
+                if (res.success) {
+                    alert("کد تایید شد ✅");
+                } else {
+                    alert("کد اشتباه است ❌");
+                }
+            },
+            error: function () {
+                alert("خطا در تایید کد");
+            }
+        });
+    });
+</script>
+
+
