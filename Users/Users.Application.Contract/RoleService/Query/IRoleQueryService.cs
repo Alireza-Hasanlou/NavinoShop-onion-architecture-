@@ -10,5 +10,6 @@ namespace Users.Application.Contract.RoleService.Query
     {
         EditRoleDto GetForEdit(int id);
         List<RolePermissionQueryModel> GetPermissionsForRole(int id);
+        bool CheckPermission(int userId, int permissionId);
     }
 }

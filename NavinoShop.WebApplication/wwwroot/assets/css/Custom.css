@@ -446,4 +446,66 @@ svg:not(:root).svg-inline--fa {
     color: #fff;
 }
 
+.user-menu {
+    position: relative;
+    display: inline-block;
+}
 
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.Authdropdown-menu {
+    display: none;
+    position: absolute;
+    top: 45px;
+    right: 0;
+    background: #fff;
+    border: 1px solid #ddd;
+    min-width: 200px;
+    box-shadow: 0 2px 5px rgba(0,0,0,.2);
+    border-radius: 8px;
+    padding: 8px 8px;
+    z-index: 1000;
+}
+
+    .Authdropdown-menu.show {
+        display: block;
+    }
+
+    .Authdropdown-menu a {
+        display: block;
+        padding: 10px 15px;
+        color: #333;
+        text-decoration: none;
+    }
+
+        .Authdropdown-menu a:hover {
+            background: #f5eab3;
+            border-radius: 10px;
+        }
+
+#btn-login-register {
+    padding: 10px 30px;
+    display: inline-block;
+    color: #000;
+    font-weight: 400;
+    text-transform: uppercase;
+    border-radius: 3px;
+    -webkit-box-shadow: 0px 0px 0px 2px #000, 2px 2px 0px 2px #fcb941;
+    box-shadow: 0px 0px 0px 2px #000, 2px 2px 0px 2px #fcb941;
+    text-decoration: none;
+    -webkit-transition: 0.2s all;
+    transition: 0.2s all;
+    cursor:pointer;
+}
+
+    #btn-login-register:hover {
+        color: #282828;
+        background-color: #fcb941;
+        -webkit-box-shadow: 0px 0px 0px 0px #000, 0px 0px 0px 2px #fcb941;
+        box-shadow: 0px 0px 0px 0px #000, 0px 0px 0px 2px #fcb941;
+    }

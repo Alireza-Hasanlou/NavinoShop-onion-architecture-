@@ -1,67 +1,7 @@
 ﻿@using Shared.Application
 @using Shared.Application.Auth
 @inject IAuthService _authService;
-<style>
-    
-    #btn-login-register {
 
-        border:solid 1px gray;
-        border-radius:8px;
-        cursor:pointer;
-        text-align:center;
-        align-content:center;
-    }
-     
-    #btn-login-register:hover {
-
- background: #f5eab3;
-    }
-    .user-menu {
-        position: relative;
-        display: inline-block;
-    }
-
-    .user-avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        cursor: pointer;
-    }
-
-    .dropdown-menu {
-        display: none;
-        position: absolute;
-        top: 45px;
-        right: 0;
-        background: #fff;
-        border: 1px solid #ddd;
-        min-width: 200px;
-        box-shadow: 0 2px 5px rgba(0,0,0,.2);
-        border-radius: 8px;
-        padding: 8px 8px;
-        z-index: 1000;
-    }
-
-        .dropdown-menu.show {
-            display: block;
-        }
-
-        .dropdown-menu a {
-            display: block;
-            padding: 10px 15px;
-            color: #333;
-            text-decoration: none;
-        }
-
-            .dropdown-menu a:hover {
-                background: #f5eab3;
-                border-radius:10px;
-            }
-
-            #auth{
-             
-            }
-</style>
 <section id="header">
     <!-- Top NavBar -->
     <div id="encode4325436">
@@ -100,40 +40,41 @@
                 </div>
                 <div class="col-12 col-md-4">
                     <div class="row">
-                       
+
                         <div class="col-12 col-md-5 col-lg-6">
                             <a href="cart.html">
                                 <div class="btn btn-warning w-100"><i class="fa fa-shopping-cart"></i>&nbsp;<span class="d-md-none d-lg-inline-block">سبد خرید</span> (2)</div>
                             </a>
                         </div>
-                        <div class="col-12 col-md-7 col-lg-6 text-center" id="btn-login-register">
+                        <div class="col-12 col-md-7 col-lg-6 text-center " id="btn-login-register">
                             @if (!_authService.IsUserLogin())
                             {
-                              <div id="authBtn">
-                                <a href="/Account/login">ورود/</a>
-                                <a href="/Account/register">عضویت</a>
-                              </div>
+                                <div id="authBtn">
+                                    <a href="/Account/login">ورود/</a>
+                                    <a href="/Account/register">عضویت</a>
+                                </div>
 
-                               
 
-                         
-                         
+
+
+
                             }
                             else
                             {
-                                <div class="user-menu">
+                                        <div class="user-menu">
                                       <span>@_authService.GetLoginUserFullName()</span>
-                                    <div class="dropdown-menu" id="userDropdown">
+                                    <div class="Authdropdown-menu" id="userDropdown">
                                          <div><img src="@((FileDirectories.UserImageDirectory100) + (_authService.GetLoginUserAvatar()))" alt="User Avatar" class="user-avatar" id="avatarBtn" /></div>
                                          <br />
                                         <span>@_authService.GetLoginUserMobile()</span>
                                         <hr />
-                                        <a href="/Account/Settings">تنظیمات</a>
+                                         
+                                        <a href="/Admin">پنل ادمین</a>
                                         <a href="/Account/Logout">خروج</a>
                                     </div>
                                 </div>
-
-
+ 
+                       
 
                             }
                         </div>
@@ -194,7 +135,7 @@
                                                                         <li><a href="products.html">بازی کامپیوتری</a></li>
                                                                     </ul>
                                                                     <ul class="droopmenu-col droopmenu-col4 d-none d-lg-inline-block">
-                                                                        <li><img src="/assets/images/megamenu/megamenu-image1.png" alt=""></li>
+                                                                        <li><img src="/images/megamenu/megamenu-image1.png" alt=""></li>
                                                                     </ul>
                                                                 </div>
                                                             </div>
@@ -227,7 +168,7 @@
                                                                         <li><a href="products.html">لوازم دکوری</a></li>
                                                                     </ul>
                                                                     <ul class="droopmenu-col droopmenu-col4 d-none d-lg-inline-block">
-                                                                        <li><img src="assets/images/megamenu/megamenu-image2.png" alt=""></li>
+                                                                        <li><img src="/images/megamenu/megamenu-image2.png" alt=""></li>
                                                                     </ul>
                                                                 </div>
                                                             </div>
@@ -262,7 +203,7 @@
                                                                         <li><a href="products.html">لباس زیر</a></li>
                                                                     </ul>
                                                                     <ul class="droopmenu-col droopmenu-col4 d-none d-lg-inline-block">
-                                                                        <li><img src="assets/images/megamenu/megamenu-image3.png" alt=""></li>
+                                                                        <li><img src="/images/megamenu/megamenu-image3.png" alt=""></li>
                                                                     </ul>
                                                                 </div>
                                                             </div>
@@ -299,7 +240,7 @@
                                                                         <li><a href="products.html">خاتم و منبت</a></li>
                                                                     </ul>
                                                                     <ul class="droopmenu-col droopmenu-col4 d-none d-lg-inline-block">
-                                                                        <li><img src="assets/images/megamenu/megamenu-image4.png" alt=""></li>
+                                                                        <li><img src="/images/megamenu/megamenu-image4.png" alt=""></li>
                                                                     </ul>
                                                                 </div>
                                                             </div>
@@ -334,7 +275,7 @@
                                                                         <li><a href="products.html">آیسان</a></li>
                                                                     </ul>
                                                                     <ul class="droopmenu-col droopmenu-col4 d-none d-lg-inline-block">
-                                                                        <li><img src="assets/images/megamenu/megamenu-image5.png" alt=""></li>
+                                                                        <li><img src="/images/megamenu/megamenu-image5.png" alt=""></li>
                                                                     </ul>
                                                                 </div>
                                                             </div>
@@ -365,7 +306,7 @@
                                                                         <li><a href="products.html">سایر</a></li>
                                                                     </ul>
                                                                     <ul class="droopmenu-col droopmenu-col4 d-none d-lg-inline-block">
-                                                                        <li><img src="assets/images/megamenu/megamenu-image6.png" alt=""></li>
+                                                                        <li><img src="/images/megamenu/megamenu-image6.png" alt=""></li>
                                                                     </ul>
                                                                 </div>
                                                             </div>
@@ -432,21 +373,4 @@
     </div>
     <!-- Main NavBar -->
 </section>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const avatarBtn = document.getElementById("btn-login-register");
-        const dropdown = document.getElementById("userDropdown");
 
-        avatarBtn.addEventListener("click", function (e) {
-            e.stopPropagation();
-            dropdown.classList.toggle("show");
-        });
-
-      
-        document.addEventListener("click", function (e) {
-            if (!avatarBtn.contains(e.target) && !dropdown.contains(e.target)) {
-                dropdown.classList.remove("show");
-            }
-        });
-    });
-</script>

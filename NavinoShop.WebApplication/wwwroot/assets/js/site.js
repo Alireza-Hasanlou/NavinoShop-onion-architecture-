@@ -6,3 +6,19 @@
     return true;
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+    const avatarBtn = document.getElementById("btn-login-register");
+    const dropdown = document.getElementById("userDropdown");
+
+    avatarBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        dropdown.classList.toggle("show");
+    });
+
+
+    document.addEventListener("click", function (e) {
+        if (!avatarBtn.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.classList.remove("show");
+        }
+    });
+});

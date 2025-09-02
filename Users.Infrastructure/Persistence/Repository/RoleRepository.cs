@@ -15,6 +15,12 @@ namespace Users.Infrastructure.Persistence.Repository
             _userContext = userContext;
         }
 
-   
+        public  bool CheckPermission(int userId, int permissionId)
+        {
+            return  _userContext.UserRoles
+                .Any(ur => ur.UserId == userId &&
+                                ur.Role.RolePermissions.Any(rp => rp.PermissionId == permissionId));
+
+        }
     }
 }

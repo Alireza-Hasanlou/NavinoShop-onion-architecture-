@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>صفحه شروع | کنترل پنل</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <partial name="_AdminCss" />
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+    <div class="wrapper">
+
+     
+        <partial name="_AdminHeader" />
+    
+        <partial name="_SideBar" />
+       
+        <div class="content-wrapper">
+         
+            <section class="content-header">
+                <h1>
+                    عنوان صفحه
+                    <small>توضیحات</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><a href="#"><i class="fa fa-dashboard"></i> خانه</a></li>
+                    <li class="active">صفحه</li>
+                </ol>
+            </section>
+
+        
+            <section class="content container-fluid">
+
+              
+               @RenderBody()
+              
+
+            </section>
+         
+        </div>
+      
+        <footer class="main-footer text-left">
+            <strong>
+                Copyleft &copy; 2014-2017 <a href="https://adminlte.io">Almsaeed Studio</a> & <a href="http://hosseinizadeh.ir/adminlte">Alireza Hosseinizadeh</a>
+            </strong>
+        </footer>
+
+
+
+       
+    </div>
+
+    <partial name="_AdminScripts" />
+</body>
+
+</html>
+
+
