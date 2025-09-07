@@ -1,14 +1,26 @@
 
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using NavinoShop.WebApplication.Utility;
+using Users.Application.Contract.RoleService.Query;
 
 namespace NavinoShop.WebApplication.Areas.Admin.Pages
 {
     [PermissionChecker(1)]
     public class IndexModel : PageModel
     {
-        public void OnGet()
+        private readonly IRoleQueryService _roleQueryService;
+
+        public IndexModel(IRoleQueryService roleQueryService)
         {
+            _roleQueryService = roleQueryService;
+        }
+
+        public async Task<IActionResult> OnGet()
+        {
+            var model = await _roleQueryService.GetForEdit(1);
+
+            return Page();
         }
     }
 }

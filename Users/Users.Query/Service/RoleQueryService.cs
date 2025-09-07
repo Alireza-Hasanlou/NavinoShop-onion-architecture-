@@ -17,19 +17,29 @@ namespace Users.Query.Service
             _roleRepository = roleRepository;
         }
 
+        public async Task<EditRoleDto> GetForEdit(int id)
+        {
+           return await _roleRepository.GetForEdit(id);
+        }
+
         public bool CheckPermission(int userId, int permissionId)
         {
-           return _roleRepository.CheckPermission(userId, permissionId);
+            return _roleRepository.CheckPermission(userId, permissionId);
         }
 
-        public EditRoleDto GetForEdit(int id)
+        public async Task<List<RoleQueryModel>> GetAllRoles()
         {
-            throw new NotImplementedException();
+           return await _roleRepository.GetAllRoles();
         }
 
-        public List<RolePermissionQueryModel> GetPermissionsForRole(int id)
+        public async Task<UsersRoleQuryModel> GetUsersInRole(int roleId)
         {
-            throw new NotImplementedException();
+         return await _roleRepository.GetUsersInRole(roleId);   
+        }
+
+        public async Task<List<PermissionQueryModel>> GetAllPermission()
+        {
+           return await _roleRepository.GetAllPermission();
         }
     }
 }

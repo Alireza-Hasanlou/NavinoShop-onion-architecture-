@@ -1,14 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Utility.Shared.Application;
-
-namespace Users.Application.Contract.RoleService.Command
+namespace NavinoShop.WebApplication.Utility.ViewModels
 {
-    public class EditRoleCommand 
+    public class RoleTitileViewModel
     {
-        public int Id { get; set; }
-        [Display(Name = "عنوان")]
+        [Display(Name = "  عنوان نقش")]
         [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
         [MaxLength(255, ErrorMessage = ValidationMessages.MaxLengthMessage)]
-        public string Title { get; set; }
+        public string RoleTitle { get; set; }
     }
 }

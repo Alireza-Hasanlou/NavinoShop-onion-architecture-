@@ -1,0 +1,79 @@
+﻿@page
+@model NavinoShop.WebApplication.Areas.Admin.Pages.Roles.CreateModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["title"] = "ایجاد نقش ";
+    var ok = ViewData["ok"] != null;
+}
+<div class="row">
+    <form role="form" asp-page="Create">
+        <div class="col-md-6">
+            <div class="box box-primary ">
+                <div class="box-header with-border">
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+
+                <input type="hidden" value="@Model.Permissions" />
+
+                <div class="box-body">
+                    <div class="col-md-6 ">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">عنوان تقش</label>
+                            <input type="text" class="form-control" asp-for="@Model.RoleTitle.Title" id="RoleTitle" placeholder=" عنوان تقش را وارد کنید">
+                        </div>
+                        <span class="text-danger"> @Html.ValidationSummary()</span>
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-primary">ارسال</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class=" col-md-6">
+            <div class="box box-primary ">
+                <div class="box-header with-border">
+                    <h4>دسترسی های نقش را مشخص کنید</h4>
+                </div>
+                @if (Model.Permissions.Count() > 0)
+                {
+                    foreach (var item in Model.Permissions)
+                    {
+                        <div>
+
+
+                            <label class="">
+
+                                <div class="icheckbox_flat-green" aria-checked="false" aria-disabled="false" style="position: relative;margin-right:10px;">
+                                    <input type="checkbox" class="flat-red"  name="permissions" value="@item.Id" style="position: absolute; opacity: 0;">
+                                    <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;">
+
+                                    </ins>
+                                </div>
+                                @item.Title
+                            </label>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+    </form>
+</div>
+
+
+
+@section scripts {
+
+
+    <script>
+
+        $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+          checkboxClass: 'icheckbox_flat-green',
+          radioClass: 'iradio_flat-green'
+        })
+    </script>
+}

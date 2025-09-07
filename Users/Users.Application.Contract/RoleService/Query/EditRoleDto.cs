@@ -4,5 +4,6 @@ namespace Users.Application.Contract.RoleService.Query
 {
     public class EditRoleDto:EditRoleCommand
     {
+        public List<PermissionQueryModel > permissions { get; set; }
     }
 }

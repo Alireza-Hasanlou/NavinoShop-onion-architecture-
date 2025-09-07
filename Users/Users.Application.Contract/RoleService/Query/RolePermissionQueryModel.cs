@@ -7,6 +7,6 @@ namespace Users.Application.Contract.RoleService.Query
     {
         public int Id { get; set; }
         public int RoleId { get; set; }
-        public List<PermissionDto> Permissions{ get; set; }
+        public List<PermissionQueryModel> Permissions{ get; set; }
     }
 }

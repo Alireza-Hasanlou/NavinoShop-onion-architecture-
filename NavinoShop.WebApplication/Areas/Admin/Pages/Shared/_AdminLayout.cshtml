@@ -6,25 +6,29 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>صفحه شروع | کنترل پنل</title>
+    <title> کنترل پنل | @ViewData["title"] </title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <partial name="_AdminCss" />
+    <link href="
+https://cdn.jsdelivr.net/npm/sweetalert2@11.22.5/dist/sweetalert2.min.css
+" rel="stylesheet">
+
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
 
-     
+
         <partial name="_AdminHeader" />
-    
+
         <partial name="_SideBar" />
-       
+
         <div class="content-wrapper">
-         
+
             <section class="content-header">
                 <h1>
-                    عنوان صفحه
-                    <small>توضیحات</small>
+                    @ViewData["title"]
+                   
                 </h1>
                 <ol class="breadcrumb">
                     <li><a href="#"><i class="fa fa-dashboard"></i> خانه</a></li>
@@ -32,17 +36,17 @@
                 </ol>
             </section>
 
-        
+
             <section class="content container-fluid">
 
-              
-               @RenderBody()
-              
+
+                @RenderBody()
+
 
             </section>
-         
+
         </div>
-      
+
         <footer class="main-footer text-left">
             <strong>
                 Copyleft &copy; 2014-2017 <a href="https://adminlte.io">Almsaeed Studio</a> & <a href="http://hosseinizadeh.ir/adminlte">Alireza Hosseinizadeh</a>
@@ -51,10 +55,19 @@
 
 
 
-       
+
     </div>
 
     <partial name="_AdminScripts" />
+
+
+    @RenderSection("Scripts", false);
+    <script>
+        $(function(){
+        AlerSweetWhitConfirmButton();
+        })
+
+    </script>
 </body>
 
 </html>

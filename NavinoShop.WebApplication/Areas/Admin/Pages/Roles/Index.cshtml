@@ -1,0 +1,72 @@
+﻿@page
+@model NavinoShop.WebApplication.Areas.Admin.Pages.Roles.IndexModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["title"] = "نقش ها";
+}
+<div class="box">
+    <div class="box-header">
+        <h3 class="box-title">نقش ها</h3>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+        <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+            <a href="/Admin/Roles/Create" class="btn btn-success">افزودن</a>
+            <div class="row">
+                <div class="col-sm-12">
+                    <table id="rolesTable" class="table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
+                        <thead>
+                            <tr role="row">
+                                <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-sort="ascending" aria-label="عنوان نقش: activate to sort column descending" style="width: 256.188px;">عنوان نقش</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="تاریخ ایجاد: activate to sort column ascending" style="width: 464.469px;">تاریخ ایجاد</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="کابران دارای این نقش: activate to sort column ascending" style="width: 424.812px;">کابران دارای این نقش</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="عملیات: activate to sort column ascending" style="width: 134.828px;">عملیات</th>
+
+                        </thead>
+                        <tbody>
+                            @if (Model.Roles.Count > 0)
+                            {
+                                @foreach (var item in Model.Roles)
+                                {
+                                    <tr role="row" class="odd">
+                                        <td class="sorting_1">@item.RoleTitle</td>
+                                        <td>@item.RoleCreateDate</td>
+                                        <td> <a href="#" class="btn btn-info">نمایش</a></td>
+                                        <td>
+                                            <div class="btn-group">
+
+                                                <a href="#" class="btn btn-warning">ویرایش</a>
+                                                <a href="#" class="btn btn-danger">حذف</a>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+
+                                }
+                            }
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- /.box-body -->
+</div>
+@section scripts {
+    <script>
+        $(function () {
+
+          $('#rolesTable').DataTable({
+            'paging': false,
+            'lengthChange': true,
+            'searching': false,
+            'ordering': true,
+            'info': false,
+            'autoWidth': true
+          })
+        })
+    </script>
+}

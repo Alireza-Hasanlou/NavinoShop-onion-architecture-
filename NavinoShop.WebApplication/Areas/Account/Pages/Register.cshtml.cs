@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using NavinoShop.WebApplication.Utility.DTOs;
 using Users.Application.Contract.UserService.Command;
 using Utility.Shared.Application;
 
@@ -40,11 +39,11 @@ namespace NavinoShop.WebApplication.Areas.Account.Pages
 
 
         }
-        public IActionResult OnPostVerifyCode([FromBody] VerifyDto dto)
+        public IActionResult OnPostVerifyCode([FromBody] string dto)
         {
 
-            var savedCode = HttpContext.Session.GetString("VerifyCode_" + dto.Mobile);
-            if (savedCode != null && savedCode == dto.Code)
+            var savedCode = HttpContext.Session.GetString("VerifyCode_" + dto);
+            if (savedCode != null && savedCode == dto)
             {
                 return new JsonResult(new { success = true });
             }

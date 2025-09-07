@@ -1,14 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Utility.Shared.Application;
 
-namespace Users.Application.Contract.RoleService.Command
+namespace Users.Application.Contract.RoleService.Query
 {
-    public class EditRoleCommand 
+    public class PermissionQueryModel
     {
         public int Id { get; set; }
         [Display(Name = "عنوان")]
         [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
         [MaxLength(255, ErrorMessage = ValidationMessages.MaxLengthMessage)]
-        public string Title { get; set; }
+        public string Title { get;  set; }
+     
     }
 }

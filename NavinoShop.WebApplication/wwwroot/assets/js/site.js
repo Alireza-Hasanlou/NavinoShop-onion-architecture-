@@ -22,3 +22,24 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+function AlerSweet(title, message, icon) {
+
+
+    Swal.fire(  title, message, icon);
+      
+}
+function AlerSweetWithTimer(title, icon, position) {
+
+
+    Swal.fire({
+        position,
+        icon,
+        title,
+        showConfirmButton: false,
+        timer: 1500
+    });
+
+
+}
+
