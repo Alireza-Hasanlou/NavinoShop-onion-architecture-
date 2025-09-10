@@ -29,17 +29,18 @@ function AlerSweet(title, message, icon) {
     Swal.fire(  title, message, icon);
       
 }
-function AlerSweetWithTimer(title, icon, position) {
-
-
+function AlerSweetWithTimer(title, icon, position, redirectUrl = null) {
     Swal.fire({
         position,
         icon,
         title,
         showConfirmButton: false,
         timer: 1500
+    }).then(() => {
+        if (redirectUrl) {
+            window.location.href = redirectUrl;
+        }
     });
-
-
 }
+
 

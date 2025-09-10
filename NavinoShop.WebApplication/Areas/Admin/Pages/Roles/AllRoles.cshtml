@@ -28,15 +28,15 @@
                             {
                                 @foreach (var item in Model.Roles)
                                 {
-                                    <tr role="row" class="odd">
+                                    <tr id="@item.RoleId" role="row" class="odd">
                                         <td class="sorting_1">@item.RoleTitle</td>
                                         <td>@item.RoleCreateDate</td>
-                                        <td> <a href="#" class="btn btn-info">نمایش</a></td>
+                                        <td> <button onclick="ShowRoleUsers(@item.RoleId)" class="btn btn-info">نمایش</button></td>
                                         <td>
                                             <div class="btn-group">
 
-                                                <a href="#" class="btn btn-warning">ویرایش</a>
-                                                <a href="#" class="btn btn-danger">حذف</a>
+                                                <a asp-page="Edit" asp-route-RoleId="@item.RoleId" class="btn btn-warning">ویرایش</a>
+                                                <a onclick="DeleteAjax('   آیا از حذف نقش @item.RoleTitle مطئن هستید؟ ','این عملیات غیر قابل بازگشت خواهد بود', 'warning', 'بله', '/Admin/Roles/Delete',@item.RoleId)" class="btn btn-danger">حذف</a>
                                             </div>
                                         </td>
 
@@ -56,17 +56,23 @@
     <!-- /.box-body -->
 </div>
 @section scripts {
-    <script>
-        $(function () {
 
-          $('#rolesTable').DataTable({
-            'paging': false,
-            'lengthChange': true,
-            'searching': false,
-            'ordering': true,
-            'info': false,
-            'autoWidth': true
-          })
-        })
-    </script>
+
+
+
+
+
+
+
+    <style>
+        .swal2-popup {
+            font-size: 1.3rem !important; 
+        }
+
+        .swal-title-large {
+            font-size: 2rem !important; 
+        }
+    </style>
+
+
 }

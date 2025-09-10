@@ -2,8 +2,8 @@
 
 namespace Users.Application.Contract.RoleService.Query
 {
-    public class EditRoleDto:EditRoleCommand
+    public class EditRoleQueryModel:EditRoleCommand
     {
-        public List<PermissionQueryModel > permissions { get; set; }
+        public List<int >? permissions { get; set; }
     }
 }

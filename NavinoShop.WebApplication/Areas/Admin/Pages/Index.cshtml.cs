@@ -18,7 +18,6 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages
 
         public async Task<IActionResult> OnGet()
         {
-            var model = await _roleQueryService.GetForEdit(1);
 
             return Page();
         }

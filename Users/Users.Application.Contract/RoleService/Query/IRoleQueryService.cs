@@ -8,7 +8,7 @@ namespace Users.Application.Contract.RoleService.Query
 {
     public interface IRoleQueryService
     {
-        Task<EditRoleDto> GetForEdit(int id);
+        Task<EditRoleQueryModel> GetForEdit(int id);
         Task<List<PermissionQueryModel>> GetAllPermission();                                                                         
         bool CheckPermission(int userId, int permissionId);
         Task<List<RoleQueryModel>> GetAllRoles();

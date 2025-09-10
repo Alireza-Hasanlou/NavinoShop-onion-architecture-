@@ -17,7 +17,7 @@ namespace Users.Query.Service
             _roleRepository = roleRepository;
         }
 
-        public async Task<EditRoleDto> GetForEdit(int id)
+        public async Task<EditRoleQueryModel> GetForEdit(int id)
         {
            return await _roleRepository.GetForEdit(id);
         }

@@ -1628,6 +1628,7 @@
     <Content Include="wwwroot\assets\Adminassets\bower_components\jquery-ui\themes\humanity\images\ui-icons_f35f07_256x240.png" />
     <Content Include="wwwroot\assets\Adminassets\bower_components\jquery-ui\themes\humanity\images\ui-icons_ff7519_256x240.png" />
     <Content Include="wwwroot\assets\Adminassets\bower_components\jquery-ui\themes\humanity\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="wwwroot\assets\Adminassets\bower_components\jquery-ui\themes\humanity\images\UI3F82~1.PNG" />
     <Content Include="wwwroot\assets\Adminassets\bower_components\jquery-ui\themes\humanity\jquery-ui.css" />
     <Content Include="wwwroot\assets\Adminassets\bower_components\jquery-ui\themes\humanity\jquery-ui.min.css" />
     <Content Include="wwwroot\assets\Adminassets\bower_components\jquery-ui\themes\humanity\theme.css" />

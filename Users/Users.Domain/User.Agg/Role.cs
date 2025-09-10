@@ -21,22 +21,18 @@ namespace Users.Domain.User.Agg
 
         public void Edit(string title)
         {
+           
             Title = title;
         }
 
 
-        public void AddPermission(int permissionId)
+        public void AddPermission(int permissionId,int roleId)
         {
             if (RolePermissions.All(x => x.PermissionId != permissionId))
-                RolePermissions.Add(new RolePermission(Id, permissionId));
+                RolePermissions.Add(new RolePermission(roleId, permissionId));
         }
 
-        public void RemovePermission(Permission permission)
-        {
-            var rolePermission = RolePermissions.FirstOrDefault(x => x.PermissionId == permission.Id);
-            if (rolePermission != null)
-                RolePermissions.Remove(rolePermission);
-        }
+ 
 
         public void ClearPermissions()
         {

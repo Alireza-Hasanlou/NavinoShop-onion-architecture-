@@ -24,14 +24,14 @@ namespace Users.Application.Services
         public async Task<OperationResult> CreateAsync(CreateRoleCommand command, List<int> permissions)
         {
             if (await _roleRepository.ExistByAsync(t => t.Title == command.Title.Trim().ToLower()))
-                return new(false);
+                return new(false, ValidationMessages.DuplicatedMessage, "RoleTitle");
 
             var role = new Role(command.Title.Trim().ToLower());
             if (permissions.Count > 0)
             {
                 foreach (var permission in permissions)
                 {
-                    role.AddPermission(permission);
+                    role.AddPermission(permission, role.Id);
                 }
 
             }
@@ -43,31 +43,20 @@ namespace Users.Application.Services
             return new(false, ValidationMessages.SystemErrorMessage, "Role");
         }
 
+        public async Task<OperationResult> DeleteAsync(int id)
+        {
+            var role = await _roleRepository.GetByIdAsync(id);
+            if (role == null) return new(false, ValidationMessages.SystemErrorMessage);
+
+            var result = await _roleRepository.DeleteAsync(role);
+            if (result.Success) return new(true);
+
+            return new(false, result.Message, result.ModelName);
+        }
+
         public async Task<OperationResult> EditAsync(EditRoleCommand command, List<int> permissions)
         {
-            var role = await _roleRepository.GetByIdAsync(command.Id);
-
-            if (await _roleRepository.ExistByAsync(t => t.Title == command.Title.Trim().ToLower() && role.Id != command.Id))
-                return new(false, ValidationMessages.DuplicatedMessage, "Role");
-
-            role.Edit(command.Title.Trim().ToLower());
-
-            if (permissions.Count > 0)
-            {
-                role.ClearPermissions();
-
-                foreach (var permission in permissions)
-                {
-                    role.AddPermission(permission);
-                }
-
-            }
-
-            var result = await _roleRepository.SaveAsync();
-            if(result)
-            return new(true);
-
-            return new(false, ValidationMessages.SystemErrorMessage, "Role");
+            return await _roleRepository.EditAsync(command, permissions);
 
         }
 
