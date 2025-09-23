@@ -4,7 +4,7 @@
     
         public class BlogCategoryAdminPageQueryModel
         {
-            public int Id { get; set; }
+            public int parentId { get; set; }
             public string PageTitle { get; set; }
             public List<BlogCategoryAdminQueryModel> Categories { get; set; }
         }

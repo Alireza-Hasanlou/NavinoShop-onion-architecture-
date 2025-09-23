@@ -1,4 +1,5 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using NavinoShop.WebApplication.Utility.ViewModels;
 using Users.Application.Contract.RoleService.Command;
@@ -20,8 +21,6 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Roles
 
         [BindProperty]
         public CreateRoleCommand RoleTitle { get; set; }
-        [BindProperty]
-
         public List<PermissionQueryModel> Permissions { get; set; }
         public async Task<IActionResult> OnGet()
         {
@@ -33,18 +32,26 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Roles
         {
             if (!ModelState.IsValid)
             {
-                var errors = string.Join(Environment.NewLine,
-             ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
-                return new JsonResult(new { success = false, errors });
+                Permissions = await _roleQueryervice.GetAllPermission();
+                return Page();
             }
             if (permissions.Count < 1)
-                return new JsonResult(new { success = false, errors = ValidationMessages.ChoosePermission });
+            {
+                Permissions = await _roleQueryervice.GetAllPermission();
+                ModelState.AddModelError("RoleTitle.Title", ValidationMessages.ChoosePermission);
+                return Page();
 
+            }
             var result = await _roleCommandService.CreateAsync(RoleTitle, permissions);
             if (result.Success)
-                return new JsonResult(new { success = true });
+            {
+                TempData["Success"] = "افرودن نقش جدید با موفقیت انجام شد";
+                return RedirectToPage("Index");
+            }
 
-            return new JsonResult(new { success = false, errors = result.Message });
+            Permissions = await _roleQueryervice.GetAllPermission();
+            ModelState.AddModelError("RoleTitle.Title", result.Message);
+            return Page();
         }
 
 

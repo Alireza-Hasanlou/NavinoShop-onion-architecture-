@@ -24,7 +24,7 @@ namespace Utility.Shared.Insfrastructure
                 await SaveAsync();
                 return new OperationResult(true);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
                 return new OperationResult(false);

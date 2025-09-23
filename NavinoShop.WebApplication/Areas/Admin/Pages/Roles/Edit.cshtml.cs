@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
 using Users.Application.Contract.RoleService.Command;
 using Users.Application.Contract.RoleService.Query;
+using Utility.Shared.Application;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace NavinoShop.WebApplication.Areas.Admin.Pages.Roles
@@ -21,7 +22,6 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Roles
 
         [BindProperty]
         public EditRoleQueryModel Role { get; set; }
-        [BindProperty]
         public List<PermissionQueryModel> Permissions { get; set; }
         public async Task<IActionResult> OnGet(int RoleId)
         {
@@ -30,25 +30,35 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Roles
             return Page();
         }
 
-        public async Task<JsonResult> OnPost(List<int> permissions)
+        public async Task<IActionResult> OnPost(List<int> permissions)
         {
             if (!ModelState.IsValid)
             {
-                var errors = string.Join(Environment.NewLine,
-           ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
-                return new JsonResult(new { success = false, errors });
+                Permissions = await _roleQueryService.GetAllPermission();
+                return Page();
 
             }
-            if(permissions.Count < 1)
-                return new JsonResult(new { success = false, errors = "لطفا حداقل  یک دسترسی برای تقش انتخاب کنید" });
+            if (permissions.Count < 1)
+            {
+                Permissions = await _roleQueryService.GetAllPermission();
+                ModelState.AddModelError(nameof(Role), ValidationMessages.ChoosePermission);
+                return Page();
+
+
+            }
 
 
             var result = await _roleCommandService.EditAsync(new EditRoleCommand { Id = Role.Id, Title = Role.Title }, permissions);
             if (result.Success)
-                return new JsonResult(new { success = true });
+            {
+                TempData["success"] = "عملیات ویرایش با موفقیت انجام شد";
+                return RedirectToPage("Index");
+            }
 
-           
-            return new JsonResult(new { success = false, errors=result.Message });
+
+            Permissions = await _roleQueryService.GetAllPermission();
+            ModelState.AddModelError(nameof(Role.Title), result.Message);
+            return Page();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Blogs.Application.Contract.BlogCategoryService.Query
 {
     public partial interface IBlogCategoryQueryService
     {      
-            Task<BlogCategoryAdminPageQueryModel> GetCategoriesForAdminAsync(int id);
+            Task<BlogCategoryAdminPageQueryModel> GetCategoriesForAdminAsync(int parentId);
             Task<List<BlogCategoryForCreateBlogQueryModel>> GetCategoriesForAddBlogAsync(int id);
             Task<EditBlogCategoryDto> GetForEditAsync(int id);
             Task<bool> CheckCategoryHaveParentAsync(int id);

@@ -32,7 +32,7 @@ namespace NavinoShop.WebApplication.Services
 
         public async Task<OperationResult> EditAsync(EditRoleCommand command, List<int> permissions)
         {
-            var role = await _userContext.Roles.Where(i=>i.Id==command.Id).Include(r=>r.RolePermissions).SingleAsync();
+            var role = await _userContext.Roles.Where(i => i.Id == command.Id).Include(r => r.RolePermissions).SingleAsync();
 
             if (await ExistByAsync(t => t.Title == command.Title.Trim().ToLower() && role.Id != command.Id))
                 return new(false, ValidationMessages.DuplicatedMessage, "Role");
@@ -42,11 +42,11 @@ namespace NavinoShop.WebApplication.Services
             if (permissions.Count > 0)
             {
                 role.ClearPermissions();
-            
+
 
                 foreach (var permission in permissions)
                 {
-                    role.AddPermission(permission,role.Id);
+                    role.AddPermission(permission, role.Id);
                 }
 
             }
@@ -70,7 +70,7 @@ namespace NavinoShop.WebApplication.Services
         public async Task<List<RoleQueryModel>> GetAllRoles()
         {
             return await _userContext.Roles
-                .Where(r => r.Id != 1) // exclude administrutor
+                .Where(r => r.Id != 1) // exclude SiteManager
                 .Select(r => new RoleQueryModel
                 {
                     RoleId = r.Id,
@@ -83,59 +83,44 @@ namespace NavinoShop.WebApplication.Services
 
         public async Task<EditRoleQueryModel> GetForEdit(int id)
         {
-           
 
-            var rolePermissions = await _userContext.RolePermissions
-                .Where(r => r.RoleId == id)
-                .Include(r => r.Role)
-                .Include(r => r.Permission)
-                .ToListAsync();
 
-            if (!rolePermissions.Any())
+            var role = await _userContext.Roles.Where(i => i.Id == id).Select(item => new EditRoleQueryModel
+            {
+                Id = item.Id,
+                Title = item.Title,
+                permissions = item.RolePermissions.Select(i => i.PermissionId).ToList()
+            }).SingleOrDefaultAsync();
+
+            if (role == null)
                 return new();
 
+            return role;
 
-            var permissions = rolePermissions.Select(item => item.PermissionId).ToList();
-            if (!permissions.Any())
-                permissions = new List<int>();
 
-            var role = rolePermissions.First().Role;
-
-            return new EditRoleQueryModel
-            {
-                Id = role.Id,
-                Title = role.Title,
-                permissions = permissions
-            };
         }
 
 
         public async Task<UsersRoleQuryModel> GetUsersInRole(int roleId)
         {
-            var userRoles = await _userContext.UserRoles
-                .Where(r => r.RoleId == roleId)
-                .Include(r => r.Role)
-                .Include(r => r.User)
-                .ToListAsync();
 
-            if (!userRoles.Any())
-                return new();
 
-            var users = userRoles.Select(item => new UsersQueryModel
-            {
-                Userid = item.User.Id,
-                UserFullName = item.User.FullName,
-                Mobile = item.User.Mobile,
-                UserAvatar = item.User.Avatar
-            }).ToList();
-
-            var role = userRoles.First().Role;
-
-            return new UsersRoleQuryModel
+          var usersInRole = await  _userContext.Roles.Where(i => i.Id == roleId).Include(u => u.UserRoles).ThenInclude(u => u.User).Select(role => new UsersRoleQuryModel
             {
                 RoleTitle = role.Title,
-                Users = users
-            };
+                Users = role.UserRoles.Select(item => new UsersQueryModel
+                {
+                    Userid = item.User.Id,
+                    UserFullName = item.User.FullName,
+                    Mobile = item.User.Mobile,
+                    UserAvatar = item.User.Avatar
+                }).ToList()
+            }).SingleOrDefaultAsync();
+
+            if(usersInRole == null) return new();   
+            
+            return usersInRole;
+            
         }
     }
 }

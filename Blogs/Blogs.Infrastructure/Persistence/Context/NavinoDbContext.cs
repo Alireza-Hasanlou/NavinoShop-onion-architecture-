@@ -8,7 +8,7 @@ namespace Blogs.Infrastructure.Persistence.Context
 {
     public class NavinoDbContext : DbContext
     {
-        public NavinoDbContext(DbContextOptions options) : base(options)
+        public NavinoDbContext(DbContextOptions<NavinoDbContext> options) : base(options)
         {
         }
 

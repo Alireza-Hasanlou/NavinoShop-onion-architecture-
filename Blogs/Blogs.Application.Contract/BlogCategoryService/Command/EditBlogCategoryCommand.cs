@@ -9,6 +9,6 @@ namespace Blogs.Application.Contract.BlogCategoryService.Command
     public class EditBlogCategoryCommand:CreateBlogCategoryCommand
     {
         public int Id { get; set; }
-        public string ImageName { get; set; }
+        public string? ImageName { get; set; }
     }
 }

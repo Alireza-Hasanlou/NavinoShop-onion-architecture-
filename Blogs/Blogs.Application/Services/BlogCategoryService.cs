@@ -36,23 +36,23 @@ namespace Blogs.Application.Services
         {
             if (await _blogCategoryRepository.ExistByAsync(t => t.Title == command.Title.Trim()))
             {
-                return new OperationResult(false, ValidationMessages.DuplicatedMessage, "Title");
+                return new OperationResult(false, ValidationMessages.DuplicatedMessage, nameof(command.Title));
             }
-            var slug = SlugUtility.GenerateSlug(command.Slug);
+            var slug = command.Slug.GenerateSlug();
             if (await _blogCategoryRepository.ExistByAsync(t => t.Slug.Trim() == slug))
             {
-                return new OperationResult(false, ValidationMessages.DuplicatedMessage, "Slug");
+                return new OperationResult(false, ValidationMessages.DuplicatedMessage, nameof(command.Slug));
             }
             if (command.ImageFile == null || !FileSecurity.IsImage(command.ImageFile))
             {
-                return new OperationResult(false, ValidationMessages.ImageErrorMessage, "Image");
+                return new OperationResult(false, ValidationMessages.ImageErrorMessage, nameof(command.ImageFile));
             }
 
-            string imageName = await _fileService.UploadImage(command.ImageFile, FileDirectories.BlogCategoryImageDirectory);
+            string imageName = await _fileService.UploadImage(command.ImageFile, FileDirectories.BlogCategoryImageFolder);
             if (imageName == "")
-                return new(false, ValidationMessages.SystemErrorMessage, "Title");
-            _fileService.ResizeImage($"{FileDirectories.BlogCategoryImageDirectory}{imageName}", $"{FileDirectories.BlogImageDirectory100}{imageName}", 100);
-            _fileService.ResizeImage($"{FileDirectories.BlogCategoryImageDirectory}{imageName}", $"{FileDirectories.BlogImageDirectory400}{imageName}", 400);
+                return new(false, ValidationMessages.SystemErrorMessage, nameof(command.Title));
+            _fileService.ResizeImage(imageName, $"{FileDirectories.BlogCategoryImageFolder}", 100);
+            _fileService.ResizeImage(imageName, $"{FileDirectories.BlogCategoryImageFolder}", 400);
 
             BlogCategory blogCategory = new(command.Title, slug, imageName, command.ImageAlt, command.Parent);
 
@@ -60,11 +60,11 @@ namespace Blogs.Application.Services
             if (reslut.Success)
                 return new(true);
 
-            try { _fileService.DeleteImage(Path.Combine(FileDirectories.BlogImageDirectory, imageName)); } catch { }
-            try { _fileService.DeleteImage(Path.Combine(FileDirectories.BlogImageDirectory400, imageName)); } catch { }
-            try { _fileService.DeleteImage(Path.Combine(FileDirectories.BlogImageDirectory100, imageName)); } catch { }
+            try { _fileService.DeleteImage(Path.Combine(FileDirectories.BlogCategoryImageDirectory, imageName)); } catch { }
+            try { _fileService.DeleteImage(Path.Combine(FileDirectories.BlogCategoryImageDirectory400, imageName)); } catch { }
+            try { _fileService.DeleteImage(Path.Combine(FileDirectories.BlogCategoryImageDirectory100, imageName)); } catch { }
 
-            return new(false, ValidationMessages.SystemErrorMessage, "Title");
+            return new(false, ValidationMessages.SystemErrorMessage, nameof(command.Title));
 
         }
 
@@ -75,12 +75,12 @@ namespace Blogs.Application.Services
             if (await _blogCategoryRepository.ExistByAsync(b => b.Title.Trim() == command.Title.Trim() && b.Id != command.Id))
                 return new(false, ValidationMessages.DuplicatedMessage, command.Title);
 
-            var slug = SlugUtility.GenerateSlug(command.Slug);
+            var slug = command.Slug.GenerateSlug();
             if (await _blogCategoryRepository.ExistByAsync(t => t.Slug.Trim() == slug && t.Id != command.Id))
             {
                 return new OperationResult(false, ValidationMessages.DuplicatedMessage, "Slug");
             }
-            if (command.ImageFile == null || !FileSecurity.IsImage(command.ImageFile))
+            if (command.ImageFile != null && !FileSecurity.IsImage(command.ImageFile))
             {
                 return new OperationResult(false, ValidationMessages.ImageErrorMessage, "Image");
             }
@@ -88,11 +88,11 @@ namespace Blogs.Application.Services
             string oldImagName = command.ImageName;
             if (command.ImageFile != null)
             {
-                imageName = await _fileService.UploadImage(command.ImageFile, FileDirectories.BlogCategoryImageDirectory);
+                imageName = await _fileService.UploadImage(command.ImageFile, FileDirectories.BlogCategoryImageFolder);
                 if (imageName == "")
-                    return new(false, ValidationMessages.SystemErrorMessage, "Title");
-                _fileService.ResizeImage($"{FileDirectories.BlogCategoryImageDirectory}{imageName}", $"{FileDirectories.BlogCategoryImageDirectory100}{imageName}", 100);
-                _fileService.ResizeImage($"{FileDirectories.BlogCategoryImageDirectory}{imageName}", $"{FileDirectories.BlogCategoryImageDirectory400}{imageName}", 400);
+                    return new(false, ValidationMessages.SystemErrorMessage, nameof(command.Title));
+                _fileService.ResizeImage(imageName, $"{FileDirectories.BlogCategoryImageFolder}", 100);
+                _fileService.ResizeImage(imageName, $"{FileDirectories.BlogCategoryImageFolder}", 400);
             }
             var blogCategory = await _blogCategoryRepository.GetByIdAsync(command.Id);
             blogCategory.Edit(command.Title, slug, imageName, command.ImageAlt);
@@ -101,18 +101,16 @@ namespace Blogs.Application.Services
             {
                 if (command.ImageFile != null)
                 {
+
                     try { _fileService.DeleteImage(Path.Combine(FileDirectories.BlogCategoryImageDirectory, oldImagName)); } catch { }
                     try { _fileService.DeleteImage(Path.Combine(FileDirectories.BlogCategoryImageDirectory400, oldImagName)); } catch { }
                     try { _fileService.DeleteImage(Path.Combine(FileDirectories.BlogCategoryImageDirectory100, oldImagName)); } catch { }
+
                 }
                 return new(true);
             }
 
-            try { _fileService.DeleteImage(Path.Combine(FileDirectories.BlogCategoryImageDirectory, imageName)); } catch { }
-            try { _fileService.DeleteImage(Path.Combine(FileDirectories.BlogCategoryImageDirectory400, imageName)); } catch { }
-            try { _fileService.DeleteImage(Path.Combine(FileDirectories.BlogCategoryImageDirectory100, imageName)); } catch { }
-
-            return new(false, ValidationMessages.SystemErrorMessage, blogCategory.Title);
+            return new(false, ValidationMessages.SystemErrorMessage, nameof(blogCategory.Title));
 
         }
     }

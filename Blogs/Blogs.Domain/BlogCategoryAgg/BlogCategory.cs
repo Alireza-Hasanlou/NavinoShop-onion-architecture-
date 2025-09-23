@@ -12,7 +12,7 @@ namespace Blogs.Domain.BlogCategoryAgg
         public int Parent { get; private set; }
         public DateTime UpdateDate { get; private set; }
         public bool Active { get; private set; }
-    
+
         public BlogCategory(string title, string slug, string imageName, string imageAlt, int parent)
         {
             Title = title;
@@ -34,8 +34,15 @@ namespace Blogs.Domain.BlogCategoryAgg
         }
         public void ActivationChange()
         {
-            if (Active) Active = false;
-            Active = true;
+            if (Active==true)
+            {
+                Active = false;
+            }
+            else
+            {
+                Active = true;
+            }
+
 
         }
 

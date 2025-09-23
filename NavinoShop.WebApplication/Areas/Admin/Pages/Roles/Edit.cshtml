@@ -8,12 +8,6 @@
 <div class="row">
     <form method="post" role="form" asp-page="Edit">
 
-        @for (int i = 0; i < Model.Permissions.Count; i++)
-        {
-            <input type="hidden" asp-for="Permissions[i].Id" />
-            <input type="hidden" asp-for="Permissions[i].Title" />
-
-        }
         @if ( Model.Role.permissions.Count() > 0)
         {
             for (int i = 0; i < Model.Role.permissions.Count; i++)
@@ -35,11 +29,11 @@
                             <label for="exampleInputEmail1">عنوان تقش</label>
                             <input type="text" class="form-control" asp-for="Role.Title" id="RoleTitle" placeholder=" عنوان تقش را وارد کنید">
                         </div>
-                        <span class="text-danger"> @Html.ValidationSummary()</span>
+                        <span asp-validation-for="Role.Title" class="text-danger"></span>
                         <div class="box-footer">
-                            <button id="EditRoleBtn" type="button" class="btn btn-primary">ویرایش</button>
+                            <button id="EditRoleBtn" type="submit" class="btn btn-primary">ویرایش</button>
                         </div>
-                        <span id="resultMessage" class="text-danger"></span>
+                       
                     </div>
 
                 </div>
@@ -68,7 +62,7 @@
                         </div>
                     }
                 }
-
+                <span asp-validation-for="Role" class="text-danger"></span>
             </div>
         </div>
 

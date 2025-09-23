@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
 using Users.Application.Contract.RoleService.Command;
@@ -19,7 +19,7 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Roles
         {
             var result = await _roleCommandService.DeleteAsync(id);
             if (result.Success)
-                return new JsonResult(new {success=true});
+                return new JsonResult(new {success=true,title="نقش مورد نظر با موفقیت حذف شد"});
 
             return new JsonResult(new { success = false, errors = result.Message });
 

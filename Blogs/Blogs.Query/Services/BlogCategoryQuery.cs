@@ -2,6 +2,7 @@
 using Blogs.Application.Contract.BlogCategoryService.Query;
 using Blogs.Domain.BlogCategoryAgg;
 using Microsoft.EntityFrameworkCore;
+using Shared.Application;
 using Utility.Shared.Application;
 
 namespace Blogs.Query.Services
@@ -33,19 +34,19 @@ namespace Blogs.Query.Services
 
         }
 
-        public async Task<BlogCategoryAdminPageQueryModel> GetCategoriesForAdminAsync(int id)
+        public async Task<BlogCategoryAdminPageQueryModel> GetCategoriesForAdminAsync(int parentId)
         {
             BlogCategoryAdminPageQueryModel model = new()
             {
-                Id = id,
+                parentId = parentId,
 
-                Categories = await _repository.GetAllBy(i => i.Parent == id).Select(b => new BlogCategoryAdminQueryModel
+                Categories = await _repository.GetAllBy(i => i.Parent == parentId).Select(b => new BlogCategoryAdminQueryModel
                 {
                     Id = b.Id,
                     Title = b.Title,
                     Active = b.Active,
                     CreationDate = b.CreateDate.ToPersainDate(),
-                    ImageName = b.ImageName,
+                    ImageName = FileDirectories.BlogCategoryImageDirectory100+b.ImageName,
                     UpdateDate = b.UpdateDate.ToPersainDate(),
                 }).ToListAsync()
 
@@ -53,9 +54,9 @@ namespace Blogs.Query.Services
 
 
 
-            if (id > 0)
+            if (parentId > 0)
             {
-                var blogCategory = await _repository.GetByIdAsync(id);
+                var blogCategory = await _repository.GetByIdAsync(parentId);
                 model.PageTitle = $" لیست زیردسته های  {blogCategory.Title}";
             }
             else
@@ -79,7 +80,7 @@ namespace Blogs.Query.Services
                 Slug = blogCategory.Slug,
                 Parent = blogCategory.Parent,
                 ImageAlt = blogCategory.ImageAlt,
-                ImageName = blogCategory.ImageName,
+                ImageName =  blogCategory.ImageName,
                 ImageFile = null
             };
         }

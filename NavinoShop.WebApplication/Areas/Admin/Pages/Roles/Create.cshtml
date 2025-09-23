@@ -29,11 +29,11 @@
                             <label for="exampleInputEmail1">عنوان تقش</label>
                             <input type="text" class="form-control" asp-for="@Model.RoleTitle.Title" id="RoleTitle" placeholder=" عنوان تقش را وارد کنید">
                         </div>
-
+                        <span asp-validation-for="RoleTitle.Title" class="text-danger"></span>
                         <div class="box-footer">
-                            <button id="CreateRoleBtn" type="button" class="btn btn-primary">ارسال</button>
+                            <button id="CreateRoleBtn" type="submit" class="btn btn-primary">ارسال</button>
                         </div>
-                        <span id="resultMessage" class="text-danger"></span>
+                       
                     </div>
 
                 </div>
@@ -46,10 +46,11 @@
                 <div class="box-header with-border">
                     <h4>دسترسی های نقش را مشخص کنید</h4>
                 </div>
+                <br />
                 @if (Model.Permissions.Count() > 0)
                 {
                     foreach (var item in Model.Permissions)
-                    {
+                    {  
                         <div>
 
 
@@ -64,9 +65,12 @@
                                 @item.Title
                             </label>
                         </div>
+                      <br />
                     }
                 }
+          
             </div>
+
         </div>
 
     </form>

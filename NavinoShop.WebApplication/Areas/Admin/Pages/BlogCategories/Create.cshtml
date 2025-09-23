@@ -1,0 +1,71 @@
+﻿@page
+@model NavinoShop.WebApplication.Areas.Admin.Pages.BlogCategories.CreateModel
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["title"] = "ایجاد دسته بندی ";
+
+}
+
+<div class="row">
+    <form method="post"  asp-page="Create" enctype="multipart/form-data">
+
+      <input type="hidden" asp-for="createBlogCategory.Parent"/>
+        <div class="col-md-6">
+            <div class="box box-primary ">
+                <div class="box-header with-border">
+                </div>
+
+                <div class="box-body">
+                    <div class="col-md-6 ">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">عنوان دسته بندی </label>
+                            <input asp-for="createBlogCategory.Title" id="Title" type="text" onchange="makeSlug('Title','Slug')" class="form-control">
+                            <span asp-validation-for="createBlogCategory.Title" class="text-danger"></span>
+                        </div>
+                      
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">سربرگ </label>
+                            <input asp-for="createBlogCategory.Slug" id="Slug" type="text" class="form-control">
+                            <span asp-validation-for="createBlogCategory.Slug" class="text-danger"></span>
+                        </div>
+                   
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Alt تصویر </label>
+                            <input asp-for="createBlogCategory.ImageAlt" type="text" class="form-control" >
+                            <span asp-validation-for="createBlogCategory.ImageAlt" class="text-danger"></span>
+                        </div>
+                       
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-primary">افزودن</button>
+                        </div>
+                        
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class=" col-md-6">
+            <div id="imagebox" class="box box-primary ">
+                <div class="box-header with-border">
+                    <h4>لطفا یک تصویر برای دسته بندی انتخاب کنید</h4>
+                </div>
+                <div id="img-container">
+                    <img id="img" />
+                    <p id="text">هنوز تصویری اضافه نشده</p>
+                </div>
+                <label for="file-upload" class="custom-file-upload">
+                    افزودن تصویر
+                </label>
+                <input asp-for="createBlogCategory.ImageFile" id="file-upload" type="file" accept="image/png, image/jpeg" />
+                <span asp-validation-for="createBlogCategory.ImageFile" class="text-danger"></span>
+                <br />
+                <br />
+            </div>
+        </div>
+
+    </form>
+</div>
+

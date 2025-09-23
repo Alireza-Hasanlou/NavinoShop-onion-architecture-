@@ -38,7 +38,7 @@ namespace Blogs.Application.Services
             {
                 return new OperationResult(false, ValidationMessages.DuplicatedMessage, "Title");
             }
-            var slug = SlugUtility.GenerateSlug(command.Slug);
+            var slug = command.Slug.GenerateSlug();
             if (await _blogRepository.ExistByAsync(t => t.Slug.Trim() == slug))
             {
                 return new OperationResult(false, ValidationMessages.DuplicatedMessage, "Slug");
@@ -77,7 +77,7 @@ namespace Blogs.Application.Services
             if (await _blogRepository.ExistByAsync(t => t.Title.Trim() == command.Title.Trim() && t.Id != command.Id))
                 return new(false, ValidationMessages.DuplicatedMessage, command.Title);
 
-            var slug = SlugUtility.GenerateSlug(command.Slug);
+            var slug = command.Slug.GenerateSlug();
             if (await _blogRepository.ExistByAsync(s => s.Slug.Trim() == slug && s.Id != command.Id))
                 return new(false, ValidationMessages.DuplicatedMessage, command.Slug);
 
