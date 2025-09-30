@@ -26,9 +26,9 @@ namespace Blogs.Infrastructure.Persistence.Repository
             return await _context.Blogs.SingleOrDefaultAsync(s => s.Slug == slug);
         }
 
-        public async Task<EditBlogDto> GetForEdit(int id)
+        public async Task<EditBlogQueryModel> GetForEdit(int id)
         {
-            return await _context.Blogs.Where(i => i.Id == id).Select(b => new EditBlogDto
+            return await _context.Blogs.Where(i => i.Id == id).Select(b => new EditBlogQueryModel
             {
                 Id = b.Id,
                 CategoryId = b.CategoryId,

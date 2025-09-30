@@ -52,16 +52,20 @@
                 <div class="box-header with-border">
                     <h4>لطفا یک تصویر برای دسته بندی انتخاب کنید</h4>
                 </div>
+
                 <div id="img-container">
-                    <img id="img" />
-                    <p id="text">هنوز تصویری اضافه نشده</p>
+                    <label for="upload-file">
+                        <div class="picture-uploader" data-url="">
+                            <div class="picture__image">Choose an image</div>
+
+                            <input asp-for="@Model.createBlogCategory.ImageFile" type="file" id="upload-file" class="picture__input" accept="image/*" />
+                        </div>
+                    </label>
+
                 </div>
-                <label for="file-upload" class="custom-file-upload">
-                    افزودن تصویر
-                </label>
-                <input asp-for="createBlogCategory.ImageFile" id="file-upload" type="file" accept="image/png, image/jpeg" />
                 <span asp-validation-for="createBlogCategory.ImageFile" class="text-danger"></span>
                 <br />
+               
                 <br />
             </div>
         </div>

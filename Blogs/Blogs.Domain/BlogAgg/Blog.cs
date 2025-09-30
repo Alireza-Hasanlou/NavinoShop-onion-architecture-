@@ -57,8 +57,14 @@ namespace Blogs.Domain.BlogAgg
         }
         public void ActivationChange()
         {
-            if (Active) Active = false;
-            Active = true;
+            if (Active==true)
+            {
+                Active = false;
+            }
+            else
+            {
+                Active = true;
+            }
 
         }
         public void VisitPlus()

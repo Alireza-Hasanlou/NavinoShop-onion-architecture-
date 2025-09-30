@@ -2,7 +2,7 @@
 
 namespace Blogs.Application.Contract.BlogApplication.Query
 {
-    public class EditBlogDto: EditBlogCommand
+    public class EditBlogQueryModel: EditBlogCommand
     {
     }
 }

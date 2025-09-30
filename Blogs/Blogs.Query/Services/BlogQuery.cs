@@ -31,13 +31,14 @@ namespace Blogs.Query.Services
             if (CategoryId > 0)
             {
                 var category = await _categoryRepository.GetByIdAsync(CategoryId);
-                model.PageTitle = $"مفالات مربوط به دسته {category.Title}";
+                model.PageTitle = $"مقالات مربوط به دسته {category.Title}";
                 model.Blogs = await _blogRepository.GetAllBy(b => b.CategoryId == CategoryId || b.SubCategoryId == CategoryId).Select(a => new BlogQueryModel
                 {
                     CategoryId = a.CategoryId,
-                    Active = true,
+                    Active = a.Active,
                     ImageName = a.ImageName,
                     Writer = a.Writer,
+                    ShorDescription=a.ShortDescription,
                     CreationDate = a.CreateDate.ToPersainDate(),
                     Title = a.Title,
                     UpdateDate = a.UpdateDate.ToPersainDate(),
@@ -50,15 +51,16 @@ namespace Blogs.Query.Services
             }
             else
             {
-                model.PageTitle = "همه مفالات";
+                model.PageTitle = "همه مقالات";
                 model.Blogs = await _blogRepository.GetAllAsync().Select(a => new BlogQueryModel
                 {
                     CategoryId = a.CategoryId,
-                    Active = true,
+                    Active = a.Active,
                     ImageName = a.ImageName,
                     Writer = a.Writer,
                     CreationDate = a.CreateDate.ToPersainDate(),
                     Title = a.Title,
+                    ShorDescription=a.ShortDescription,
                     UpdateDate = a.UpdateDate.ToPersainDate(),
                     UserId = a.UserId,
                     VisitCount = a.VisitCount,
@@ -73,14 +75,14 @@ namespace Blogs.Query.Services
 
         }
 
-        public async Task<EditBlogDto> GetForEditAsync(int id)
+        public async Task<EditBlogQueryModel> GetForEditAsync(int id)
         {
             var blog = await _blogRepository.GetByIdAsync(id);
 
             if (blog == null)
                 return null;
 
-            return new EditBlogDto
+            return new EditBlogQueryModel
             {
                 Id = blog.Id,
                 Title = blog.Title,

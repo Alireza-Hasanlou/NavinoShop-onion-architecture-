@@ -5,6 +5,7 @@ using Shared.Application;
 using Shared.Application.Service;
 
 using Utility.Shared.Application;
+using Blogs.Domain.BlogCategoryAgg;
 
 namespace Blogs.Application.Services
 {
@@ -12,11 +13,13 @@ namespace Blogs.Application.Services
     {
         private readonly IBlogRepository _blogRepository;
         private readonly IFileService _fileService;
+        private readonly IBlogCategoryRepository _blogCategoryRepository;
 
-        public BlogService(IBlogRepository blogRepository, IFileService fileService)
+        public BlogService(IBlogRepository blogRepository, IFileService fileService, IBlogCategoryRepository blogCategoryRepository)
         {
             _blogRepository = blogRepository;
             _fileService = fileService;
+            _blogCategoryRepository = blogCategoryRepository;
         }
 
         public async Task<OperationResult> ChangeActivationAsync(int id)
@@ -25,32 +28,41 @@ namespace Blogs.Application.Services
             var blog = await _blogRepository.GetByIdAsync(id);
             if (blog == null)
             {
-                return new OperationResult(false, "Blog is Not found ", "Blog");
+                return new OperationResult(false, "بلاگ پیدا نشد ", "Blog");
             }
 
             blog.ActivationChange();
-            return new OperationResult(true, "ActivationChanged ", "Blog");
+            await _blogRepository.SaveAsync();
+
+            return new OperationResult(true, "Blog");
         }
 
         public async Task<OperationResult> CreateAsync(CreateBlogCommand command)
         {
             if (await _blogRepository.ExistByAsync(t => t.Title == command.Title.Trim()))
             {
-                return new OperationResult(false, ValidationMessages.DuplicatedMessage, "Title");
+                return new OperationResult(false, ValidationMessages.DuplicatedMessage, nameof(command.Title));
             }
             var slug = command.Slug.GenerateSlug();
             if (await _blogRepository.ExistByAsync(t => t.Slug.Trim() == slug))
             {
-                return new OperationResult(false, ValidationMessages.DuplicatedMessage, "Slug");
+                return new OperationResult(false, ValidationMessages.DuplicatedMessage, nameof(command.Slug));
             }
             if (command.ImageFile == null || !FileSecurity.IsImage(command.ImageFile))
             {
-                return new OperationResult(false, ValidationMessages.ImageErrorMessage, "Image");
+                return new OperationResult(false, ValidationMessages.ImageErrorMessage, nameof(command.ImageFile));
             }
+            if (command.CategoryId < 1 ||
+               await _blogCategoryRepository.ExistByAsync(c => c.Id == command.CategoryId && c.Parent == 0) == false)
+                return new OperationResult(false, ValidationMessages.ParentCategoryMessage, nameof(command.CategoryId));
 
-            string imageName = await _fileService.UploadImage(command.ImageFile, FileDirectories.BlogImageDirectory);
+            if (command.SubCategoryId < 1 ||
+               await _blogCategoryRepository.ExistByAsync(c => c.Id == command.SubCategoryId && c.Parent != 0) == false)
+                return new OperationResult(false, ValidationMessages.ChildCategoryMessage, nameof(command.SubCategoryId));
+
+            string imageName = await _fileService.UploadImage(command.ImageFile, FileDirectories.BlogImageFolder);
             if (imageName == "")
-                return new(false, ValidationMessages.SystemErrorMessage, "Title");
+                return new(false, ValidationMessages.SystemErrorMessage, nameof(command.ImageFile));
             _fileService.ResizeImage(imageName, FileDirectories.BlogImageFolder, 400);
             _fileService.ResizeImage(imageName, FileDirectories.BlogImageFolder, 100);
             Blog blog = new Blog(command.Title, command.UserId, command.Writer,
@@ -68,7 +80,7 @@ namespace Blogs.Application.Services
             try { _fileService.DeleteImage($"{FileDirectories.BlogImageDirectory400}{imageName}"); } catch { }
             try { _fileService.DeleteImage($"{FileDirectories.BlogImageDirectory100}{imageName}"); } catch { }
 
-            return new(false, ValidationMessages.SystemErrorMessage, "Title");
+            return new(false, ValidationMessages.SystemErrorMessage, nameof(command.ImageFile));
         }
 
         public async Task<OperationResult> EditAsync(EditBlogCommand command)
@@ -81,15 +93,22 @@ namespace Blogs.Application.Services
             if (await _blogRepository.ExistByAsync(s => s.Slug.Trim() == slug && s.Id != command.Id))
                 return new(false, ValidationMessages.DuplicatedMessage, command.Slug);
 
+            if (command.CategoryId < 1 ||
+              await _blogCategoryRepository.ExistByAsync(c => c.Id == command.CategoryId && c.Parent == 0) == false)
+                return new OperationResult(false, ValidationMessages.ParentCategoryMessage, nameof(command.CategoryId));
+
+            if (command.SubCategoryId < 1 ||
+               await _blogCategoryRepository.ExistByAsync(c => c.Id == command.SubCategoryId && c.Parent != 0) == false)
+                return new OperationResult(false, ValidationMessages.ChildCategoryMessage, nameof(command.SubCategoryId));
             if (command.ImageFile != null && !FileSecurity.IsImage(command.ImageFile))
-                return new(false, ValidationMessages.ImageErrorMessage, "ImageFile");
+                return new(false, ValidationMessages.ImageErrorMessage, nameof(command.ImageFile));
             string imageName = command.ImageName;
             string oldImagName = command.ImageName;
             if (command.ImageFile != null)
             {
                 imageName = await _fileService.UploadImage(command.ImageFile, FileDirectories.BlogImageDirectory);
                 if (imageName == "")
-                    return new(false, ValidationMessages.SystemErrorMessage, "Title");
+                    return new(false, ValidationMessages.SystemErrorMessage, nameof(command.ImageFile));
                 _fileService.ResizeImage(imageName, FileDirectories.BlogImageFolder, 400);
                 _fileService.ResizeImage(imageName, FileDirectories.BlogImageFolder, 100);
             }

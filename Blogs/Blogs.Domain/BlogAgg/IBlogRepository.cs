@@ -11,6 +11,6 @@ namespace Blogs.Domain.BlogAgg
     public interface IBlogRepository:IGenericRepository<Blog,int>
     {
        Task< Blog> GetBySlug(string slug);
-        Task< EditBlogDto> GetForEdit(int id);
+        Task< EditBlogQueryModel> GetForEdit(int id);
     }
 }

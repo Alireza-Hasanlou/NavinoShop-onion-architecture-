@@ -1,98 +1,28 @@
-﻿$('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
-    checkboxClass: 'icheckbox_flat-green',
-    radioClass: 'iradio_flat-green'
-})
-//Role DataTable
+﻿// ================== iCheck (چک‌باکس و رادیو) ==================
+$('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({ checkboxClass: 'icheckbox_flat-green', radioClass: 'iradio_flat-green' })
+// ================== DataTable عمومی ==================
 $('.DataTable').DataTable({
-    'paging': true,
+    paging: true,
     autoWidth: true,
-    'lengthChange': true,
-    'searching': true,
-    lengthChange: false, 
-    'ordering': true,
-    'info': false,
-    'autoWidth': true,
+    lengthChange: false,
+    searching: true,
+    ordering: true,
+    info: false,
     language: {
         search: "جستجو:",
         paginate: {
             next: "بعدی",
             previous: "قبلی"
-
         }
     }
-})
+});
 
-//Create Role
-//$("#CreateRoleBtn").click(function (e) {
-//    e.preventDefault();
-
-
-//    var formData = {
-//        "RoleTitle.Title": $("#RoleTitle").val(),
-//        "permissions": $(".flat-red:checked").map(function () {
-//            return parseInt($(this).val());
-//        }).get()
-//    };
-
-//    $.ajax({
-//        url: "/Admin/Roles/Create",
-//        type: "POST",
-//        data: formData,
-//        success: function (res) {
-//            if (res.success) {
-//                AlerSweetWithTimer("عملیات موفق بود", "success", "center", "/Admin/Roles/AllRoles");
-//            } else {
-//                if (res.errors) {
-
-//                    $('#resultMessage').text(res.errors);
-
-//                }
-
-//            }
-//        },
-//        error: function () {
-//            AlerSweetWithTimer("خطای سمت سرور", "error", "center");
-//        }
-//    });
-
-//});
-//EditRole
-//$("#EditRoleBtn").click(function (e) {
-//    e.preventDefault();
+$(document).ready(function () {
+    $(".picture-uploader").imageUploader();
+});
 
 
-//    var formData = {
-//        "Role.Title": $("#RoleTitle").val(),
-//        "Role.Id": $("#RoleId").val(),
-//        "permissions": $(".flat-red:checked").map(function () {
-//            return parseInt($(this).val());
-//        }).get()
-//    };
-
-//    $.ajax({
-//        url: "/Admin/Roles/Edit",
-//        type: "POST",
-//        data: formData,
-//        success: function (res) {
-//            if (res.success) {
-//                AlerSweetWithTimer("عملیات موفق بود", "success", "center", "/Admin/Roles/AllRoles");
-//            } else {
-//                if (res.errors) {
-
-//                    $('#resultMessage').text(res.errors);
-
-//                }
-
-//            }
-//        },
-//        error: function () {
-//            AlerSweetWithTimer("خطای سمت سرور", "error", "center");
-//        }
-//    });
-
-//});
-
-
+// ================== نمایش کاربران یک نقش ==================
 function renderRoleUsersModal(res) {
     if (!res || !res.users || res.users.length === 0) {
         Swal.fire({
@@ -127,7 +57,7 @@ function renderRoleUsersModal(res) {
             </table>
         </div>
     `;
-    
+
     Swal.fire({
         title: "لیست کاربران",
         html: tableHtml,
@@ -139,25 +69,23 @@ function renderRoleUsersModal(res) {
         }
     });
 
-    // فعال کردن DataTable
- 
-        $('#swalTable').DataTable({
-            paging: true,
-            searching: true,
-            lengthChange: false,
-            info: false,
-            language: {
-                search: "جستجو:",
-                paginate: {
-                    next: "بعدی",
-                    previous: "قبلی"
-                }
+    // فعال کردن DataTable داخل مودال
+    $('#swalTable').DataTable({
+        paging: true,
+        searching: true,
+        lengthChange: false,
+        info: false,
+        language: {
+            search: "جستجو:",
+            paginate: {
+                next: "بعدی",
+                previous: "قبلی"
             }
-        });
- 
+        }
+    });
 }
 
-// تابع Ajax فقط دیتا می‌گیرد و به تابع بالا می‌دهد
+// Ajax برای گرفتن لیست کاربران نقش
 function ShowRoleUsers(roleId) {
     $.ajax({
         url: "/Admin/Roles/UsersInRole",
@@ -172,25 +100,54 @@ function ShowRoleUsers(roleId) {
     });
 }
 
+//// تست رندر مودال
+//$("#testRenderBtn").click(function () {
+//    const fakeData = {
+//        roleTitle: "ادمین",
+//        users: [
+//            { userAvatar: "default.png", userFullName: "علی رضایی", mobile: "09123456789" },
+//            { userAvatar: "default.png", userFullName: "مینا احمدی", mobile: "09351234567" }
+//        ]
+//    };
+//    renderRoleUsersModal(fakeData);
+//});
 
-$("#testRenderBtn").click(function () {
-    const fakeData = {
-        roleTitle: "ادمین",
-        users: [
-            { userAvatar: "default.png", userFullName: "علی رضایی", mobile: "09123456789" },
-            { userAvatar: "default.png", userFullName: "مینا احمدی", mobile: "09351234567" }
-        ]
-    };
-    renderRoleUsersModal(fakeData);
-});
-
+// ================== تولید Slug ==================
 function makeSlug(source, destination) {
-
     var titleStr = $('#' + source).val();
     titleStr = titleStr.replace(/^\s+|\s+$/g, '');
     titleStr = titleStr.toLowerCase();
-    titleStr = titleStr.replace(/[^a-z0-9_\s-ءاأإآؤئبتثجحخدذرزسشصضطظعغفقكلمنهويةى]#u/, '')
+    titleStr = titleStr.replace(/[^a-z0-9_\s-ءاأإآؤئبتثجحخدذرزسشصضطظعغفقكلمنهويةى]/g, '')
         .replace(/\s+/g, '-')
         .replace(/-+/g, '-');
     $('#' + destination).val(titleStr);
 }
+
+// ================== بارگذاری زیرگروه‌ها (Ajax SubCategories) ==================
+$(function () {
+    $(document).on("change", "#categoryId", function () {
+        var categoryId = $(this).val();
+        var $subCategory = $("#subCategoryId");
+
+        if (categoryId) {
+            $.ajax({
+                url: '/Admin/Blogs/Create?handler=SubCategories', 
+                type: 'GET',
+                data: { categoryId: categoryId },
+                success: function (data) {
+                    $subCategory.empty();
+                    $subCategory.append('<option value="0">انتخاب کنید</option>');
+                    $.each(data, function (i, sub) {
+                        $subCategory.append('<option value="' + sub.id + '">' + sub.title + '</option>');
+                    });
+                },
+                error: function () {
+                    alert("خطا در بارگذاری زیرگروه‌ها");
+                }
+            });
+        } else {
+            $subCategory.empty();
+            $subCategory.append('<option value="0">ابتدا سر گروه را انتخاب کنید</option>');
+        }
+    });
+});

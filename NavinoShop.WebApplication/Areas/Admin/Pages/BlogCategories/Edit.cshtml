@@ -5,11 +5,11 @@
 @{
     Layout = "_AdminLayout";
     ViewData["title"] = "ویرایش دسته بندی ";
-
+    var imgeUrl = FileDirectories.BlogCategoryImageDirectory400 + Model.EditBlogCategory.ImageName;
 }
 
 <div class="row">
-    <form method="post"  asp-page="Edit" enctype="multipart/form-data">
+    <form method="post" asp-page="Edit" enctype="multipart/form-data">
         <input type="hidden" asp-for="EditBlogCategory.Parent" />
         <input type="hidden" asp-for="EditBlogCategory.Id" />
         <input type="hidden" asp-for="EditBlogCategory.ImageName" />
@@ -38,7 +38,7 @@
                         <div class="box-footer">
                             <button type="submit" class="btn btn-primary">ویرایش</button>
                         </div>
-                        
+
                     </div>
 
                 </div>
@@ -51,21 +51,23 @@
                 <div class="box-header with-border">
                     <h4>لطفا یک تصویر برای دسته بندی انتخاب کنید</h4>
                 </div>
-                <div id="img-container">
-                    <img id="img" src="@FileDirectories.BlogCategoryImageDirectory400@Model.EditBlogCategory.ImageName" />
-                    <p id="text">هنوز تصویری اضافه نشده</p>
+                <div  id="img-container">
+                    <label for="upload-file">
+                        <div class="picture-uploader" data-url="@imgeUrl">
+                            <div class="picture__image">Choose an image</div>
+
+                            <input asp-for="@Model.EditBlogCategory.ImageFile" type="file" id="upload-file" class="picture__input" accept="image/*" />
+                        </div>
+                    </label>
+             
+
+                  
+
                 </div>
-                <label for="file-upload" class="custom-file-upload">
-                    افزودن تصویر
-                </label>
-                <input asp-for="EditBlogCategory.ImageFile" id="file-upload" type="file" accept="image/png, image/jpeg" />
-                <span asp-validation-for="EditBlogCategory.ImageFile" class="text-danger"></span>
-                <br />
-                <br />
+               
+                <br /> <br />
             </div>
-           
         </div>
 
     </form>
 </div>
-

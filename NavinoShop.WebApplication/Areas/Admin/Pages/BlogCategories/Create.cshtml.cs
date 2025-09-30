@@ -41,11 +41,11 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.BlogCategories
             if (result.Success)
             {
                 TempData["success"] = "افرودن دسته بندی جدید با موفقیت انجام شد";
-                return RedirectToPage("Index", new {parentId=createBlogCategory.Parent});
+                return RedirectToPage("Index", new { Id = createBlogCategory.Parent});
 
             }
 
-            ModelState.AddModelError("createBlogCategory.ImageFile", result.Message);
+            ModelState.AddModelError($"createBlogCategory.{result.ModelName}", result.Message);
             return Page();
 
 

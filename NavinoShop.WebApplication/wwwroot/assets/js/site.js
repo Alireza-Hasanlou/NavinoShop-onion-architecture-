@@ -37,19 +37,57 @@ document.addEventListener("DOMContentLoaded", function () {
 // -------------------------
 // 🖼 File Upload Preview
 // -------------------------
+(function ($) {
+    $.fn.imageUploader = function (options) {
+        const defaults = {
+            text: "لطفا یک عکس انتخاب کنید"
+        };
 
-document.addEventListener("DOMContentLoaded", function () {
-    const file = document.getElementById("file-upload");
-    const img = document.getElementById("img");
-    const text = document.getElementById("text");
+        const settings = $.extend({}, defaults, options);
 
-    if (file && img && text) {
-        file.addEventListener("change", function () {
-            img.src = URL.createObjectURL(this.files[0]);
-            text.innerHTML = this.files[0].name;
+        return this.each(function () {
+            const $container = $(this);
+            const $inputFile = $container.find("input[type='file']");
+            const $pictureImage = $container.find(".picture__image");
+
+            // تابع نمایش عکس
+            function showImage(src) {
+                const $img = $("<img>", {
+                    src: src,
+                    class: "picture__img"
+                });
+                $pictureImage.empty().append($img);
+            }
+
+            // اگر data-url وجود داشت → عکس رو نمایش بده
+            const dataUrl = $container.data("url");
+            if (dataUrl && dataUrl.trim() !== "") {
+                showImage(dataUrl);
+            } else {
+                $pictureImage.text(settings.text);
+            }
+
+            // وقتی روی کل container کلیک شد → input باز شه
+            $container.on("click", function () {
+                $inputFile.trigger("click");
+            });
+
+            // وقتی فایل جدید انتخاب شد
+            $inputFile.on("change", function () {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        showImage(e.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    $pictureImage.text(settings.text);
+                }
+            });
         });
-    }
-});
+    };
+})(jQuery);
 
 
 // -------------------------

@@ -50,7 +50,7 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Roles
             }
 
             Permissions = await _roleQueryervice.GetAllPermission();
-            ModelState.AddModelError("RoleTitle.Title", result.Message);
+            ModelState.AddModelError($"RoleTitle.{result.ModelName}", result.Message);
             return Page();
         }
 

@@ -14,12 +14,12 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.BlogCategories
             _blogCategoryQueryService = blogCategoryQueryService;
         }
         public BlogCategoryAdminPageQueryModel BlogCategories { get; set; }
-        public async Task<IActionResult> OnGet(int parentId = 0)
+        public async Task<IActionResult> OnGet(int Id )
         {
-            if (parentId > 0 && await _blogCategoryQueryService.CheckCategoryHaveParentAsync(parentId))
-                return NotFound();
+            if (Id > 0 && await _blogCategoryQueryService.CheckCategoryHaveParentAsync(Id))
+                return RedirectToPage("index");
 
-            BlogCategories = await _blogCategoryQueryService.GetCategoriesForAdminAsync(parentId);
+            BlogCategories = await _blogCategoryQueryService.GetCategoriesForAdminAsync(Id);
             return Page();
         }
     }

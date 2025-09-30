@@ -9,6 +9,6 @@ namespace Blogs.Application.Contract.BlogApplication.Query
     public interface IBlogQueryService
     {
         Task<AdminBlogPageQueryModel> GetBlogsForAdmin(int CategoryId);
-        Task<EditBlogDto> GetForEditAsync(int id);
+        Task<EditBlogQueryModel> GetForEditAsync(int id);
     }
 }

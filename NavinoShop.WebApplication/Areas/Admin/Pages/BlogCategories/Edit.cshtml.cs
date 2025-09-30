@@ -35,10 +35,10 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.BlogCategories
             if (result.Success)
             {
                 TempData["success"] = "عملیات ویرایش با موفقیت انجام شد";
-                return RedirectToPage("Index", new { parentId = EditBlogCategory.Parent });
+                return RedirectToPage("Index", new { Id = EditBlogCategory.Parent });
             }
 
-            ModelState.AddModelError("EditBlogCategory.ImageFile", result.Message);
+            ModelState.AddModelError($"EditBlogCategory.{result.ModelName}", result.Message);
             return Page();
 
         }

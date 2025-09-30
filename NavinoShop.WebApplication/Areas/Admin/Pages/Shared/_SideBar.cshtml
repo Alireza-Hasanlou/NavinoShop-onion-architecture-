@@ -49,7 +49,7 @@
             </li>
 
             <li class="@(currentPath.Contains("/admin/blogcategories") || currentPath.Contains("/admin/blogs") ? "active" : "") treeview">
-                <a href="#">
+                <a >
                     <i class="fa fa-link"></i> <span>مدیریت مقالات</span>
                     <span class="pull-left-container">
                         <i class="fa fa-angle-right pull-left"></i>
@@ -59,7 +59,7 @@
                     <li class="@(currentPath.Contains("/admin/blogcategories") ? "active" : "")">
                         <a href="/Admin/BlogCategories/Index">دسته بندی مقالات</a>
                     </li>
-                    <li><a href="/Admin/Blogs">مدیریت مقالات</a></li>
+                    <li class="@(currentPath.Contains("/admin/blogs") ? "active" : "")"><a href="/Admin/Blogs">مدیریت مقالات</a></li>
                 </ul>
             </li>
         </ul>

@@ -6,7 +6,7 @@
         public string Title { get; set; }
         public string ImageName { get; set; }
         public int CategoryId { get; set; }
-        public string CategoryTitle { get; set; }
+        public string ShorDescription { get; set; }
         public int VisitCount { get; set; }
         public long UserId { get; set; }
         public string Writer { get; set; }

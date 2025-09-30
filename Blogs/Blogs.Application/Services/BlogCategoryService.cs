@@ -78,11 +78,11 @@ namespace Blogs.Application.Services
             var slug = command.Slug.GenerateSlug();
             if (await _blogCategoryRepository.ExistByAsync(t => t.Slug.Trim() == slug && t.Id != command.Id))
             {
-                return new OperationResult(false, ValidationMessages.DuplicatedMessage, "Slug");
+                return new OperationResult(false, ValidationMessages.DuplicatedMessage, nameof(command.Slug));
             }
             if (command.ImageFile != null && !FileSecurity.IsImage(command.ImageFile))
             {
-                return new OperationResult(false, ValidationMessages.ImageErrorMessage, "Image");
+                return new OperationResult(false, ValidationMessages.ImageErrorMessage, nameof(command.ImageFile));
             }
             string imageName = command.ImageName;
             string oldImagName = command.ImageName;

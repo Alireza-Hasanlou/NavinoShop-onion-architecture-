@@ -43,6 +43,7 @@ namespace Blogs.Query.Services
                 Categories = await _repository.GetAllBy(i => i.Parent == parentId).Select(b => new BlogCategoryAdminQueryModel
                 {
                     Id = b.Id,
+                    ParentId=b.Parent,
                     Title = b.Title,
                     Active = b.Active,
                     CreationDate = b.CreateDate.ToPersainDate(),
