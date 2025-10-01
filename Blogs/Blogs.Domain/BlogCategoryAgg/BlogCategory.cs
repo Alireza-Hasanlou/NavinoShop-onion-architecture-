@@ -3,7 +3,7 @@ using Utility.Shared.Domain;
 
 namespace Blogs.Domain.BlogCategoryAgg
 {
-    public class BlogCategory : BaseEntity<int>
+    public class BlogCategory : BaseEntityCreate<int>
     {
         public string Title { get; private set; }
         public string Slug { get; private set; }

@@ -3,7 +3,7 @@
 
 namespace Users.Domain.User.Agg
 {
-    public class Role : BaseEntity<int>
+    public class Role : BaseEntityCreate<int>
     {
         public string Title { get; private set; }
 

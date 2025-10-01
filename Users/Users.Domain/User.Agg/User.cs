@@ -5,7 +5,7 @@ using Utility.Shared.Domain;
 
 namespace Users.Domain.User.Agg
 {
-    public class User : BaseEntity<int>
+    public class User : BaseEntityCreate<int>
     {
         public string FullName { get; private set; }
         public string Mobile { get; private set; }

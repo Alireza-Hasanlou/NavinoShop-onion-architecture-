@@ -4,7 +4,7 @@ using Utility.Shared.Domain;
 
 namespace Blogs.Domain.BlogAgg
 {
-    public class Blog : BaseEntity<int>
+    public class Blog : BaseEntityCreate<int>
     {
 
         public string Title { get; private set; }
