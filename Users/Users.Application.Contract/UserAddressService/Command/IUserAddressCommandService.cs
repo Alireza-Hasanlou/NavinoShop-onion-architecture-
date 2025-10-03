@@ -1,4 +1,4 @@
-﻿using Utility.Shared.Application;
+﻿using Shared.Application;
 
 namespace Users.Application.Contract.UserAddressService.Command
 {

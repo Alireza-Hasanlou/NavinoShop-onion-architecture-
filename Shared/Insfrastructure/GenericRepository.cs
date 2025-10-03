@@ -1,12 +1,12 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
-using Utility.Shared.Domain;
 using System.Linq.Expressions;
-using Utility.Shared.Application;
+using Shared.Domain;
+using Shared.Application;
 
 
 
-namespace Utility.Shared.Insfrastructure
+namespace Shared.Insfrastructure
 {
     public class GenericRepository<TEntity, TKey> : IGenericRepository<TEntity, TKey> where TEntity : class
     {
@@ -50,7 +50,7 @@ namespace Utility.Shared.Insfrastructure
         public async Task<bool> ExistByAsync(Expression<Func<TEntity, bool>> expression) =>
                     await _context.Set<TEntity>().AsNoTracking().AnyAsync(expression);
 
-        public IQueryable<TEntity> GetAllAsync() =>
+        public IQueryable<TEntity> GetAll() =>
                         _context.Set<TEntity>().AsNoTracking();
 
         public IQueryable<TEntity> GetAllBy(Expression<Func<TEntity, bool>> expression) =>

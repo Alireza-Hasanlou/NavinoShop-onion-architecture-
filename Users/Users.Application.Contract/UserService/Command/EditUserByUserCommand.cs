@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Shared.Application.Validations;
 using Shared.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
-using Utility.Shared.Application;
-using Utility.Shared.Application.Validations;
 
 namespace Users.Application.Contract.UserService.Command
 {

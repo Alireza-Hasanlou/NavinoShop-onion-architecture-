@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Shared.Application;
 using Shared.Application.Auth;
+using Shared.Application.Validations;
+using Shared.Insfrastructure;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,8 +11,6 @@ using Users.Application.Contract.RoleService.Query;
 using Users.Domain.User.Agg;
 using Users.Domain.User.Agg.IRepository;
 using Users.Infrastructure.Persistence.Context;
-using Utility.Shared.Application;
-using Utility.Shared.Insfrastructure;
 
 namespace NavinoShop.WebApplication.Services
 {

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Shared.Application;
+using Shared.Application.Validations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +8,6 @@ using System.Threading.Tasks;
 using Users.Application.Contract.UserAddressService.Command;
 using Users.Domain.User.Agg;
 using Users.Domain.User.Agg.IRepository;
-using Utility.Shared.Application;
 
 namespace Users.Application.Services
 {

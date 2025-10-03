@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Utility.Shared.Application;
+﻿using Shared.Application.Validations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Users.Application.Contract.RoleService.Command
 {
@@ -9,5 +9,6 @@ namespace Users.Application.Contract.RoleService.Command
         [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
         [MaxLength(255, ErrorMessage = ValidationMessages.MaxLengthMessage)]
         public string Title { get; set; }
+        public string ImageName { get; set; }
     }
 }

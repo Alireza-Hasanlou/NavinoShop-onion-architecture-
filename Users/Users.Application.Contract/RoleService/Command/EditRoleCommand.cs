@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Utility.Shared.Application;
+﻿using Shared.Application.Validations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Users.Application.Contract.RoleService.Command
 {

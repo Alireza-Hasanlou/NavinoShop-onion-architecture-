@@ -1,6 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Utility.Shared.Application;
-using Utility.Shared.Application.BaseCommands;
+﻿using Shared.Application.Validations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Users.Application.Contract.PermissionService.Command
 {

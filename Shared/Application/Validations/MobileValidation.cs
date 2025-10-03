@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Utility.Shared.Application.Validations
+namespace Shared.Application.Validations
 {
     public class MobileValidation : ValidationAttribute
     {

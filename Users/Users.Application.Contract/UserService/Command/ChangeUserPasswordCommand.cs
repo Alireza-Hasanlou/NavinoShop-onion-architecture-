@@ -1,7 +1,6 @@
 ﻿
+using Shared.Application.Validations;
 using System.ComponentModel.DataAnnotations;
-using Utility.Shared.Application;
-using Utility.Shared.Application.Validations;
 
 namespace Users.Application.Contract.UserService.Command
 {

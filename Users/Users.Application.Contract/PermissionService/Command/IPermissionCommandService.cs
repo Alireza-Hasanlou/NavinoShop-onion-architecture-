@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Shared.Application;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Utility.Shared.Application;
 
 namespace Users.Application.Contract.PermissionService.Command
 {

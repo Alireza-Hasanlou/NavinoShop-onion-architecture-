@@ -2,12 +2,12 @@
 using Emails.Application.Contract.SensEmailService.Query;
 using Emails.Domailn.SendEmailAgg;
 using Microsoft.EntityFrameworkCore;
+using Shared.Application;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Utility.Shared.Application;
 
 namespace Emails.Query.Services
 {
@@ -20,7 +20,7 @@ namespace Emails.Query.Services
         }
         public async Task<List<SendEmailQueryModel>> GetEmailSendsFoeAdmin()
 		{
-			return await _sendEmailRepository.GetAllAsync()
+			return await _sendEmailRepository.GetAll()
 				.Select(x => new SendEmailQueryModel()
 				{
 					CreationDate = x.CreateDate.ToPersainDate(),

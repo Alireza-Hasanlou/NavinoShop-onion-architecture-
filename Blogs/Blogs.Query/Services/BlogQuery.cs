@@ -3,12 +3,12 @@ using Blogs.Application.Contract.BlogCategoryService.Query;
 using Blogs.Domain.BlogAgg;
 using Blogs.Domain.BlogCategoryAgg;
 using Microsoft.EntityFrameworkCore;
+using Shared.Application;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Utility.Shared.Application;
 
 namespace Blogs.Query.Services
 {
@@ -52,7 +52,7 @@ namespace Blogs.Query.Services
             else
             {
                 model.PageTitle = "همه مقالات";
-                model.Blogs = await _blogRepository.GetAllAsync().Select(a => new BlogQueryModel
+                model.Blogs = await _blogRepository.GetAll().Select(a => new BlogQueryModel
                 {
                     CategoryId = a.CategoryId,
                     Active = a.Active,

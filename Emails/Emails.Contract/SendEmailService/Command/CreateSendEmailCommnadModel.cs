@@ -1,6 +1,6 @@
 ﻿using Shared.Application;
+using Shared.Application.Validations;
 using System.ComponentModel.DataAnnotations;
-using Utility.Shared.Application;
 
 namespace Emails.Application.Contract.SensEmailService.Command
 {

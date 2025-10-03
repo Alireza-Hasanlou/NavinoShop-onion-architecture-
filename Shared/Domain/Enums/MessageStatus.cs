@@ -1,4 +1,4 @@
-﻿namespace Shared.Domain.Enum
+﻿namespace Shared.Domain.Enums
 {
     public enum MessageStatus
     {

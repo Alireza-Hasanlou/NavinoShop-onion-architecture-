@@ -1,6 +1,6 @@
-﻿using Shared.Domain.Enums;
+﻿using Shared.Domain;
+using Shared.Domain.Enums;
 using System;
-using Utility.Shared.Domain;
 
 
 namespace Users.Domain.User.Agg

@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Shared.Application.Validations;
+using System.ComponentModel.DataAnnotations;
 
-namespace Utility.Shared.Application.BaseCommands
+namespace Shared.Application.BaseCommands
 {
     public class Text_ShortDescription
 	{

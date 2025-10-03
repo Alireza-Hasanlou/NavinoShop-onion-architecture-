@@ -1,10 +1,5 @@
-﻿using Shared.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Utility.Shared.Application;
+﻿using Shared.Application;
+
 
 namespace Users.Application.Contract.RoleService.Command
 {

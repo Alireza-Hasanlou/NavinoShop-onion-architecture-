@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Utility.Shared.Application.Validations
+namespace Shared.Application.Validations
 {
     public class PasswordValidation : ValidationAttribute
     {

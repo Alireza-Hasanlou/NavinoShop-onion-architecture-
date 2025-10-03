@@ -1,6 +1,6 @@
 ﻿
 using Blogs.Application.Contract.BlogCategoryService.Query;
-using Utility.Shared.Domain;
+using Shared.Domain;
 
 namespace Blogs.Domain.BlogCategoryAgg
 {

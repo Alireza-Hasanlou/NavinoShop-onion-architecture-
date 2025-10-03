@@ -1,6 +1,6 @@
 ﻿using Emails.Domailn.MessageUserAgg;
 using Emails.Infrastructure.Persistence.Context;
-using Utility.Shared.Insfrastructure;
+using Shared.Insfrastructure;
 
 namespace Emails.Infrastructure.Persistence.Repository;
 

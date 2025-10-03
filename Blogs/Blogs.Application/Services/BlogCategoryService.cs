@@ -1,15 +1,15 @@
 ﻿using Blogs.Application.Contract.BlogCategoryService.Command;
 using Blogs.Domain.BlogAgg;
 using Blogs.Domain.BlogCategoryAgg;
+using Shared;
 using Shared.Application;
 using Shared.Application.Service;
+using Shared.Application.Validations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Utility.Shared;
-using Utility.Shared.Application;
 
 namespace Blogs.Application.Services
 {

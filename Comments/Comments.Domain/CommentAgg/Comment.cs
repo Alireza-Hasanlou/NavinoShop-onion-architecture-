@@ -1,6 +1,6 @@
 ﻿
+using Shared.Domain;
 using Shared.Domain.Enums;
-using Utility.Shared.Domain;
 namespace Comments.Domain.CommentAgg
 {
     public class Comment : BaseEntityCreate<long>

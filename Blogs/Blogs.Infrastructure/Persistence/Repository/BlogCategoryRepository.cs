@@ -2,13 +2,13 @@
 using Blogs.Domain.BlogCategoryAgg;
 using Blogs.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
+using Shared.Insfrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Utility.Shared.Domain;
-using Utility.Shared.Insfrastructure;
+
 
 namespace Blogs.Infrastructure.Persistence.Repository
 {

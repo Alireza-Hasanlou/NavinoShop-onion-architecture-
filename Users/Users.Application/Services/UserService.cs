@@ -1,12 +1,12 @@
-﻿using Shared.Application;
+﻿using Shared;
+using Shared.Application;
 using Shared.Application.Auth;
 using Shared.Application.Security;
 using Shared.Application.Service;
+using Shared.Application.Validations;
 using Users.Application.Contract.UserService.Command;
 using Users.Domain.User.Agg;
 using Users.Domain.User.Agg.IRepository;
-using Utility.Shared;
-using Utility.Shared.Application;
 
 
 namespace Users.Application.Services

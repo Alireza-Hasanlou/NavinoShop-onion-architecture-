@@ -1,5 +1,4 @@
 ﻿using Shared.Domain;
-using Utility.Shared.Domain;
 
 namespace Comments.Domain.CommentAgg
 {

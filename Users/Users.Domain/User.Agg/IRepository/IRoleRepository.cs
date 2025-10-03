@@ -1,7 +1,7 @@
-﻿using Users.Application.Contract.RoleService.Command;
+﻿using Shared.Application;
+using Shared.Domain;
+using Users.Application.Contract.RoleService.Command;
 using Users.Application.Contract.RoleService.Query;
-using Utility.Shared.Application;
-using Utility.Shared.Domain;
 
 namespace Users.Domain.User.Agg.IRepository
 {

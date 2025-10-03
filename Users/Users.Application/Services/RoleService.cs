@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Shared.Application;
+using Shared.Application.Validations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
@@ -7,7 +9,6 @@ using System.Threading.Tasks;
 using Users.Application.Contract.RoleService.Command;
 using Users.Domain.User.Agg;
 using Users.Domain.User.Agg.IRepository;
-using Utility.Shared.Application;
 
 namespace Users.Application.Services
 {

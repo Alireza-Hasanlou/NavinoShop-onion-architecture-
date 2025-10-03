@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
 using Users.Application.Contract.UserService.Command;
-using Utility.Shared.Application;
 
 namespace NavinoShop.WebApplication.Areas.Account
 {

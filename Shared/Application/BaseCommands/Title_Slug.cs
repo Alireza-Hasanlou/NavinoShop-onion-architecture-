@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Shared.Application.Validations;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Utility.Shared.Application.BaseCommands
+namespace Shared.Application.BaseCommands
 {
     public class Title_Slug
 	{

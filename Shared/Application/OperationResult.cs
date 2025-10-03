@@ -1,6 +1,4 @@
-﻿
-
-namespace Utility.Shared.Application
+﻿namespace Shared.Application
 {
     public class OperationResult
     {

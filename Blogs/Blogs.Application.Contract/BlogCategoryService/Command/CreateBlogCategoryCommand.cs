@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Shared.Application.BaseCommands;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Utility.Shared.Application.BaseCommands;
 
 namespace Blogs.Application.Contract.BlogCategoryService.Command
 {

@@ -1,7 +1,7 @@
-﻿using Utility.Shared.Application.BaseCommands;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using Shared.Application.Validations;
 
-namespace Utility.Shared.Application.BaseCommands
+namespace Shared.Application.BaseCommands
 {
     public class Text_ShortDescription_Title_Slug : Title_Slug
 	{

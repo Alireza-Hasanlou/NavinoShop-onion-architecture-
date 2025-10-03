@@ -1,6 +1,5 @@
 ﻿using Shared.Domain;
-using Shared.Domain.Enum;
-using Utility.Shared.Domain;
+using Shared.Domain.Enums;
 
 namespace Emails.Domailn.MessageUserAgg
 {

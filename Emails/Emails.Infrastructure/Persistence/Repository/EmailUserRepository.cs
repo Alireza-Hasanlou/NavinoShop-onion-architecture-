@@ -1,8 +1,8 @@
 ﻿using Emails.Domailn.EmailAgg;
 using Emails.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
+using Shared.Insfrastructure;
 using System.Threading.Tasks;
-using Utility.Shared.Insfrastructure;
 
 namespace Emails.Infrastructure.Persistence.Repository;
 

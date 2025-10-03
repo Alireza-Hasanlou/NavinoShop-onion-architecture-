@@ -1,0 +1,87 @@
+﻿using Shared.Application;
+using Shared;
+using Site.Domain.SliderAgg;
+using Site.Application.Contract.SliderService.Command;
+using Shared.Application.Service;
+using System.Threading.Tasks;
+using Shared.Application.Validations;
+
+namespace Site.Application.Services
+{
+    internal class SliderService : ISliderCommandService
+    {
+        private readonly ISliderRepository _sliderRepository;
+        private readonly IFileService _fileService;
+
+        public SliderService(ISliderRepository sliderRepository, IFileService fileService)
+        {
+            _sliderRepository = sliderRepository;
+            _fileService = fileService;
+        }
+
+        public async Task<OperationResult> ActivationChange(int id)
+        {
+            var slider =await _sliderRepository.GetByIdAsync(id);
+            slider.ActivationChange();
+            if (await _sliderRepository.SaveAsync())
+                return new(true);
+            return new(false);
+        }
+
+        public async Task<OperationResult> Create(CreateSliderCommandModel command)
+        {
+            if (command.ImageFile == null || !command.ImageFile.IsImage())
+                return new(false, ValidationMessages.ImageErrorMessage, nameof(command.ImageFile));
+
+            string imageName =await _fileService.UploadImage(command.ImageFile, FileDirectories.SliderImageFolder);
+            if (imageName == "")
+                return new(false, ValidationMessages.ImageErrorMessage, nameof(command.ImageFile));
+
+            _fileService.ResizeImage(imageName, FileDirectories.SliderImageFolder, 100);
+            Slider slider = new(imageName, command.ImageAlt,command.Url);
+            var result = await _sliderRepository.CreateAsync(slider);
+            if (result.Success) return new(true);
+            _fileService.DeleteImage($"{FileDirectories.SliderImageDirectory}{imageName}");
+            _fileService.DeleteImage($"{FileDirectories.SliderImageDirectory100}{imageName}");
+            return new(false, ValidationMessages.SystemErrorMessage, nameof(command.ImageAlt));
+        }
+
+        public async Task<OperationResult> Edit(EditSliderCommandModel command)
+        {
+            var slider =await _sliderRepository.GetByIdAsync(command.Id);
+            string imageName = slider.ImageName;
+            string oldImageName = slider.ImageName;
+            if (command.ImageFile != null)
+            {
+                if (!command.ImageFile.IsImage()) return new(false, ValidationMessages.ImageErrorMessage, nameof(command.ImageFile));
+                imageName =await _fileService.UploadImage(command.ImageFile, FileDirectories.SliderImageFolder);
+                if (imageName == "")
+                    return new(false, ValidationMessages.ImageErrorMessage, nameof(command.ImageFile));
+                _fileService.ResizeImage(imageName, FileDirectories.SliderImageFolder, 100);
+            }
+            slider.Edit(imageName, command.ImageAlt,command.Url);
+            if (await _sliderRepository.SaveAsync())
+            {
+                if (command.ImageFile != null)
+                {
+                    _fileService.DeleteImage($"{FileDirectories.SliderImageDirectory}{oldImageName}");
+                    _fileService.DeleteImage($"{FileDirectories.SliderImageDirectory100}{oldImageName}");
+                }
+                return new(true);
+            }
+            else
+            {
+
+                if (command.ImageFile != null)
+                {
+                    _fileService.DeleteImage($"{FileDirectories.SliderImageDirectory}{imageName}");
+                    _fileService.DeleteImage($"{FileDirectories.SliderImageDirectory100}{imageName}");
+                }
+                return new(false, ValidationMessages.SystemErrorMessage, nameof(command.ImageAlt));
+            }
+        }
+
+        public async Task<EditSliderCommandModel> GetForEdit(int id) =>
+            await _sliderRepository.GetForEdit(id);
+    }
+}

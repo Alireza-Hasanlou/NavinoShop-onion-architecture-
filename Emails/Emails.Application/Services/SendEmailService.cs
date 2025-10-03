@@ -1,8 +1,9 @@
 ﻿
 using Emails.Application.Contract.SensEmailService.Command;
 using Emails.Domailn.SendEmailAgg;
+using Shared.Application;
+using Shared.Application.Validations;
 using System.ComponentModel.Design;
-using Utility.Shared.Application;
 
 
 namespace Emails.Application.Services

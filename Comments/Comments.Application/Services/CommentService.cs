@@ -3,12 +3,12 @@ using Comments.Application.Contract.CommentService.Command;
 using Comments.Domain.CommentAgg;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions.Internal;
 using Shared.Application;
+using Shared.Application.Validations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Utility.Shared.Application;
 
 namespace Comments.Application.Services
 {

@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace Utility.Shared.Application
+namespace Shared.Application
 {
     public static class DateConvertor
     {

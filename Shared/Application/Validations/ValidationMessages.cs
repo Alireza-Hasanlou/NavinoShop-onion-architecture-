@@ -1,5 +1,4 @@
-﻿
-namespace Utility.Shared.Application
+﻿namespace Shared.Application.Validations
 {
     public class ValidationMessages
     {

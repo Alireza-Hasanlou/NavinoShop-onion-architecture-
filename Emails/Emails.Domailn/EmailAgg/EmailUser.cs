@@ -1,5 +1,4 @@
 ﻿using Shared.Domain;
-using Utility.Shared.Domain;
 
 namespace Emails.Domailn.EmailAgg
 {

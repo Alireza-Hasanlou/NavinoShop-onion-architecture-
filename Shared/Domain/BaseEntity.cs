@@ -1,6 +1,4 @@
-﻿
-
-namespace Utility.Shared.Domain
+﻿namespace Shared.Domain
 {
  
         public class BaseEntity<TKey>

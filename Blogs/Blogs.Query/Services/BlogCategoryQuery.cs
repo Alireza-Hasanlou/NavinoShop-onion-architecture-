@@ -3,7 +3,6 @@ using Blogs.Application.Contract.BlogCategoryService.Query;
 using Blogs.Domain.BlogCategoryAgg;
 using Microsoft.EntityFrameworkCore;
 using Shared.Application;
-using Utility.Shared.Application;
 
 namespace Blogs.Query.Services
 {
@@ -39,7 +38,7 @@ namespace Blogs.Query.Services
             BlogCategoryAdminPageQueryModel model = new()
             {
                 parentId = parentId,
-
+              
                 Categories = await _repository.GetAllBy(i => i.Parent == parentId).Select(b => new BlogCategoryAdminQueryModel
                 {
                     Id = b.Id,

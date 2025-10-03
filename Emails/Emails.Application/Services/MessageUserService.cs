@@ -2,12 +2,12 @@
 using Emails.Application.Contract.MessageUserService.Command;
 using Emails.Domailn.MessageUserAgg;
 using Shared.Application;
+using Shared.Application.Validations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Utility.Shared.Application;
 
 namespace Emails.Application.Services
 {
