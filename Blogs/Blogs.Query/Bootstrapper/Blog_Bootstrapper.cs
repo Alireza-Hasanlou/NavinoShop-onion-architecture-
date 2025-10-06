@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Blogs.Query.Bootstrapper
 {
-    public class BlogQueryBootstrapper
+    public static class Blog_Bootstrapper
     {
         public static void Config(IServiceCollection services, string connectionString)
         {

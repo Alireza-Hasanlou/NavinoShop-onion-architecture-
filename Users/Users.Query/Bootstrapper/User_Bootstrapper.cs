@@ -10,7 +10,7 @@ using Users.Query.Service;
 
 namespace Users.Query.Bootstrapper
 {
-    public class UserQueryBootstrapper
+    public static class User_Bootstrapper
     {
         public static void Config(IServiceCollection services, string connectionString)
         {

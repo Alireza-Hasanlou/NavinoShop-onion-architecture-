@@ -1,10 +1,12 @@
-using Blogs.Query.Bootstrapper;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NavinoShop.WebApplication.Utility;
+using Seos.Query.Bootstrapper;
+using Site.Query.Bootstrapper;
 using Users.Query.Bootstrapper;
-
+using Blogs.Query.Bootstrapper;
+using Comments.Query.Bootstrapper;
+using Emails.Query.Bootstrapper;
+using PostModule.Query.Bootstrapper;
 
 var builder = WebApplication.CreateBuilder(args);
 var Services = builder.Services;
@@ -16,8 +18,15 @@ Services.AddRazorPages();
 #region Bootstrappers
 
 DependencyBootstrapper.Congig(Services);
-BlogQueryBootstrapper.Config(Services, ConnectionString);
-UserQueryBootstrapper.Config(Services, ConnectionString);
+Blog_Bootstrapper.Config(Services, ConnectionString);
+User_Bootstrapper.Config(Services, ConnectionString);
+Seo_Bootstrapper.Config(Services, ConnectionString);
+Site_Bootstrapper.Config(Services, ConnectionString);
+Comment_Bootstrapper.Config(Services, ConnectionString);
+Email_Bootstrapper.Config(Services, ConnectionString);
+Post_Bootstrapper.Config(Services, ConnectionString);
+
+
 #endregion
 var app = builder.Build();
 

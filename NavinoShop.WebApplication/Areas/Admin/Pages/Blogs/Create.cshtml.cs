@@ -2,7 +2,6 @@
 using Blogs.Application.Contract.BlogApplication.Query;
 using Blogs.Application.Contract.BlogCategoryService.Query;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Shared.Application.Auth;

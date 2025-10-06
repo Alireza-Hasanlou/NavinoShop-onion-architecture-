@@ -2,11 +2,7 @@
 using Blogs.Application.Contract.BlogCategoryService.Command;
 using Blogs.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Blogs.Application.Bootstrapper
 {
