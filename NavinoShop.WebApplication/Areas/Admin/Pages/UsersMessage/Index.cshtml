@@ -1,0 +1,119 @@
+﻿@page
+@model NavinoShop.WebApplication.Areas.Admin.Pages.UsersMessage.IndexModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["title"] = "خبرنامه ها ";
+}
+
+
+<div class="box">
+    <div class="box-header">
+        <h3 class="box-title">تصاویر</h3>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+        <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+
+            <div class="row col-12">
+                <form>
+                    <div class="col col-md-4 col-sm-6">
+                        <div id="DataTables_Table_0_filter" class="dataTables_filter">
+                            <label>
+                                جستجو:
+                                <input name="filter" type="search" class="form-control input-sm" placeholder="" aria-controls="DataTables_Table_0">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col col-md-4 col-sm-6">
+                        <div class="dataTables_length" id="DataTables_Table_0_length">
+                            <label>
+                                نمایش
+                                <select name="take" aria-controls="DataTables_Table_0" class="form-control input-sm">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                                داده
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col col-md-4 col-sm-6">
+                        <button class="btn btn-info">جست و جو </button>
+                    </div>
+                </form>
+
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="ImageDataTable table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
+
+                        <thead>
+                            <tr role="row">
+                                <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-sort="ascending" aria-label="نام: activate to sort column descending">نام</th>
+                                <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-sort="ascending" aria-label="نام کاربری: activate to sort column descending" ">نام کاربری</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="موضوع: activate to sort column ascending">موضوع</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="وضعیت: activate to sort column ascending" >وضعیت</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="شماره تماس: activate to sort column ascending" style="width: 134.828px;">شماره تماس</th>
+                                <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-sort="ascending" aria-label="ایمیل: activate to sort column descending" >ایمیل</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="تاریخ ایجاد: activate to sort column ascending" >تاریخ ایجاد</th>
+
+                        </thead>
+                        <tbody>
+                            @if (Model.MessageUser.Messages.Count > 0)
+                            {
+                                @foreach (var item in Model.MessageUser.Messages)
+                                {
+                                    <tr>
+                                        <td>@item.FullName</td>
+                                        <td>@item.UserName</td>
+                                        <td>@item.Subject </td>
+                                        <td>@item.Status </td>
+                                        <td>@item.PhoneNumber </td>
+                                        <td>@item.Email </td>
+                                        <td>@item.CreateDate </td>
+                                       
+                                    </tr>
+
+
+                                }
+                            }
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+
+            @if (Model.MessageUser.PageCount > 1)
+            {
+                <div class="row">
+                    <div class="col-sm-5"></div>
+                    <div class="col-sm-7">
+                        <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
+                            <ul class="pagination">
+
+                                <li class="paginate_button previous disabled" id="DataTables_Table_0_previous">
+                                    <a href="/Admin/SitesImages/Index?pageId=@Model.MessageUser.StartPage" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0">@Model.MessageUser.StartPage</a>
+                                </li>
+                                @for (int i = Model.MessageUser.StartPage + 1; i < Model.MessageUser.EndPage; i++)
+                                {
+                                    <li class="paginate_button  @((Model.MessageUser.PageId == i) ? "active" : "")">
+                                        <a href="/Admin/SitesImages/Index?pageId=@i" aria-controls="DataTables_Table_0" data-dt-idx="1" tabindex="0">@i</a>
+                                    </li>
+                                }
+                                <li class="paginate_button next disabled" id="DataTables_Table_0_next">
+                                    <a href="/Admin/SitesImages/Index?pageId=@Model.MessageUser.EndPage" aria-controls="DataTables_Table_0" data-dt-idx="2" tabindex="0">@Model.MessageUser.EndPage</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+
+
+
+
+        </div>
+    </div>
+</div>

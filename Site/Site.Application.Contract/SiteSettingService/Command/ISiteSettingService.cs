@@ -9,7 +9,7 @@ namespace Site.Application.Contract.SiteSettingService.Command
 {
     public interface ISiteSettingService
     {
-       Task< OperationResult> Ubsert(UbsertSiteSetting command);
-        Task<UbsertSiteSetting> GetForUbsert();
+       Task< OperationResult> Upsert(UpsertSiteSetting command);
+        Task<UpsertSiteSetting> GetForUpsert();
     }
 }

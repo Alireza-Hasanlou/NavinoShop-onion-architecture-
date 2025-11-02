@@ -2,7 +2,7 @@
 using Shared.Application.Validations;
 using System.ComponentModel.DataAnnotations;
 
-namespace Emails.Application.Contract.SensEmailService.Command
+namespace Emails.Application.Contract.SendEmailService.Command
 {
     public class CreateSendEmailCommnadModel
     {

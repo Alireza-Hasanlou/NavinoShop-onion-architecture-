@@ -9,8 +9,8 @@
     var subCategories = ViewData["subCategories"] as List<SelectListItem>;
     var imageUrl = FileDirectories.BlogImageDirectory400 + Model.EditBlog.ImageName;
 }
-<link href="~/assets/css/CreationForm.css" rel="stylesheet" />
-<div class="Blogcontainer">
+
+<div class="Formcontainer">
 
     <form id="blogcontentForm" method="post" enctype="multipart/form-data">
         <input type="hidden" asp-for="EditBlog.UserId" />
@@ -20,7 +20,7 @@
 
             <div class="col col-md-6 col-12 col-sm-12 ">
                 <!-- عنوان -->
-                <div class="blogform-group">
+                <div class="custom-form-group">
                     <label for="title" class="required">عنوان</label>
                     <input asp-for="EditBlog.Title" type="text" id="Title" onchange="makeSlug('Title','Slug')">
                     <span asp-validation-for="EditBlog.Title" class="text-danger"></span>
@@ -28,7 +28,7 @@
             </div>
             <div class="col col-md-6 col-sm-12 col-12">
                 <!-- لینک سربرگ -->
-                <div class="blogform-group">
+                <div class="custom-form-group">
                     <label class="required"> سربرگ</label>
                     <input asp-for="EditBlog.Slug" type="text" id="Slug">
                     <span asp-validation-for="EditBlog.Slug" class="text-danger"></span>
@@ -39,7 +39,7 @@
 
         <div class="col col-12 col-sm-12 ">
             <!-- توضیح مختصر -->
-            <div class="blogform-group">
+            <div class="custom-form-group">
                 <label for="shortDescription" class="required">توضیح مختصر</label>
                 <textarea asp-for="EditBlog.ShortDescription" id="shortDescription"></textarea>
                 <span asp-validation-for="EditBlog.ShortDescription" class="text-danger"></span>
@@ -47,7 +47,7 @@
         </div>
 
         <!-- توضیح کامل -->
-        <div class="blogform-group">
+        <div class="custom-form-group">
             <label for="text" class="required">توضیح</label>
             <textarea asp-for="EditBlog.Text" id="editor1" rows="10"
                       cols="80">این ویرایشگر راست چین و فارسی شده و تنظیمات آن به صورت اختصاصی تنظیم شده است...</textarea>
@@ -57,14 +57,14 @@
 
         <div class="row">
             <div class="col">
-                <div class="blogform-group">
+                <div class="custom-form-group">
                     <label for="writer" class="required">نویسنده</label>
                     <input asp-for="EditBlog.Writer" type="text" id="writer" readonly>
                     <span asp-validation-for="EditBlog.Writer" class="text-danger"></span>
                 </div>
             </div>
             <div class="col">
-                <div class="blogform-group">
+                <div class="custom-form-group">
                     <label for="imageAlt" class="required">Alt تصویر</label>
                     <input asp-for="EditBlog.ImageAlt" type="text" id="imageAlt">
                     <span asp-validation-for="EditBlog.ImageAlt" class="text-danger"></span>
@@ -75,7 +75,7 @@
         <!-- ردیف برای گروه‌ها -->
         <div class="row">
             <div class="col">
-                <div class="blogform-group">
+                <div class="custom-form-group">
                     <label asp-for="EditBlog.CategoryId" class="required">سر گروه</label>
                     <select asp-items="@categories" id="categoryId" asp-for="EditBlog.CategoryId">
                         <option value="0">سرگروه را انتخاب کنید</option>
@@ -85,7 +85,7 @@
                 </div>
             </div>
             <div class="col">
-                <div class="blogform-group">
+                <div class="custom-form-group">
                     <label asp-for="EditBlog.SubCategoryId" class="required">زیرگروه</label>
                     <select asp-items="subCategories" id="subCategoryId" asp-for="EditBlog.SubCategoryId">
                         <option value="0">ابتدا سر گروه را انتخاب کنید</option>

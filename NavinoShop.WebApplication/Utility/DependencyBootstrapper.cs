@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using NavinoShop.WebApplication.Services;
+using Query.Service;
 using Shared.Application.Auth;
 using Shared.Application.Service;
 
@@ -7,7 +8,7 @@ namespace NavinoShop.WebApplication.Utility
 {
     public static class  DependencyBootstrapper
     {
-        public static void Congig(IServiceCollection services)
+        public static void Congig(IServiceCollection services,string connectionString)
         {
             services.AddHttpContextAccessor();
 
@@ -24,6 +25,7 @@ namespace NavinoShop.WebApplication.Utility
                
                 option.ExpireTimeSpan = TimeSpan.FromDays(20);
             });
+            Module_Bootstrapper.Config(services, connectionString);
             services.AddScoped<IFileService, FileServices>();
             services.AddScoped<IAuthService, AuthService>();
         }

@@ -13,7 +13,7 @@ namespace Comments.Query.Bootstrapper
     {
         public static void Config(IServiceCollection services, string connection)
         {
-            CommentInfrastryctureBootstrapper.Config(services, connection);
+            CommentBootstrapper.Config(services, connection);
         }
     }
 }

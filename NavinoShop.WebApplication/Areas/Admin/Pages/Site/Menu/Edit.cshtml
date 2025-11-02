@@ -1,0 +1,95 @@
+﻿@page 
+@using Shared.Application
+@using Shared.Domain.Enums
+@model NavinoShop.WebApplication.Areas.Admin.Pages.Site.Menu.EditModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "ویرایش بنر";
+    var ImageAddress = FileDirectories.MenuImageDirectory + Model.Editmenu.ImageName ;
+}
+<div class="Formcontainer">
+
+    <form method="post" enctype="multipart/form-data">
+
+
+        <div class="Formcontainer">
+
+
+            <form method="post" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col  col-md-6 col-sm-12 ">
+
+                        <div class="custom-form-group">
+                            <label for="Title" class="required">عنوان</label>
+                            <input asp-for="@Model.Editmenu.Title" type="text" id="Title" ">
+                            <span asp-validation-for="Editmenu.Url" class="text-danger"></span>
+                        </div>
+                    </div>
+                   @*  <div class="col  col-md-6 col-sm-12">
+                        <div class="custom-form-group">
+                            <label asp-for="Editmenu." class="required">محل منو</label>
+                            <select asp-items="Html.GetEnumSelectList<MenuStatus>()" asp-for="Editmenu.Status">
+                                <option value="0">محل بنر را انتخاب کنید</option>
+
+                            </select>
+                            <span asp-validation-for="Editmenu.sta" class="text-danger"></span>
+                        </div>
+                    </div> *@
+                </div>
+                <div class="row">
+
+                    <div class="col  col-md-6 col-sm-12 ">
+                        <div class="custom-form-group">
+                            <label for="Url" class="required">لینک مقصد</label>
+                            <input asp-for="@Model.Editmenu.Url" type="text" id="Url" ">
+                            <span asp-validation-for="Editmenu.Url" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col  col-md-6 col-sm-12 ">
+                        <div class="custom-form-group">
+                            <label for="Number" class="required">شماره برای ترتیب بندی</label>
+                            <input asp-for="@Model.Editmenu.Number" type="number" id=" Number">
+                            <span asp-validation-for="Editmenu.Url" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+
+
+                    <div class="col col-md-6 col-sm-12 col-12">
+
+                        <div class="custom-form-group">
+                            <label class="required" for="ImageAlt"> Alt تصویر</label>
+                            <input asp-for="Editmenu.ImageAlt" type="text" id="ImageAlt">
+                            <span asp-validation-for="Editmenu.ImageAlt" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col col-md-6 col-sm-12 col-12">
+                        <div id="img-container">
+                            <label for="upload-file">
+                                <div class="picture-uploader" data-url="@ImageAddress">
+                                    <div class="picture__image"></div>
+
+                                    <input asp-for="@Model.Editmenu.ImageFile" type="file" id="upload-file" class="picture__input" accept="image/*" />
+                                </div>
+                            </label>
+
+                        </div>
+                        <span asp-validation-for="Editmenu.ImageFile" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success btn-block">افزودن </button>
+
+            </form>
+        </div>
+
+    </form>
+</div>
+
+
+
+
+

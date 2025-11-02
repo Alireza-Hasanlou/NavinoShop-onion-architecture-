@@ -18,7 +18,7 @@ internal class SiteServiceService : ISiteServiceCommandService
         _fileService = fileService;
     }
 
-    public async Task<OperationResult> ActivationChange(int id)
+    public async Task<OperationResult> ActivationChangeAsync(int id)
     {
         var service = await _siteServiceepository.GetByIdAsync(id);
         service.ActivationChange();
@@ -27,7 +27,7 @@ internal class SiteServiceService : ISiteServiceCommandService
         return new(false);
     }
 
-    public async Task<OperationResult> Create(CreateSiteServiceCommnadModel commmand)
+    public async Task<OperationResult> CreateAsync(CreateSiteServiceCommnadModel commmand)
     {
         if (commmand.ImageFile == null || !commmand.ImageFile.IsImage())
             return new(false, ValidationMessages.ImageErrorMessage, nameof(commmand.ImageFile));
@@ -46,7 +46,7 @@ internal class SiteServiceService : ISiteServiceCommandService
         return new(false, ValidationMessages.SystemErrorMessage, nameof(commmand.ImageAlt));
     }
 
-    public async Task<OperationResult> Edit(EditSiteServiceCommandModel commmand)
+    public async Task<OperationResult> EditAsync(EditSiteServiceCommandModel commmand)
     {
         var service =await _siteServiceepository.GetByIdAsync(commmand.Id);
         string imageName = service.ImageName;
@@ -82,6 +82,6 @@ internal class SiteServiceService : ISiteServiceCommandService
 
     }
 
-    public async Task<EditSiteServiceCommandModel> GetForEdit(int id) =>
+    public async Task<EditSiteServiceCommandModel> GetForEditAsync(int id) =>
        await _siteServiceepository.GetForEdit(id);
 }

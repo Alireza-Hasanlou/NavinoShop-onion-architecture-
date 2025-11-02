@@ -1,0 +1,170 @@
+﻿@page
+@using Shared.Application
+@model NavinoShop.WebApplication.Areas.Admin.Pages.Site.Images.IndexModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["title"] = "تصاویر";
+    var successMessage = TempData["success"] as string;
+    var SiteImagesBaseAddress = FileDirectories.ImageDirectory100;
+}
+<div class="box">
+    <div class="box-header">
+        <h3 class="box-title">تصاویر</h3>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+        <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+            <a href="/Admin/Site/Images/Create" class="btn btn-success">افزودن</a>
+
+            <div class="row col-12">
+                <form>
+                    <div class="col col-md-4 col-sm-6">
+                        <div id="DataTables_Table_0_filter" class="dataTables_filter">
+                            <label>
+                                جستجو:
+                                <input name="filter" type="search" class="form-control input-sm" placeholder="" aria-controls="DataTables_Table_0">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col col-md-4 col-sm-6">
+                        <div class="dataTables_length" id="DataTables_Table_0_length">
+                            <label>
+                                نمایش
+                                <select name="take" aria-controls="DataTables_Table_0" class="form-control input-sm">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                                داده
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col col-md-4 col-sm-6">
+                        <button class="btn btn-info">جست و جو </button>
+                    </div>
+                </form>
+
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="ImageDataTable table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
+
+                        <thead>
+                            <tr role="row">
+                                <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-sort="ascending" aria-label="تصویر: activate to sort column descending" style="width: 256.188px;">تصویر</th>
+                                <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-sort="ascending" aria-label="عنوان: activate to sort column descending" style="width: 256.188px;">عنوان
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="تاریخ ایجاد: activate to sort column ascending" style="width: 464.469px;">تاریخ ایجاد</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="کپی ادرس: activate to sort column ascending" style="width: 134.828px;">کپی ادرس</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="عملیات: activate to sort column ascending" style="width: 134.828px;">عملیات</th>
+
+                        </thead>
+                        <tbody>
+                            @if (Model.Images.Images.Count > 0)
+                            {
+                                @foreach (var item in Model.Images.Images)
+                                {
+                                    <tr id="@item.Id">
+                                        <td style="width:100px"><img  src="@(SiteImagesBaseAddress + item.ImageName)" /></td>
+                                        <td>@item.Title</td>
+                                        <td>@item.CreateDate</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a onclick="copyImageUrl('@(SiteImagesBaseAddress + item.ImageName)')" class="btn btn-info ">کپی </a>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a onclick="DeleteAjax('   آیا از حذف تصویر @item.Title مطئن هستید؟ ','تصویر به طور کامل از دیتابیس حذف میگردد و این عملیات غیر قابل بازگشت خواهد بود', 'warning', 'بله', '/Admin/Site/Images/Delete',@item.Id)" class="btn btn-danger">حذف</a>
+                                            </div>
+
+                                        </td>
+                                    </tr>
+
+
+                                }
+                            }
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+
+            @if (Model.Images.PageCount > 1)
+            {
+                <div class="row">
+                    <div class="col-sm-5"></div>
+                    <div class="col-sm-7">
+                        <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
+                            <ul class="pagination">
+
+                                <li class="paginate_button previous disabled" id="DataTables_Table_0_previous">
+                                    <a href="/Admin/SitesImages/Index?pageId=@Model.Images.StartPage" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0">@Model.Images.StartPage</a>
+                                </li>
+                                @for (int i = Model.Images.StartPage + 1; i < Model.Images.EndPage; i++)
+                                {
+                                    <li class="paginate_button  @((Model.Images.PageId == i) ? "active" : "")">
+                                        <a href="/Admin/SitesImages/Index?pageId=@i" aria-controls="DataTables_Table_0" data-dt-idx="1" tabindex="0">@i</a>
+                                    </li>
+                                }
+                                <li class="paginate_button next disabled" id="DataTables_Table_0_next">
+                                    <a href="/Admin/SitesImages/Index?pageId=@Model.Images.EndPage" aria-controls="DataTables_Table_0" data-dt-idx="2" tabindex="0">@Model.Images.EndPage</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+
+
+
+
+        </div>
+    </div>
+    <!-- /.box-body -->
+</div>
+@section Scripts {
+    @if (!string.IsNullOrEmpty(successMessage))
+    {
+        TempData["success"] = null;
+        <script>
+            AlerSweetWithTimer( "@successMessage","success", "center");
+        </script>
+    }
+
+
+
+    <script>
+             function copyImageUrl(imageUrl) {
+            // اطمینان از اینکه آدرس خالی نباشد
+            if (!imageUrl) {
+                alert("آدرس تصویر معتبر نیست!");
+                return;
+            }
+
+            // اگر آدرس نسبی است، آدرس کامل ساخته می‌شود
+            const fullUrl = imageUrl.startsWith("http")
+                ? imageUrl
+                : window.location.origin + imageUrl;
+
+            // کپی به کلیپ‌بورد
+            navigator.clipboard.writeText(fullUrl)
+                .then(() => {
+                    alert("✅ آدرس تصویر با موفقیت کپی شد!");
+                })
+                .catch(() => {
+                    alert("❌ خطا در کپی آدرس!");
+                });
+        }
+                $('.ImageDataTable').DataTable({
+            paging: false,
+            autoWidth: true,
+            lengthChange: true,
+            searching: false,
+            ordering: true,
+            info:false
+        });
+
+    </script>
+}

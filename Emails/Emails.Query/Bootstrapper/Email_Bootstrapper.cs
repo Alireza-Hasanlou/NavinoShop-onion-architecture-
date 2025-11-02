@@ -1,4 +1,4 @@
-﻿using Emails.Application.Contract.SensEmailService.Query;
+﻿using Emails.Application.Contract.SendEmailService.Query;
 using Emails.Infrastructure;
 using Emails.Infrastructure.Bootstrapper;
 using Emails.Query.Services;

@@ -5,10 +5,11 @@
     ViewData["title"] = "ویرایش نقش ";
 
 }
-<div class="row">
-    <form method="post" role="form" asp-page="Edit">
+<div class="Formcontainer">
 
-        @if ( Model.Role.permissions.Count() > 0)
+    <form id="blogcontentForm" asp-page="Edit" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Role.Id" />
+        @if (Model.Role.permissions.Count() > 0)
         {
             for (int i = 0; i < Model.Role.permissions.Count; i++)
             {
@@ -16,58 +17,49 @@
             }
         }
 
-        <input id="RoleId" type="hidden" asp-for="Role.Id" />
 
+        <div class="col  col-12 col-sm-12 ">
 
-        <div class="col-md-6">
-            <div class="box box-primary ">
-                <div class="box-header with-border">
-                </div>
-                <div class="box-body">
-                    <div class="col-md-6 ">
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">عنوان تقش</label>
-                            <input type="text" class="form-control" asp-for="Role.Title" id="RoleTitle" placeholder=" عنوان تقش را وارد کنید">
-                        </div>
-                        <span asp-validation-for="Role.Title" class="text-danger"></span>
-                        <div class="box-footer">
-                            <button id="EditRoleBtn" type="submit" class="btn btn-primary">ویرایش</button>
-                        </div>
-                       
-                    </div>
-
-                </div>
-
+            <div class="custom-form-group">
+                <label for="title" class="required">عنوان</label>
+                <input asp-for="@Model.Role.Title" type="text" id="Title">
+                <span asp-validation-for="Role.Title" class="text-danger"></span>
             </div>
         </div>
 
-        <div class=" col-md-6">
-            <div class="box box-primary ">
-                <div class="box-header with-border">
-                    <h4>دسترسی های نقش را مشخص کنید</h4>
-                </div>
-                @if (Model.Permissions?.Any() == true)
+
+        <div class=" col  col-12 col-sm-12">
+
+            <div class="box-header with-border">
+                <h4>دسترسی های نقش را مشخص کنید</h4>
+            </div>
+            @if (Model.Permissions?.Any() == true)
+            {
+                foreach (var item in Model.Permissions)
                 {
-                    foreach (var item in Model.Permissions)
-                    {
-                        <div>
-                            <label>
-                                <input type="checkbox"
-                                       class="flat-red"
-                                       name="permissions"
-                                       value="@item.Id"
-                                       @(Model.Role?.permissions?.Any(x => x == item.Id) == true ? "checked" : "") />
-                                @item.Title
-                            </label>
-                        </div>
-                    }
+                    <div>
+                        <label>
+                            <input type="checkbox"
+                                   class="flat-red"
+                                   name="permissions"
+                                   value="@item.Id"
+                                   @(Model.Role?.permissions?.Any(x => x == item.Id) == true ? "checked" : "") />
+                            @item.Title
+                        </label>
+                    </div>
+                    <br />
                 }
-                <span asp-validation-for="Role" class="text-danger"></span>
-            </div>
+            }
+            <span asp-validation-for="Role" class="text-danger"></span>
         </div>
+
+        <button type="submit" class="btn btn-success btn-block">ویرایش </button>
 
     </form>
 </div>
+
+
+
 
 
 

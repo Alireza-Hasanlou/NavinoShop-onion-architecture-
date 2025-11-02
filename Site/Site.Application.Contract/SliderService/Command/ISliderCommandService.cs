@@ -9,9 +9,9 @@ namespace Site.Application.Contract.SliderService.Command
 {
     public interface ISliderCommandService
     {
-        Task<OperationResult> Create(CreateSliderCommandModel command);
-        Task<OperationResult> Edit(EditSliderCommandModel command);
-        Task<OperationResult> ActivationChange(int id);
-        Task<EditSliderCommandModel> GetForEdit(int id);
+        Task<OperationResult> CreateAsync(CreateSliderCommandModel command);
+        Task<OperationResult> EditAsync(EditSliderCommandModel command);
+        Task<OperationResult> ActivationChangeAsync(int id);
+        Task<EditSliderCommandModel> GetForEditAsync(int id);
     }
 }

@@ -20,7 +20,7 @@ namespace Site.Application.Services
             _fileService = fileService;
         }
 
-        public async Task<OperationResult> ActivationChange(int id)
+        public async Task<OperationResult> ActivationChangeAsync(int id)
         {
             var menu = await _menuRepository.GetByIdAsync(id);
             menu.ActivationChange();
@@ -29,7 +29,7 @@ namespace Site.Application.Services
             return new(false);
         }
 
-        public async Task<OperationResult> Create(CreateMenuCommandModel command)
+        public async Task<OperationResult> CreateAsync(CreateMenuCommandModel command)
         {
             if (command.Status == MenuStatus.منوی_اصلی_با_زیر_منو)
             {
@@ -67,7 +67,7 @@ namespace Site.Application.Services
             return new(false, ValidationMessages.SystemErrorMessage, nameof(command.ImageAlt));
         }
 
-        public async Task<OperationResult> CreateSub(CreateSubMenuCommandModel command)
+        public async Task<OperationResult> CreateSubAsync(CreateSubMenuCommandModel command)
         {
             if (command.ParentStatus == MenuStatus.منوی_وبلاگ_با_زیر_منوی_عکس_دار)
             {
@@ -125,7 +125,7 @@ namespace Site.Application.Services
             return new(false, ValidationMessages.SystemErrorMessage, nameof(command.ImageAlt));
         }
 
-        public async Task<OperationResult> Edit(EditMenuCommandModel command)
+        public async Task<OperationResult> EditAsync(EditMenuCommandModel command)
         {
             var menu = await _menuRepository.GetByIdAsync(command.Id);
             string imageName = command.ImageName;
@@ -160,7 +160,7 @@ namespace Site.Application.Services
             return new(false, ValidationMessages.SystemErrorMessage, nameof(command.ImageAlt));
         }
 
-        public async Task<CreateSubMenuCommandModel> GetForCreate(int parentId)
+        public async Task<CreateSubMenuCommandModel> GetForCreateAsync(int parentId)
         {
             var parent = await _menuRepository.GetByIdAsync(parentId);
             return new()
@@ -174,7 +174,7 @@ namespace Site.Application.Services
             };
         }
 
-        public async Task<EditMenuCommandModel> GetForEdit(int id) =>
+        public async Task<EditMenuCommandModel> GetForEditAsync(int id) =>
           await _menuRepository.GetForEdit(id);
     }
 }

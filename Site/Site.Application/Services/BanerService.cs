@@ -21,7 +21,7 @@ namespace Site.Application.Services
             _fileService = fileService;
         }
 
-        public async Task<OperationResult> ActivationChange(int id)
+        public async Task<OperationResult> ActivationChangeAsync(int id)
         {
             var baner = await _banerRepository.GetByIdAsync(id);
             baner.ActivationChange();
@@ -30,7 +30,7 @@ namespace Site.Application.Services
             return new(false);
         }
 
-        public async Task<OperationResult> Create(CreateBanerCommandModel command)
+        public async Task<OperationResult> CreateAsync(CreateBanerCommandModel command)
         {
             if (command.ImageFile == null ||  !command.ImageFile.IsImage())
                 return new(false, ValidationMessages.ImageErrorMessage, nameof(command.ImageFile));
@@ -50,7 +50,7 @@ namespace Site.Application.Services
             return new(false, ValidationMessages.SystemErrorMessage, nameof(command.ImageAlt));
         }
 
-        public async Task<OperationResult> Edit(EditBanerCommandModel command)
+        public async Task<OperationResult> EditAsync(EditBanerCommandModel command)
         {
             var baner = await _banerRepository.GetByIdAsync(command.Id);
             string imageName = baner.ImageName;
@@ -86,7 +86,7 @@ namespace Site.Application.Services
             
         }
 
-        public async Task<EditBanerCommandModel> GetForEdit(int id) =>
+        public async Task<EditBanerCommandModel> GetForEditAsync(int id) =>
            await _banerRepository.GetForEdit(id);
     }
 }

@@ -9,6 +9,5 @@ namespace Users.Application.Contract.RoleService.Command
         [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
         [MaxLength(255, ErrorMessage = ValidationMessages.MaxLengthMessage)]
         public string Title { get; set; }
-        public string ImageName { get; set; }
     }
 }

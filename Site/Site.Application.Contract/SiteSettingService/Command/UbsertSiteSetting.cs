@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Site.Application.Contract.SiteSettingService.Command
 {
-    public class UbsertSiteSetting
+    public class UpsertSiteSetting
     {
         [Display(Name = "لینک پیج اینستاگرام")] 
         [MaxLength(600, ErrorMessage = ValidationMessages.MaxLengthMessage)]

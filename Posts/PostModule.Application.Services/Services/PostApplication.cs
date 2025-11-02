@@ -29,7 +29,7 @@ namespace PostModule.Application.Services
         public async Task<OperationResult> Create(CreatePost command)
         {
             if (await _postRepository.ExistByAsync(p => p.Title == command.Title))
-                return new OperationResult(false, ValidationMessages.DuplicatedMessage, "Title");
+                return new OperationResult(false, ValidationMessages.DuplicatedMessage,nameof(command.Title));
             Post post = new(command.Title, command.Status, command.TehranPricePlus, command.StateCenterPricePlus,
                command.CityPricePlus, command.InsideStatePricePlus, command.StateClosePricePlus,
                command.StateNonClosePricePlus,command.Description);
@@ -37,13 +37,13 @@ namespace PostModule.Application.Services
             if (result.Success)
                 return new(true);
 
-            return new OperationResult(false, ValidationMessages.SystemErrorMessage, "Title");
+            return new OperationResult(false, ValidationMessages.SystemErrorMessage, nameof(command.Title));
         }
 
         public async Task<OperationResult> Edit(EditPost command)
         {
             if (await _postRepository.ExistByAsync(p => p.Title == command.Title && p.Id != command.Id))
-                return new OperationResult(false, ValidationMessages.DuplicatedMessage, "Title");
+                return new OperationResult(false, ValidationMessages.DuplicatedMessage, nameof(command.Title));
             var post = await _postRepository.GetByIdAsync(command.Id);
              post.Edit(command.Title, command.Status, command.TehranPricePlus, command.StateCenterPricePlus,
                command.CityPricePlus, command.InsideStatePricePlus, command.StateClosePricePlus,
@@ -51,7 +51,7 @@ namespace PostModule.Application.Services
             if (await _postRepository.SaveAsync())
                 return new(true);
 
-            return new OperationResult(false, ValidationMessages.SystemErrorMessage, "Title");
+            return new OperationResult(false, ValidationMessages.SystemErrorMessage, nameof(command.Title));
         }
 
         public async Task<EditPost> GetForEdit(int id)

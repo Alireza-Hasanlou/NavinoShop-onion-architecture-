@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Comments.Infrastructure.Bootstrapper
 {
-    public static class CommentInfrastryctureBootstrapper
+    public static class CommentBootstrapper
     {
         public static void Config(IServiceCollection services,string connection)
         {

@@ -1,0 +1,60 @@
+﻿@page 
+@model NavinoShop.WebApplication.Areas.Admin.Pages.Site.Service.EditModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "ویرایش سرویس";
+}
+<div class="Formcontainer">
+
+    <div class="Formcontainer">
+
+
+        <form method="post" enctype="multipart/form-data">
+
+
+            <div class="col  col-12">
+                <!-- عنوان -->
+                <div class="custom-form-group">
+                    <label for="title" class="required">عنوان</label>
+                    <input asp-for="EditsiteService.Title" type="text" id="Title">
+                    <span asp-validation-for="EditsiteService.Title" class="text-danger"></span>
+                </div>
+            </div>
+
+
+
+
+            <div class="row">
+
+
+                <div class="col col-md-6 col-sm-12 col-12">
+
+                    <div class="custom-form-group">
+                        <label class="required" for="ImageAlt"> Alt تصویر</label>
+                        <input asp-for="EditsiteService.ImageAlt" type="text" id="ImageAlt">
+                        <span asp-validation-for="EditsiteService.ImageAlt" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col col-md-6 col-sm-12 col-12">
+                    <div id="img-container">
+                        <label for="upload-file">
+                            <div class="picture-uploader" data-url="">
+                                <div class="picture__image">Choose an image</div>
+
+                                <input asp-for="@Model.EditsiteService.ImageFile" type="file" id="upload-file" class="picture__input" accept="image/*" />
+                            </div>
+                        </label>
+
+                    </div>
+                    <span asp-validation-for="EditsiteService.ImageFile" class="text-danger"></span>
+                </div>
+            </div>
+
+
+            <button type="submit" class="btn btn-success btn-block">افزودن </button>
+
+        </form>
+    </div>
+</div>
+
+

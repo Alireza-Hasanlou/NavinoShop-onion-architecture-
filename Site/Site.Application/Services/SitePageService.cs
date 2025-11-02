@@ -17,7 +17,7 @@ internal class SitePageService : ISitePageCommandService
 		_sitePageRepository = sitePageRepository;
 	}
 
-    public async Task<OperationResult> ActivationChange(int id)
+    public async Task<OperationResult> ActivationChangeAsync(int id)
 	{
 		var page = await _sitePageRepository.GetByIdAsync(id);
 		page.ActivationChange();
@@ -26,7 +26,7 @@ internal class SitePageService : ISitePageCommandService
 	   return new(false);
 	}
 
-    public async Task<OperationResult> Create(CreateSitePageCommnadModel command)
+    public async Task<OperationResult> CreateAsync(CreateSitePageCommnadModel command)
 	{
 		if (await _sitePageRepository.ExistByAsync(c => c.Title == command.Title.Trim()))
 			return new(false, ValidationMessages.DuplicatedMessage, nameof(command.Title));
@@ -40,7 +40,7 @@ internal class SitePageService : ISitePageCommandService
 		return new(false, ValidationMessages.SystemErrorMessage, nameof(command.Title));
 	}
 
-	public async Task<OperationResult> Edit(EditSitePageCommandModel command)
+	public async Task<OperationResult> EditAsync(EditSitePageCommandModel command)
 	{
 		var page =await _sitePageRepository.GetByIdAsync(command.Id);
 		if (await _sitePageRepository.ExistByAsync(c => c.Title == command.Title.Trim() && c.Id != page.Id))
@@ -54,6 +54,6 @@ internal class SitePageService : ISitePageCommandService
 		return new(false, ValidationMessages.SystemErrorMessage, nameof(command.Title));
 	}
 
-	public async Task<EditSitePageCommandModel> GetForEdit(int id) =>
+	public async Task<EditSitePageCommandModel> GetForEditAsync(int id) =>
 		await _sitePageRepository.GetForEdit(id);
 }

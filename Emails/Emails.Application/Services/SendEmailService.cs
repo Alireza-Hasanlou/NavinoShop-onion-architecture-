@@ -1,9 +1,8 @@
 ﻿
-using Emails.Application.Contract.SensEmailService.Command;
+using Emails.Application.Contract.SendEmailService.Command;
 using Emails.Domailn.SendEmailAgg;
 using Shared.Application;
 using Shared.Application.Validations;
-using System.ComponentModel.Design;
 
 
 namespace Emails.Application.Services
@@ -15,7 +14,7 @@ namespace Emails.Application.Services
         {
             _sendEmailRepository = sendEmailRepository;
         }
-        public async Task<OperationResult> Create(CreateSendEmailCommnadModel commmand)
+        public async Task<OperationResult> CreateAsync(CreateSendEmailCommnadModel commmand)
         {
             SendEmail email = new(commmand.Title, commmand.Text);
             var result = await _sendEmailRepository.CreateAsync(email);

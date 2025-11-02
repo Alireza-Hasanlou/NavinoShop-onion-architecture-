@@ -17,16 +17,7 @@ Services.AddRazorPages();
 
 #region Bootstrappers
 
-DependencyBootstrapper.Congig(Services);
-Blog_Bootstrapper.Config(Services, ConnectionString);
-User_Bootstrapper.Config(Services, ConnectionString);
-Seo_Bootstrapper.Config(Services, ConnectionString);
-Site_Bootstrapper.Config(Services, ConnectionString);
-Comment_Bootstrapper.Config(Services, ConnectionString);
-Email_Bootstrapper.Config(Services, ConnectionString);
-Post_Bootstrapper.Config(Services, ConnectionString);
-
-
+DependencyBootstrapper.Congig(Services,ConnectionString);
 #endregion
 var app = builder.Build();
 

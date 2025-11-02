@@ -14,3 +14,4 @@ namespace Site.Application.Contract.MenuService.Query
         public string CreationDate { get; set; }
     }
 }
+

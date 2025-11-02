@@ -19,7 +19,7 @@ namespace Site.Infrastructure.Persistence.Repository
             _context = context;
         }
 
-        public async Task<UbsertSiteSetting> GetForUbsert()
+        public async Task<UpsertSiteSetting> GetForUpsert()
         {
             var site = await GetSingle();
             return new()

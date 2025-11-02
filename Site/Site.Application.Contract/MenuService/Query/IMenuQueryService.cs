@@ -9,10 +9,10 @@ namespace Site.Application.Contract.MenuService.Query
 {
     public interface IMenuQueryService
     {
-        Task<MenuPageAdminQueryModel>GetForAdmin(int parentId);
-        Task<List<MenuForUiQueryModel>> GetForIndex();
-        Task<List<MenuForUiQueryModel>> GetForFooter();
-        Task<List<MenuForUiQueryModel>> GetForBlog();
+        Task<MenuPageAdminQueryModel>GetForAdminAsync(int parentId);
+        Task<List<MenuForUiQueryModel>> GetForIndexAsync();
+        Task<List<MenuForUiQueryModel>> GetForFooterAsync();
+        Task<List<MenuForUiQueryModel>> GetForBlogAsync();
 
     }
 }

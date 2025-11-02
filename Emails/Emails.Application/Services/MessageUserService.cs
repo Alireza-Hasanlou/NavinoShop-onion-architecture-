@@ -65,7 +65,7 @@ namespace Emails.Application.Services
             }
         }
 
-        public async Task<OperationResult> Create(CreateMessageUserCommandModel command)
+        public async Task<OperationResult> CreateAsync(CreateMessageUserCommandModel command)
         {
             MessageUser messageUser = new(command.UserId, command.FullName, command.Subject, 
                 command.PhoneNumber, command.Email, command.Message);

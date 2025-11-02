@@ -1,5 +1,5 @@
 ﻿
-using Emails.Application.Contract.SensEmailService.Query;
+using Emails.Application.Contract.SendEmailService.Query;
 using Emails.Domailn.SendEmailAgg;
 using Microsoft.EntityFrameworkCore;
 using Shared.Application;
@@ -18,7 +18,7 @@ namespace Emails.Query.Services
         {
             _sendEmailRepository = sendEmailRepository;
         }
-        public async Task<List<SendEmailQueryModel>> GetEmailSendsFoeAdmin()
+        public async Task<List<SendEmailQueryModel>> GetEmailSendsForAdmin()
 		{
 			return await _sendEmailRepository.GetAll()
 				.Select(x => new SendEmailQueryModel()

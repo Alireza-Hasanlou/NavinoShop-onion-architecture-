@@ -13,7 +13,7 @@
             </div>
             <div class="pull-right info">
                 <p>علیرضا حسینی زاده</p>
- 
+
                 <a href="#"><i class="fa fa-circle text-success"></i> آنلاین</a>
             </div>
         </div>
@@ -29,42 +29,140 @@
             </div>
         </form>
 
-      
+
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">تیتر</li>
 
-            <li class="@(currentPath.Contains("/admin/roles") || currentPath.Contains("/admin/user") ? "active" : "") treeview">
+            <li class="@(currentPath.Contains("/admin/roles")
+                      || currentPath.Contains("/admin/user") ? "active" : "") treeview">
                 <a href="#">
-                    <i class="fa fa-link"></i> <span>مدیریت کاربران</span>
+                    <i class="fa fa-user"></i> <span>مدیریت کاربران</span>
                     <span class="pull-left-container">
                         <i class="fa fa-angle-right pull-left"></i>
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class="@(currentPath.Contains("/admin/roles") ? "active" : "")">
-                        <a href="/Admin/Roles/Index">سطوح دسترسی</a>
+                    <li class=@(currentPath.Contains("/admin/roles") ? "active" : "")>
+                        <a href="/Admin/Roles"><i class="fa fa-user-secret"></i>  سطوح دسترسی</a>
                     </li>
-                    <li><a href="#">لینک سطح ۱</a></li>
+                    <li class=@(currentPath.Contains("/admin/user") ? "active" : "")>
+                        <a href="/Admin/Users"><i class="fa fa-users"></i>  کاربران سایت</a>
+                    </li>
                 </ul>
             </li>
 
-            <li class="@(currentPath.Contains("/admin/blogcategories") || currentPath.Contains("/admin/blogs") ? "active" : "") treeview">
-                <a >
-                    <i class="fa fa-link"></i> <span>مدیریت مقالات</span>
+            <li class="@(currentPath.Contains("/admin/blogs")|| currentPath.Contains("/admin/blogcategories")
+                                                              ? "active" : "") treeview">
+                <a href="#">
+                    <i class="fa fa-newspaper-o"></i> <span>مدیریت مقالات</span>
                     <span class="pull-left-container">
                         <i class="fa fa-angle-right pull-left"></i>
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class="@(currentPath.Contains("/admin/blogcategories") ? "active" : "")">
-                        <a href="/Admin/BlogCategories/Index">دسته بندی مقالات</a>
+                    <li class=@(currentPath.Contains("/admin/blogcategories/") ? "active" : "")>
+                        <a href="/Admin/BlogCategories/Index?0"><i class="fa fa-newspaper-o"></i>  دسته بندی مقالات</a>
                     </li>
-                    <li class="@(currentPath.Contains("/admin/blogs") ? "active" : "")"><a href="/Admin/Blogs">مدیریت مقالات</a></li>
+                    <li class=@(currentPath.Contains("/admin/blogs/") ? "active" : "")>
+                        <a href="/Admin/Blogs/Index?0"><i class="fa fa-newspaper-o"></i>  مدیریت مقالات</a>
+                    </li>
                 </ul>
+            </li>
+            <li class="@(currentPath.Contains("/admin/post")
+                                                            || currentPath.Contains("/admin/state")
+                                                            || currentPath.Contains("/admin/package")
+                                                            || currentPath.Contains("/admin/city")
+                                                              ? "active" : "") treeview">
+                <a href="#">
+                    <i class="fa fa-ship"></i> <span>مدیریت پست</span>
+                    <span class="pull-left-container">
+                        <i class="fa fa-angle-right pull-left"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class=@(currentPath.Contains("/admin/site/post") ? "active" : "")>
+                        <a href="/Admin/site/Post/Index"><i class="fa fa-ship"></i>  مدیریت پست</a>
+                    </li>
+                    <li class=@(currentPath.Contains("/admin/state/") ? "active" : "")>
+                        <a href="/Admin/State/Index"><i class="fa fa-map-o"></i>  مدیریت استان ها</a>
+                    </li>
+                    <li class=@(currentPath.Contains("/admin/package") ? "active" : "")>
+                        <a href="/Admin/Package/Index"><i class="fa fa-shopping-basket"></i>  مدیریت پکیج های فروش پست</a>
+                    </li>
+                    <li class=@(currentPath.Contains("/admin/site/post/setting") ? "active" : "")>
+                        <a href="/Admin/site/Post/Setting"><i class="fa fa-gear"></i>  تنظیمات پست</a>
+                    </li>
+                </ul>
+            </li>
+
+
+            <li class="@(currentPath.Contains("/admin/useremail")
+                                                            || currentPath.Contains("/admin/sendemail")
+                                                                            || currentPath.Contains("/admin/usermessage")
+                                                              ? "active" : "") treeview">
+                <a href="#">
+                    <i class="fa fa-envelope-open"></i> <span>مدیریت خبرنامه</span>
+                    <span class="pull-left-container">
+                        <i class="fa fa-angle-right pull-left"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class=@(currentPath.Contains("/admin/usersemail") ? "active" : "")>
+                        <a href="/Admin/UsersEmail/Index"><i class="fa fa-mail-reply"></i>  ایمیل های خبرنامه</a>
+                    </li>
+                    <li class=@(currentPath.Contains("/admin/sendemail/") ? "active" : "")>
+                        <a href="/Admin/SendEmail/Index"><i class="fa fa-mail-forward"></i>  ایمیل های ارسالی</a>
+                    </li>
+                    <li class=@(currentPath.Contains("/admin/usermessage/") ? "active" : "")>
+                        <a href="/Admin/UsersMessage/Index"><i class="fa fa-comment"></i>  پیام های ارسالی</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="@(currentPath.Contains("/admin/site")
+                      || currentPath.Contains("/admin/site/baners")
+                      || currentPath.Contains("/admin/site/sliders")
+                      || currentPath.Contains("/admin/site/service")
+                      || currentPath.Contains("/admin/site/menu")
+                      || currentPath.Contains("/admin/site/images")
+                      || currentPath.Contains("/admin/site/sitepage")
+                      ? "active" : "") treeview">
+                <a href="#">
+                    <i class="fa fa-gear"></i> <span>تنظیمات سایت</span>
+                    <span class="pull-left-container">
+                        <i class="fa fa-angle-right pull-left"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class=@(currentPath.Contains("/admin/site/setting") ? "active" : "")>
+                        <a href="/Admin/Site/Settings/Index"><i class="fa fa-gear"></i> تنظیمات سایت</a>
+                    </li>
+                    <li class=@(currentPath.Contains("/admin/site/baners/") ? "active" : "")>
+                        <a href="/Admin/site/Baners/Index"><i class="fa fa-image"></i>  مدیریت بنر ها</a>
+                    </li>
+                    <li class=@(currentPath.Contains("/admin/site/sliders/") ? "active" : "")>
+                        <a href="/Admin/Site/Sliders/Index"><i class="fa fa-sliders"></i>  مدیریت اسلایدر</a>
+                    </li>
+                    <li class=@(currentPath.Contains("/admin/site/service/") ? "active" : "")>
+                        <a href="/Admin/site/Service/Index"><i class="fa fa-circle-o"></i>  مدیریت خدمات</a>
+                    </li>
+                    <li class=@(currentPath.Contains("/admin/site/menu/") ? "active" : "")>
+                        <a href="/Admin/site/Menu/Index"><i class="fa fa-circle-o"></i>  مدیریت منو</a>
+                    </li>
+                    <li class=@(currentPath.Contains("/admin/Site/images") ? "active" : "")>
+                        <a href="/Admin/Site/Images/Index"><i class="fa fa-image"></i> <span>عکس های آپلود شده</span></a>
+                    </li>
+                    <li class=@(currentPath.Contains("/admin/site/sitepage") ? "active" : "")>
+                        <a href="/Admin/Site/SitePage/Index"><i class="fa fa-book"></i> <span>مدیریت صفحات</span></a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class=@(currentPath.Contains("/admin/comment") ? "active" : "")>
+                <a href="/Admin/Comment/UnSeen"><i class="fa fa-comment"></i> <span>نظرات دیده نشده</span></a>
             </li>
         </ul>
 
-     
+
     </section>
 
 </aside>

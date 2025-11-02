@@ -7,14 +7,13 @@ namespace PostModule.Application.Contract.PostApplication
     public class CreatePost
     {
         [Display(Name = "عنوان پست")]
-        [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
-        [MaxLength(255 ,ErrorMessage = ValidationMessages.MaxLengthMessage)]
+        [Required(  ErrorMessage = ValidationMessages.RequiredMessage)]
         public string Title { get; set; }
         [Display(Name = "توضیحات تحویل")]
         [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
         public string Status { get; set; }
         [Display(Name = "اضافه بار هر کیلوگرم درون شهری تهران (تومان)")]
-        [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
+        [MinLength(1000,ErrorMessage = ValidationMessages.RequiredMessage)]
         public int TehranPricePlus { get; set; }
         [Display(Name = "اضافه بار هر کیلوگرم درون شهری مراکز استان ها (تومان)")]
         [Required(ErrorMessage = ValidationMessages.RequiredMessage)]

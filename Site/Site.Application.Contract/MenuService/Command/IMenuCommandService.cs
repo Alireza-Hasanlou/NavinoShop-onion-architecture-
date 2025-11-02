@@ -9,11 +9,11 @@ namespace Site.Application.Contract.MenuService.Command
 {
     public interface IMenuCommandService
     {
-        Task<OperationResult> Create(CreateMenuCommandModel command);
-        Task<CreateSubMenuCommandModel> GetForCreate(int parentId);
-        Task<OperationResult> CreateSub(CreateSubMenuCommandModel command);
-        Task<OperationResult> Edit(EditMenuCommandModel command);
-        Task<EditMenuCommandModel> GetForEdit(int id);
-        Task<OperationResult> ActivationChange(int id);
+        Task<OperationResult> CreateAsync(CreateMenuCommandModel command);
+        Task<CreateSubMenuCommandModel> GetForCreateAsync(int parentId);
+        Task<OperationResult> CreateSubAsync(CreateSubMenuCommandModel command);
+        Task<OperationResult> EditAsync(EditMenuCommandModel command);
+        Task<EditMenuCommandModel> GetForEditAsync(int id);
+        Task<OperationResult> ActivationChangeAsync(int id);
     }
 }

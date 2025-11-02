@@ -18,7 +18,7 @@ internal class ImageSiteService : IImageSiteCommandService
         _fileService = fileService;
     }
 
-    public async Task<OperationResult> Create(CreateImageSiteCommandModel command)
+    public async Task<OperationResult> CreateAsync(CreateImageSiteCommandModel command)
     {
         if (command.ImageFile == null || !command.ImageFile.IsImage())
             return new(false, ValidationMessages.ImageErrorMessage, nameof(command.Title));

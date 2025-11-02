@@ -1,0 +1,43 @@
+﻿@page 
+@model NavinoShop.WebApplication.Areas.Admin.Pages.SendEmail.CreateModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["title"] = "ایجاد صفحه  ";
+
+}
+<div class="Formcontainer">
+
+        <div class="Formcontainer">
+
+
+            <form method="post" enctype="multipart/form-data">
+
+            <div class="col  col-12  ">
+                <!-- عنوان -->
+                <div class="custom-form-group">
+                    <label for="title" class="required">عنوان</label>
+                    <input asp-for="CreateSendEmail.Title" type="text" id="Title">
+                    <span asp-validation-for="CreateSendEmail.Title" class="text-danger"></span>
+                </div>
+            </div>
+
+
+
+                <div class="col col-12  ">
+                  
+                    <div class="custom-form-group">
+                        <label for="Text" class="required">متن ایمیل</label>
+                        <textarea asp-for="CreateSendEmail.Text" id="Text"></textarea>
+                        <span asp-validation-for="CreateSendEmail.Text" class="text-danger"></span>
+                    </div>
+                </div>
+                
+
+
+                <button type="submit" class="btn btn-success btn-block">افزودن </button>
+
+            </form>
+        </div>
+</div>
+
+

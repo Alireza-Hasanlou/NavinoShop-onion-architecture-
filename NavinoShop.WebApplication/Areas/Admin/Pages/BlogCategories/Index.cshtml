@@ -81,7 +81,8 @@
                                                 </div>
                                             </div>
 
-                                        <td>  <a asp-page="Edit" asp-route-id="@item.Id" class="btn btn-warning">ویرایش</a></td>
+                                        <td>  
+                                         <a asp-page="Edit" asp-route-id="@item.Id" class="btn btn-warning">ویرایش</a></td>
                                         @if (item.ParentId == 0)
                                         {
                                             <td>  <a asp-page="index" asp-route-Id="@item.Id" class="btn btn-info">زیرگروه ها</a></td>

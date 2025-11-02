@@ -1,0 +1,66 @@
+﻿@page 
+@model NavinoShop.WebApplication.Areas.Admin.Pages.Site.Images.CreateModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["title"] = "ایجاد تصویر  ";
+}
+<div class="Formcontainer">
+
+    <div class="Formcontainer">
+
+
+        <form method="post" enctype="multipart/form-data">
+
+            <div class="row">
+                <div class="col col-md-6 col-sm-12 col-12">
+                    <!-- عنوان -->
+                    <div class="custom-form-group">
+                        <label for="title" class="required">عنوان</label>
+                        <input asp-for="CreateImage.Title" type="text" id="Title" onchange="makeSlug('Title','Slug')">
+                        <span asp-validation-for="CreateImage.Title" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col col-md-6 col-sm-12 col-12">
+
+                    <div class="custom-form-group">
+                        <label class="required"> سربرگ</label>
+                        <input asp-for="CreateImage.Slug" type="text" id="Slug">
+                        <span asp-validation-for="CreateImage.Slug" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+
+
+                <div class="col col-md-6 col-sm-12 col-12">
+
+                    <div class="custom-form-group">
+                        <label class="required" for="ImageAlt"> Alt تصویر</label>
+                        <input asp-for="CreateImage.ImageAlt" type="text" id="ImageAlt">
+                        <span asp-validation-for="CreateImage.ImageAlt" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col col-md-6 col-sm-12 col-12">
+                    <div id="img-container">
+                        <label for="upload-file">
+                            <div class="picture-uploader" data-url="">
+                                <div class="picture__image">Choose an image</div>
+
+                                <input asp-for="@Model.CreateImage.ImageFile" type="file" id="upload-file" class="picture__input" accept="image/*" />
+                            </div>
+                        </label>
+
+                    </div>
+                    <span asp-validation-for="CreateImage.ImageFile" class="text-danger"></span>
+                </div>
+            </div>
+
+
+            <button type="submit" class="btn btn-success btn-block">افزودن </button>
+
+        </form>
+    </div>
+</div>

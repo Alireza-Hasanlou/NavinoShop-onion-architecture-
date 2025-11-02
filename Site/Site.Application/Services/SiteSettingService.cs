@@ -19,10 +19,10 @@ internal class SiteSettingService : ISiteSettingService
         _fileService = fileService;
     }
 
-    public async Task<UbsertSiteSetting> GetForUbsert() =>
-      await  _siteSettingRepository.GetForUbsert();
+    public async Task<UpsertSiteSetting> GetForUpsert() =>
+      await  _siteSettingRepository.GetForUpsert();
 
-    public async Task<OperationResult> Ubsert(UbsertSiteSetting command)
+    public async Task<OperationResult> Upsert(UpsertSiteSetting command)
     {
         SiteSetting site = await _siteSettingRepository.GetSingle();
         string logoName = site.LogoName;

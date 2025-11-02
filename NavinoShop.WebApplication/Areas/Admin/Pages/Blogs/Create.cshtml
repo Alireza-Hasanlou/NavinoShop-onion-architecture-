@@ -6,8 +6,7 @@
     ViewData["title"] = "ایجاد مقاله جدید ";
     var categories = ViewData["Categories"] as List<SelectListItem>;
 }
-<link href="~/assets/css/CreationForm.css" rel="stylesheet" />
-<div class="Blogcontainer">
+<div class="Formcontainer">
 
     <form id="blogcontentForm" method="post" enctype="multipart/form-data">
         <input type="hidden" asp-for="CreateBlog.UserId" />
@@ -15,7 +14,7 @@
 
             <div class="col col-md-6 col-12 col-sm-12 ">
                 <!-- عنوان -->
-                <div class="blogform-group">
+                <div class="custom-form-group">
                     <label for="title" class="required">عنوان</label>
                     <input asp-for="@Model.CreateBlog.Title" type="text" id="Title" onchange="makeSlug('Title','Slug')">
                     <span asp-validation-for="CreateBlog.Title" class="text-danger"></span>
@@ -23,7 +22,7 @@
             </div>
             <div class="col col-md-6 col-sm-12 col-12">
                 <!-- لینک سربرگ -->
-                <div class="blogform-group">
+                <div class="custom-form-group">
                     <label class="required"> سربرگ</label>
                     <input asp-for="CreateBlog.Slug" type="text" id="Slug" >
                     <span asp-validation-for="CreateBlog.Slug" class="text-danger"></span>
@@ -34,7 +33,7 @@
 
         <div class="col col-12 col-sm-12 ">
             <!-- توضیح مختصر -->
-            <div class="blogform-group">
+            <div class="custom-form-group">
                 <label for="shortDescription" class="required">توضیح مختصر</label>
                 <textarea asp-for="CreateBlog.ShortDescription" id="shortDescription" ></textarea>
                 <span asp-validation-for="CreateBlog.ShortDescription" class="text-danger"></span>
@@ -42,7 +41,7 @@
         </div>
 
         <!-- توضیح کامل -->
-        <div class="blogform-group">
+        <div class="custom-form-group">
             <label for="text" class="required">توضیح</label>
             <textarea asp-for ="CreateBlog.Text" id="editor1" rows="10"
                       cols="80">این ویرایشگر راست چین و فارسی شده و تنظیمات آن به صورت اختصاصی تنظیم شده است...</textarea>
@@ -52,14 +51,14 @@
 
         <div class="row">
             <div class="col">
-                <div class="blogform-group">
+                <div class="custom-form-group">
                     <label for="writer" class="required">نویسنده</label>
                     <input asp-for="CreateBlog.Writer" type="text" id="writer" readonly  >
                     <span asp-validation-for="CreateBlog.Writer" class="text-danger"></span>
                 </div>
             </div>
             <div class="col">
-                <div class="blogform-group">
+                <div class="custom-form-group">
                     <label for="imageAlt" class="required">Alt تصویر</label>
                     <input asp-for="CreateBlog.ImageAlt" type="text" id="imageAlt"  >
                     <span asp-validation-for="CreateBlog.ImageAlt" class="text-danger"></span>
@@ -70,7 +69,7 @@
         <!-- ردیف برای گروه‌ها -->
         <div class="row">
             <div class="col">
-                <div class="blogform-group">
+                <div class="custom-form-group">
                     <label asp-for="CreateBlog.CategoryId" class="required">سر گروه</label>
                     <select asp-items="@categories" id="categoryId" asp-for="CreateBlog.CategoryId" >
                         <option value="0">سرگروه را انتخاب کنید</option>
@@ -80,7 +79,7 @@
                 </div>
             </div>
             <div class="col">
-                <div class="blogform-group">
+                <div class="custom-form-group">
                     <label asp-for="CreateBlog.SubCategoryId"  class="required">زیرگروه</label>
                     <select id="subCategoryId" asp-for="CreateBlog.SubCategoryId" >
                         <option value="0">ابتدا سر گروه را انتخاب کنید</option>

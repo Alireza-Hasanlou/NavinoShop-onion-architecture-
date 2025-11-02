@@ -59,6 +59,7 @@
 @section scripts {
     @if (!string.IsNullOrEmpty(successMessage))
     {
+        TempData["success"] = null;
         <script>
             AlerSweetWithTimer( "@successMessage","success", "center");
         </script>

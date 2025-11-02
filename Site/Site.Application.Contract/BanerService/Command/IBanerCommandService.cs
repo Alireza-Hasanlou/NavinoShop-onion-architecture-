@@ -5,10 +5,10 @@ namespace Site.Application.Contract.BanerService.Command
 {
     public interface IBanerCommandService
     {
-       Task< OperationResult> Create(CreateBanerCommandModel command);
-        Task<OperationResult> Edit(EditBanerCommandModel command);
-        Task<OperationResult> ActivationChange(int id);
-        Task<EditBanerCommandModel> GetForEdit(int id);
+       Task< OperationResult> CreateAsync(CreateBanerCommandModel command);
+        Task<OperationResult> EditAsync(EditBanerCommandModel command);
+        Task<OperationResult> ActivationChangeAsync(int id);
+        Task<EditBanerCommandModel> GetForEditAsync(int id);
 
     }
 }

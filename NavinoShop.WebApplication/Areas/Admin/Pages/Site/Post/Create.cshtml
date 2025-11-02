@@ -1,0 +1,95 @@
+﻿@page 
+@model NavinoShop.WebApplication.Areas.Admin.Pages.Site.Post.CreateModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["title"] = "ایجاد پست جدید ";
+}
+<div class="Formcontainer">
+
+    <form id="Formcontainer" method="post" enctype="multipart/form-data">
+
+
+        <div class="col col-12 col-sm-12 ">
+
+            <div class="custom-form-group">
+                <label for="title" class="required">عنوان پست</label>
+                <input asp-for="@Model.CreatePost.Title" type="text" id="Title" onchange="makeSlug('Title','Slug')">
+                <span asp-validation-for="CreatePost.Title" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col col-sm-12 col-12">
+
+            <div class="custom-form-group">
+                <label class="required" for="Status"> توضیحات تحویل</label>
+                <textarea asp-for="CreatePost.Status" id="Status"></textarea>
+                <span asp-validation-for="CreatePost.Status" class="text-danger"></span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="TehranPricePlus" class="required">اضافه بار هر کیلوگرم درون شهری تهران </label>
+                    <input asp-for="CreatePost.TehranPricePlus" type="number" placeholder="مبلغ به تومان">
+                    <span asp-validation-for="CreatePost.TehranPricePlus" id="TehranPricePlus" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="StateCenterPricePlus" class="required"> اضافه بار هر کیلوگرم درون شهری مراکز استان ها</label>
+                    <input asp-for="CreatePost.StateCenterPricePlus" type="number" placeholder="مبلغ به تومان" id="StateCenterPricePlus">
+                    <span asp-validation-for="CreatePost.StateCenterPricePlus" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="CityPricePlus" class="required">اضافه بار هر کیلوگرم درون شهری شهرستان ها </label>
+                    <input asp-for="CreatePost.CityPricePlus" type="number" id="CityPricePlus" placeholder="مبلغ به تومان">
+                    <span asp-validation-for="CreatePost.CityPricePlus"  class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="InsideStatePricePlus" class="required"> ضافه بار هر کیلوگرم درون استانی</label>
+                    <input asp-for="CreatePost.InsideStatePricePlus" type="number" placeholder="مبلغ به تومان" id="InsideStatePricePlus">
+                    <span asp-validation-for="CreatePost.InsideStatePricePlus" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="StateClosePricePlus" class="required">اضافه بار هر کیلوگرم برون استانی هم جوار  </label>
+                    <input asp-for="CreatePost.StateClosePricePlus" type="number" id="StateClosePricePlus" placeholder="مبلغ به تومان">
+                    <span asp-validation-for="CreatePost.StateClosePricePlus" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="StateNonClosePricePlus" class="required"> اضافه بار هر کیلوگرم برون استانی غیر هم جوار</label>
+                    <input asp-for="CreatePost.StateNonClosePricePlus" type="number" placeholder="مبلغ به تومان" id="StateNonClosePricePlus">
+                    <span asp-validation-for="CreatePost.StateNonClosePricePlus" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col col-sm-12 col-12">
+
+            <div class="custom-form-group">
+                <label class="required" for="Description"> توضیحات </label>
+                <textarea asp-for="CreatePost.Description" id="Description"></textarea>
+                <span asp-validation-for="CreatePost.Description" class="text-danger"></span>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success btn-block">افزودن </button>
+
+    </form>
+</div>

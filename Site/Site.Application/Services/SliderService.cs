@@ -19,7 +19,7 @@ namespace Site.Application.Services
             _fileService = fileService;
         }
 
-        public async Task<OperationResult> ActivationChange(int id)
+        public async Task<OperationResult> ActivationChangeAsync(int id)
         {
             var slider =await _sliderRepository.GetByIdAsync(id);
             slider.ActivationChange();
@@ -28,7 +28,7 @@ namespace Site.Application.Services
             return new(false);
         }
 
-        public async Task<OperationResult> Create(CreateSliderCommandModel command)
+        public async Task<OperationResult> CreateAsync(CreateSliderCommandModel command)
         {
             if (command.ImageFile == null || !command.ImageFile.IsImage())
                 return new(false, ValidationMessages.ImageErrorMessage, nameof(command.ImageFile));
@@ -46,7 +46,7 @@ namespace Site.Application.Services
             return new(false, ValidationMessages.SystemErrorMessage, nameof(command.ImageAlt));
         }
 
-        public async Task<OperationResult> Edit(EditSliderCommandModel command)
+        public async Task<OperationResult> EditAsync(EditSliderCommandModel command)
         {
             var slider =await _sliderRepository.GetByIdAsync(command.Id);
             string imageName = slider.ImageName;
@@ -81,7 +81,7 @@ namespace Site.Application.Services
             }
         }
 
-        public async Task<EditSliderCommandModel> GetForEdit(int id) =>
-            await _sliderRepository.GetForEdit(id);
+        public async Task<EditSliderCommandModel> GetForEditAsync(int id) =>
+            await _sliderRepository.GetForEditAsync(id);
     }
 }

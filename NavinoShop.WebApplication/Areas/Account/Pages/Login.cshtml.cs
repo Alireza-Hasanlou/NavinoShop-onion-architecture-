@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
 using Users.Application.Contract.UserService.Command;
 
-namespace NavinoShop.WebApplication.Areas.Account
+namespace NavinoShop.WebApplication.Areas.Account.Pages
 {
     public class LoginModel : PageModel
     {

@@ -17,7 +17,7 @@ internal class MenuQuery : IMenuQueryService
         _menuRepository = menuRepository;
     }
 
-    public async Task<MenuPageAdminQueryModel> GetForAdmin(int parentId)
+    public async Task<MenuPageAdminQueryModel> GetForAdminAsync(int parentId)
     {
         MenuPageAdminQueryModel model = new()
         {
@@ -62,7 +62,7 @@ internal class MenuQuery : IMenuQueryService
         return model;
     }
 
-    public async Task<List<MenuForUiQueryModel>> GetForBlog()
+    public async Task<List<MenuForUiQueryModel>> GetForBlogAsync()
     {
         List<MenuForUiQueryModel> model = new();
         var menus = _menuRepository.GetAllBy(b => b.Active &&
@@ -101,7 +101,7 @@ internal class MenuQuery : IMenuQueryService
         return model;
     }
 
-    public async Task<List<MenuForUiQueryModel>> GetForFooter()
+    public async Task<List<MenuForUiQueryModel>> GetForFooterAsync()
     {
         List<MenuForUiQueryModel> model = new();
         var menus = _menuRepository.GetAllBy(b => b.Active &&
@@ -136,7 +136,7 @@ internal class MenuQuery : IMenuQueryService
         return model;
     }
 
-    public async Task<List<MenuForUiQueryModel>> GetForIndex()
+    public async Task<List<MenuForUiQueryModel>> GetForIndexAsync()
     {
         List<MenuForUiQueryModel> model = new();
         var menus = _menuRepository.GetAllBy(b => b.Active &&

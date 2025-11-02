@@ -1,0 +1,43 @@
+﻿@page
+@model NavinoShop.WebApplication.Areas.Admin.Pages.SendEmail.GetEmailDetailsModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["title"] = "جزئیات ایمیل ";
+}
+<div class="Formcontainer">
+
+    <div class="Formcontainer">
+
+
+       
+
+            <div class="col  col-12  ">
+                <div class="custom-form-group">
+                    <label for="title" class="required">عنوان</label>
+                    <input asp-for="EmailDetails.Title" type="text" id="Title" readonly>
+                </div>
+            </div>
+
+
+
+            <div class="col col-12  ">
+
+                <div class="custom-form-group">
+                    <label for="Text" class="required">متن ایمیل</label>
+                <textarea asp-for="EmailDetails.Text" id="Text" readonly></textarea>
+                </div>
+            </div>
+
+
+        <div class="col col-12  ">
+
+            <div class="custom-form-group">
+                <label for="Text" class="required">تاریخ ایجاد</label>
+                <input asp-for="EmailDetails.CreationDate" id="Text" readonly></input>
+            </div>
+        </div>
+            
+
+       
+    </div>
+</div>

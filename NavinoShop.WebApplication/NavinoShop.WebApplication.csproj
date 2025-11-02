@@ -2312,16 +2312,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ShopOnionCodeyad-master\PostModule\PostModule.Query\PostModule.Query.csproj" />
-    <ProjectReference Include="..\Blogs\Blogs.Query\Blogs.Query.csproj" />
-    <ProjectReference Include="..\Comments\Comments.Query\Comments.Query.csproj" />
-    <ProjectReference Include="..\Emails\Emails.Query\Emails.Query.csproj" />
-    <ProjectReference Include="..\Seos\Seos.Query\Seos.Query.csproj" />
-    <ProjectReference Include="..\Site\Site.Query\Site.Query.csproj" />
-    <ProjectReference Include="..\Users\Users.Query\Users.Query.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="Areas\Account\Models\" />
     <Folder Include="Areas\Account\Pages\Shared\" />
     <Folder Include="Areas\Admin\Models\" />
@@ -7653,6 +7643,11 @@
     <None Include="wwwroot\assets\Adminassets\bower_components\tinymce\themes\inlite\theme.min.js" />
     <None Include="wwwroot\assets\Adminassets\bower_components\tinymce\themes\modern\theme.min.js" />
     <None Include="wwwroot\assets\Adminassets\bower_components\tinymce\tinymce.min.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Query\Query.Service\Query.Service.csproj" />
+    <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

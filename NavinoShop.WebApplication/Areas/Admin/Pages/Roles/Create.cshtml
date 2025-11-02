@@ -5,72 +5,58 @@
     ViewData["title"] = "ایجاد نقش ";
 
 }
-<div class="row">
-    <form method="post" id="createRoleForm" role="form" asp-page="Create">
+<div class="Formcontainer">
+
+    <form id="blogcontentForm" method="post" enctype="multipart/form-data">
         @for (int i = 0; i < Model.Permissions.Count; i++)
         {
             <input type="hidden" asp-for="Permissions[i].Id" />
             <input type="hidden" asp-for="Permissions[i].Title" />
 
         }
+       
 
-        <div class="col-md-6">
-            <div class="box box-primary ">
-                <div class="box-header with-border">
+            <div class="col  col-12 col-sm-12 ">
+
+                <div class="custom-form-group">
+                    <label for="title" class="required">عنوان</label>
+                    <input asp-for="@Model.RoleTitle.Title" type="text" id="Title" onchange="makeSlug('Title','Slug')">
+                    <span asp-validation-for="RoleTitle.Title" class="text-danger"></span>
                 </div>
-
-                <input type="hidden" value="@Model.Permissions" />
-
-                <div class="box-body">
-                    <div class="col-md-6 ">
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">عنوان تقش</label>
-                            <input type="text" class="form-control" asp-for="@Model.RoleTitle.Title" id="RoleTitle" placeholder=" عنوان تقش را وارد کنید">
-                        </div>
-                        <span asp-validation-for="RoleTitle.Title" class="text-danger"></span>
-                        <div class="box-footer">
-                            <button id="CreateRoleBtn" type="submit" class="btn btn-primary">ارسال</button>
-                        </div>
-                       
-                    </div>
-
-                </div>
-
             </div>
-        </div>
+            
+      
+        <div class=" col  col-12 col-sm-12">
 
-        <div class=" col-md-6">
-            <div class="box box-primary ">
-                <div class="box-header with-border">
-                    <h4>دسترسی های نقش را مشخص کنید</h4>
-                </div>
-                <br />
-                @if (Model.Permissions.Count() > 0)
+            <div class="box-header with-border">
+                <h4>دسترسی های نقش را مشخص کنید</h4>
+            </div>
+            <br />
+            @if (Model.Permissions.Count() > 0)
+            {
+                foreach (var item in Model.Permissions)
                 {
-                    foreach (var item in Model.Permissions)
-                    {  
-                        <div>
+                    <div>
 
 
-                            <label class="">
+                        <label class="">
 
-                                <div class="icheckbox_flat-green" aria-checked="false" aria-disabled="false" style="position: relative;margin-right:10px;">
-                                    <input type="checkbox" class="flat-red" name="permissions" value="@item.Id" style="position: absolute; opacity: 0;">
-                                    <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;">
+                            <div class="icheckbox_flat-green" aria-checked="false" aria-disabled="false" style="position: relative;margin-right:10px;">
+                                <input type="checkbox" class="flat-red" name="permissions" value="@item.Id" style="position: absolute; opacity: 0;">
+                                <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;">
 
-                                    </ins>
-                                </div>
-                                @item.Title
-                            </label>
-                        </div>
-                      <br />
-                    }
+                                </ins>
+                            </div>
+                            @item.Title
+                        </label>
+                    </div>
+                    <br />
                 }
-          
-            </div>
-
+            }
         </div>
+        <button type="submit" class="btn btn-success btn-block">افزودن </button>
 
     </form>
 </div>
+
 

@@ -9,9 +9,9 @@ namespace Site.Application.Contract.SitePageService.Command
 {
     public interface ISitePageCommandService
     {
-        Task<OperationResult> Create(CreateSitePageCommnadModel command);
-        Task<OperationResult> Edit(EditSitePageCommandModel command);
-        Task<EditSitePageCommandModel> GetForEdit(int id);
-        Task<OperationResult> ActivationChange(int id);
+        Task<OperationResult> CreateAsync(CreateSitePageCommnadModel command);
+        Task<OperationResult> EditAsync(EditSitePageCommandModel command);
+        Task<EditSitePageCommandModel> GetForEditAsync(int id);
+        Task<OperationResult> ActivationChangeAsync(int id);
     }
 }

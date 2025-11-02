@@ -1,0 +1,65 @@
+﻿@page
+@using Shared.Application
+@using Shared.Domain.Enums
+@model NavinoShop.WebApplication.Areas.Admin.Pages.Site.Sliders.EditModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "ویرایش اسلایدر";
+    var ImageAddress = FileDirectories.SliderImageDirectory + Model.EditSlider.ImageName;
+}
+<div class="Formcontainer">
+
+
+
+
+        <div class="Formcontainer">
+
+
+            <form method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="EditSlider.Id" />
+            <input type="hidden" asp-for="EditSlider.ImageName" />
+               
+                    <div class="col  col-12 ">
+
+                        <div class="custom-form-group">
+                            <label for="Url" class="required">لینک مقصد</label>
+                            <input asp-for="@Model.EditSlider.Url" type="text" id="Url" ">
+                            <span asp-validation-for="EditSlider.Url" class="text-danger"></span>
+                        </div>
+                    </div>
+                   
+              
+                <div class="row">
+
+
+                    <div class="col col-md-6 col-sm-12 col-12">
+
+                        <div class="custom-form-group">
+                            <label class="required" for="ImageAlt"> Alt تصویر</label>
+                            <input asp-for="EditSlider.ImageAlt" type="text" id="ImageAlt">
+                            <span asp-validation-for="EditSlider.ImageAlt" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col col-md-6 col-sm-12 col-12">
+                        <div id="img-container">
+                            <label for="upload-file">
+                                <div class="picture-uploader" data-url="@ImageAddress">
+                                    <div class="picture__image">Choose an image</div>
+
+                                    <input asp-for="@Model.EditSlider.ImageFile" type="file" id="upload-file" class="picture__input" accept="image/*" />
+                                </div>
+                            </label>
+
+                        </div>
+                        <span asp-validation-for="EditSlider.ImageFile" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success btn-block">ویرایش </button>
+
+            </form>
+        </div>
+
+</div>
+
+

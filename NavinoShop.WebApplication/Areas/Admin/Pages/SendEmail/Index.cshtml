@@ -1,0 +1,64 @@
+﻿@page
+@model NavinoShop.WebApplication.Areas.Admin.Pages.SendEmail.IndexModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["title"] = "ایمیل های ارسالی ";
+}
+
+
+<div class="box">
+    <div class="box-header">
+        <h3 class="box-title">صفحه ها</h3>
+    </div>
+
+    <div class="box-body">
+        <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+            <a href="/Admin/SendEmail/Create" class="btn btn-success">افزودن</a>
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="DataTable table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
+                        <thead>
+                            <tr role="row">
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="تصویر: activate to sort column ascending" style="width: 424.812px;">ایمیل</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="تاریخ ایجاد: activate to sort column ascending" style="width: 464.469px;">تاریخ ایجاد</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="عملیات: activate to sort column ascending" style="width: 464.469px;">عملیات</th>
+                        </thead>
+                        <tbody>
+                            @if (Model.Emails.Count() > 0)
+                            {
+                                @foreach (var item in Model.Emails)
+                                {
+                                    <tr id="@item.Id" role="row" class="odd">
+
+                                        <td>@item.Title</td>
+                                        <td>@item.CreationDate</td>
+
+
+                                        <td>
+                                            <div class="btn-group">
+                                                <a href="/Admin/SendEmail/GetEmailDetails?EmailId=@item.Id" class="btn btn-info">جزئیات</a>
+
+                                                <a onclick="DeleteAjax('   آیا از حذف این ایمیل مطئن هستید؟ ','این عملیات غیر قابل بازگشت خواهد بود', 'warning', 'بله', '/Admin/SiteService/Delete',@item.Id)" class="btn btn-danger">حذف</a>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+
+                                }
+                            }
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- /.box-body -->
+</div>
+
+
+
+
+

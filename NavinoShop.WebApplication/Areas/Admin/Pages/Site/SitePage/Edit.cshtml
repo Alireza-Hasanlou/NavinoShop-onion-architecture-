@@ -1,0 +1,50 @@
+﻿@page 
+@model NavinoShop.WebApplication.Areas.Admin.Pages.Site.SitePage.EditModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "ویرایش صفحه";
+}
+<div class="Formcontainer">
+
+    <div class="Formcontainer">
+
+
+        <form method="post" enctype="multipart/form-data">
+            <input type="hidden" asp-for="EditsitePage.Id" />   
+
+            <div class="col col-md-6 col-12 col-sm-12 ">
+           
+                <div class="custom-form-group">
+                    <label for="title" class="required">عنوان</label>
+                    <input asp-for="EditsitePage.Title" type="text" id="Title" onchange="makeSlug('Title','Slug')">
+                    <span asp-validation-for="EditsitePage.Title" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col col-12">
+
+                <div class="custom-form-group">
+                    <label class="required"> سربرگ</label>
+                    <input asp-for="EditsitePage.Slug" type="text" id="Slug">
+                    <span asp-validation-for="EditsitePage.Slug" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col col-12  ">
+
+                <div class="custom-form-group">
+                    <label for="Text" class="required">توضیح مختصر</label>
+                    <textarea asp-for="EditsitePage.Text" id="Text"></textarea>
+                    <span asp-validation-for="EditsitePage.Text" class="text-danger"></span>
+                </div>
+            </div>
+
+
+
+            <button type="submit" class="btn btn-success btn-block">افزودن </button>
+
+        </form>
+    </div>
+</div>
+
+

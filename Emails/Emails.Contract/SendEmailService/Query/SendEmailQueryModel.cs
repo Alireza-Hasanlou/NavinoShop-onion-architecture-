@@ -1,4 +1,4 @@
-﻿namespace Emails.Application.Contract.SensEmailService.Query
+﻿namespace Emails.Application.Contract.SendEmailService.Query
 {
     public class SendEmailQueryModel
     {

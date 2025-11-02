@@ -4,7 +4,7 @@ namespace Site.Domain.SiteSettingAgg
 {
     public interface ISiteSettingRepository
     {
-       Task< UbsertSiteSetting> GetForUbsert();
+       Task< UpsertSiteSetting> GetForUpsert();
        Task<SiteSetting> GetSingle();
        Task< bool> SaveAsync();
     }

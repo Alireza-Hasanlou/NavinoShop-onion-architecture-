@@ -34,7 +34,7 @@ function DeleteAjax(Title, Text1, Icon, ConfirmButtonText, Url, DeletedId) {
         }
     });
 }
-function AjaxSweetNotDelete(title1, text1, icon1, confirmButtonText1, cancelButtonText1, url1,id) {
+function AjaxSweetNotDelete(title1, text1, icon1, confirmButtonText1, cancelButtonText1, url1, id) {
     Swal.fire({
         title: title1,
         text: text1,
@@ -46,14 +46,14 @@ function AjaxSweetNotDelete(title1, text1, icon1, confirmButtonText1, cancelButt
         cancelButtonText: cancelButtonText1
     }).then((result) => {
         if (result.isConfirmed) {
-        
+
             $.ajax({
                 url: url1,
                 type: "GET",
                 data: { id: id },
             }).done(function (res) {
                 if (res && res.success) {
-                
+
                     AlerSweetWithTimer(res.message || "عملیات موفق", "success", "center");
                     setTimeout(function () {
                         location.reload();
@@ -67,9 +67,8 @@ function AjaxSweetNotDelete(title1, text1, icon1, confirmButtonText1, cancelButt
             }).fail(function () {
                 AlerSweetWithTimer("خطای سمت سرور", "error", "center");
             });
-        } else {
-            location.reload();
         }
+     
 
     });
 }

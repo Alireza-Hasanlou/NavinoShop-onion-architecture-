@@ -16,7 +16,7 @@ internal class SliderRepository : GenericRepository<Slider, int>, ISliderReposit
         _context = context;
     }
 
-    public async Task<EditSliderCommandModel> GetForEdit(int id) =>
+    public async Task<EditSliderCommandModel> GetForEditAsync(int id) =>
        await _context.Sliders.Select(s => new EditSliderCommandModel
         {
             ImageAlt = s.ImageAlt,

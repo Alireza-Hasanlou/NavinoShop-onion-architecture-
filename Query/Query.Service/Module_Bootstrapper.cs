@@ -1,0 +1,39 @@
+﻿using Blogs.Query.Bootstrapper;
+using Comments.Query.Bootstrapper;
+using Emails.Query.Bootstrapper;
+using Microsoft.Extensions.DependencyInjection;
+using PostModule.Query.Bootstrapper;
+using Query.Contract.Admin.Comment;
+using Query.Contract.Admin.Email.EmailUser;
+using Query.Contract.Admin.Email.MessageUser;
+using Query.Service.Admin.Comment;
+using Query.Service.Admin.Email.EmailUser;
+using Query.Service.Admin.Email.MessageUser;
+using Seos.Query.Bootstrapper;
+using Site.Query.Bootstrapper;
+using Users.Query.Bootstrapper;
+
+namespace Query.Service
+{
+    public static class Module_Bootstrapper
+    {
+        public static void Config(IServiceCollection Services, string ConnectionString)
+        {
+
+
+            Blog_Bootstrapper.Config(Services, ConnectionString);
+            User_Bootstrapper.Config(Services, ConnectionString);
+            Seo_Bootstrapper.Config(Services, ConnectionString);
+            Site_Bootstrapper.Config(Services, ConnectionString);
+            Comment_Bootstrapper.Config(Services, ConnectionString);
+            Email_Bootstrapper.Config(Services, ConnectionString);
+            Post_Bootstrapper.Config(Services, ConnectionString);
+            Comment_Bootstrapper.Config(Services, ConnectionString);
+
+            Services.AddTransient<ICommentAdminQuery, CommentQueryService>();
+            Services.AddTransient<IEmailAdminQuery, EmailAdminQuery>();
+            Services.AddTransient<IMessageUserAdminQuery,MessageUserAdminQuery>();
+
+        }
+    }
+}

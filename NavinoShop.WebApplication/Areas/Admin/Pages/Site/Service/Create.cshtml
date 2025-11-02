@@ -1,0 +1,58 @@
+﻿@page 
+@model NavinoShop.WebApplication.Areas.Admin.Pages.Site.Service.CreateModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["title"] = "ایجاد سرویس  ";
+}
+<div class="Formcontainer">
+
+    <div class="Formcontainer">
+
+
+        <form method="post" enctype="multipart/form-data">
+
+         
+                <div class="col  col-12">
+                    <!-- عنوان -->
+                    <div class="custom-form-group">
+                        <label for="title" class="required">عنوان</label>
+                        <input asp-for="CreateSiteService.Title" type="text" id="Title">
+                        <span asp-validation-for="CreateSiteService.Title" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+
+
+            <div class="row">
+
+
+                <div class="col col-md-6 col-sm-12 col-12">
+
+                    <div class="custom-form-group">
+                        <label class="required" for="ImageAlt"> Alt تصویر</label>
+                        <input asp-for="CreateSiteService.ImageAlt" type="text" id="ImageAlt">
+                        <span asp-validation-for="CreateSiteService.ImageAlt" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col col-md-6 col-sm-12 col-12">
+                    <div id="img-container">
+                        <label for="upload-file">
+                            <div class="picture-uploader" data-url="">
+                                <div class="picture__image">Choose an image</div>
+
+                                <input asp-for="@Model.CreateSiteService.ImageFile" type="file" id="upload-file" class="picture__input" accept="image/*" />
+                            </div>
+                        </label>
+
+                    </div>
+                    <span asp-validation-for="CreateSiteService.ImageFile" class="text-danger"></span>
+                </div>
+            </div>
+
+
+            <button type="submit" class="btn btn-success btn-block">افزودن </button>
+
+        </form>
+    </div>
+</div>
