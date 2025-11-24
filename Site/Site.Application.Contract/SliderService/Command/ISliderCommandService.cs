@@ -11,6 +11,7 @@ namespace Site.Application.Contract.SliderService.Command
     {
         Task<OperationResult> CreateAsync(CreateSliderCommandModel command);
         Task<OperationResult> EditAsync(EditSliderCommandModel command);
+        Task<OperationResult> DeleteAsync(int id);
         Task<OperationResult> ActivationChangeAsync(int id);
         Task<EditSliderCommandModel> GetForEditAsync(int id);
     }

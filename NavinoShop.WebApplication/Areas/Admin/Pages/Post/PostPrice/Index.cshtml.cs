@@ -4,7 +4,7 @@ using PostModule.Application.Contract.PostApplication;
 using PostModule.Application.Contract.PostQuery;
 using System.Threading.Tasks;
 
-namespace NavinoShop.WebApplication.Areas.Admin.Pages.Site.Post
+namespace NavinoShop.WebApplication.Areas.Admin.Pages.Post.PostPrice
 {
     public class IndexModel : PageModel
     {
@@ -14,10 +14,10 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Site.Post
         {
             _postQuery = postQuery;
         }
-        public List<PostAdminQueryModel> Posts { get; set; }
-        public async Task OnGet()
+        public PostAdminDetailQueryModel PostDetails { get; set; }
+        public async Task OnGet(int id)
         {
-            Posts = await _postQuery.GetAllPostsForAdmin();
+            PostDetails = await _postQuery.GetPostDetails(id);
         }
     }
 }

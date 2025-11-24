@@ -9,8 +9,8 @@ namespace PostModule.Application.Contract.PostPriceApplication
 {
     public interface IPostPriceApplication
     {
-        Task<OperationResult> Create(CreatePostPrice command);
-        Task<OperationResult> Edit(EditPostPrice command);
-        Task<EditPostPrice> GetForEdit(int id);
+        Task<OperationResult> CreateAsync(CreatePostPrice command);
+        Task<OperationResult> EditAsync(EditPostPrice command);
+        Task<EditPostPrice> GetForEditAsync(int id);
     }
 }

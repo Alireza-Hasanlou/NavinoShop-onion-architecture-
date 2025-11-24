@@ -28,7 +28,7 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Site.Sliders
             if (result.Success)
             {
                 TempData["success"] = "اسلایدر با موفقیت ویرایش شد";
-                return Redirect("/Admin/sliders/Index");
+                return Redirect("/Admin/Site/sliders/Index");
             }
             ModelState.AddModelError($"Editslider.{result.ModelName}", result.Message);
             return Page();

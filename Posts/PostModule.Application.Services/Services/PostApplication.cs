@@ -19,14 +19,14 @@ namespace PostModule.Application.Services
             _postRepository = postRepository;
         }
 
-        public async Task<bool> ActivationChange(int id)
+        public async Task<bool> ChangeActivationAsync(int id)
         {
             var post = await _postRepository.GetByIdAsync(id);
             post.ActivationChange();
             return await _postRepository.SaveAsync();
         }
 
-        public async Task<OperationResult> Create(CreatePost command)
+        public async Task<OperationResult> CreateAsync(CreatePost command)
         {
             if (await _postRepository.ExistByAsync(p => p.Title == command.Title))
                 return new OperationResult(false, ValidationMessages.DuplicatedMessage,nameof(command.Title));
@@ -40,7 +40,7 @@ namespace PostModule.Application.Services
             return new OperationResult(false, ValidationMessages.SystemErrorMessage, nameof(command.Title));
         }
 
-        public async Task<OperationResult> Edit(EditPost command)
+        public async Task<OperationResult> EditAsync(EditPost command)
         {
             if (await _postRepository.ExistByAsync(p => p.Title == command.Title && p.Id != command.Id))
                 return new OperationResult(false, ValidationMessages.DuplicatedMessage, nameof(command.Title));
@@ -54,19 +54,19 @@ namespace PostModule.Application.Services
             return new OperationResult(false, ValidationMessages.SystemErrorMessage, nameof(command.Title));
         }
 
-        public async Task<EditPost> GetForEdit(int id)
+        public async Task<EditPost> GetForEditAsync(int id)
         {
             return await _postRepository.GetForEditAsync(id);
         }
 
-        public async Task<bool> InsideCityChange(int id)
+        public async Task<bool> InsideCityChangeAsync(int id)
         {
             var post = await _postRepository.GetByIdAsync(id);
             post.InsideCityChange();
             return await _postRepository.SaveAsync();
         }
 
-        public async Task<bool> OutSideCityChange(int id)
+        public async Task<bool> OutSideCityChangeAsync(int id)
         {
             var post = await _postRepository.GetByIdAsync(id);
             post.OutSideCityChange();

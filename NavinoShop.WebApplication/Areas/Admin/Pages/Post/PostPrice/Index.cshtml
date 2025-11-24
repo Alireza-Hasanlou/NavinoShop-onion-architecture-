@@ -1,0 +1,125 @@
+﻿@page 
+@model NavinoShop.WebApplication.Areas.Admin.Pages.Post.PostPrice.IndexModel
+@{
+    Layout = "_AdminLayout";
+    var successMessage = TempData["success"] as string;
+    ViewData["title"] = " ";
+}
+
+<style>
+    .info-box {
+        width:100%;
+        padding: 15px;
+        border-radius: 10px;
+        background: #f5f5f5;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        font-family: sans-serif;
+        line-height: 1.8em;
+        font-size: x-large;
+    }
+
+        .info-box h2 {
+            margin-top: 20px;
+            color: #838383;
+        }
+
+</style>
+
+<div class="info-box">
+    <h2 id="title">@Model.PostDetails.Title</h2>
+    <hr />
+    <p><strong>وضعیت:</strong> <span class="text-info text-bold" id="status">@Model.PostDetails.Status</span></p>
+    <p><strong>اضافه بار هر کیلوگرم درون شهری تهران:</strong> <span class="text-info text-bold" id="tehran">@Model.PostDetails.TehranPricePlus تومان</span></p>
+    <p><strong>اضافه بار هر کیلوگرم درون شهری مراکز استان ها :</strong> <span class="text-info text-bold" id="stateCenter">@Model.PostDetails.StateCenterPricePlus تومان</span></p>
+    <p><strong>اضافه بار هر کیلوگرم درون شهری شهرستان ها:</strong> <span class="text-info text-bold" id="city">@Model.PostDetails.CityPricePlus تومان</span></p>
+    <p><strong>اضافه بار هر کیلوگرم درون استانی:</strong> <span class="text-info text-bold" id="insideState">@Model.PostDetails.InsideStatePricePlus تومان</span></p>
+    <p><strong>اضافه بار هر کیلوگرم برون استانی هم جوار:</strong> <span class="text-info text-bold" id="stateClose">@Model.PostDetails.StateClosePricePlus تومان </span></p>
+    <p><strong>اضافه بار هر کیلوگرم برون استانی غیر هم جوار :</strong> <span class="text-info text-bold" id="stateNonClose">@Model.PostDetails.StateNonClosePricePlus تومان</span></p>
+    <p><strong>تاریخ ایجاد:</strong> <span class="text-info text-bold" id="date">@Model.PostDetails.CreationDate</span></p>
+    <p><strong>توضیحات:</strong> <span class="text-info text-bold" id="desc">@Model.PostDetails.Description</span></p>
+    <p><strong>فعال:</strong> <span class="text-info text-bold" id="active">@((@Model.PostDetails.Active) ? "بله" : "خیر")</span></p>
+    <p><strong>داخل شهر:</strong> <span class="text-info text-bold" id="insideCity">@((@Model.PostDetails.InsideCity) ? "بله" : "خیر")</span></p>
+    <p><strong>خارج شهر:</strong> <span class="text-info text-bold" id="outsideCity">@((@Model.PostDetails.OutsideCity) ? "بله" : "خیر")</span></p>
+</div>
+
+
+
+
+
+
+
+<div class="box">
+
+    <div class="box-body">
+        <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+
+            <a asp-page="Create"  asp-route-postId="@Model.PostDetails.Id" class="btn btn-success">افزودن قیمت جدید</a>
+            <br />
+            <br />
+            <span class="text-secondary">مبالغ به تومان میباشد</span>
+            <br />
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="DataTable table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
+                        <thead>
+                            <tr role="row">
+                                <th> وزن از</th>
+                                <th>وزن تا</th>
+                                <th>درون شهری</th>
+                                <th>درون شهری  مرکز استان</th>
+                                <th>درون شهری تهران</th>
+                                <th>درون استانی</th>
+                                <th>برون استانی هم جوار</th>
+                                <th>برون استانی غیر هم جوار</th>
+                                <td>عملیات</td>
+                        </thead>
+                        <tbody>
+                            @if (Model.PostDetails.PostPrices.Count() > 0)
+                            {
+                                @foreach (var item in Model.PostDetails.PostPrices)
+                                {
+                                    <tr>
+                                        <td> @item.Start </td>
+                                        <td> @item.End</td>
+                                        <td> @item.CityPrice</td>
+                                        <td> @item.StateCenterPrice</td>
+                                        <td> @item.TehranPrice</td>
+                                        <td> @item.InsideStatePrice</td>
+                                        <td> @item.StateClosePrice</td>
+                                        <td> @item.StateNonClosePrice</td>
+                                        <td>
+                                            <a class="btn btn-warning" title="ویرایش این قیمت" asp-page="Edit" asp-route-id="@item.Id">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+
+                                }
+                            }
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- /.box-body -->
+</div>
+@section scripts {
+    @if (!string.IsNullOrEmpty(successMessage))
+    {
+        TempData["success"] = null;
+        <script>
+            AlerSweetWithTimer("@successMessage","success", "center");
+        </script>
+
+    }
+
+
+
+}
+
+
+

@@ -1,0 +1,199 @@
+﻿@page
+@using Shared.Domain.Enums
+
+@model NavinoShop.WebApplication.Areas.Admin.Pages.Post.City.IndexModel
+@{
+    Layout = "_AdminLayout";
+    var successMessage = TempData["success"] as string;
+    var chooseStateClose = TempData["ChooseState"] as string;
+    var faild = TempData["faild"] as string;
+}
+<div class="box">
+
+    <div class="box-body">
+        <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+
+
+            <br />
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="DataTable table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>شناسه</th>
+                                <th>عنوان</th>
+                                <th>وضعیت</th>
+                                <th>تاریخ</th>
+                                <th>ویرایش</th>
+                                <th>تغییر وضعیت</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var item in Model.StateDetail.Cities)
+                            {
+                                <tr id="row_@item.Id">
+                                    <td>@item.Id</td>
+                                    <td>@item.Title</td>
+                                    <td>@item.Status</td>
+                                    <td>@item.CreationDate</td>
+
+                                    <td>
+                                        <a asp-page="Edit" asp-route-blogId="@item.Id"
+                                           class="btn btn-warning">
+                                            ویرایش
+                                        </a>
+                                    </td>
+
+                                    <td>
+                                        @if (item.Status != CityStatus.شهرستان_معمولی)
+                                        {
+                                            <button class="btn btn-info"
+                                                    onclick="AjaxSweetRefresh('شهرستان معمولی شود','شهرستان معمولی شود',
+                                                        'question','تایید','انصراف',
+                                                        '/Admin/Post/City/ChangeCityStatus/@item.Id/@CityStatus.شهرستان_معمولی')">
+                                                شهرستان معمولی
+                                            </button>
+                                        }
+
+                                        @if (item.Status != CityStatus.تهران && Model.StateDetail.Name.Trim() == "تهران")
+                                        {
+                                            <button class="btn btn-default"
+                                                    onclick="AjaxSweetRefresh('تهران شود',
+                                                        'اگر این شهرستان تهران شود، بقیه به معمولی برمی‌گردند',
+                                                        'question','تایید','انصراف',
+                                                                '/Admin/Post/City/ChangeCityStatus/@item.Id/@CityStatus.تهران')">
+                                                تهران ؟
+                                            </button>
+                                        }
+
+                                        @if (item.Status != CityStatus.مرکز_استان && Model.StateDetail.Name.Trim() != "تهران")
+                                        {
+                                            <button class="btn btn-primary"
+                                                    onclick="AjaxSweetRefresh('مرکز استان شود',
+                                                        'اگر مرکز استان شود بقیه معمولی می‌شوند',
+                                                        'question','تایید','انصراف',
+                                                                '/Admin/Post/City/ChangeCityStatus/@item.Id/@CityStatus.مرکز_استان')">
+                                                مرکز استان
+                                            </button>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- /.box-body -->
+    <!-- StateClose -->
+    <div class="box-body">
+        <div class="box-header">
+            <h2 class="box-title">استان های همجوار</h2>
+        </div>
+        <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+
+            <br />
+            <form action="/Admin/Post/State/ChangeStateClose">
+
+                <input type="hidden" name="id" value="@Model.StateDetail.Id" />
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="StateCloseDataTable table table-bordered table-striped StateCloseDataTable" role="grid" aria-describedby="example1_info">
+                            <thead>
+                                <tr role="row">
+                                    <th>شناسه</th>
+                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="عنوان: activate to sort column ascending">نام استان</th>
+                                    <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="وضعیت: activate to sort column ascending">همجوار</th>
+
+
+
+                            </thead>
+                            <tbody>
+
+                                @if (Model.StateDetail.States.Count > 0)
+                                {
+                                    List<string> stateCloses = new List<string>();
+                                    stateCloses = Model.StateDetail.CloseStates.Split("-").ToList();
+
+                                    @foreach (var item in Model.StateDetail.States)
+                                    {
+                                        if (Model.StateDetail.Id != item.Id)
+                                        {
+                                            <tr id="@item.Id" role="row" class="odd">
+
+                                                <td>@item.Id</td>
+                                                <td>@item.title</td>
+                                                <td>
+                                                    <div class="custom-form-group">
+                                                        <div class="custom-checkbox-container">
+                                                            <input @((stateCloses.Any(i => item.Id.ToString() == i)) ? "checked" : "") class="custom-checkbox-input" value="@item.Id" name="stateCloses" id="chk_@item.Id" type="checkbox" />
+                                                            <label class="custom-checkbox-label" for="chk_@item.Id">
+                                                                <span class="custom-checkbox-shine"></span>
+
+                                                            </label>
+
+                                                        </div>
+                                                    </div>
+
+                                                </td>
+
+
+                                            </tr>
+                                        }
+
+
+                                    }
+                                }
+
+
+
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success">تغییر استان های هم جوار</button>
+            </form>
+
+
+        </div>
+    </div>
+
+</div>
+@section scripts {
+
+
+    @if (!string.IsNullOrEmpty(successMessage))
+    {
+        TempData["success"] = "";
+        <script>
+            AlerSweetWithTimer("@successMessage","success", "center");
+        </script>
+
+    }
+
+    @if (!string.IsNullOrEmpty(chooseStateClose))
+    {
+        TempData["ChooseState"] = "";
+        <script>
+            AlerSweetWithTimer("@chooseStateClose","error", "center");
+        </script>
+
+    }
+
+    @if (!string.IsNullOrEmpty(faild))
+    {
+        TempData["faild"] = "";
+        <script>
+            AlerSweetWithTimer("@faild","error", "center");
+        </script>
+
+    }
+}
+
+
+

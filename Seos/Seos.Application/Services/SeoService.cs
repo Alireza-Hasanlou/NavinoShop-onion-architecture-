@@ -22,7 +22,7 @@ namespace Seos.Application.Services
             return _seoRepository.GetSeoForUbsert(ownerId, where);
         }
 
-        public async Task<OperationResult> UbsertSeo(CreateSeoCommandModel command)
+        public async Task<OperationResult> UpsertSeo(CreateSeoCommandModel command)
         {
             var seo = _seoRepository.GetSeo(command.OwnerId, command.Where);
             if (seo == null)

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PostModule.Application.Contract.StateQuery
 {
-    public interface IStateQuery
+    public interface ICityQuery
     {
         Task<List<StateQueryModel>> GetStatesWithCity();
         Task<List<StateAdminQueryModel>> GetStatesForAdmin();

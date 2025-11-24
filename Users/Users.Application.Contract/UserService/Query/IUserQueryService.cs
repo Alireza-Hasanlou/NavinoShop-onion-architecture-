@@ -10,5 +10,14 @@ namespace Users.Application.Contract.UserService.Query
     {
         Task<EditUserByUserDto> GetForEditByUserAsync(int userId);
         Task<EditUserByAdminDto> GetForEditByAdminAsync(int userId);
+        Task<List<UserQueryModel>> GetUsersByIds(List<int> Ids);
+        
+    }
+
+    public class UserQueryModel
+    {
+        public int Id { get; set; }
+        public string FullName { get; set; }
+        public string Mobile { get; set; }
     }
 }

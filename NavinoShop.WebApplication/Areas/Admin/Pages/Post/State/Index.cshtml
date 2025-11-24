@@ -1,0 +1,76 @@
+﻿@page
+@model NavinoShop.WebApplication.Areas.Admin.Pages.Post.State.IndexModel
+@{
+    Layout = "_AdminLayout";
+    var successMessage = TempData["success"] as string;
+    ViewData["title"] = " استان ها";
+}
+<div class="box">
+
+    <div class="box-body">
+        <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+
+            <a asp-page="Create" class="btn btn-success">افزودن استان جدید</a>
+
+            <br />
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="DataTable table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
+                        <thead>
+                            <tr role="row">
+
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="عنوان: activate to sort column ascending">نام استان</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="وضعیت: activate to sort column ascending">تعداد شهر ها</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="تاریخ ایجاد: activate to sort column ascending">تاریخ ایجاد</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="وضعیت: activate to sort column ascending">عملیات</th>
+
+
+                        </thead>
+                        <tbody>
+                            @if (Model.States.Count > 0)
+                            {
+                                @foreach (var item in Model.States)
+                                {
+                                    <tr id="@item.Id" role="row" class="odd">
+
+                                        <td class="sorting_1">@item.Title</td>
+                                        <td>@item.CityCount</td>
+                                        <td>@item.CreateDate</td>
+
+                                        <td>
+                                            <a href="/Admin/Post/City/Create?stateId=@item.Id" class="btn btn-success">افزودن شهر</a>
+                                            <a asp-page="Edit" asp-route-Id="@item.Id" class="btn btn-warning">ویرایش</a>
+                                            <a href="/Admin/Post/City/Index?id=@item.Id" class="btn btn-info">جزئیات استان</a>
+                                        </td>
+                                    </tr>
+
+                                }
+                            }
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- /.box-body -->
+
+</div>
+@section scripts {
+    @if (!string.IsNullOrEmpty(successMessage))
+    {
+        TempData["success"] = null;
+        <script>
+            AlerSweetWithTimer("@successMessage","success", "center");
+        </script>
+
+    }
+
+
+
+}
+
+
+

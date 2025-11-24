@@ -20,7 +20,7 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.BlogCategories
 
         [BindProperty]
         public CreateBlogCategoryCommand createBlogCategory { get; set; }
-        public async Task<IActionResult> OnGet(int parentId = 0)
+        public async Task<IActionResult> OnGet(int parentId )
         {
             if (parentId > 0 && await _blogCategoryQueryService.CheckCategoryHaveParentAsync(parentId))
                 return NotFound();

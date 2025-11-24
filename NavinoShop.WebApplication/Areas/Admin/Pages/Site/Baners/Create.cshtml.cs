@@ -10,17 +10,17 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Site.Baners
 
         public CreateModel(IBanerCommandService banerCommandService)
         {
-            _banerCommandService = _banerCommandService;
+            _banerCommandService = banerCommandService;
         }
 
         [BindProperty]
         public CreateBanerCommandModel CreateBaner { get; set; }
         public void OnGet()
         {
-            Page();
+         
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPost()
         {
             if (!ModelState.IsValid)
                 Page();
@@ -31,7 +31,7 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Site.Baners
                 TempData["Success"] = "افرودن بنر جدید با موفقیت انجام شد";
                 return RedirectToPage("Index");
             }
-            ModelState.AddModelError($"RoleTitle.{result.ModelName}", result.Message);
+            ModelState.AddModelError($"CreateBaner.{result.ModelName}", result.Message);
             return Page();
         }
 

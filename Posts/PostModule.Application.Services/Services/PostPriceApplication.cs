@@ -19,7 +19,7 @@ namespace PostModule.Application.Services
             _postPriceRepository = postPriceRepository;
         }
 
-        public async Task<OperationResult> Create(CreatePostPrice command)
+        public async Task<OperationResult> CreateAsync(CreatePostPrice command)
         {
             PostPrice postPrice = new(command.PostId, command.Start, command.End, command.TehranPrice,
                 command.StateCenterPrice, command.CityPrice, command.InsideStatePrice,
@@ -31,7 +31,7 @@ namespace PostModule.Application.Services
             return new(false, ValidationMessages.SystemErrorMessage, nameof(command.Start));
         }
 
-        public async Task<OperationResult> Edit(EditPostPrice command)
+        public async Task<OperationResult> EditAsync(EditPostPrice command)
         {
             var postPrice = await _postPriceRepository.GetByIdAsync(command.Id);
             postPrice.Edit(command.Start, command.End, command.TehranPrice,
@@ -43,7 +43,7 @@ namespace PostModule.Application.Services
             return new(false, ValidationMessages.SystemErrorMessage, nameof(command.Start));
         }
 
-        public async Task<EditPostPrice> GetForEdit(int id)
+        public async Task<EditPostPrice> GetForEditAsync(int id)
         {
             return await _postPriceRepository.GetForEdit(id);
         }

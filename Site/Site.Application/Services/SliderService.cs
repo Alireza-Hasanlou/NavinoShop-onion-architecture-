@@ -1,10 +1,11 @@
-﻿using Shared.Application;
-using Shared;
-using Site.Domain.SliderAgg;
-using Site.Application.Contract.SliderService.Command;
+﻿using Shared;
+using Shared.Application;
 using Shared.Application.Service;
-using System.Threading.Tasks;
 using Shared.Application.Validations;
+using Site.Application.Contract.SliderService.Command;
+using Site.Domain.BanerAgg;
+using Site.Domain.SliderAgg;
+using System.Threading.Tasks;
 
 namespace Site.Application.Services
 {
@@ -46,6 +47,18 @@ namespace Site.Application.Services
             return new(false, ValidationMessages.SystemErrorMessage, nameof(command.ImageAlt));
         }
 
+        public async Task<OperationResult> DeleteAsync(int id)
+        {
+            var baner = await _sliderRepository.GetByIdAsync(id);
+            if (baner != null)
+            {
+                var result = await _sliderRepository.DeleteAsync(baner);
+                if (result.Success)
+                    return new(true);
+            }
+
+            return new(false, ValidationMessages.SystemErrorMessage, nameof(baner.ImageAlt));
+        }
         public async Task<OperationResult> EditAsync(EditSliderCommandModel command)
         {
             var slider =await _sliderRepository.GetByIdAsync(command.Id);

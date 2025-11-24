@@ -9,12 +9,12 @@ namespace PostModule.Application.Contract.StateApplication
 {
     public interface IStateApplication
     {
-        Task<OperationResult> Create(CreateStateModel command);
-        Task<OperationResult> Edit(EditStateModel command);
+        Task<OperationResult> CreateAsync(CreateStateModel command);
+        Task<OperationResult> EditAsync(EditStateModel command);
         Task<List<StateViewModel>> GetAll();
-        Task<EditStateModel> GetStateForEdit(int id);
-        Task<bool> ExistTitleForCreate(string title);
-        Task<bool> ExistTitleForEdit(string title, int id);
-        Task<bool> ChangeStateClose(int id, List<int> stateCloses);
+        Task<EditStateModel> GetStateForEditAsync(int id);
+        Task<bool> ExistTitleForCreateAsync(string title);
+        Task<bool> ExistTitleForEditAsync(string title, int id);
+        Task<bool> ChangeStateCloseAsync(int id, List<int> stateCloses);
     }
 }

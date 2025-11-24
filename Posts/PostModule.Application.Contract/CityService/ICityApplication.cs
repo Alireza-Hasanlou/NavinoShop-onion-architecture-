@@ -10,12 +10,12 @@ namespace PostModule.Application.Contract.CityApplication
 {
     public interface ICityApplication
     {
-        Task<OperationResult> Create(CreateCityModel command);
-        Task<OperationResult> Edit(EditCityModel command);
-        Task<bool> ChangeStatus(int id, CityStatus status);
-        Task<bool> ExistTitleForCreate(string title, int stateid);
-        Task<bool> ExistTitleForEdit(string title, int id, int stateid);
-        Task<EditCityModel> GetCityForEdit(int id);
-        Task<List<CityViewModel>> GetAllForState(int stateId);
+        Task<OperationResult> CreateAsync(CreateCityModel command);
+        Task<OperationResult> EditAsync(EditCityModel command);
+        Task<bool> ChangeStatusAsync(int id, CityStatus status);
+        Task<bool> ExistTitleForCreateAsync(string title, int stateid);
+        Task<bool> ExistTitleForEditAsync(string title, int id, int stateid);
+        Task<EditCityModel> GetCityForEditAsync(int id);
+        Task<List<CityViewModel>> GetAllForStateAsync(int stateId);
     }
 }

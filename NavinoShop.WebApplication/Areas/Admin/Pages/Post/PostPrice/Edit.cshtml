@@ -1,0 +1,101 @@
+﻿@page
+@model NavinoShop.WebApplication.Areas.Admin.Pages.Post.PostPrice.EditModel
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["title"] = "ویرایش قیمت پست  ";
+
+}
+<div class="Formcontainer">
+
+    <form id="Formcontainer" method="post" enctype="multipart/form-data">
+
+        <input type="hidden" asp-for="EditPostPrice.Id" />
+        <input type="hidden" asp-for="EditPostPrice.PostId" />
+
+        <div class="row">
+            <div class="col col-12 col-sm-12 ">
+
+                <div class="custom-form-group">
+                    <label for="title" class="required">وزن از</label>
+                    <input asp-for="@Model.EditPostPrice.Start" type="text"  type="number" placeholder="گرم">
+                    <span asp-validation-for="@Model.EditPostPrice.Start" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col col-sm-12 col-12">
+
+                <div class="custom-form-group">
+                    <label class="required" for="Status"> وزن تا</label>
+                    <input asp-for="@Model.EditPostPrice.End"  type="number" placeholder="گرم">
+                    <span asp-validation-for="@Model.EditPostPrice.End" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="TehranPricePlus" class="required">قیمت درون شهری تهران</label>
+                    <input asp-for="@Model.EditPostPrice.TehranPrice"  type="number" placeholder="مبلغ به تومان">
+                    <span asp-validation-for="@Model.EditPostPrice.TehranPrice" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="StateCenterPricePlus" class="required"> قیمت درون شهری مراکز استان </label>
+                    <input asp-for="@Model.EditPostPrice.StateCenterPrice"  type="number" placeholder="مبلغ به تومان">
+                    <span asp-validation-for="@Model.EditPostPrice.StateCenterPrice" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="CityPricePlus" class="required">اقیمت درون شهری شهرستان ها </label>
+                    <input asp-for="@Model.EditPostPrice.CityPrice"  type="number" placeholder="مبلغ به تومان">
+                    <span asp-validation-for="@Model.EditPostPrice.CityPrice" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="InsideStatePrice" class="required"> قیمت درون استانی</label>
+                    <input asp-for="@Model.EditPostPrice.InsideStatePrice"  type="number" placeholder="مبلغ به تومان">
+                    <span asp-validation-for="@Model.EditPostPrice.InsideStatePrice" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="StateNonClosePrice" class="required">قیمت برون استانی غیر همجوار  </label>
+                    <input asp-for="@Model.EditPostPrice.StateNonClosePrice"  type="number" placeholder="مبلغ به تومان">
+                    <span asp-validation-for="@Model.EditPostPrice.StateNonClosePrice" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="StateClosePrice" class="required"> قیمت برون استانی همجوار</label>
+                    <input asp-for="@Model.EditPostPrice.StateClosePrice"  type="number" placeholder="مبلغ به تومان">
+                    <span asp-validation-for="@Model.EditPostPrice.StateClosePrice" class="text-danger"></span>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="col">
+            <div class="custom-form-group">
+                <label for="StateCenterPrice" class="required">قیمت درون شهری مراکز استان   </label>
+                <input asp-for="@Model.EditPostPrice.StateCenterPrice"  type="number" placeholder="مبلغ به تومان">
+                <span asp-validation-for="@Model.EditPostPrice.StateCenterPrice" class="text-danger"></span>
+            </div>
+        </div>
+       
+
+        <button type="submit" class="btn btn-success btn-block">ویرایش </button>
+
+    </form>
+</div>

@@ -1,0 +1,24 @@
+﻿@page
+@model NavinoShop.WebApplication.Areas.Admin.Pages.Post.City.CreateModel
+@{
+    Layout = "_AdminLayout";
+}
+<div class="Formcontainer">
+
+    <form id="Formcontainer" method="post">
+        <input type="hidden" asp-for="Createcity.StateId" />
+
+        <div class="col col-12 col-sm-12 ">
+
+            <div class="custom-form-group">
+                <label for="title" class="required">نام شهر</label>
+                <input asp-for="@Model.Createcity.Title" type="text" id="Title">
+                <span asp-validation-for="Createcity.Title" class="text-danger"></span>
+            </div>
+        </div>
+
+
+        <button type="submit" class="btn btn-success btn-block">افزودن </button>
+
+    </form>
+</div>

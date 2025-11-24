@@ -28,7 +28,7 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Site.Baners
             if (result.Success)
             {
                 TempData["success"] = "بنر با موفقیت ویرایش شد";
-                return Redirect("/Admin/Baners/Index");
+                return RedirectToPage("Index");
             }
             ModelState.AddModelError($"EditBaner.{result.ModelName}", result.Message);
             return Page();

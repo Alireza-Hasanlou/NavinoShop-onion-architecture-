@@ -1,5 +1,6 @@
 ﻿@page
 @using Shared.Application
+@using Shared.Domain.Enums
 @model NavinoShop.WebApplication.Areas.Admin.Pages.Blogs.IndexModel
 @{
     Layout = "_AdminLayout";
@@ -16,6 +17,7 @@
         <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
 
             <a asp-page="Create" asp-route-categoryId="@Model.blogs.CategoryId" class="btn btn-success">افزودن مقاله جدید</a>
+            <a href="/Admin/Seo/Index?Id=0&where=@WhereSeo.BlogCategory" target="_blank" class="btn btn-danger">سئو صفحه اصلی مقالات</a>
 
             <br />
             <div class="row">
@@ -82,6 +84,7 @@
                                             </div>
 
                                         <td>  <a asp-page="Edit" asp-route-blogId="@item.Id" class="btn btn-warning">ویرایش</a></td>
+                                        <td>  <a href="/Admin/Seo/Index?Id=@item.Id&where=@WhereSeo.Blog" class="btn btn-danger" target="_blank">سئو</a></td>
                                     </tr>
 
                                 }

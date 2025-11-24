@@ -1,0 +1,100 @@
+﻿@page
+@using Shared.Domain.Enums
+@model NavinoShop.WebApplication.Areas.Admin.Pages.Seo.IndexModel
+@{
+    Layout = "_AdminLayout";
+    var successMessage = TempData["success"] as string;
+}
+<style>
+
+
+</style>
+<div class="Formcontainer" dir="ltr">
+
+    <div class="Formcontainer">
+        <form method="post">
+            <input type="hidden" asp-for="Seo.OwnerId" />
+            <div class="row">
+                <div class="col  col-md-6 col-sm-12 ">
+
+                    <div class="custom-form-group">
+                        <label for="MetaTitle" class="required">MetaTitle</label>
+                        <input asp-for="@Model.Seo.MetaTitle" type="text">
+                        <span asp-validation-for="Seo.MetaTitle" id="MetaTitle" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col  col-md-6 col-sm-12">
+                    <div class="custom-form-group">
+                        <label for="Where" class="required">SeoFor</label>
+                        <input asp-for="Seo.Where" id="Where" type="text" readonly>
+                        <span asp-validation-for="Seo.Where" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+
+
+                <div class="col col-md-6 col-sm-12 col-12">
+
+                    <div class="custom-form-group">
+                        <label for="MetaDescription"> MetaDescription</label>
+                        <input asp-for="Seo.MetaDescription" id="MetaDescription" type="text">
+                        <span asp-validation-for="Seo.MetaDescription" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col col-md-6 col-sm-12 col-12">
+
+                    <div class="custom-form-group">
+                        <label for="MetaKeyWords"> MetaKeyWords</label>
+                        <input asp-for="Seo.MetaKeyWords" id="MetaKeyWords" type="text">
+                        <span asp-validation-for="Seo.MetaKeyWords" class="text-danger"></span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+
+
+
+                <div class="col col-md-4 col-sm-12 col-12">
+
+                    <div class="custom-form-group">
+                        <label for="Canonical"> Canonical</label>
+                        <input asp-for="Seo.Canonical" id="Canonical" type="text">
+                        <span asp-validation-for="Seo.Canonical" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col col-md-4 col-sm-12 col-12">
+
+                    <div class="custom-form-group">
+                        <label for="Schema"> Canonical</label>
+                        <input asp-for="Seo.Schema" id="Schema" type="text">
+                        <span asp-validation-for="Seo.Schema" class="text-danger"></span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="custom-form-group">
+
+                <div class="custom-checkbox-container">
+                    <input class="custom-checkbox-input" id="modernCheckbox" asp-for="Seo.IndexPage" type="checkbox" />
+                    <label class="custom-checkbox-label" for="modernCheckbox">
+                        <span class="custom-checkbox-text">IndexPage?</span>
+                    </label>
+                </div>
+
+            </div>
+            <button type="submit" class="btn btn-success btn-block">افزودن </button>
+
+        </form>
+    </div>
+</div>
+@section scripts {
+    @if (!string.IsNullOrEmpty(successMessage))
+    {
+        TempData["success"] = null;
+        <script>
+            AlerSweetWithTimer( "@successMessage","success", "center");
+        </script>
+    }
+}

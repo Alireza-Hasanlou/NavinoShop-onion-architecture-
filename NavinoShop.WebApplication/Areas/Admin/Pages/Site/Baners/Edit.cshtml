@@ -1,4 +1,4 @@
-﻿@page 
+﻿@page
 @using Shared.Application
 @using Shared.Domain.Enums
 @model NavinoShop.WebApplication.Areas.Admin.Pages.Site.Baners.EditModel
@@ -12,11 +12,13 @@
 
 
 
-        <div class="Formcontainer">
+    <div class="Formcontainer">
 
 
-            <form method="post" enctype="multipart/form-data">
-                <div class="row">
+        <form method="post" enctype="multipart/form-data">
+            <input type="hidden" asp-for="EditBaner.ImageName" />
+            <input type="hidden" asp-for="EditBaner.Id" />
+            <div class="row">
                 <div class="col  col-md-6 col-sm-12 ">
 
                     <div class="custom-form-group">
@@ -25,47 +27,44 @@
                         <span asp-validation-for="EditBaner.Url" class="text-danger"></span>
                     </div>
                 </div>
-                    <div class="col  col-md-6 col-sm-12">
+                <div class="col  col-md-6 col-sm-12">
                     <div class="custom-form-group">
                         <label asp-for="EditBaner" class="required">محل بنر</label>
-                            <select asp-items="Html.GetEnumSelectList<BanerState>()" asp-for="EditBaner.State">
-                            <option value="0">محل بنر را انتخاب کنید</option>
-
-                        </select>
-                            <span asp-validation-for="EditBaner.State" class="text-danger"></span>
+                        <input asp-for="EditBaner.State" type="text" readonly>
+                        <span asp-validation-for="EditBaner.State" class="text-danger"></span>
                     </div>
                 </div>
-                </div>
-                <div class="row">
+            </div>
+            <div class="row">
 
 
-                    <div class="col col-md-6 col-sm-12 col-12">
+                <div class="col col-md-6 col-sm-12 col-12">
 
-                        <div class="custom-form-group">
-                            <label class="required" for="ImageAlt"> Alt تصویر</label>
-                            <input asp-for="EditBaner.ImageAlt" type="text" id="ImageAlt">
-                            <span asp-validation-for="EditBaner.ImageAlt" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="col col-md-6 col-sm-12 col-12">
-                        <div id="img-container">
-                            <label for="upload-file">
-                                <div class="picture-uploader" data-url="@ImageAddress">
-                                    <div class="picture__image">Choose an image</div>
-
-                                    <input asp-for="@Model.EditBaner.ImageFile" type="file" id="upload-file" class="picture__input" accept="image/*" />
-                                </div>
-                            </label>
-
-                        </div>
-                        <span asp-validation-for="EditBaner.ImageFile" class="text-danger"></span>
+                    <div class="custom-form-group">
+                        <label class="required" for="ImageAlt"> Alt تصویر</label>
+                        <input asp-for="EditBaner.ImageAlt" type="text" id="ImageAlt">
+                        <span asp-validation-for="EditBaner.ImageAlt" class="text-danger"></span>
                     </div>
                 </div>
-               
-                <button type="submit" class="btn btn-success btn-block">افزودن </button>
+                <div class="col col-md-6 col-sm-12 col-12">
+                    <div id="img-container">
+                        <label for="upload-file">
+                            <div class="picture-uploader" data-url="@ImageAddress">
+                                <div class="picture__image">Choose an image</div>
 
-            </form>
-        </div>
+                                <input asp-for="@Model.EditBaner.ImageFile" type="file" id="upload-file" class="picture__input" accept="image/*" />
+                            </div>
+                        </label>
+
+                    </div>
+                    <span asp-validation-for="EditBaner.ImageFile" class="text-danger"></span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success btn-block">ویرایش </button>
+
+        </form>
+    </div>
 </div>
 
 

@@ -1,4 +1,4 @@
-.skin-blue .main-header .logo {
+﻿.skin-blue .main-header .logo {
     background-color: #222d32;
     color: #fff;
     border-bottom: 0 solid transparent;
@@ -51,3 +51,42 @@
 .info-box-icon {
     background: rgba(0, 0, 0, 0.1);
 }
+/* جدول کامنت‌ها */
+.ImageDataTable {
+    width: 100% !important;
+    table-layout: fixed; /* از به‌هم‌ریختگی جدول جلوگیری می‌کنه */
+    border-collapse: collapse;
+}
+
+    /* تنظیمات سلول‌ها */
+    .ImageDataTable th,
+    .ImageDataTable td {
+        text-align: center;
+        vertical-align: top;
+        padding: 8px;
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        border: 1px solid #ddd;
+    }
+
+        /* ستون‌های خاص */
+        .ImageDataTable td.comment-text {
+            max-width: 400px; /* متن نظر */
+            text-align: justify;
+            direction: rtl;
+        }
+
+        .ImageDataTable td.why-rejected {
+            max-width: 250px; /* دلیل لغو */
+            color: #b30000;
+        }
+
+    /* رنگ‌آمیزی جدول */
+    .ImageDataTable tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .ImageDataTable tr:hover {
+        background-color: #f1f1f1;
+    }
+

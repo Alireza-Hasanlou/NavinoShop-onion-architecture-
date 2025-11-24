@@ -32,7 +32,7 @@ namespace Site.Application.Services
 
         public async Task<OperationResult> CreateAsync(CreateBanerCommandModel command)
         {
-            if (command.ImageFile == null ||  !command.ImageFile.IsImage())
+            if (command.ImageFile == null || !command.ImageFile.IsImage())
                 return new(false, ValidationMessages.ImageErrorMessage, nameof(command.ImageFile));
 
             string imageName = await _fileService.UploadImage(command.ImageFile, FileDirectories.BanerImageFolder);
@@ -42,12 +42,25 @@ namespace Site.Application.Services
             _fileService.ResizeImage(imageName, FileDirectories.BanerImageFolder, 100);
             Baner baner = new(imageName, command.ImageAlt, command.Url, command.State);
             var result = await _banerRepository.CreateAsync(baner);
-            if(result.Success)
+            if (result.Success)
                 return new(true);
 
             _fileService.DeleteImage($"{FileDirectories.BanerImageDirectory}{imageName}");
             _fileService.DeleteImage($"{FileDirectories.BanerImageDirectory100}{imageName}");
             return new(false, ValidationMessages.SystemErrorMessage, nameof(command.ImageAlt));
+        }
+
+        public async Task<OperationResult> DeleteAsync(int id)
+        {
+            var baner = await _banerRepository.GetByIdAsync(id);
+            if (baner != null)
+            {
+                var result = await _banerRepository.DeleteAsync(baner);
+                if (result.Success)
+                    return new(true);
+            }
+           
+                return new(false, ValidationMessages.SystemErrorMessage, nameof(baner.ImageAlt)); 
         }
 
         public async Task<OperationResult> EditAsync(EditBanerCommandModel command)
@@ -58,32 +71,43 @@ namespace Site.Application.Services
             if (command.ImageFile != null)
             {
                 if (!command.ImageFile.IsImage()) return new(false, ValidationMessages.ImageErrorMessage, nameof(command.ImageFile));
-                imageName =await _fileService.UploadImage(command.ImageFile, FileDirectories.BanerImageFolder);
+                imageName = await _fileService.UploadImage(command.ImageFile, FileDirectories.BanerImageFolder);
                 if (imageName == "")
                     return new(false, ValidationMessages.ImageErrorMessage, nameof(command.ImageFile));
                 _fileService.ResizeImage(imageName, FileDirectories.BanerImageFolder, 100);
             }
-                baner.Edit(imageName, command.ImageAlt, command.Url);
-                if (await _banerRepository.SaveAsync())
-                {
-                    if(command.ImageFile != null)
-                    {
-                        _fileService.DeleteImage($"{FileDirectories.BanerImageDirectory}{oldImageName}");
-                        _fileService.DeleteImage($"{FileDirectories.BanerImageDirectory100}{oldImageName}");
-                    }
-                    return new(true);
-                }
-                else
-                {
+            baner.Edit(imageName, command.ImageAlt, command.Url);
+            var res = false;
+            try
+            {
 
-                    if (command.ImageFile != null)
-                    {
-                        _fileService.DeleteImage($"{FileDirectories.BanerImageDirectory}{imageName}");
-                        _fileService.DeleteImage($"{FileDirectories.BanerImageDirectory100}{imageName}");
-                    }
-                    return new(false, ValidationMessages.SystemErrorMessage, nameof(command.ImageAlt));
+                res = await _banerRepository.SaveAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+            if (res)
+            {
+                if (command.ImageFile != null)
+                {
+                    _fileService.DeleteImage($"{FileDirectories.BanerImageDirectory}{oldImageName}");
+                    _fileService.DeleteImage($"{FileDirectories.BanerImageDirectory100}{oldImageName}");
                 }
-            
+                return new(true);
+            }
+            else
+            {
+
+                if (command.ImageFile != null)
+                {
+                    _fileService.DeleteImage($"{FileDirectories.BanerImageDirectory}{imageName}");
+                    _fileService.DeleteImage($"{FileDirectories.BanerImageDirectory100}{imageName}");
+                }
+                return new(false, ValidationMessages.SystemErrorMessage, nameof(command.ImageAlt));
+            }
+
         }
 
         public async Task<EditBanerCommandModel> GetForEditAsync(int id) =>

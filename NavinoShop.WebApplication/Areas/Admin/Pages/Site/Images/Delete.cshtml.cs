@@ -21,7 +21,7 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Site.Images
         {
             var result = await _imageSiteService.DeleteFromDataBase(id);
             if (result.Success)
-                return new JsonResult(new { success = true, title = "تصویر مورد نظر با موفقیت از دیتابیس حذف شد" });
+                return new JsonResult(new { success = true, title = "تصویر مورد نظر با موفقیت از سایت حذف شد" });
 
             return new JsonResult(new { success = false, errors = result.Message });
 

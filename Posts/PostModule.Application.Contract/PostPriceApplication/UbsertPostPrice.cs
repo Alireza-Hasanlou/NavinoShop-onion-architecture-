@@ -32,3 +32,5 @@ namespace PostModule.Application.Contract.PostPriceApplication
         public int StateNonClosePrice { get; set; }
     }
 }
+
+

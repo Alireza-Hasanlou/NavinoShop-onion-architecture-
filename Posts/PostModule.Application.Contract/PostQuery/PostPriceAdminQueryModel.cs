@@ -13,3 +13,4 @@
         public int StateNonClosePrice { get; set; }
     }
 }
+

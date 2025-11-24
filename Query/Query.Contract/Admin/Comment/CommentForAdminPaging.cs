@@ -14,3 +14,4 @@ namespace Query.Contract.Admin.Comment
         public string? PageTitle { get; set; }
     }
 }
+

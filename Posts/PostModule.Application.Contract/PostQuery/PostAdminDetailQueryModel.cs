@@ -19,3 +19,4 @@
         public List<PostPriceAdminQueryModel> PostPrices { get; set; }
     }
 }
+

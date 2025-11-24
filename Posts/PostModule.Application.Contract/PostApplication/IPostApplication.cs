@@ -9,11 +9,11 @@ namespace PostModule.Application.Contract.PostApplication
 {
     public interface IPostApplication
     {
-        Task<OperationResult> Create(CreatePost command);
-        Task<OperationResult> Edit(EditPost command);
-        Task<EditPost> GetForEdit(int id);
-        Task<bool> ActivationChange(int id);
-        Task<bool> InsideCityChange(int id);
-        Task<bool> OutSideCityChange(int id);
+        Task<OperationResult> CreateAsync(CreatePost command);
+        Task<OperationResult> EditAsync(EditPost command);
+        Task<EditPost> GetForEditAsync(int id);
+        Task<bool> ChangeActivationAsync(int id);
+        Task<bool> InsideCityChangeAsync(int id);
+        Task<bool> OutSideCityChangeAsync(int id);
     }
 }

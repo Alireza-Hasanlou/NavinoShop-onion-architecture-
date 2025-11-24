@@ -17,12 +17,12 @@ namespace PostModule.Application.Services
             _cityRepository = cityRepository;
         }
 
-        public async Task<bool> ChangeStatus(int id, CityStatus status) =>
+        public async Task<bool> ChangeStatusAsync(int id, CityStatus status) =>
             await _cityRepository.ChangeStatus(id, status);
 
 
 
-        public async Task<OperationResult> Create(CreateCityModel command)
+        public async Task<OperationResult> CreateAsync(CreateCityModel command)
         {
             if (await _cityRepository.ExistByAsync(c => c.Title == command.Title && c.StateId == command.StateId))
                 return new(false, ValidationMessages.DuplicatedMessage, nameof(command.Title));
@@ -35,7 +35,7 @@ namespace PostModule.Application.Services
             return new(false, ValidationMessages.SystemErrorMessage, nameof(command.Title));
         }
 
-        public async Task<OperationResult> Edit(EditCityModel command)
+        public async Task<OperationResult> EditAsync(EditCityModel command)
         {
             if (await _cityRepository.ExistByAsync(c => c.Title == command.Title && c.StateId == command.StateId && c.Id != command.Id))
                 return new(false, ValidationMessages.DuplicatedMessage, nameof(command.Title));
@@ -45,21 +45,21 @@ namespace PostModule.Application.Services
             return new(false, ValidationMessages.SystemErrorMessage, nameof(command.Title));
         }
 
-        public async Task<bool> ExistTitleForCreate(string title, int stateid) =>
+        public async Task<bool> ExistTitleForCreateAsync(string title, int stateid) =>
             await _cityRepository.ExistByAsync(c => c.Title == title && c.StateId == stateid);
 
 
 
-        public async Task<bool> ExistTitleForEdit(string title, int id, int stateid) =>
+        public async Task<bool> ExistTitleForEditAsync(string title, int id, int stateid) =>
              await _cityRepository.ExistByAsync(c => c.Title == title && c.StateId == stateid && c.Id != id);
 
 
 
 
-        public async Task<List<CityViewModel>> GetAllForState(int stateId) =>
+        public async Task<List<CityViewModel>> GetAllForStateAsync(int stateId) =>
           await _cityRepository.GetAllForState(stateId);
 
-        public async Task<EditCityModel> GetCityForEdit(int id) =>
+        public async Task<EditCityModel> GetCityForEditAsync(int id) =>
            await _cityRepository.GetCityForEdit(id);
     }
 }

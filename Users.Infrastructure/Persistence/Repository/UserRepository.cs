@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Users.Application.Contract.UserService.Query;
 using Users.Domain.User.Agg;
 using Users.Domain.User.Agg.IRepository;
 using Users.Infrastructure.Persistence.Context;
@@ -17,6 +18,16 @@ namespace Users.Infrastructure.Persistence.Repository
         public UserRepository(UserContext context) : base(context)
         {
             _context = context;
+        }
+
+        public async Task<List<UserQueryModel>> GetUsersByIds(List<int> Ids)
+        {
+          return await _context.Users.Where(i=>Ids.Contains(i.Id)) .Select(u => new UserQueryModel
+            {
+                Id = u.Id,
+                FullName = u.FullName,
+                Mobile = u.Mobile,
+            }).ToListAsync();
         }
 
         public async Task<User> GetByMobile(string mobile)

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PostModule.Application.Contract.PostApplication;
 
-namespace NavinoShop.WebApplication.Areas.Admin.Pages.Site.Post
+namespace NavinoShop.WebApplication.Areas.Admin.Pages.Post
 {
     public class CreateModel : PageModel
     {
@@ -23,7 +23,7 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Site.Post
             if (!ModelState.IsValid)
                 return Page();
 
-            var result = await _postService.Create(CreatePost);
+            var result = await _postService.CreateAsync(CreatePost);
             if (result.Success)
             {
                 TempData["success"] = "پست با موفقیت ایجاد شد";

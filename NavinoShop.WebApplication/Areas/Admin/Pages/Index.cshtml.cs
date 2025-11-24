@@ -6,7 +6,7 @@ using Users.Application.Contract.RoleService.Query;
 
 namespace NavinoShop.WebApplication.Areas.Admin.Pages
 {
-    [PermissionChecker(1)]
+    //[PermissionChecker(1)]
     public class IndexModel : PageModel
     {
         private readonly IRoleQueryService _roleQueryService;

@@ -13,7 +13,7 @@ namespace PostModule.Application.Contract.PostApplication
         [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
         public string Status { get; set; }
         [Display(Name = "اضافه بار هر کیلوگرم درون شهری تهران (تومان)")]
-        [MinLength(1000,ErrorMessage = ValidationMessages.RequiredMessage)]
+        [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
         public int TehranPricePlus { get; set; }
         [Display(Name = "اضافه بار هر کیلوگرم درون شهری مراکز استان ها (تومان)")]
         [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
@@ -35,3 +35,4 @@ namespace PostModule.Application.Contract.PostApplication
         public string Description { get; set; }
     }
 }
+

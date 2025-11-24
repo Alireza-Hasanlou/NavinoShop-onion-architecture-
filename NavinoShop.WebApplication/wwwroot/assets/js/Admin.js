@@ -7,6 +7,7 @@ $('.DataTable').DataTable({
     lengthChange: false,
     searching: true,
     ordering: true,
+    scroll: true,
     info: false,
     language: {
         search: "جستجو:",

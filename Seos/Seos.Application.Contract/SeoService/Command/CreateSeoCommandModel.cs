@@ -25,4 +25,5 @@ namespace Seos.Application.Contract.SeoService.Command
         [Display(Name = "Schema")]
         public string? Schema { get; set; }
     }
+
 }

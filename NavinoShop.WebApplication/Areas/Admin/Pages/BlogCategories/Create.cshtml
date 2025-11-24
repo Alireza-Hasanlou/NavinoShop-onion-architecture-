@@ -10,6 +10,7 @@
 <div class="Formcontainer">
 
     <form id="blogcontentForm" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="createBlogCategory.Parent" />
         <div class="row">
 
             <div class="col col-md-6 col-12 col-sm-12 ">
@@ -36,7 +37,7 @@
             <div class="col">
                 <div class="custom-form-group">
                     <label for="ImageAlt" class="required">Alt تصویر</label>
-                    <input asp-for="createBlogCategory.ImageAlt" type="text" id="ImageAlt" readonly>
+                    <input asp-for="createBlogCategory.ImageAlt" type="text" id="ImageAlt" >
                     <span asp-validation-for="createBlogCategory.ImageAlt" class="text-danger"></span>
                 </div>
             </div>

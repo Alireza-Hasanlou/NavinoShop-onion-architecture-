@@ -15,7 +15,7 @@ namespace PostModule.Application.Services
             _stateRepository = stateRepository;
         }
 
-        public async Task<bool> ChangeStateClose(int id, List<int> stateCloses)
+        public async Task<bool> ChangeStateCloseAsync(int id, List<int> stateCloses)
         {
             if (stateCloses.Count() < 1) return false;
             var state = await _stateRepository.GetByIdAsync(id);
@@ -23,7 +23,7 @@ namespace PostModule.Application.Services
             return await _stateRepository.SaveAsync();
         }
 
-        public async Task<OperationResult> Create(CreateStateModel command)
+        public async Task<OperationResult> CreateAsync(CreateStateModel command)
         {
             if (await _stateRepository.ExistByAsync(s => s.Title == command.Title))
                 return new(false, ValidationMessages.DuplicatedMessage, nameof(command.Title));
@@ -33,7 +33,7 @@ namespace PostModule.Application.Services
             return new(false, ValidationMessages.SystemErrorMessage, nameof(command.Title));
         }
 
-        public async Task<OperationResult> Edit(EditStateModel command)
+        public async Task<OperationResult> EditAsync(EditStateModel command)
         {
             if (await _stateRepository.ExistByAsync(s => s.Title == command.Title && s.Id != command.Id))
                 return new(false, ValidationMessages.DuplicatedMessage, nameof(command.Title));
@@ -43,16 +43,16 @@ namespace PostModule.Application.Services
             return new(false, ValidationMessages.SystemErrorMessage, nameof(command.Title));
         }
 
-        public async Task<bool> ExistTitleForCreate(string title) =>
+        public async Task<bool> ExistTitleForCreateAsync(string title) =>
            await _stateRepository.ExistByAsync(s => s.Title == title);
 
-        public async Task<bool> ExistTitleForEdit(string title, int id) =>
+        public async Task<bool> ExistTitleForEditAsync(string title, int id) =>
            await _stateRepository.ExistByAsync(s => s.Title == title && s.Id != id);
 
         public async Task<List<StateViewModel>> GetAll() =>
            await _stateRepository.GetAllStateViewModel();
 
-        public async Task<EditStateModel> GetStateForEdit(int id)
+        public async Task<EditStateModel> GetStateForEditAsync(int id)
         {
             return await _stateRepository.GetStateForEdit(id);
         }

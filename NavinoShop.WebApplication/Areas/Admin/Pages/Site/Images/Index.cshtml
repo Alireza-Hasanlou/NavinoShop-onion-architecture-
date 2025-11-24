@@ -6,6 +6,7 @@
     ViewData["title"] = "تصاویر";
     var successMessage = TempData["success"] as string;
     var SiteImagesBaseAddress = FileDirectories.ImageDirectory100;
+    var SiteImagesBaseAddressForcopy = FileDirectories.ImageDirectory;
 }
 <div class="box">
     <div class="box-header">
@@ -70,14 +71,14 @@
                                         <td>@item.CreateDate</td>
                                         <td>
                                             <div class="btn-group">
-                                                <a onclick="copyImageUrl('@(SiteImagesBaseAddress + item.ImageName)')" class="btn btn-info ">کپی </a>
+                                                <a onclick="copyImageUrl('@(SiteImagesBaseAddressForcopy + item.ImageName)')" class="btn btn-info ">کپی </a>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="btn-group">
-                                                <a onclick="DeleteAjax('   آیا از حذف تصویر @item.Title مطئن هستید؟ ','تصویر به طور کامل از دیتابیس حذف میگردد و این عملیات غیر قابل بازگشت خواهد بود', 'warning', 'بله', '/Admin/Site/Images/Delete',@item.Id)" class="btn btn-danger">حذف</a>
+                                                <a onclick="DeleteAjax('   آیا از حذف تصویر @item.Title مطئن هستید؟ ','تصویر به طور کامل از سایت حذف میگردد و این عملیات غیر قابل بازگشت خواهد بود', 'warning', 'بله', '/Admin/Site/Images/Delete',@item.Id)" class="btn btn-danger">حذف</a>
                                             </div>
-
+                                          
                                         </td>
                                     </tr>
 
@@ -99,17 +100,17 @@
                         <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
                             <ul class="pagination">
 
-                                <li class="paginate_button previous disabled" id="DataTables_Table_0_previous">
-                                    <a href="/Admin/SitesImages/Index?pageId=@Model.Images.StartPage" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0">@Model.Images.StartPage</a>
+                                <li class="paginate_button previous @((Model.Images.PageId == Model.Images.StartPage) ? "active" : "")" id="DataTables_Table_0_previous">
+                                    <a href="/Admin/Site/Images/Index?pageId=@Model.Images.StartPage" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0">@Model.Images.StartPage</a>
                                 </li>
                                 @for (int i = Model.Images.StartPage + 1; i < Model.Images.EndPage; i++)
                                 {
                                     <li class="paginate_button  @((Model.Images.PageId == i) ? "active" : "")">
-                                        <a href="/Admin/SitesImages/Index?pageId=@i" aria-controls="DataTables_Table_0" data-dt-idx="1" tabindex="0">@i</a>
+                                        <a href="/Admin/Site/Images/Index?pageId=@i" aria-controls="DataTables_Table_0" data-dt-idx="1" tabindex="0">@i</a>
                                     </li>
                                 }
-                                <li class="paginate_button next disabled" id="DataTables_Table_0_next">
-                                    <a href="/Admin/SitesImages/Index?pageId=@Model.Images.EndPage" aria-controls="DataTables_Table_0" data-dt-idx="2" tabindex="0">@Model.Images.EndPage</a>
+                                <li class="paginate_button next @((Model.Images.PageId == Model.Images.EndPage) ? "active" : "")" id="DataTables_Table_0_next">
+                                    <a href="/Admin/Site/Images/Index?pageId=@Model.Images.EndPage"  aria-controls="DataTables_Table_0" data-dt-idx="2" tabindex="0">@Model.Images.EndPage</a>
                                 </li>
                             </ul>
                         </div>

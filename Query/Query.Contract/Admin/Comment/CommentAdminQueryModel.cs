@@ -19,3 +19,4 @@ namespace Query.Contract.Admin.Comment
         public long? ParentId { get; set; }
     }
 }
+

@@ -28,10 +28,10 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Site.Sliders
             var result = await _sliderCommandService.CreateAsync(CreateSlider);
             if (result.Success)
             {
-                TempData["Success"] = "افرودن بنر جدید با موفقیت انجام شد";
+                TempData["Success"] = "افرودن اسلایدر جدید با موفقیت انجام شد";
                 return RedirectToPage("Index");
             }
-            ModelState.AddModelError($"RoleTitle.{result.ModelName}", result.Message);
+            ModelState.AddModelError($"CreateSlider.{result.ModelName}", result.Message);
             return Page();
         }
 

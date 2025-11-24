@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Users.Domain.User.Agg;
 
 namespace Comments.Infrastructure.Persistence.EFConfig
 {
@@ -20,7 +21,7 @@ namespace Comments.Infrastructure.Persistence.EFConfig
             builder.Property(b => b.WhyRejected).IsRequired(false).HasMaxLength(350);
             builder.Property(b => b.CommentFor).IsRequired(true);
             builder.Property(b => b.Status).IsRequired(true);
-
+            builder.HasOne<User>().WithMany().HasForeignKey(f => f.UserId);
 
             builder.HasMany(b => b.Childs).WithOne(x => x.Parent).HasForeignKey(b => b.ParentId).IsRequired(false);
         }
