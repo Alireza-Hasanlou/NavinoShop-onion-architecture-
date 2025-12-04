@@ -45,8 +45,6 @@
                                 <div class="btn btn-warning w-100"><i class="fa fa-shopping-cart"></i>&nbsp;<span class="d-md-none d-lg-inline-block">سبد خرید</span> (2)</div>
                             </a>
                         </div>
-
-
                         <div class="col-12 col-md-7 col-lg-6 text-center " id="btn-login-register">
                             @if (!_authService.IsUserLogin())
                             {
@@ -61,7 +59,7 @@
                                     <span>
                                         <img src="@((FileDirectories.UserImageDirectory100) + (_authService.GetLoginUserAvatar()))" alt="User Avatar" class="user-avatar p-1" id="avatarBtn" />
                                         @_authService.GetLoginUserFullName()
-                                        </span>
+                                    </span>
                                     <div class="Authdropdown-menu" id="userDropdown">
                                         <div></div>
                                         <br />
@@ -76,6 +74,12 @@
 
 
                             }
+
+
+                            <!-- HTML -->
+
+
+
                         </div>
                     </div>
                 </div>
@@ -373,7 +377,10 @@
     <!-- Main NavBar -->
 </section>
 
-@section scripts{
+@section scripts {
+
+
+
     <script>
                 $(document).ready(function(){
           $('#dropDown').click(function(event){

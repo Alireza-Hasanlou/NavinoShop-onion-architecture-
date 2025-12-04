@@ -15,13 +15,13 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Site.Menu
             _menurService = menurService;
         }
 
-        public async Task<JsonResult> OnGet(int id)
+        public async Task<JsonResult> OnGet(int Id)
         {
           
-            if(id<1)
+            if(Id < 1)
                 return new JsonResult (new { success = false });
 
-            var result= await _menurService.ActivationChangeAsync(id);
+            var result= await _menurService.ActivationChangeAsync(Id);
             if (result.Success)
                 return new JsonResult(new {success=true });
 

@@ -10,5 +10,6 @@ namespace Query.Contract.Admin.Email.MessageUser
     public interface IMessageUserAdminQuery
     {
         Task<MessageUserAdminPaging> GetMessagesForAdmin(MessageStatus status,int pageId, int take, string Filter = "");
+        Task<MessageUserDetailAdminQueryModel> GetMessageDetailForAdmin(int id);
     }
 }

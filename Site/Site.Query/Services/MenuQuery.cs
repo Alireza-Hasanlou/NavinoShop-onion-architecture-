@@ -21,7 +21,7 @@ internal class MenuQuery : IMenuQueryService
     {
         MenuPageAdminQueryModel model = new()
         {
-            Id = parentId
+            ParentId = parentId
         };
         if (parentId == 0)
         {
@@ -66,9 +66,7 @@ internal class MenuQuery : IMenuQueryService
     {
         List<MenuForUiQueryModel> model = new();
         var menus = _menuRepository.GetAllBy(b => b.Active &&
-        (b.Status == MenuStatus.منوی_وبلاگ_لینک
-        || b.Status == MenuStatus.منوی_وبلاگ_با_زیرمنوی_بدون_عکس
-        || b.Status == MenuStatus.منوی_وبلاگ_با_زیر_منوی_عکس_دار));
+        (b.Status == MenuStatus.منوی_وبلاگ_لینک));
         foreach (var item in menus)
         {
             MenuForUiQueryModel menu = new()

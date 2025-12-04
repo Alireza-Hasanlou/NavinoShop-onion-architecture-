@@ -16,9 +16,12 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Site.Menu
 
         [BindProperty]
         public EditMenuCommandModel Editmenu { get; set; }
-        public async Task OnGet(int menuId)
+        public async Task<IActionResult> OnGet(int Id)
         {
-            Editmenu = await _menuService.GetForEditAsync(menuId);
+            if (Id < 1)
+                return RedirectToPage("Index");
+            Editmenu = await _menuService.GetForEditAsync(Id);
+            return Page();
         }
         public async Task<IActionResult> OnPost()
         {
@@ -29,7 +32,7 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Site.Menu
             if (result.Success)
             {
                 TempData["success"] = "منو با موفقیت ویرایش شد";
-                return Redirect("/Admin/menu/Index");
+                return Redirect($"/Admin/Site/menu/Index?parentId={Editmenu.ParentId}");
             }
             ModelState.AddModelError($"Editmenu.{result.ModelName}", result.Message);
             return Page();

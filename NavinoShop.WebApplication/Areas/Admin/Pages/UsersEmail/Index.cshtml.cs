@@ -18,7 +18,7 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.UsersEmail
         }
         [BindProperty]
         public EmailUserAdminPaging EmailUser { get; set; }
-        public async Task OnGet(int pageId, int take, string? filter = "")
+        public async Task OnGet(int pageId=1, int take=10, string? filter = "")
         {
             EmailUser = await _emailAdminQuery.GetAllEmailForAdmin(pageId, take, filter);
         }

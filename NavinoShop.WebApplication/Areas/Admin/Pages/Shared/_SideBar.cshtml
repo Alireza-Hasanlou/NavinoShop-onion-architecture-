@@ -68,37 +68,12 @@
                     </li>
                 </ul>
             </li>
-            <li class="@(currentPath.Contains("/admin/post")
-                                                            || currentPath.Contains("/admin/state")
-                                                            || currentPath.Contains("/admin/package")
-                                                            || currentPath.Contains("/admin/city")
-                                                              ? "active" : "") treeview">
-                <a href="#">
-                    <i class="fa fa-ship"></i> <span>مدیریت پست</span>
-                    <span class="pull-left-container">
-                        <i class="fa fa-angle-right pull-left"></i>
-                    </span>
-                </a>
-                <ul class="treeview-menu">
-                    <li class=@(currentPath.Contains("/admin/site/post") ? "active" : "")>
-                        <a href="/Admin/site/Post/Index"><i class="fa fa-ship"></i>  مدیریت پست</a>
-                    </li>
-                    <li class=@(currentPath.Contains("/admin/state/") ? "active" : "")>
-                        <a href="/Admin/State/Index"><i class="fa fa-map-o"></i>  مدیریت استان ها</a>
-                    </li>
-                    <li class=@(currentPath.Contains("/admin/package") ? "active" : "")>
-                        <a href="/Admin/Package/Index"><i class="fa fa-shopping-basket"></i>  مدیریت پکیج های فروش پست</a>
-                    </li>
-                    <li class=@(currentPath.Contains("/admin/site/post/setting") ? "active" : "")>
-                        <a href="/Admin/site/Post/Setting"><i class="fa fa-gear"></i>  تنظیمات پست</a>
-                    </li>
-                </ul>
-            </li>
 
 
-            <li class="@(currentPath.Contains("/admin/useremail")
+
+            <li class="@(currentPath.Contains("/admin/usersemail")
                                                             || currentPath.Contains("/admin/sendemail")
-                                                                            || currentPath.Contains("/admin/usermessage")
+                                                                            || currentPath.Contains("/admin/usersmessage")
                                                               ? "active" : "") treeview">
                 <a href="#">
                     <i class="fa fa-envelope-open"></i> <span>مدیریت خبرنامه</span>
@@ -113,7 +88,7 @@
                     <li class=@(currentPath.Contains("/admin/sendemail/") ? "active" : "")>
                         <a href="/Admin/SendEmail/Index"><i class="fa fa-mail-forward"></i>  ایمیل های ارسالی</a>
                     </li>
-                    <li class=@(currentPath.Contains("/admin/usermessage/") ? "active" : "")>
+                    <li class=@(currentPath.Contains("/admin/usersmessage/") ? "active" : "")>
                         <a href="/Admin/UsersMessage/Index"><i class="fa fa-comment"></i>  پیام های ارسالی</a>
                     </li>
                 </ul>
@@ -202,6 +177,7 @@
                     </li>
                 </ul>
             </li>
+
         </ul>
 
 

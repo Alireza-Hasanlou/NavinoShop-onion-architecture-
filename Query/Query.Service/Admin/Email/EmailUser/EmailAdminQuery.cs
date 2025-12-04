@@ -1,6 +1,7 @@
 ﻿using Emails.Domailn.EmailAgg;
 using Microsoft.EntityFrameworkCore;
 using Query.Contract.Admin.Email.EmailUser;
+using Shared.Application;
 using Users.Domain.User.Agg.IRepository;
 
 namespace Query.Service.Admin.Email.EmailUser
@@ -31,19 +32,20 @@ namespace Query.Service.Admin.Email.EmailUser
                 Email = x.Email,
                 Id = x.Id,
                 UserId = x.UserId,
-                Active=x.Active
+                Active = x.Active,
+                CreationDate = x.CreateDate.ToPersainDate()
 
             }).OrderByDescending(i => i.Id).ToListAsync();
 
-            model.Emails.ForEach(async x =>
+            foreach (var item in model.Emails)
             {
-                var user = await _userRepository.GetByIdAsync(x.UserId);
-                x.UserName = !string.IsNullOrEmpty(user.FullName) ? user.FullName : user.Mobile;
-            });
+                var user = await _userRepository.GetByIdAsync(item.UserId);
+                item.UserName = !string.IsNullOrEmpty(user.FullName) ? user.FullName : user.Mobile;
+            }
+
+
 
             return model;
-
-
 
         }
     }

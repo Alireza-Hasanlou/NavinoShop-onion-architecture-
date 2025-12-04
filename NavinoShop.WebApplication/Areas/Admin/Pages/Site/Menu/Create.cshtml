@@ -1,87 +1,93 @@
-﻿@page 
+﻿@page
 @using Shared.Domain.Enums
 @model NavinoShop.WebApplication.Areas.Admin.Pages.Site.Menu.CreateModel
 @{
     Layout = "_AdminLayout";
     ViewData["title"] = "ایجاد منو ";
 
+
+
 }
 <div class="Formcontainer">
 
-        <div class="Formcontainer">
+    <div class="Formcontainer">
 
 
-            <form method="post"  enctype="multipart/form-data">
-                <div class="row">
-                    <div class="col  col-md-6 col-sm-12 ">
+        <form method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col  col-md-6 col-sm-12 ">
 
-                        <div class="custom-form-group">
-                            <label for="Title" class="required">عنوان</label>
-                            <input asp-for="@Model.CreateMenu.Title" type="text" id="Title" ">
-                            <span asp-validation-for="CreateMenu.Url" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="col  col-md-6 col-sm-12">
-                        <div class="custom-form-group">
-                            <label asp-for="CreateMenu.Status" class="required">محل منو</label>
-                            <select asp-items="Html.GetEnumSelectList<MenuStatus>()" asp-for="CreateMenu.Status">
-                                <option value="0">محل بنر را انتخاب کنید</option>
-
-                            </select>
-                            <span asp-validation-for="CreateMenu.Status" class="text-danger"></span>
-                        </div>
+                    <div class="custom-form-group">
+                        <label for="Title" class="required">عنوان</label>
+                        <input asp-for="@Model.CreateMenu.Title" type="text" id="Title" ">
+                        <span asp-validation-for="CreateMenu.Url" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="row">
+                <div class="col  col-md-6 col-sm-12">
+                    <div class="custom-form-group">
+                        <label asp-for="CreateMenu.Status" class="required">محل منو</label>
+                        <select asp-for="CreateMenu.Status">
+                            <option value="0">محل بنر را انتخاب کنید</option>
+                            @foreach (var item in Enum.GetValues(typeof(MenuStatus)).Cast<MenuStatus>())
+                            {
+                                <option value="@item">@item.ToString().Replace("_", " ")</option>
+                            }
+                        </select>
 
-                    <div class="col  col-md-6 col-sm-12 ">
-                        <div class="custom-form-group">
-                            <label for="Url" class="required">لینک مقصد</label>
-                            <input asp-for="@Model.CreateMenu.Url" type="text" id="Url" ">
-                            <span asp-validation-for="CreateMenu.Url" class="text-danger"></span>
-                        </div>
+                        <span asp-validation-for="CreateMenu.Status" class="text-danger"></span>
                     </div>
+                </div>
+            </div>
+            <div class="row">
 
-                    <div class="col  col-md-6 col-sm-12 ">
-                        <div class="custom-form-group">
-                            <label for="Number" class="required">شماره برای ترتیب بندی</label>
-                            <input asp-for="@Model.CreateMenu.Number" type="number" id=" Number">
-                            <span asp-validation-for="CreateMenu.Url" class="text-danger"></span>
-                        </div>
+                <div class="col  col-md-6 col-sm-12 ">
+                    <div class="custom-form-group">
+                        <label for="Url" class="required">لینک مقصد</label>
+                        <input dir="ltr" asp-for="@Model.CreateMenu.Url" type="text" id="Url">
+                        <span asp-validation-for="CreateMenu.Url" class="text-danger"></span>
                     </div>
                 </div>
 
-                <div class="row">
-
-
-                    <div class="col col-md-6 col-sm-12 col-12">
-
-                        <div class="custom-form-group">
-                            <label class="required" for="ImageAlt"> Alt تصویر</label>
-                            <input asp-for="CreateMenu.ImageAlt" type="text" id="ImageAlt">
-                            <span asp-validation-for="CreateMenu.ImageAlt" class="text-danger"></span>
-                        </div>
-                        <span class="text-info"> @Html.DisplayNameFor(Model => Model.CreateMenu.ImageFile)</span>
-                    </div>
-                    <div class="col col-md-6 col-sm-12 col-12">
-                        <div id="img-container">
-                            <label for="upload-file">
-                              
-                                <div class="picture-uploader" data-url="">
-                                    <div class="picture__image"></div>
-                                    <input asp-for="@Model.CreateMenu.ImageFile" type="file" id="upload-file" class="picture__input" accept="image/*" />
-                                </div>
-                            </label>
-
-                        </div>
-                        <span asp-validation-for="CreateMenu.ImageFile" class="text-danger"></span>
+                <div class="col  col-md-6 col-sm-12 ">
+                    <div class="custom-form-group">
+                        <label for="Number" class="required">شماره برای ترتیب بندی</label>
+                        <input asp-for="@Model.CreateMenu.Number" type="number" id=" Number">
+                        <span asp-validation-for="CreateMenu.Url" class="text-danger"></span>
                     </div>
                 </div>
+            </div>
 
-                <button type="submit" class="btn btn-success btn-block">افزودن </button>
+            <div class="row">
 
-            </form>
-        </div>
+
+                <div class="col col-md-6 col-sm-12 col-12">
+
+                    <div class="custom-form-group">
+                        <label class="required" for="ImageAlt"> Alt تصویر</label>
+                        <input asp-for="CreateMenu.ImageAlt" type="text" id="ImageAlt">
+                        <span asp-validation-for="CreateMenu.ImageAlt" class="text-danger"></span>
+                    </div>
+                    <span class="text-info"> @Html.DisplayNameFor(Model => Model.CreateMenu.ImageFile)</span>
+                </div>
+                <div class="col col-md-6 col-sm-12 col-12">
+                    <div id="img-container">
+                        <label for="upload-file">
+
+                            <div class="picture-uploader" data-url="">
+                                <div class="picture__image"></div>
+                                <input asp-for="@Model.CreateMenu.ImageFile" type="file" id="upload-file" class="picture__input" accept="image/*" />
+                            </div>
+                        </label>
+
+                    </div>
+                    <span asp-validation-for="CreateMenu.ImageFile" class="text-danger"></span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success btn-block">افزودن </button>
+
+        </form>
+    </div>
 </div>
 
 

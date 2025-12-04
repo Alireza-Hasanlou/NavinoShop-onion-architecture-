@@ -6,7 +6,7 @@ namespace Site.Application.Contract.MenuService.Command
 {
     public class UbsertMenuCommandModel
     {
-        [Display(Name = "تصویر (برای سر منو های صفحه اصلی که زیر منو دارند و دراپ داون طور هستند و در منو های وبلاگی که زیر منو دارن میتوانید برای زیر منو هاش عکس وارد کنید .)")]
+        [Display(Name = " تصویر برای منوی گروه های محصولات در اندازه 256*451 ")]
         public IFormFile? ImageFile { get; set; }
         [Display(Name = "Alt تصویر")]
         [MaxLength(250, ErrorMessage = ValidationMessages.MaxLengthMessage)]

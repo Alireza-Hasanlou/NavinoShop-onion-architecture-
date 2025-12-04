@@ -1,8 +1,9 @@
 ﻿@page
+@using Shared.Domain.Enums
 @model NavinoShop.WebApplication.Areas.Admin.Pages.UsersMessage.IndexModel
 @{
     Layout = "_AdminLayout";
-    ViewData["title"] = "خبرنامه ها ";
+    ViewData["title"] = "پیام های تماس با ما ";
 }
 
 
@@ -14,35 +15,45 @@
     <div class="box-body">
         <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
 
+            <!-- HTML -->
             <div class="row col-12">
                 <form>
-                    <div class="col col-md-4 col-sm-6">
-                        <div id="DataTables_Table_0_filter" class="dataTables_filter">
-                            <label>
-                                جستجو:
-                                <input name="filter" type="search" class="form-control input-sm" placeholder="" aria-controls="DataTables_Table_0">
-                            </label>
+                    <div class="col col-md-3">
+                        <div class="form-group position-relative">
+                            <label for="filter">جستجو:</label>
+                            <input id="filter" name="filter" type="search" class="form-control input-sm" placeholder="">
                         </div>
                     </div>
-                    <div class="col col-md-4 col-sm-6">
-                        <div class="dataTables_length" id="DataTables_Table_0_length">
-                            <label>
-                                نمایش
-                                <select name="take" aria-controls="DataTables_Table_0" class="form-control input-sm">
-                                    <option value="10">10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select>
-                                داده
-                            </label>
+
+                    <div class="col col-md-3">
+                        <div class="form-group position-relative">
+                            <label for="take">نمایش داده</label>
+                            <select id="take" name="take" class="form-control input-sm">
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="col col-md-4 col-sm-6">
-                        <button class="btn btn-info">جست و جو </button>
+
+                    <div class="col col-md-3">
+                        <div class="form-group position-relative">
+                            <label for="status">جست و جو بر اساس وضعیت</label>
+                            <select id="status" class="form-control" name="status">
+                                @foreach (var item in Enum.GetValues(typeof(MessageStatus)).Cast<MessageStatus>())
+                                {
+                                    <option value="@item">@item.ToString().Replace("_", " ")</option>
+                                }
+                            </select>
+                        </div>
+                        <span asp-validation-for="MessageUser.Status" class="text-danger"></span>
+                    </div>
+
+                    <div class="col col-md-3 JustifyLeft">
+                        <button class="btn btn-info">جست و جو</button>
                     </div>
                 </form>
-
             </div>
             <div class="row">
                 <div class="col-sm-12">
@@ -57,6 +68,7 @@
                                 <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="شماره تماس: activate to sort column ascending" style="width: 134.828px;">شماره تماس</th>
                                 <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-sort="ascending" aria-label="ایمیل: activate to sort column descending" >ایمیل</th>
                                 <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="تاریخ ایجاد: activate to sort column ascending" >تاریخ ایجاد</th>
+                                <th>عملیات</th>
 
                         </thead>
                         <tbody>
@@ -72,6 +84,7 @@
                                         <td>@item.PhoneNumber </td>
                                         <td>@item.Email </td>
                                         <td>@item.CreateDate </td>
+                                        <td> <a href="/Admin/UsersMessage/Detail?id=@item.Id" class="btn btn-info">جزئیات</a></td>
                                        
                                     </tr>
 

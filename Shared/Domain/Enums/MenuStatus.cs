@@ -2,15 +2,24 @@
 {
     public enum MenuStatus
     {
+        منوی_گروه_محصولات,
+        دسته_های_گروه_مجصولات,
+        زیردسته_های_گروه_محصولات,
         منوی_اصلی,
         منوی_اصلی_با_زیر_منو,
         زیرمنوی_سردسته,
-        زیرمنو,
         تیتر_منوی_فوتر,
         منوی_فوتر,
         منوی_وبلاگ_لینک,
-        منوی_وبلاگ_با_زیرمنوی_بدون_عکس,
-        منوی_وبلاگ_با_زیر_منوی_عکس_دار,
-        زیر_منوی_وبلاگ
+
     }
+    public static class EnumExtensions
+    {
+        public static string ToFriendlyString(this MenuStatus status)
+        {
+            return status.ToString().Replace("_", " ");
+        }
+    }
+
+
 }

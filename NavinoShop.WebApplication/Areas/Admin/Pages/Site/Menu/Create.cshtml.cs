@@ -28,7 +28,7 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Site.Menu
                 TempData["Success"] = "افرودن منو جدید با موفقیت انجام شد";
                 return RedirectToPage("Index");
             }
-            ModelState.AddModelError($"CreateMenur.{result.ModelName}", result.Message);
+            ModelState.AddModelError($"CreateMenu.{result.ModelName}", result.Message);
             return Page();
         }
 

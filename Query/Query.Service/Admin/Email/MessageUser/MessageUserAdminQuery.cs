@@ -44,7 +44,7 @@ namespace Query.Service.Admin.Email.MessageUser
             MessageUserAdminPaging model = new();
             model.GetData(Messages, pageId, take, 5);
             model.Filter = Filter;
-            model.Status=status;
+            model.Status = status;
             model.Messages = await Messages.Skip(model.Skip).Take(take).Select(m => new MessageUserAdminQueryModel
             {
                 Id = m.Id,
@@ -57,14 +57,39 @@ namespace Query.Service.Admin.Email.MessageUser
                 Status = m.Status,
             }).OrderByDescending(i => i.Id).ToListAsync();
 
-            model.Messages.ForEach(async x =>
+            foreach (var item in model.Messages)
             {
-                var user = await _userRepository.GetByIdAsync(x.Id);
-                x.UserName = !string.IsNullOrEmpty(user.FullName) ? user.FullName : user.Mobile;
-            });
+                var user = await _userRepository.GetByIdAsync(item.Id);
+                item.UserName = !string.IsNullOrEmpty(user.FullName) ? user.FullName : user.Mobile;
+            }
 
             return model;
 
+        }
+        public async Task<MessageUserDetailAdminQueryModel> GetMessageDetailForAdmin(int id)
+        {
+            var m = await _messageUserRepository.GetByIdAsync(id);
+            MessageUserDetailAdminQueryModel model = new()
+            {
+                AnswerEmail = m.AnswerEmail,
+                AnswerSms = m.AnswerSms,
+                CreationDate = m.CreateDate.ToPersainDate(),
+                Email = m.Email,
+                FullName = m.FullName,
+                Id = id,
+                Message = m.Message,
+                PhoneNumber = m.PhoneNumber,
+                Status = m.Status,
+                Subject = m.Subject,
+                UseName = "",
+                UserId = m.UserId
+            };
+            if (model.UserId > 0)
+            {
+                var user = await _userRepository.GetByIdAsync(id);
+                model.UseName = string.IsNullOrEmpty(user.FullName) ? user.Mobile : user.FullName;
+            }
+            return model;
         }
     }
 }

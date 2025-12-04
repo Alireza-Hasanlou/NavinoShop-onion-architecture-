@@ -1,0 +1,45 @@
+﻿@page
+@using Shared.Domain.Enums
+@model NavinoShop.WebApplication.Areas.Admin.Pages.Site.Menu.CreateSubMenuModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["title"] = Model.CreateSubMenu.Title;
+}
+<div class="Formcontainer">
+
+    <div class="Formcontainer">
+
+
+        <form method="post" enctype="multipart/form-data">
+            <input type="hidden" asp-for="CreateSubMenu.ParentId" />
+            <input type="hidden" asp-for="CreateSubMenu.ParentStatus" />
+        
+            <div class="col  col-md-6 col-sm-12 ">
+
+                <div class="custom-form-group">
+                    <label for="Title" class="required">عنوان</label>
+                    <input asp-for="@Model.CreateSubMenu.Title" type="text" id="Title" ">
+                    <span asp-validation-for="CreateSubMenu.Url" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col  col-md-6 col-sm-12 ">
+                <div class="custom-form-group">
+                    <label for="Url" class="required">لینک مقصد</label>
+                    <input dir="ltr" asp-for="@Model.CreateSubMenu.Url" type="text" id="Url">
+                    <span asp-validation-for="CreateSubMenu.Url" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col  col-md-6 col-sm-12 ">
+                <div class="custom-form-group">
+                    <label for="Number" class="required">شماره برای ترتیب بندی</label>
+                    <input asp-for="@Model.CreateSubMenu.Number" type="number" id=" Number">
+                    <span asp-validation-for="CreateSubMenu.Url" class="text-danger"></span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success btn-block">افزودن </button>
+
+        </form>
+    </div>
+</div>

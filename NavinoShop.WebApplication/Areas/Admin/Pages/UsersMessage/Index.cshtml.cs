@@ -17,7 +17,7 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.UsersMessage
             _messageUserAdminQuery = messageUserAdminQuery;
         }
         public MessageUserAdminPaging MessageUser { get; set; }
-        public async Task OnGet(MessageStatus status, int pageId, int take, string? filter = "")
+        public async Task OnGet(MessageStatus status, int pageId=1, int take=10, string? filter = "")
         {
             MessageUser = await _messageUserAdminQuery.GetMessagesForAdmin(status, pageId, take, filter);
         }
