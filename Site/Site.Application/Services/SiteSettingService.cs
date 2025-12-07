@@ -33,7 +33,7 @@ internal class SiteSettingService : ISiteSettingService
             logoName =await _fileService.UploadImage(command.LogoFile, FileDirectories.SiteImageFolder);
             if (logoName == "")
                 return new(false, ValidationMessages.ImageErrorMessage, nameof(command.LogoFile));
-            _fileService.ResizeImage(logoName, FileDirectories.SiteImageFolder, 300);
+            _fileService.ResizeImage(logoName, FileDirectories.SiteImageFolder, 64);
         }
         string favIconName = site.FavIcon;
         string oldfavIconName = site.FavIcon;

@@ -1,4 +1,223 @@
 ﻿@page
 @model NavinoShop.WebApplication.Areas.Admin.Pages.Site.Settings.IndexModel
 @{
+    Layout = "_AdminLayout";
 }
+
+<div class="Formcontainer">
+
+    <form method="post" enctype="multipart/form-data">
+
+        <div class="row">
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="Instagram">لینک پیج اینستاگرام</label>
+                    <input asp-for="UpsertSiteSetting.Instagram" type="text" id="Instagram">
+                    <span asp-validation-for="UpsertSiteSetting.Instagram" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="WhatsApp">لینک واتس اپ</label>
+                    <input asp-for="UpsertSiteSetting.WhatsApp" type="text" id="WhatsApp">
+                    <span asp-validation-for="UpsertSiteSetting.WhatsApp" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="row">
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="Telegram">لینک تلگرام</label>
+                    <input asp-for="UpsertSiteSetting.Telegram" type="text" id="Telegram">
+                    <span asp-validation-for="UpsertSiteSetting.Telegram" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="Youtube">لینک یوتیوب</label>
+                    <input asp-for="UpsertSiteSetting.Youtube" type="text" id="Youtube">
+                    <span asp-validation-for="UpsertSiteSetting.Youtube" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 3 -->
+        <div class="row">
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="LogoFile">لوگو</label>
+                    <input asp-for="UpsertSiteSetting.LogoFile" type="file" id="LogoFile">
+                    <span asp-validation-for="UpsertSiteSetting.LogoFile" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="LogoAlt">Alt لوگو</label>
+                    <input asp-for="UpsertSiteSetting.LogoAlt" type="text" id="LogoAlt">
+                    <span asp-validation-for="UpsertSiteSetting.LogoAlt" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 4 -->
+        <div class="row">
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="FavIconFile">فاو آیکون</label>
+                    <input asp-for="UpsertSiteSetting.FavIconFile" type="file" id="FavIconFile">
+                    <span asp-validation-for="UpsertSiteSetting.FavIconFile" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="Enamad">لینک اینماد</label>
+                    <input asp-for="UpsertSiteSetting.Enamad" type="text" id="Enamad">
+                    <span asp-validation-for="UpsertSiteSetting.Enamad" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 5 -->
+        <div class="row">
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="SamanDehi">لینک ساماندهی</label>
+                    <input asp-for="UpsertSiteSetting.SamanDehi" type="text" id="SamanDehi">
+                    <span asp-validation-for="UpsertSiteSetting.SamanDehi" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="SeoBox">Seo Box</label>
+                    <textarea asp-for="UpsertSiteSetting.SeoBox" id="SeoBox"></textarea>
+                    <span asp-validation-for="UpsertSiteSetting.SeoBox" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 6 -->
+        <div class="row">
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="Android">لینک اپلیکیشن اندروید</label>
+                    <input asp-for="UpsertSiteSetting.Android" type="text" id="Android">
+                    <span asp-validation-for="UpsertSiteSetting.Android" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="IOS">لینک اپلیکیشن آیفون</label>
+                    <input asp-for="UpsertSiteSetting.IOS" type="text" id="IOS">
+                    <span asp-validation-for="UpsertSiteSetting.IOS" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 7 -->
+        <div class="row">
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="FooterTitle">عنوان فوتر</label>
+                    <input asp-for="UpsertSiteSetting.FooterTitle" type="text" id="FooterTitle">
+                    <span asp-validation-for="UpsertSiteSetting.FooterTitle" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="FooterDescription">توضیحات فوتر</label>
+                    <textarea asp-for="UpsertSiteSetting.FooterDescription" id="FooterDescription"></textarea>
+                    <span asp-validation-for="UpsertSiteSetting.FooterDescription" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 8 -->
+        <div class="row">
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="Phone1">شماره تماس 1</label>
+                    <input asp-for="UpsertSiteSetting.Phone1" type="text" id="Phone1">
+                    <span asp-validation-for="UpsertSiteSetting.Phone1" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="Phone2">شماره تماس 2</label>
+                    <input asp-for="UpsertSiteSetting.Phone2" type="text" id="Phone2">
+                    <span asp-validation-for="UpsertSiteSetting.Phone2" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 9 -->
+        <div class="row">
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="Email1">ایمیل 1</label>
+                    <input asp-for="UpsertSiteSetting.Email1" type="text" id="Email1">
+                    <span asp-validation-for="UpsertSiteSetting.Email1" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="Email2">ایمیل 2</label>
+                    <input asp-for="UpsertSiteSetting.Email2" type="text" id="Email2">
+                    <span asp-validation-for="UpsertSiteSetting.Email2" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 10 -->
+        <div class="row">
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="Address">آدرس</label>
+                    <textarea asp-for="UpsertSiteSetting.Address" id="Address"></textarea>
+                    <span asp-validation-for="UpsertSiteSetting.Address" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="ContactDescription">توضیحات تماس با ما</label>
+                    <textarea asp-for="UpsertSiteSetting.ContactDescription" id="ContactDescription"></textarea>
+                    <span asp-validation-for="UpsertSiteSetting.ContactDescription" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 11 -->
+        <div class="row">
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="AboutTitle">عنوان درباره ما</label>
+                    <input asp-for="UpsertSiteSetting.AboutTitle" id="AboutTitle" type="text">
+                    <span asp-validation-for="UpsertSiteSetting.AboutTitle" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="AboutDescription">توضیحات درباره ما</label>
+                    <textarea asp-for="UpsertSiteSetting.AboutDescription" id="AboutDescription"></textarea>
+                    <span asp-validation-for="UpsertSiteSetting.AboutDescription" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success btn-block">ثبت</button>
+
+    </form>
+</div>
+

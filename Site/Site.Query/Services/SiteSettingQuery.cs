@@ -19,6 +19,8 @@ internal class SiteSettingQuery : ISiteSettingQueryService
         _siteSettingRepository = siteSettingRepository;
     }
 
+
+
     public async Task<ContactFooterUiQueryModel> GetContactDataForFooter()
     {
         var site = await _siteSettingRepository.GetSingle();
@@ -28,7 +30,7 @@ internal class SiteSettingQuery : ISiteSettingQueryService
     public async Task< FavIconForUiQueryModel> GetFavIconForUi()
     {
         var site =await _siteSettingRepository.GetSingle();
-        return new FavIconForUiQueryModel(string.IsNullOrEmpty(site.FavIcon) ? "" : FileDirectories.SiteImageDirectory64 + site.FavIcon);
+        return new FavIconForUiQueryModel(string.IsNullOrEmpty(site.FavIcon) ? "" : FileDirectories.SiteImageDirectory + site.FavIcon);
     }
 
     public async Task< FooterUiQueryModel> GetFooter()
@@ -40,7 +42,7 @@ internal class SiteSettingQuery : ISiteSettingQueryService
     public async Task< LogoForUiQueryModel> GetLogoForUi()
     {
         var site = await _siteSettingRepository.GetSingle();
-        return new LogoForUiQueryModel(string.IsNullOrEmpty(site.LogoName) ? "" : FileDirectories.SiteImageDirectory300 + site.LogoName, site.LogoAlt);
+        return new LogoForUiQueryModel(string.IsNullOrEmpty(site.LogoName) ? "" : FileDirectories.SiteImageDirectory64 + site.LogoName, site.LogoAlt);
     }
 
     public async Task<SocialForUiQueryModel> GetSocialForUi()

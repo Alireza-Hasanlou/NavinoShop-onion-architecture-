@@ -2317,6 +2317,7 @@
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Areas\Admin\Pages\Post\Setting\" />
     <Folder Include="Areas\Admin\Pages\Post\Package\" />
+    <Folder Include="wwwroot\Images\Site\" />
   </ItemGroup>
 
   <ItemGroup>

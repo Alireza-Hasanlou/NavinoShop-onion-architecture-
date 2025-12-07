@@ -27,7 +27,7 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Site.Settings
             var result = await _siteSettingService.Upsert(UpsertSiteSetting);
             if (result.Success)
             {
-                TempData["Success"] = "افرودن صفحه جدید با موفقیت انجام شد";
+                TempData["Success"] = "تنظیمات اعمال شد";
                 return RedirectToPage("Index");
 
             }
