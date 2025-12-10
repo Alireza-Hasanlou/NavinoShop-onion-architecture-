@@ -1,4 +1,4 @@
-﻿namespace Blogs.Application.Contract.BlogApplication.Query
+﻿namespace Blogs.Application.Contract.BlogService.Query
 {
     public class BlogQueryModel
     {

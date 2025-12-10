@@ -1,4 +1,4 @@
-﻿using Blogs.Application.Contract.BlogApplication.Query;
+﻿using Blogs.Application.Contract.BlogService.Query;
 using Shared.Domain;
 using System;
 using System.Collections.Generic;

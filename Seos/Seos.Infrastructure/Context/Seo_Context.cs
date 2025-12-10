@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Seos.Domain;
 using Seos.Domain.SeoAgg;
+using Seos.Infrastructure.Persistence.EFConfig;
 
 namespace Seos.Infrastructure.Context
 {

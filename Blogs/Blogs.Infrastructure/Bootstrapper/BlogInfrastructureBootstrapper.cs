@@ -20,7 +20,7 @@ namespace Blogs.Infrastructure.Bootstrapper
             BlogApplicationBootstrapper.Config(services);
             services.AddScoped<IBlogCategoryRepository, BlogCategoryRepository>();
             services.AddScoped<IBlogRepository, BlogRepository>();
-            services.AddDbContext<NavinoDbContext>(option =>
+            services.AddDbContext<BlogDbContext>(option =>
             {
                 option.UseSqlServer(connectionString);
             });

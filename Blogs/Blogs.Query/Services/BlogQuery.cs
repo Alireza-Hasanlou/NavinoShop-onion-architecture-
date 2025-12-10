@@ -1,5 +1,5 @@
-﻿using Blogs.Application.Contract.BlogApplication.Query;
-using Blogs.Application.Contract.BlogCategoryService.Query;
+﻿using Blogs.Application.Contract.BlogCategoryService.Query;
+using Blogs.Application.Contract.BlogService.Query;
 using Blogs.Domain.BlogAgg;
 using Blogs.Domain.BlogCategoryAgg;
 using Microsoft.EntityFrameworkCore;

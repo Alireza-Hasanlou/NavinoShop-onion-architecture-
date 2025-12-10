@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Seos.Infrastructure
+namespace Seos.Infrastructure.Persistence.EFConfig
 {
     public class SeoConfig : IEntityTypeConfiguration<Seo>
     {

@@ -47,7 +47,4 @@ app.UseEndpoints(x =>
 
 });
 
-
-
-
 app.Run();

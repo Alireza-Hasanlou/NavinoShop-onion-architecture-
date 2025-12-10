@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using NavinoShop.WebApplication.Services;
 using Users.Application.Bootstrapper;
 using Users.Domain.User.Agg.IRepository;
 using Users.Infrastructure.Persistence.Context;

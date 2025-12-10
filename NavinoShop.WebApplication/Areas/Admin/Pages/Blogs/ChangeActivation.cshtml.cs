@@ -1,5 +1,5 @@
-using Blogs.Application.Contract.BlogApplication.Command;
 using Blogs.Application.Contract.BlogCategoryService.Command;
+using Blogs.Application.Contract.BlogService.Command;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 

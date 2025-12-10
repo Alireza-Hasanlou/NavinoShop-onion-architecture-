@@ -2,7 +2,7 @@
 using Shared.Application.Validations;
 using System.ComponentModel.DataAnnotations;
 
-namespace Blogs.Application.Contract.BlogApplication.Command
+namespace Blogs.Application.Contract.BlogService.Command
 {
     public class CreateBlogCommand:Text_ShortDescription_Title_Slug_Image_ImageAlt
     {
