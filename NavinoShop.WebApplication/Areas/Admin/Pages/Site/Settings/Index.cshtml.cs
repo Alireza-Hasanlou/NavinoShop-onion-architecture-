@@ -28,7 +28,7 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Site.Settings
             if (result.Success)
             {
                 TempData["Success"] = "تنظیمات اعمال شد";
-                return RedirectToPage("Index");
+                return RedirectToPage("/Admin/Index");
 
             }
             ModelState.AddModelError($"UpsertSiteSetting.{result.ModelName}", result.Message);
