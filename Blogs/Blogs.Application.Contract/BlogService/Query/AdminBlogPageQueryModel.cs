@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Blogs.Application.Contract.BlogApplication.Query
+namespace Blogs.Application.Contract.BlogService.Query
 {
     public class AdminBlogPageQueryModel
     {

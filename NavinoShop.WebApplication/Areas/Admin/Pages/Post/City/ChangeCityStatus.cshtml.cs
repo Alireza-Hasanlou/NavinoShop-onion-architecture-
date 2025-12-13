@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using PostModule.Application.Contract.CityApplication;
+using PostModule.Application.Contract.CityService;
 using Shared.Domain.Enums;
 
 namespace NavinoShop.WebApplication.Areas.Admin.Pages.Post.City

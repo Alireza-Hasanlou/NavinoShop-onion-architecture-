@@ -1,10 +1,10 @@
-﻿using Blogs.Application.Contract.BlogApplication.Command;
-using Blogs.Domain.BlogAgg;
+﻿using Blogs.Domain.BlogAgg;
 using Shared.Application;
 using Shared.Application.Service;
 using Blogs.Domain.BlogCategoryAgg;
 using Shared.Application.Validations;
 using Shared;
+using Blogs.Application.Contract.BlogService.Command;
 
 namespace Blogs.Application.Services
 {

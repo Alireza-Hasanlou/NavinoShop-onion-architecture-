@@ -14,9 +14,9 @@ namespace Blogs.Infrastructure.Persistence.Repository
 {
     internal class BlogCategoryRepository:GenericRepository<BlogCategory,int>,IBlogCategoryRepository
     {
-        private readonly NavinoDbContext _context;
+        private readonly BlogDbContext _context;
 
-        public BlogCategoryRepository(NavinoDbContext context):base(context) 
+        public BlogCategoryRepository(BlogDbContext context):base(context) 
         {
             _context = context;
         }

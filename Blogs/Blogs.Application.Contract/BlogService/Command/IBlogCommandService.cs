@@ -1,7 +1,7 @@
 ﻿using Shared.Application;
 
 
-namespace Blogs.Application.Contract.BlogApplication.Command
+namespace Blogs.Application.Contract.BlogService.Command
 {
     public interface IBlogCommandService
     {

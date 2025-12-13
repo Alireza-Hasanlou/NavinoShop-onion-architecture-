@@ -12,7 +12,7 @@ using Users.Domain.User.Agg;
 using Users.Domain.User.Agg.IRepository;
 using Users.Infrastructure.Persistence.Context;
 
-namespace NavinoShop.WebApplication.Services
+namespace Users.Infrastructure.Persistence.Repository
 {
     public class RoleRepository : GenericRepository<Role, int>, IRoleRepository
     {

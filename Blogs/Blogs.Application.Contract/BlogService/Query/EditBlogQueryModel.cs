@@ -1,6 +1,6 @@
-﻿using Blogs.Application.Contract.BlogApplication.Command;
+﻿using Blogs.Application.Contract.BlogService.Command;
 
-namespace Blogs.Application.Contract.BlogApplication.Query
+namespace Blogs.Application.Contract.BlogService.Query
 {
     public class EditBlogQueryModel: EditBlogCommand
     {

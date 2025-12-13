@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using PostModule.Application.Contract.CityApplication;
+using PostModule.Application.Contract.CityService;
 using PostModule.Application.Contract.PostApplication;
 using PostModule.Application.Contract.PostQuery;
 using System.Threading.Tasks;

@@ -1,4 +1,4 @@
-﻿using Blogs.Application.Contract.BlogApplication.Query;
+﻿using Blogs.Application.Contract.BlogService.Query;
 using Blogs.Domain.BlogAgg;
 using Blogs.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
@@ -14,9 +14,9 @@ namespace Blogs.Infrastructure.Persistence.Repository
 {
     internal class BlogRepository : GenericRepository<Blog, int>, IBlogRepository
     {
-        private readonly NavinoDbContext _context;
+        private readonly BlogDbContext _context;
 
-        public BlogRepository(NavinoDbContext context) : base(context)
+        public BlogRepository(BlogDbContext context) : base(context)
         {
             _context = context;
         }

@@ -1,5 +1,5 @@
-using Blogs.Application.Contract.BlogApplication.Query;
 using Blogs.Application.Contract.BlogCategoryService.Query;
+using Blogs.Application.Contract.BlogService.Query;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;

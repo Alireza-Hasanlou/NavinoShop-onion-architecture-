@@ -1,5 +1,5 @@
-﻿using Blogs.Application.Contract.BlogApplication.Command;
-using Blogs.Application.Contract.BlogCategoryService.Command;
+﻿using Blogs.Application.Contract.BlogCategoryService.Command;
+using Blogs.Application.Contract.BlogService.Command;
 using Blogs.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
