@@ -29,11 +29,16 @@ internal class MenuRepository : GenericRepository<Menu, int>, IMenuRepository
         return false;
     }
 
+    public Menu GetById(int id)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<EditMenuCommandModel> GetForEdit(int id)
     {
        
 
-        var Menu = await _context.Menus.Select(s => new EditMenuCommandModel
+        var menu = await _context.Menus.Select(s => new EditMenuCommandModel
         {
             ImageAlt = s.ImageAlt,
             Id = s.Id,
@@ -46,9 +51,10 @@ internal class MenuRepository : GenericRepository<Menu, int>, IMenuRepository
             Status = s.Status
         }).SingleOrDefaultAsync(s => s.Id == id);
 
-        if (Menu == null)
+        if (menu == null)
             return new();
-        return Menu;
+        return menu;
     }
+
 
 }

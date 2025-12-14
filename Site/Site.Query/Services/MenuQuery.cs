@@ -140,6 +140,8 @@ internal class MenuQuery : IMenuQueryService
         var menus = _menuRepository.GetAllBy(b => b.Active &&
         (b.Status == MenuStatus.منوی_اصلی
         || b.Status == MenuStatus.منوی_اصلی_با_زیر_منو
+
+
         ));
         foreach (var item in menus)
         {
@@ -171,21 +173,95 @@ internal class MenuQuery : IMenuQueryService
 
             model.Add(menu);
         }
-        foreach (var item in model.Where(w => w.Status == MenuStatus.منوی_اصلی_با_زیر_منو && w.Childs.Count() > 0))
+
+        return model;
+    }
+
+    public async Task<List<MenuForUiQueryModel>> GetProductCategoriesForIndexAsync()
+    {
+        List<MenuForUiQueryModel> model = new();
+        var productCategories = _menuRepository.GetAllBy(m => m.Status == MenuStatus.منوی_گروه_محصولات && m.Active == true);
+        if (productCategories == null)
+            return new();
+
+        foreach (var item in productCategories)
         {
-            foreach (var sub in item.Childs)
+            var menu = new MenuForUiQueryModel
             {
+                Id = item.Id,
+                Status = item.Status,
+                Title = item.Title,
+                Url = item.Url,
+                ImageAlt = item.ImageAlt,
+                ImageName = item.ImageName,
+                Number = item.Number,
+                Childs = new()
+            };
 
-                sub.Childs = await _menuRepository.GetAllBy(m => m.Active && m.ParentId == sub.Id).Select(m => new MenuForUiQueryModel
+            if (await _menuRepository.ExistByAsync(p => p.ParentId == item.Id))
+            {
+                var sub1productCategories = _menuRepository.GetAllBy(m => m.ParentId == item.Id && m.Active == true);
+                foreach (var sub1 in sub1productCategories)
                 {
-                    Childs = new(),
-                    Number = m.Number,
-                    Title = m.Title,
-                    Url = m.Url,
-                    Status = m.Status
-                }).ToListAsync();
+                    var menu1 = new MenuForUiQueryModel
+                    {
+                        Id = sub1.Id,
+                        Status = sub1.Status,
+                        Title = sub1.Title,
+                        Url = sub1.Url,
+                        ImageAlt = sub1.ImageAlt,
+                        ImageName = sub1.ImageName,
+                        Number = sub1.Number,
+                        Childs = new()
+                    };
 
+                    menu.Childs.Add(menu1);
+                    if (await _menuRepository.ExistByAsync(p => p.ParentId == sub1.Id && p.Active == true))
+                    {
+
+                        var sub2productCategories = _menuRepository.GetAllBy(m => m.ParentId == sub1.Id && m.Active == true);
+                        foreach (var sub2 in sub1productCategories)
+                        {
+                            var menu2 = new MenuForUiQueryModel
+                            {
+                                Id = sub1.Id,
+                                Status = sub1.Status,
+                                Title = sub1.Title,
+                                Url = sub1.Url,
+                                ImageAlt = sub1.ImageAlt,
+                                ImageName = sub1.ImageName,
+                                Number = sub1.Number,
+                                Childs = new()
+                            };
+
+                            menu1.Childs.Add(menu2);
+
+                            if (await _menuRepository.ExistByAsync(p => p.ParentId == sub2.Id && p.Active == true))
+                            {
+
+                                menu2.Childs = await _menuRepository.GetAllBy(p => p.ParentId == sub2.Id && p.Active == true).Select(sub3 => new MenuForUiQueryModel
+                                {
+                                    Id = sub3.Id,
+                                    Status = sub3.Status,
+                                    Title = sub3.Title,
+                                    Url = sub3.Url,
+                                    ImageAlt = sub3.ImageAlt,
+                                    ImageName = sub3.ImageName,
+                                    Number = sub3.Number,
+                                    Childs = new()
+                                }).ToListAsync();
+
+                                model.Add(menu);
+                            }
+                        }
+                    }
+
+
+
+
+                }
             }
+
         }
         return model;
     }

@@ -11,6 +11,7 @@ namespace Site.Application.Contract.MenuService.Query
     {
         Task<MenuPageAdminQueryModel>GetForAdminAsync(int parentId);
         Task<List<MenuForUiQueryModel>> GetForIndexAsync();
+        Task<List<MenuForUiQueryModel>> GetProductCategoriesForIndexAsync();
         Task<List<MenuForUiQueryModel>> GetForFooterAsync();
         Task<List<MenuForUiQueryModel>> GetForBlogAsync();
 
