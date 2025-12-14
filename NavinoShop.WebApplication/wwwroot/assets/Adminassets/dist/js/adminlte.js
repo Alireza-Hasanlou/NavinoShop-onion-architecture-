@@ -426,6 +426,7 @@ throw new Error('AdminLTE requires jQuery')
   $.fn.controlSidebar             = Plugin
   $.fn.controlSidebar.Constructor = ControlSidebar
 
+
   // No Conflict Mode
   // ================
   $.fn.controlSidebar.noConflict = function () {

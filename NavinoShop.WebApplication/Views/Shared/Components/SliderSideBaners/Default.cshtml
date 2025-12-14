@@ -1,0 +1,27 @@
+﻿@model List<Site.Application.Contract.BanerService.Query.BanerForUiQueryModel>
+<link href="~/assets/css/style.css" rel="stylesheet" />
+@{
+    var dataaosduration = 1000;
+    string[] pos = ["align-self-start ", "align-self-center", "align-self-end"];
+    var posindex = 0;
+}
+@if (Model.Count > 1)
+{
+    <div class="col-12 col-md-3 mt-2 mt-sm-1 text-center text-sm-start" id="slider-side-banners">
+        <div class="row row-cols-1 row-cols-sm-3 row-cols-md-1 h-100 gy-2 g-sm-1 g-md-0">
+            @foreach (var item in Model)
+            {
+                <div class="col @pos[posindex] aos-init aos-animate" data-aos="fade-top" data-aos-duration="@dataaosduration">
+                    <a href="@item.Url">
+                        <img src="@item.ImageName" alt="@item.ImageAlt" width="100%">
+                    </a>
+                </div>
+
+                dataaosduration = dataaosduration + 100;
+                if (posindex <= 2)
+                    posindex++;
+            }
+    </div>
+</div>
+
+}
