@@ -37,7 +37,33 @@
                     <span asp-validation-for="CreateSubMenu.Url" class="text-danger"></span>
                 </div>
             </div>
+            @if (Model.CreateSubMenu.ParentStatus == MenuStatus.منوی_گروه_محصولات)
+            {
+                <div class="row">
+                    <div class="col col-md-6 col-sm-12 col-12">
 
+                        <div class="custom-form-group">
+                            <label class="required" for="ImageAlt"> Alt تصویر</label>
+                            <input asp-for="CreateSubMenu.ImageAlt" type="text" id="ImageAlt">
+                            <span asp-validation-for="CreateSubMenu.ImageAlt" class="text-danger"></span>
+                        </div>
+                        <span class="text-info"> @Html.DisplayNameFor(Model => Model.CreateSubMenu.ImageFile)</span>
+                    </div>
+                    <div class="col col-md-6 col-sm-12 col-12">
+                        <div id="img-container">
+                            <label for="upload-file">
+                              
+                                <div class="picture-uploader" data-url="">
+                                    <div class="picture__image"></div>
+                                    <input asp-for="@Model.CreateSubMenu.ImageFile" type="file" id="upload-file" class="picture__input" accept="image/*" />
+                                </div>
+                            </label>
+
+                        </div>
+                        <span asp-validation-for="CreateSubMenu.ImageFile" class="text-danger"></span>
+                    </div>
+                </div>
+            }
             <button type="submit" class="btn btn-success btn-block">افزودن </button>
 
         </form>

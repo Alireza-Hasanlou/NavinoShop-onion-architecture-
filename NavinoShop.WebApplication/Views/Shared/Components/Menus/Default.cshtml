@@ -1,0 +1,34 @@
+﻿@model List<Site.Application.Contract.MenuService.Query.MenuForUiQueryModel>
+
+@if (Model.Count() >= 1)
+{
+
+
+    @foreach (var item in Model)
+    {
+        if (!item.Childs.Any())
+        {
+            <li>
+                <a href="@item.Url">@item.Title<em class="droopmenu-topanim"></em></a>
+            </li>
+        }
+        else
+        {
+
+            <li class="droopmenu-parent" aria-haspopup="true">
+                <a href="@item.Url" aria-expanded="false">@item.Title<em class="droopmenu-topanim"></em></a><div class="dm-arrow"></div>
+                <ul style="">
+                    @foreach (var sub1 in item.Childs)
+                    {
+                             <li><a href="@sub1.Url">@sub1.Title </a></li>    
+                    }
+           
+               
+                </ul>
+            </li>
+        }
+
+    }
+
+
+}

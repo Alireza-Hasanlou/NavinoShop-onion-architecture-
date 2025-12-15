@@ -50,7 +50,7 @@
 
                                     <tr id="@item.Id" role="row" class="odd">
                                         <td>
-                                            @if (item.Status == MenuStatus.منوی_گروه_محصولات)
+                                            @if (item.Status == MenuStatus.دسته_های_گروه_مجصولات)
                                             {
                                                 <img width="100px" src="@(imageBaseAddress + item.ImageName)" />
 
@@ -102,7 +102,7 @@
                                                 @if (
                                                                                         item.Status != MenuStatus.منوی_اصلی
                                                                                         && item.Status != MenuStatus.زیرمنوی_سردسته
-                                                                                        && item.Status != MenuStatus.زیردسته_های_گروه_محصولات
+                                                                                        && item.Status != MenuStatus.محصولات_در_زیردسته_گروه_محصولات
                                                                                         && item.Status != MenuStatus.منوی_فوتر)
                                                 {
                                                     <a asp-page="Index" asp-route-ParentId="@item.Id" class="btn btn-info"> زیر منو</a>

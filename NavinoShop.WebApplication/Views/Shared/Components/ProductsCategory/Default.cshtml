@@ -1,0 +1,84 @@
+﻿@model List<Site.Application.Contract.MenuService.Query.MenuForUiQueryModel>
+
+@if (Model.Count() >= 1)
+{
+
+    @foreach (var root in Model)
+    {
+        <li class="droopmenu-parent" aria-haspopup="true">
+            <a href="@root.Url">
+                <i class="fa fa-bars"></i>&nbsp;&nbsp;
+                @root.Title
+                <em class="droopmenu-topanim"></em>
+            </a>
+            <div class="dm-arrow"></div>
+
+            <ul class="droopmenu-grid droopmenu-grid-9">
+                <li class="droopmenu-tabs droopmenu-tabs-vertical">
+
+                    @{
+                        var tabIndex = 0;
+                    }
+
+                    @foreach (var level2 in root.Childs ?? new())
+                    {
+                        var isActive = tabIndex == 0 ? "droopmenu-tab-active" : "";
+                        var tabId = $"droopmenutab_{root.Id}_{level2.Id}";
+
+                        <div class="droopmenu-tabsection @isActive" id="@tabId">
+
+                            <!-- لایه دوم (تب سمت راست) -->
+                            <a class="droopmenu-tabheader" href="@level2.Url">
+                                @level2.Title
+                            </a>
+
+                            <div class="droopmenu-tabcontent">
+                                <div class="droopmenu-row">
+
+                                    @foreach (var level3 in level2.Childs ?? new())
+                                    {
+                                        <ul class="droopmenu-col droopmenu-col4">
+
+                                            <!-- لایه سوم (تیتر زرد) -->
+                                            <li>
+                                                <h4>@level3.Title</h4>
+                                            </li>
+
+                                            <!-- لایه چهارم (آیتم‌ها) -->
+                                            @foreach (var level4 in level3.Childs ?? new())
+                                            {
+                                                <li>
+                                                    <a href="@level4.Url">
+                                                        @level4.Title
+                                                    </a>
+                                                </li>
+                                            }
+
+                                        </ul>
+                                    }
+
+                                    <!-- تصویر (اختیاری) -->
+                                    @if (!string.IsNullOrEmpty(level2.ImageName))
+                                    {
+                                        <ul class="droopmenu-col droopmenu-col4 d-none d-lg-inline-block">
+                                            <li>
+                                                <img src="@level2.ImageName" alt="@level2.ImageAlt">
+                                            </li>
+                                        </ul>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+
+                        tabIndex++;
+                    }
+
+                </li>
+            </ul>
+        </li>
+    }
+
+
+
+}

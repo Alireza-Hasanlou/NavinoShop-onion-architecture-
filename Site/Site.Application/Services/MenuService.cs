@@ -90,6 +90,9 @@ namespace Site.Application.Services
                 case MenuStatus.دسته_های_گروه_مجصولات:
                     status = MenuStatus.زیردسته_های_گروه_محصولات;
                     break;
+                case MenuStatus.زیردسته_های_گروه_محصولات:
+                    status = MenuStatus.محصولات_در_زیردسته_گروه_محصولات;
+                    break;
                 case MenuStatus.منوی_اصلی_با_زیر_منو:
                     status = MenuStatus.زیرمنوی_سردسته;
                     break;
