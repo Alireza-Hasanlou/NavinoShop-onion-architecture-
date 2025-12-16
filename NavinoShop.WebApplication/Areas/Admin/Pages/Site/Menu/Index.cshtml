@@ -1,12 +1,11 @@
 ﻿@page
-@using Shared.Application
 @using Shared.Domain.Enums
 @model NavinoShop.WebApplication.Areas.Admin.Pages.Site.Menu.IndexModel
 @{
     Layout = "_AdminLayout";
     ViewData["title"] = "منو ها";
     var successMessage = TempData["success"] as string;
-    var imageBaseAddress = FileDirectories.MenuImageDirectory100;
+    
 }
 
 
@@ -52,7 +51,7 @@
                                         <td>
                                             @if (item.Status == MenuStatus.دسته_های_گروه_مجصولات)
                                             {
-                                                <img width="100px" src="@(imageBaseAddress + item.ImageName)" />
+                                                <img width="100px" src="@( item.ImageName)" />
 
                                             }
                                         </td>

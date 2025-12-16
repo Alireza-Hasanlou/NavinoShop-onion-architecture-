@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\Admin\Models\**" />
+    <Content Remove="Areas\Admin\Models\**" />
+    <EmbeddedResource Remove="Areas\Admin\Models\**" />
+    <None Remove="Areas\Admin\Models\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="wwwroot\assets\Adminassets\bower_components\bootstrap-colorpicker\.bower.json" />
     <Content Include="wwwroot\assets\Adminassets\bower_components\bootstrap-colorpicker\bower.json" />
     <Content Include="wwwroot\assets\Adminassets\bower_components\bootstrap-colorpicker\dist\css\bootstrap-colorpicker.css" />
@@ -2314,10 +2321,10 @@
   <ItemGroup>
     <Folder Include="Areas\Account\Models\" />
     <Folder Include="Areas\Account\Pages\Shared\" />
-    <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Areas\Admin\Pages\Post\Setting\" />
     <Folder Include="Areas\Admin\Pages\Post\Package\" />
     <Folder Include="wwwroot\Images\Baner\100\" />
+    <Folder Include="wwwroot\Images\Menu\100\" />
     <Folder Include="wwwroot\Images\Site\" />
     <Folder Include="wwwroot\Images\slider\100\" />
   </ItemGroup>

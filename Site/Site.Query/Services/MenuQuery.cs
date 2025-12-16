@@ -36,7 +36,7 @@ internal class MenuQuery : IMenuQueryService
                 Status = m.Status,
                 Title = m.Title,
                 Url = m.Url,
-                ImageName = m.ImageName
+                ImageName =FileDirectories.MenuImageDirectory100+ m.ImageName
             }).ToListAsync();
 
         }
@@ -55,7 +55,7 @@ internal class MenuQuery : IMenuQueryService
                 Status = m.Status,
                 Title = m.Title,
                 Url = m.Url,
-                ImageName = m.ImageName
+                ImageName = FileDirectories.MenuImageDirectory100 + m.ImageName
             }).ToListAsync();
 
         }

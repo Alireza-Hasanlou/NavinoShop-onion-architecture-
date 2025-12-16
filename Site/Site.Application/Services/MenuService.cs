@@ -31,14 +31,14 @@ namespace Site.Application.Services
 
         public async Task<OperationResult> CreateAsync(CreateMenuCommandModel command)
         {
-            if(command.Status== MenuStatus.زیرمنوی_سردسته
+            if (command.Status == MenuStatus.زیرمنوی_سردسته
                 || command.Status == MenuStatus.دسته_های_گروه_مجصولات
                 || command.Status == MenuStatus.زیردسته_های_گروه_محصولات
                 || command.Status == MenuStatus.زیرمنوی_سردسته
                 || command.Status == MenuStatus.منوی_فوتر)
                 return new(false, "در این بخض فقط سردسته منو ها را میتوانید ایجاد کنید", nameof(command.Status));
 
-            if(await _menuRepository.ExistMainMenu(command.Status))
+            if (await _menuRepository.ExistMainMenu(command.Status))
                 return new(false, "منوی گروه محصولات از قبل موجود است", nameof(command.Status));
 
             if (command.Status == MenuStatus.دسته_های_گروه_مجصولات)
@@ -102,11 +102,26 @@ namespace Site.Application.Services
                 default:
                     return new(false, ValidationMessages.SystemErrorMessage, nameof(command.Title));
             }
-            Menu menu = new(command.Number, command.Title, command.Url, status, "", command.ImageAlt, command.ParentId);
+            string imageName = "";
+            if (status == MenuStatus.دسته_های_گروه_مجصولات && command.ImageFile != null)
+            {
+                imageName = await _fileService.UploadImage(command.ImageFile, FileDirectories.MenuImageFolder);
+                if (imageName == "")
+                    return new(false, ValidationMessages.ImageErrorMessage, nameof(command.ImageFile));
+
+                _fileService.ResizeImage(imageName, FileDirectories.MenuImageFolder, 100);
+            }
+            Menu menu = new(command.Number, command.Title, command.Url, status, imageName, command.ImageAlt, command.ParentId);
             var result = await _menuRepository.CreateAsync(menu);
             if (result.Success)
                 return new(true);
 
+
+            if (command.ImageFile != null)
+            {
+                _fileService.DeleteImage($"{FileDirectories.MenuImageDirectory}{imageName}");
+                _fileService.DeleteImage($"{FileDirectories.MenuImageDirectory100}{imageName}");
+            }
             return new(false, ValidationMessages.SystemErrorMessage, nameof(command.Title));
         }
 
@@ -122,7 +137,7 @@ namespace Site.Application.Services
             if (command.ImageFile != null)
             {
                 imageName = await _fileService.UploadImage(command.ImageFile, FileDirectories.MenuImageFolder);
-                if (imageName == ""&& command.Status==MenuStatus.زیردسته_های_گروه_محصولات)
+                if (imageName == "" && command.Status == MenuStatus.زیردسته_های_گروه_محصولات)
                     return new(false, ValidationMessages.ImageErrorMessage, nameof(command.ImageFile));
 
                 _fileService.ResizeImage(imageName, FileDirectories.MenuImageFolder, 100);
