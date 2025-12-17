@@ -41,39 +41,11 @@ namespace Site.Application.Services
             if (await _menuRepository.ExistMainMenu(command.Status))
                 return new(false, "منوی گروه محصولات از قبل موجود است", nameof(command.Status));
 
-            if (command.Status == MenuStatus.دسته_های_گروه_مجصولات)
-            {
-                if (command.ImageFile == null || !command.ImageFile.IsImage())
-                    return new(false, $"{MenuStatus.دسته_های_گروه_مجصولات.ToString().Replace("_", " ")} نیاز به یک تصویر دارد", nameof(command.ImageFile));
-                else if (string.IsNullOrEmpty(command.ImageAlt))
-                    return new(false, ValidationMessages.RequiredMessage, nameof(command.ImageAlt));
-            }
-            else
-            {
-                if (command.ImageFile != null)
-                    return new(false, $"{command.Status.ToString().Replace("_", " ")} نیاز به تصویر ندارد", nameof(command.ImageFile));
-                if (!string.IsNullOrEmpty(command.ImageAlt))
-                    return new(false, $"{command.Status.ToString().Replace("_", " ")} نیاز به Alt تصویر ندارد", nameof(command.ImageAlt));
-            }
-            string imageName = "";
-            if (command.ImageFile != null)
-            {
-                imageName = await _fileService.UploadImage(command.ImageFile, FileDirectories.MenuImageFolder);
-                if (imageName == "")
-                    return new(false, ValidationMessages.ImageErrorMessage, nameof(command.ImageFile));
-
-                _fileService.ResizeImage(imageName, FileDirectories.MenuImageFolder, 100);
-            }
-
-            Menu menu = new(command.Number, command.Title, command.Url, command.Status, imageName, command.ImageAlt, null);
+            Menu menu = new(command.Number, command.Title, command.Url, command.Status, "", command.ImageAlt, null);
             var result = await _menuRepository.CreateAsync(menu);
             if (result.Success)
                 return new(true);
-            if (command.ImageFile != null)
-            {
-                _fileService.DeleteImage($"{FileDirectories.MenuImageDirectory}{imageName}");
-                _fileService.DeleteImage($"{FileDirectories.MenuImageDirectory100}{imageName}");
-            }
+
             return new(false, ValidationMessages.SystemErrorMessage, nameof(command.ImageAlt));
         }
 

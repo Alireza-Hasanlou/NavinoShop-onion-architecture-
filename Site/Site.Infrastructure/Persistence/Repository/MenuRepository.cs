@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
+using Shared.Application;
 using Shared.Domain.Enums;
 using Shared.Insfrastructure;
 using Site.Application.Contract.MenuService.Command;
@@ -36,14 +37,14 @@ internal class MenuRepository : GenericRepository<Menu, int>, IMenuRepository
 
     public async Task<EditMenuCommandModel> GetForEdit(int id)
     {
-       
+
 
         var menu = await _context.Menus.Select(s => new EditMenuCommandModel
         {
             ImageAlt = s.ImageAlt,
             Id = s.Id,
             ImageFile = null,
-            ImageName = s.ImageName,
+            ImageName = FileDirectories.MenuImageDirectory + s.ImageName,
             Number = s.Number,
             Title = s.Title,
             ParentId = s.ParentId == null ? 0 : s.ParentId.Value,

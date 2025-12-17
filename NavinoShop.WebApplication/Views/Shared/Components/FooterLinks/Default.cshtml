@@ -1,0 +1,21 @@
+﻿@model List<Site.Application.Contract.MenuService.Query.MenuForUiQueryModel>
+
+@if (Model.Count() >= 1)
+{
+    @foreach (var item in Model)
+    {
+        <div class="col-6 col-sm-4 col-lg-2">
+            <div class="title">@item.Title</div>
+            <ul>
+                @if (item.Childs.Any())
+                {
+                    foreach (var link in item.Childs)
+                    {
+                        <li><a href="@link.Url">@link.Title</a></li>
+
+                    }
+                }
+            </ul>
+        </div>
+    }
+}

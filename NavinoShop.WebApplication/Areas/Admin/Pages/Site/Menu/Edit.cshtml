@@ -1,5 +1,4 @@
 ﻿@page
-@using Shared.Application
 @using Shared.Domain.Enums
 @model NavinoShop.WebApplication.Areas.Admin.Pages.Site.Menu.EditModel
 @{
@@ -69,7 +68,7 @@
                         <div id="img-container">
                             <label for="upload-file">
                                 @{
-                                    var ImageAddress = FileDirectories.MenuImageDirectory + Model.Editmenu.ImageName;
+                                    var ImageAddress =  Model.Editmenu.ImageName;
                                 }
                                 <div class="picture-uploader" data-url="@ImageAddress">
                                     <div class="picture__image"></div>

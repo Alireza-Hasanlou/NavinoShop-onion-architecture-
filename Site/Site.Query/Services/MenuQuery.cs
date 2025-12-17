@@ -36,7 +36,7 @@ internal class MenuQuery : IMenuQueryService
                 Status = m.Status,
                 Title = m.Title,
                 Url = m.Url,
-                ImageName =FileDirectories.MenuImageDirectory100+ m.ImageName
+                ImageName = FileDirectories.MenuImageDirectory100 + m.ImageName
             }).ToListAsync();
 
         }
@@ -102,8 +102,8 @@ internal class MenuQuery : IMenuQueryService
     public async Task<List<MenuForUiQueryModel>> GetForFooterAsync()
     {
         List<MenuForUiQueryModel> model = new();
-        var menus = _menuRepository.GetAllBy(b => b.Active &&
-        (b.Status == MenuStatus.تیتر_منوی_فوتر));
+        var menus = await _menuRepository.GetAllBy(b => b.Active &&
+        (b.Status == MenuStatus.تیتر_منوی_فوتر)).ToListAsync();
         foreach (var item in menus)
         {
             MenuForUiQueryModel menu = new()
@@ -114,20 +114,17 @@ internal class MenuQuery : IMenuQueryService
                 Status = item.Status,
                 Childs = new()
             };
-            if (await _menuRepository.ExistByAsync(m => m.ParentId == item.Id && m.Active))
+
+            menu.Childs = await _menuRepository.GetAllBy(m => m.Active && m.ParentId == item.Id).Select(m => new MenuForUiQueryModel
             {
-
-                menu.Childs = await _menuRepository.GetAllBy(m => m.Active && m.ParentId == item.Id).Select(m => new MenuForUiQueryModel
-                {
-                    Number = m.Number,
-                    Title = m.Title,
-                    Url = m.Url,
-                    Status = m.Status
-                }).OrderBy(i=>i.Number).ToListAsync();
+                Number = m.Number,
+                Title = m.Title,
+                Url = m.Url,
+                Status = m.Status
+            }).OrderBy(n => n.Number).ToListAsync();
 
 
-            }
-            
+
 
             model.Add(menu);
         }
@@ -162,7 +159,7 @@ internal class MenuQuery : IMenuQueryService
                 Childs = new List<MenuForUiQueryModel>()
             };
 
-        
+
             if (item.Status == MenuStatus.منوی_اصلی_با_زیر_منو)
             {
                 menu.Childs = await _menuRepository
@@ -175,7 +172,7 @@ internal class MenuQuery : IMenuQueryService
                         Title = m.Title,
                         Url = m.Url,
                         Status = m.Status,
-                        Childs = new List<MenuForUiQueryModel>() // ❌ بدون لایه سوم
+                        Childs = new List<MenuForUiQueryModel>()
                     })
                     .ToListAsync();
             }
@@ -204,13 +201,13 @@ internal class MenuQuery : IMenuQueryService
                 Title = item.Title,
                 Url = item.Url,
                 ImageAlt = item.ImageAlt,
-                ImageName =FileDirectories.MenuImageDirectory+ item.ImageName,
+                ImageName = FileDirectories.MenuImageDirectory + item.ImageName,
                 Number = item.Number,
                 Childs = new()
             };
 
             var level1 = await _menuRepository
-                .GetAllBy(m => m.ParentId == item.Id && m.Active).OrderBy(i=>i.Number)
+                .GetAllBy(m => m.ParentId == item.Id && m.Active).OrderBy(i => i.Number)
                 .ToListAsync();
 
             foreach (var sub1 in level1)
@@ -226,7 +223,7 @@ internal class MenuQuery : IMenuQueryService
                     Number = sub1.Number,
                     Childs = new()
                 };
-             
+
                 var level2 = await _menuRepository
                     .GetAllBy(m => m.ParentId == sub1.Id && m.Active).OrderBy(i => i.Number)
                     .ToListAsync();
