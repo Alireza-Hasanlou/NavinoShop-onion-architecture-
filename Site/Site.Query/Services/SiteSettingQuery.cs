@@ -27,22 +27,25 @@ internal class SiteSettingQuery : ISiteSettingQueryService
         return new ContactFooterUiQueryModel(site.Address, site.Phone1, site.Email1, site.Android, site.IOS);
     }
 
-    public async Task< FavIconForUiQueryModel> GetFavIconForUi()
+    public async Task<FavIconForUiQueryModel> GetFavIconForUi()
     {
-        var site =await _siteSettingRepository.GetSingle();
+        var site = await _siteSettingRepository.GetSingle();
         return new FavIconForUiQueryModel(string.IsNullOrEmpty(site.FavIcon) ? "" : FileDirectories.SiteImageDirectory + site.FavIcon);
     }
 
-    public async Task< FooterUiQueryModel> GetFooter()
+    public async Task<FooterUiQueryModel> GetFooter()
     {
         var site = await _siteSettingRepository.GetSingle();
-        return new FooterUiQueryModel(site.Enamad, site.SamanDehi, site.FooterTitle, site.FooterDescription);
+        return new FooterUiQueryModel(site.Enamad, site.SamanDehi, site.FooterTitle, site.FooterDescription, 
+            FileDirectories.SiteImageDirectory64 + site.LogoName, site.LogoAlt,site.Instagram,site.Youtube,site.Telegram,site.WhatsApp,
+            site.Phone1,site.Email1,site.Android,site.IOS
+            );
     }
 
-    public async Task< LogoForUiQueryModel> GetLogoForUi()
+    public async Task<LogoForUiQueryModel> GetLogoForUi()
     {
         var site = await _siteSettingRepository.GetSingle();
-        return new LogoForUiQueryModel(string.IsNullOrEmpty(site.LogoName) ? "" : FileDirectories.SiteImageDirectory64 + site.LogoName, site.LogoAlt);
+        return new LogoForUiQueryModel(string.IsNullOrEmpty(site.LogoName) ? "" : FileDirectories.SiteImageDirectory32 + site.LogoName, site.LogoAlt);
     }
 
     public async Task<SocialForUiQueryModel> GetSocialForUi()

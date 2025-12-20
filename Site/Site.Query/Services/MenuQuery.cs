@@ -123,9 +123,6 @@ internal class MenuQuery : IMenuQueryService
                 Status = m.Status
             }).OrderBy(n => n.Number).ToListAsync();
 
-
-
-
             model.Add(menu);
         }
         return model;
@@ -138,8 +135,9 @@ internal class MenuQuery : IMenuQueryService
         var menus = await _menuRepository
             .GetAllBy(m =>
                 m.Active &&
-                (m.Status == MenuStatus.منوی_اصلی ||
-                 m.Status == MenuStatus.منوی_اصلی_با_زیر_منو))
+                (m.Status == MenuStatus.منوی_اصلی
+                || m.Status == MenuStatus.منوی_اصلی_با_زیر_منو
+                || m.Status == MenuStatus.منوی_گروه_محصولات))
             .OrderBy(m => m.Number)
             .ToListAsync();
 

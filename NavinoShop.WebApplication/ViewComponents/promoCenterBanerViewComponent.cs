@@ -4,11 +4,11 @@ using Site.Application.Contract.BanerService.Query;
 
 namespace NavinoShop.WebApplication.ViewComponents
 {
-    public class promoCenterBanerLeftSideViewComponent : ViewComponent
+    public class promoCenterBanerViewComponent:ViewComponent
     {
         private readonly IBanerQueryService _banerQueryService;
 
-        public promoCenterBanerLeftSideViewComponent(IBanerQueryService banerQueryService)
+        public promoCenterBanerViewComponent(IBanerQueryService banerQueryService)
         {
             _banerQueryService = banerQueryService;
         }
@@ -16,7 +16,7 @@ namespace NavinoShop.WebApplication.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync()
         {
 
-            var SliderSidebaners = await _banerQueryService.GetForUi(3, BanerState.بنر_تبلیغاتی_سمت_چپ_وسط_850x100);
+            var SliderSidebaners = await _banerQueryService.GetForUi(3, BanerState.بنر_تبلیغاتی_سمت_راست_وسط_410x100);
 
             return View(SliderSidebaners);
         }

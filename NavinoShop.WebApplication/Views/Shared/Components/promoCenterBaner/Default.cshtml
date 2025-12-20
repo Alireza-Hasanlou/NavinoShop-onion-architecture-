@@ -1,0 +1,30 @@
+﻿@using Shared.Domain.Enums
+@model List<Site.Application.Contract.BanerService.Query.BanerForUiQueryModel>
+
+
+@if (Model?.Any() == true)
+{
+    foreach (var item in Model)
+    {
+        if (item.BanerState == BanerState.بنر_تبلیغاتی_سمت_راست_وسط_410x100)
+        {
+            <div class="col-12 col-md-4 pt-2 text-center">
+
+                <a href="@item.Url">
+                    <img src="@item.ImageName" alt="@item.ImageAlt">
+                </a>
+            </div>
+        }
+        if (item.BanerState == BanerState.بنر_تبلیغاتی_سمت_چپ_وسط_850x100)
+        {
+            <div class="col-12 col-md-8 pt-2 text-center">
+
+            <a href="@item.Url">
+                <img src="@item.ImageName" alt="@item.ImageAlt">
+            </a>
+        </div>
+        }
+    }
+
+}
+

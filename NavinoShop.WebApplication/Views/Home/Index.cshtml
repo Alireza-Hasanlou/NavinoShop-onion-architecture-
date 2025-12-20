@@ -37,6 +37,10 @@
         </div>
     </div>
 </section>
+
+@await Component.InvokeAsync("SpecialsaleBaner")
+
+
 <section id="benefits" class="pt-4">
     <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 gy-3 text-center">
@@ -66,11 +70,7 @@
 </section>
 <div class="container aos-init aos-animate" data-aos="fade-up" data-aos-duration="1200">
     <div class="row">
-        <div class="col-12 col-md-4 pt-2 text-center">
-            @await Component.InvokeAsync("promoCenterBanerRightSide")
-        </div>
-        <div class="col-12 col-md-8 pt-2 text-center">
-            @await Component.InvokeAsync("promoCenterBanerLeftSide")
-        </div>
+        @await Component.InvokeAsync("promoCenterBaner")
+
     </div>
 </div>

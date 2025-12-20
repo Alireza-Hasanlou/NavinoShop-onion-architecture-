@@ -1,9 +1,8 @@
-﻿@model List<Site.Application.Contract.MenuService.Query.MenuForUiQueryModel>
+﻿@using Shared.Domain.Enums
+@model List<Site.Application.Contract.MenuService.Query.MenuForUiQueryModel>
 
 @if (Model.Count() >= 1)
 {
-
-
     @foreach (var item in Model)
     {
         if (!item.Childs.Any())
@@ -14,7 +13,6 @@
         }
         else
         {
-
             <li class="droopmenu-parent" aria-haspopup="true">
                 <a href="@item.Url" aria-expanded="false">@item.Title<em class="droopmenu-topanim"></em></a><div class="dm-arrow"></div>
                 <ul style="">
@@ -22,8 +20,6 @@
                     {
                              <li><a href="@sub1.Url">@sub1.Title </a></li>    
                     }
-           
-               
                 </ul>
             </li>
         }

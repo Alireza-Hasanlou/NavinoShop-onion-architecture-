@@ -32,13 +32,29 @@ internal class BanerQuery : IBanerQueryService
 
     public async Task<List<BanerForUiQueryModel>> GetForUi(int count, BanerState state)
     {
+        if (state == BanerState.بنر_تبلیغاتی_سمت_راست_وسط_410x100)
+        {
+            return _banerRepository.GetAllBy(b => b.State == state||b.State==BanerState.بنر_تبلیغاتی_سمت_چپ_وسط_850x100 && b.Active).Select(b => new BanerForUiQueryModel
+            {
+                ImageAlt = b.ImageAlt,
+                ImageName = $"{FileDirectories.BanerImageDirectory}{b.ImageName}",
+                Url = b.Url,
+                BanerState = b.State
 
-
+            }).Take(count).ToList();
+        }
+        else
+        {
         return _banerRepository.GetAllBy(b => b.State == state && b.Active).Select(b => new BanerForUiQueryModel
         {
             ImageAlt = b.ImageAlt,
             ImageName = $"{FileDirectories.BanerImageDirectory}{b.ImageName}",
-            Url = b.Url
+            Url = b.Url,
+            BanerState = b.State
+            
         }).Take(count).ToList();
+        }
+
+
     }
 }
