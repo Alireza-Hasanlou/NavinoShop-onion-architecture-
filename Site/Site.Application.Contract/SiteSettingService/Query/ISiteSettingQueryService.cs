@@ -12,5 +12,5 @@ public interface ISiteSettingQueryService
     Task<LogoForUiQueryModel> GetLogoForUi();
     Task<FavIconForUiQueryModel> GetFavIconForUi();
     Task<FooterUiQueryModel> GetFooter();
-    Task<ContactFooterUiQueryModel> GetContactDataForFooter();
+    Task<ContactInfoForUiQueryModel> GetContactData();
 }

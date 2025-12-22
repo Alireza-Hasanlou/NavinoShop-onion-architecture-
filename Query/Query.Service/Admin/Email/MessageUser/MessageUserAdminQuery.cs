@@ -27,7 +27,7 @@ namespace Query.Service.Admin.Email.MessageUser
         public async Task<MessageUserAdminPaging> GetMessagesForAdmin(MessageStatus status, int pageId, int take, string Filter = "")
         {
 
-            var Messages = _messageUserRepository.GetAllBy();
+            var Messages = _messageUserRepository.GetAll();
 
             if (status != MessageStatus.همه)
                 Messages = Messages.Where(s => s.Status == status);
@@ -59,7 +59,7 @@ namespace Query.Service.Admin.Email.MessageUser
 
             foreach (var item in model.Messages)
             {
-                var user = await _userRepository.GetByIdAsync(item.Id);
+                var user = await _userRepository.GetByIdAsync(item.UserId);
                 item.UserName = !string.IsNullOrEmpty(user.FullName) ? user.FullName : user.Mobile;
             }
 
@@ -86,7 +86,7 @@ namespace Query.Service.Admin.Email.MessageUser
             };
             if (model.UserId > 0)
             {
-                var user = await _userRepository.GetByIdAsync(id);
+                var user = await _userRepository.GetByIdAsync(model.UserId);
                 model.UseName = string.IsNullOrEmpty(user.FullName) ? user.Mobile : user.FullName;
             }
             return model;

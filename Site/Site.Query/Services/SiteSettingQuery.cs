@@ -21,10 +21,10 @@ internal class SiteSettingQuery : ISiteSettingQueryService
 
 
 
-    public async Task<ContactFooterUiQueryModel> GetContactDataForFooter()
+    public async Task<ContactInfoForUiQueryModel> GetContactData()
     {
         var site = await _siteSettingRepository.GetSingle();
-        return new ContactFooterUiQueryModel(site.Address, site.Phone1, site.Email1, site.Android, site.IOS);
+        return new ContactInfoForUiQueryModel(site.Address, site.Phone1,site.Phone2, site.Email1);
     }
 
     public async Task<FavIconForUiQueryModel> GetFavIconForUi()

@@ -1261,7 +1261,7 @@ section.inner-page .team-person i:hover {
 }
 section.inner-page#contact-page #contact-page-info {
   color: white;
-  background-image: url("../images/contact-image.jpg");
+  background-image: url("/Images/contact-image.jpg");
   background-size: cover;
   background-position: top center;
 }
