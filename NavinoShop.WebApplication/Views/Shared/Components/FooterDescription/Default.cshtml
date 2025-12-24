@@ -1,6 +1,4 @@
 ﻿@model Site.Application.Contract.SiteSettingService.Query.FooterUiQueryModel
-
-
 <div class="col-12 col-md-12 col-lg-6">
 
     @if (!string.IsNullOrEmpty(Model.LogoName))
@@ -20,7 +18,7 @@
             <div>پاسخگوی شما هستیم</div>
             <div>@Model.Phone1</div>
             <div>@Model.Email1</div>
-           
+
         </div>
         <div class="col-12 col-md-12 pt-2 pt-md-0" id="encode43vfbbbfb">
             <div class="row">
@@ -43,16 +41,28 @@
         </div>
     </div>
 </div>
+<!-- From Uiverse.io by alexruix -->
+<div class="input-group " style="width:250px">
+    <label class="label"></label>از تخفیف ها و جدیدترین خبر های فروشگاه باخبر شوید
+    <input autocomplete="off" placeholder="لطفاایمیل خود رو وارد کنید" id="InputUsersEmail" class="input">
+    <br />
+
+    <div class="btn-group mt-2">
+        <button type="button" onclick="AddUsersEmail()" class="btn btn-success">ارسال</button>
+    </div>
+
+</div>
+<span id="InputUsersEmailValid" class="m-2"></span>
 <section class="py-2" id="copyright">
     <div class="container">
         <div class="row">
             <div class="col-12 col-sm-6 " id="social-links">
                 <span>ما را دنبال کنید</span>
 
-                <a href="@(!string.IsNullOrEmpty(Model.InstagrmLink)?Model.InstagrmLink:"#")"><img src="/images/social/insta.png" alt=""></a>
-                <a href="@(!string.IsNullOrEmpty(Model.YoutubeLink) ? Model.YoutubeLink : "#")"><img src="/images/social/youtube.png" alt=""></a>
-                <a href="@(!string.IsNullOrEmpty(Model.TelegramLink) ? Model.TelegramLink : "#")"><img src="/images/social/Telegram.16.png" alt=""></a>
-                <a href="@(!string.IsNullOrEmpty(Model.WhatsupLink) ? Model.WhatsupLink : "#")"><img src="/images/social/Whatsapp.16.png" alt=""></a>
+                <a href="@(!string.IsNullOrEmpty(Model.InstagrmLink) ? Model.InstagrmLink : "#")" target="_blank"><img src="/images/social/insta.png" alt=""></a>
+                <a href="@(!string.IsNullOrEmpty(Model.YoutubeLink) ? Model.YoutubeLink : "#")" target="_blank"><img src="/images/social/youtube.png" alt=""></a>
+                <a href="@(!string.IsNullOrEmpty(Model.TelegramLink) ? Model.TelegramLink : "#")" target="_blank"><img src="/images/social/Telegram.16.png" alt=""></a>
+                <a href="@(!string.IsNullOrEmpty(Model.WhatsupLink) ? Model.WhatsupLink : "#")" target="_blank"><img src="/images/social/Whatsapp.16.png" alt=""></a>
             </div>
             <div class="col-12 col-sm-6 text-sm-end pt-2 pt-sm-0">
                 <span>کلیه حقوق و مادی معنوی محفوط است.</span>
@@ -60,3 +70,4 @@
         </div>
     </div>
 </section>
+

@@ -1,3 +1,4 @@
+using Emails.Application.Contract.EmailUserService.Command;
 using Emails.Application.Contract.MessageUserService.Command;
 using Microsoft.AspNetCore.Mvc;
 using NavinoShop.WebApplication.Models;
@@ -9,20 +10,23 @@ using System.Threading.Tasks;
 
 namespace NavinoShop.WebApplication.Controllers
 {
+    [IgnoreAntiforgeryToken]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IMessageUserCommandService _messageUserCommandService;
         private readonly ISiteSettingQueryService _siteSettingQueryService;
         private readonly IAuthService _authService;
+        private readonly IEmailUseCommandService _emailUseCommandService;
 
         public HomeController(ILogger<HomeController> logger, IMessageUserCommandService messageUserCommandService,
-            ISiteSettingQueryService siteSettingQueryService, IAuthService authService)
+            ISiteSettingQueryService siteSettingQueryService, IAuthService authService, IEmailUseCommandService emailUseCommandService)
         {
             _logger = logger;
             _messageUserCommandService = messageUserCommandService;
             _siteSettingQueryService = siteSettingQueryService;
             _authService = authService;
+            _emailUseCommandService = emailUseCommandService;
         }
 
         public IActionResult Index()
@@ -49,6 +53,19 @@ namespace NavinoShop.WebApplication.Controllers
                 ViewData["Success"] = true;
 
             return View();
+        }
+        [HttpPost]
+        
+        public async Task<JsonResult> AddUserEmail(string email)
+        {
+            var Userid =  _authService.GetLoginUserId();
+            var model = new CreateEmailUserCommandModel { UserId = Userid, Email = email };
+            var res = await _emailUseCommandService.Create(model);
+            if (res.Success)
+            {
+                return new JsonResult(new { success = true });
+            }
+            return new JsonResult(new { success = false , message=res.Message});
         }
         public IActionResult Privacy()
         {
