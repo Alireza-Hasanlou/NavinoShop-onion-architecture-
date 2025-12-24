@@ -4,7 +4,8 @@ using Shared.Domain;
 
 namespace Blogs.Domain.BlogAgg
 {
-    public class Blog : BaseEntityCreateUpdateActive<int>
+    public class 
+        Blog : BaseEntityCreateUpdateActive<int>
     {
 
         public string Title { get; private set; }

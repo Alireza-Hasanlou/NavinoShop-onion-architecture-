@@ -7,9 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\Account\Models\**" />
     <Compile Remove="Areas\Admin\Models\**" />
+    <Content Remove="Areas\Account\Models\**" />
     <Content Remove="Areas\Admin\Models\**" />
+    <EmbeddedResource Remove="Areas\Account\Models\**" />
     <EmbeddedResource Remove="Areas\Admin\Models\**" />
+    <None Remove="Areas\Account\Models\**" />
     <None Remove="Areas\Admin\Models\**" />
   </ItemGroup>
 
@@ -2319,7 +2323,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Account\Models\" />
     <Folder Include="Areas\Account\Pages\Shared\" />
     <Folder Include="Areas\Admin\Pages\Post\Setting\" />
     <Folder Include="Areas\Admin\Pages\Post\Package\" />
