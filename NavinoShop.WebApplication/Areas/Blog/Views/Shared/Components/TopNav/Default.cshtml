@@ -1,0 +1,77 @@
+﻿@using Shared.Domain.Enums
+@using Site.Application.Contract.MenuService.Query
+@model List<MenuForUiQueryModel>
+@if (Model.Count() > 0)
+{
+
+    <nav class="flex-child nav__wrap d-none d-lg-block">
+        <ul class="nav__menu">
+            <li class="active">
+                <a href="/Blog">صفحه اصلی </a>
+            </li>
+            @foreach (var item in Model)
+            {
+
+                @if (item.Status == MenuStatus.منوی_اصلی_وبلاگ_بدون_زیرمنو)
+                {
+                    <li>
+                        <a href="@item.Url">@item.Title</a>
+                    </li>
+                }
+
+                @if (item.Status == MenuStatus.منوی_اصلی_وبلاگ_بازیرمنوی_تصویردار && item.Childs.Count() > 0)
+                {
+                    <li class="nav__dropdown">
+                        <a href="@item.Url">@item.Title</a>
+                        <ul class="nav__dropdown-menu nav__megamenu" style="width: 1218px; left: -838.788px;">
+                            <li>
+                                <div class="nav__megamenu-wrap">
+                                    <div class="row">
+                                        @foreach (var sub in item.Childs)
+                                        {
+                                            <div class="col nav__megamenu-item">
+                                                <article class="entry">
+                                                    <div class="entry__img-holder">
+                                                        <a href="single-post.html">
+                                                            <img src="@sub.ImageName" alt="@sub.ImageAlt" class="entry__img">
+                                                        </a>
+                                                        <a href="@item.Url" class="entry__meta-category entry__meta-category--label entry__meta-category--align-in-corner entry__meta-category--purple">@item.Title</a>
+                                                    </div>
+
+                                                    <div class="entry__body">
+                                                        <h2 class="entry__title">
+                                                            <a href="@sub.Url">@sub.Title</a>
+                                                        </h2>
+                                                    </div>
+                                                </article>
+                                            </div>
+                                        }
+
+
+                                    </div>
+                                </div>
+                            </li>
+                        </ul> <!-- end megamenu -->
+                    </li>
+                }
+                @if (item.Status == MenuStatus.منوی_اصلی_وبلاگ_بازیرمنو)
+                {
+                    <li class="nav__dropdown">
+                        <a href="@item.Url">@item.Title</a>
+                        <ul class="nav__dropdown-menu">
+                            @foreach (var sub in item.Childs)
+                            {
+                                <li><a href="@sub.Url">@sub.Title</a></li>
+                            }
+
+                        </ul>
+                    </li>
+                }
+
+
+            }
+        </ul> <!-- end menu -->
+    </nav>
+
+}
+

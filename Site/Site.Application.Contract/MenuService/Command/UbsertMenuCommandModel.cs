@@ -6,7 +6,7 @@ namespace Site.Application.Contract.MenuService.Command
 {
     public class UbsertMenuCommandModel
     {
-        [Display(Name = " تصویر برای منوی گروه های محصولات در اندازه 256*451 ")]
+        [Display(Name = " تصویر برای منوی گروه های محصولات در اندازه 256*451 - تصویر برای منو وبلاگ در اندازه 284*180")]
         public IFormFile? ImageFile { get; set; }
         [Display(Name = "Alt تصویر")]
         [MaxLength(250, ErrorMessage = ValidationMessages.MaxLengthMessage)]

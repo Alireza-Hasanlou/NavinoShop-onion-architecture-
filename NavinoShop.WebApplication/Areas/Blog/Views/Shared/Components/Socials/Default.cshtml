@@ -1,0 +1,16 @@
+﻿@model Site.Application.Contract.SiteSettingService.Query.SocialForUiQueryModel
+
+
+
+<a class="social  bg-whatsapp" href="@((!string.IsNullOrEmpty(Model.WhatsApp)) ? Model.WhatsApp : "#")" target="_blank" aria-label="whatsapp">
+    <i class="ui-whatsapp"></i>
+</a>
+<a class="social social-twitter" href="@((!string.IsNullOrEmpty(Model.Telegram)) ? Model.Telegram : "#")" target="_blank" aria-label="telegram">
+    <i class="fab fa-telegram"></i>
+</a>
+<a class="social social-youtube" href="@((!string.IsNullOrEmpty(Model.Youtube)) ? Model.Youtube : "#")" target="_blank" aria-label="youtube">
+    <i class="ui-youtube"></i>
+</a>
+<a class="social social-instagram" href="@((!string.IsNullOrEmpty(Model.Instagram)) ? Model.Instagram : "#")" target="_blank" aria-label="instagram">
+    <i class="ui-instagram"></i>
+</a>

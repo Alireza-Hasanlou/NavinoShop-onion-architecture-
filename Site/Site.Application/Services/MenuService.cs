@@ -35,7 +35,9 @@ namespace Site.Application.Services
                 || command.Status == MenuStatus.دسته_های_گروه_مجصولات
                 || command.Status == MenuStatus.زیردسته_های_گروه_محصولات
                 || command.Status == MenuStatus.زیرمنوی_سردسته
-                || command.Status == MenuStatus.منوی_فوتر)
+                || command.Status == MenuStatus.منوی_فوتر
+                || command.Status == MenuStatus.زیرمنوی_وبلاگ_تصویردار
+                || command.Status == MenuStatus.زیرمنوی_وبلاگ)
                 return new(false, "در این بخض فقط سردسته منو ها را میتوانید ایجاد کنید", nameof(command.Status));
 
             if (await _menuRepository.ExistMainMenu(command.Status))
@@ -70,6 +72,12 @@ namespace Site.Application.Services
                     break;
                 case MenuStatus.تیتر_منوی_فوتر:
                     status = MenuStatus.منوی_فوتر;
+                    break;
+                case MenuStatus.منوی_اصلی_وبلاگ_بازیرمنو:
+                    status = MenuStatus.زیرمنوی_وبلاگ;
+                    break;
+                case MenuStatus.منوی_اصلی_وبلاگ_بازیرمنوی_تصویردار:
+                    status = MenuStatus.زیرمنوی_وبلاگ_تصویردار;
                     break;
                 default:
                     return new(false, ValidationMessages.SystemErrorMessage, nameof(command.Title));

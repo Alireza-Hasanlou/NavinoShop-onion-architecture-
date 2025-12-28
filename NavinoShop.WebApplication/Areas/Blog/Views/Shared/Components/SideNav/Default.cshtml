@@ -1,0 +1,32 @@
+﻿@using Shared.Domain.Enums
+@model List<Site.Application.Contract.MenuService.Query.MenuForUiQueryModel>
+<ul class="sidenav__menu" role="menubar">
+    <li>
+        <a href="/Blog" class="sidenav__menu-url">صفحه اصلی</a>
+    </li>
+    @if (Model.Count() >= 1)
+    {
+
+        @foreach (var item in Model)
+        {
+
+            <li>
+                <a href="@((!string.IsNullOrEmpty(item.Url) ? item.Url : "#"))" class="sidenav__menu-url">@item.Title</a>
+                @if (item.Childs.Count() > 0)
+                {
+                    <button class="sidenav__menu-toggle" aria-haspopup="true" aria-label="Open dropdown"><i class="ui-arrow-down"></i></button>
+                    <ul class="sidenav__menu-dropdown">
+                        @foreach (var sub in item.Childs)
+                        {
+
+                            <li><a href="@sub.Url" class="sidenav__menu-url">@sub.Title</a></li>
+                        }
+                    </ul>
+                }
+            </li>
+
+
+        }
+
+    }
+</ul>

@@ -38,7 +38,7 @@ namespace Blogs.Query.Services
                     Active = a.Active,
                     ImageName = a.ImageName,
                     Writer = a.Writer,
-                    ShorDescription=a.ShortDescription,
+                    ShorDescription = a.ShortDescription,
                     CreationDate = a.CreateDate.ToPersainDate(),
                     Title = a.Title,
                     UpdateDate = a.UpdateDate.ToPersainDate(),
@@ -60,7 +60,7 @@ namespace Blogs.Query.Services
                     Writer = a.Writer,
                     CreationDate = a.CreateDate.ToPersainDate(),
                     Title = a.Title,
-                    ShorDescription=a.ShortDescription,
+                    ShorDescription = a.ShortDescription,
                     UpdateDate = a.UpdateDate.ToPersainDate(),
                     UserId = a.UserId,
                     VisitCount = a.VisitCount,
@@ -99,6 +99,15 @@ namespace Blogs.Query.Services
 
             };
 
+        }
+
+        public async Task<List<LastBlogsQueryModel>> GetLastBlogsAsync(int take)
+        {
+            return await _blogRepository.GetAllBy(a=>a.Active)
+                .OrderByDescending(t => t.CreateDate)
+                .Select(b => new LastBlogsQueryModel(b.Title, "/Blog/" + b.Slug))
+                .Take(take)
+                .ToListAsync();
         }
     }
 }

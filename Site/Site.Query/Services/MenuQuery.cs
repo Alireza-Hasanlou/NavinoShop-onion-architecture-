@@ -65,8 +65,13 @@ internal class MenuQuery : IMenuQueryService
     public async Task<List<MenuForUiQueryModel>> GetForBlogAsync()
     {
         List<MenuForUiQueryModel> model = new();
-        var menus = _menuRepository.GetAllBy(b => b.Active &&
-        (b.Status == MenuStatus.منوی_وبلاگ_لینک));
+        var menus = await _menuRepository.GetAllBy(b => b.Active &&
+        (b.Status == MenuStatus.منوی_اصلی_وبلاگ_بازیرمنوی_تصویردار
+        || b.Status == MenuStatus.منوی_اصلی_وبلاگ_بدون_زیرمنو
+        || b.Status == MenuStatus.منوی_اصلی_وبلاگ_بازیرمنو))
+            .AsNoTracking()
+            .OrderBy(i=>i.Number)
+            .ToListAsync();
         foreach (var item in menus)
         {
             MenuForUiQueryModel menu = new()
@@ -80,7 +85,9 @@ internal class MenuQuery : IMenuQueryService
             if (await _menuRepository.ExistByAsync(m => m.ParentId == item.Id && m.Active))
             {
 
-                menu.Childs = await _menuRepository.GetAllBy(m => m.Active && m.ParentId == item.Id).Select(m => new MenuForUiQueryModel
+                menu.Childs = await _menuRepository.GetAllBy(m => m.Active && m.ParentId == item.Id)
+                    .AsNoTracking()
+                    .Select(m => new MenuForUiQueryModel
                 {
                     ImageAlt = m.ImageAlt,
                     Childs = new(),

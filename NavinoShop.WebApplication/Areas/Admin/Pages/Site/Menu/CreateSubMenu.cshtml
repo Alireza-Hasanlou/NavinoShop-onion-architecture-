@@ -13,16 +13,25 @@
         <form method="post" enctype="multipart/form-data">
             <input type="hidden" asp-for="CreateSubMenu.ParentId" />
             <input type="hidden" asp-for="CreateSubMenu.ParentStatus" />
-        
-            <div class="col  col-md-6 col-sm-12 ">
+        <div class="row">
+                <div class="col  col-md-6 col-sm-12 ">
 
-                <div class="custom-form-group">
-                    <label for="Title" class="required">عنوان</label>
-                    <input asp-for="@Model.CreateSubMenu.Title" type="text" id="Title" ">
-                    <span asp-validation-for="CreateSubMenu.Url" class="text-danger"></span>
+                    <div class="custom-form-group">
+                        <label for="Title" class="required">عنوان</label>
+                        <input asp-for="@Model.CreateSubMenu.Title" type="text" id="Title" ">
+                        <span asp-validation-for="CreateSubMenu.Url" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col  col-md-6 col-sm-12 ">
+                    <div class="custom-form-group">
+                        <label for="Number" class="required">شماره برای ترتیب بندی</label>
+                        <input asp-for="@Model.CreateSubMenu.Number" type="number" id=" Number">
+                        <span asp-validation-for="CreateSubMenu.Url" class="text-danger"></span>
+                    </div>
                 </div>
             </div>
-            <div class="col  col-md-6 col-sm-12 ">
+
+            <div class="col  col-md-12 col-sm-12 ">
                 <div class="custom-form-group">
                     <label for="Url" class="required">لینک مقصد</label>
                     <input dir="ltr" asp-for="@Model.CreateSubMenu.Url" type="text" id="Url">
@@ -30,14 +39,9 @@
                 </div>
             </div>
 
-            <div class="col  col-md-6 col-sm-12 ">
-                <div class="custom-form-group">
-                    <label for="Number" class="required">شماره برای ترتیب بندی</label>
-                    <input asp-for="@Model.CreateSubMenu.Number" type="number" id=" Number">
-                    <span asp-validation-for="CreateSubMenu.Url" class="text-danger"></span>
-                </div>
-            </div>
-            @if (Model.CreateSubMenu.ParentStatus == MenuStatus.منوی_گروه_محصولات)
+        
+           
+            @if (Model.CreateSubMenu.ParentStatus == MenuStatus.منوی_گروه_محصولات || Model.CreateSubMenu.ParentStatus == MenuStatus.منوی_اصلی_وبلاگ_بازیرمنوی_تصویردار)
             {
                 <div class="row">
                     <div class="col col-md-6 col-sm-12 col-12">
@@ -47,8 +51,9 @@
                             <input asp-for="CreateSubMenu.ImageAlt" type="text" id="ImageAlt">
                             <span asp-validation-for="CreateSubMenu.ImageAlt" class="text-danger"></span>
                         </div>
-                        <span class="text-info"> @Html.DisplayNameFor(Model => Model.CreateSubMenu.ImageFile)</span>
+
                     </div>
+                  
                     <div class="col col-md-6 col-sm-12 col-12">
                         <div id="img-container">
                             <label for="upload-file">
@@ -62,7 +67,9 @@
                         </div>
                         <span asp-validation-for="CreateSubMenu.ImageFile" class="text-danger"></span>
                     </div>
+                    <span class="text-info"> @Html.DisplayNameFor(Model => Model.CreateSubMenu.ImageFile)</span>
                 </div>
+                <br />
             }
             <button type="submit" class="btn btn-success btn-block">افزودن </button>
 

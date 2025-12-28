@@ -581,7 +581,9 @@ svg:not(:root).svg-inline--fa {
     padding-right: 30px;
 
 }
-
+.bg-whatsapp {
+    background-color: #25D366;
+}
 /*loader*/
 :root {
     --main-color: #ecf0f1;
