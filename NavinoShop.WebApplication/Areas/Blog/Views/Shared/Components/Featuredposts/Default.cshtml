@@ -1,118 +1,91 @@
-﻿  <!-- Featured Posts Grid -->
-<section class="featured-posts-grid">
-    <div class="container">
-        <div class="row row-8">
+﻿@using Shared.Application
+@model List<Blogs.Application.Contract.BlogService.Query.MostViewedPosts>
+<!-- Featured Posts Grid -->
+@if (Model.Count() == 4)
+{
+    var first = Model.First();
+    var list = Model.Skip(1);
 
-            <div class="col-lg-6">
+    <section class="featured-posts-grid">
+        <div class="container">
+            <div class="row row-8">
 
-                <!-- Small post -->
-                <div class="featured-posts-grid__item featured-posts-grid__item--sm">
-                    <article class="entry card post-list featured-posts-grid__entry">
-                        <div class="entry__img-holder post-list__img-holder card__img-holder" style="background-image: url(img/content/thumb/post-5.jpg)">
-                            <a href="single-post.html" class="thumb-url"></a>
-                            <img src="img/content/thumb/post-5.jpg" alt="" class="entry__img d-none">
-                            <a href="categories.html" class="entry__meta-category entry__meta-category--label entry__meta-category--align-in-corner entry__meta-category--violet">کتاب</a>
+                <div class="col-lg-6">
+
+                    @foreach (var item in list)
+                    {
+                        <!-- Small post -->
+                        <div class="featured-posts-grid__item featured-posts-grid__item--sm">
+                            <article class="entry card post-list featured-posts-grid__entry">
+                                <div class="entry__img-holder post-list__img-holder card__img-holder" style="background-image: url(@FileDirectories.BlogImageDirectory@item.ImageName)">
+                                    <a href="/Blog/@item.BlogSlug" class="thumb-url"></a>
+                                    <img src="@FileDirectories.BlogImageDirectory@item.ImageName" alt="@item.ImageAlt" class="entry__img d-none">
+                                    <a href="/Blog/@item.CategorySlug" class="entry__meta-category entry__meta-category--label entry__meta-category--align-in-corner entry__meta-category--blue">@item.CategoryName</a>
+                                </div>
+
+                                <div class="entry__body post-list__body card__body">
+                                    <h2 class="entry__title">
+                                        <a href="/Blog/@item.BlogSlug">@item.Title</a>
+                                    </h2>
+                                    <ul class="entry__meta">
+                                        <li class="entry__meta-author">
+                                            <span>نویسنده:</span>
+                                            <a href="#">@item.Writer </a>
+                                        </li> <li class="entry__meta-author">
+                                            <span>تعداد بازدید:</span>
+                                            <a href="#">@item.Seen </a>
+                                        </li>
+                                        <li class="entry__meta-date">
+                                           @item.CreateDate
+                                        </li>
+                                    </ul>
+                                </div>
+                            </article>
                         </div>
+                        
+                        <!-- end post -->
+                    }
 
-                        <div class="entry__body post-list__body card__body">
-                            <h2 class="entry__title">
-                                <a href="single-post.html">۵ کتاب روانشناسی که برای زندگی بهتر باید بخوانید</a>
-                            </h2>
-                            <ul class="entry__meta">
-                                <li class="entry__meta-author">
-                                    <span>نویسنده:</span>
-                                    <a href="#">بهرامی راد</a>
-                                </li>
-                                <li class="entry__meta-date">
-                                    ۴ اردیبهشت ۱۳۹۸
-                                </li>
-                            </ul>
-                        </div>
-                    </article>
-                </div> <!-- end post -->
-                <!-- Small post -->
-                <div class="featured-posts-grid__item featured-posts-grid__item--sm">
-                    <article class="entry card post-list featured-posts-grid__entry">
-                        <div class="entry__img-holder post-list__img-holder card__img-holder" style="background-image: url(img/content/thumb/post-6.jpg)">
-                            <a href="single-post.html" class="thumb-url"></a>
-                            <img src="img/content/thumb/post-6.jpg" alt="" class="entry__img d-none">
-                            <a href="categories.html" class="entry__meta-category entry__meta-category--label entry__meta-category--align-in-corner entry__meta-category--purple">اپلیکیشن و نرم افزار</a>
-                        </div>
 
-                        <div class="entry__body post-list__body card__body">
-                            <h2 class="entry__title">
-                                <a href="single-post.html">چرا لانچرهای اندروید دیگر محبوبیت گذشته را ندارند؟</a>
-                            </h2>
-                            <ul class="entry__meta">
-                                <li class="entry__meta-author">
-                                    <span>نویسنده:</span>
-                                    <a href="#">بهرامی راد</a>
-                                </li>
-                                <li class="entry__meta-date">
-                                    ۴ اردیبهشت ۱۳۹۸
-                                </li>
-                            </ul>
-                        </div>
-                    </article>
-                </div> <!-- end post -->
-                <!-- Small post -->
-                <div class="featured-posts-grid__item featured-posts-grid__item--sm">
-                    <article class="entry card post-list featured-posts-grid__entry">
-                        <div class="entry__img-holder post-list__img-holder card__img-holder" style="background-image: url(img/content/thumb/post-7.jpg)">
-                            <a href="single-post.html" class="thumb-url"></a>
-                            <img src="img/content/thumb/post-7.jpg" alt="" class="entry__img d-none">
-                            <a href="categories.html" class="entry__meta-category entry__meta-category--label entry__meta-category--align-in-corner entry__meta-category--blue">معرفی محصول</a>
-                        </div>
+                </div> <!-- end col -->
 
-                        <div class="entry__body post-list__body card__body">
-                            <h2 class="entry__title">
-                                <a href="single-post.html">جعبه‌گشایی هواوی P30 لایت در دیجی‌کالا مگ</a>
-                            </h2>
-                            <ul class="entry__meta">
-                                <li class="entry__meta-author">
-                                    <span>نویسنده:</span>
-                                    <a href="#">بهرامی راد</a>
-                                </li>
-                                <li class="entry__meta-date">
-                                    ۴ اردیبهشت ۱۳۹۸
-                                </li>
-                            </ul>
-                        </div>
-                    </article>
-                </div> <!-- end post -->
+                <div class="col-lg-6">
 
-            </div> <!-- end col -->
+                    <!-- Large post -->
+                    <div class="featured-posts-grid__item featured-posts-grid__item--lg">
+                        <article class="entry card featured-posts-grid__entry">
+                            <div class="entry__img-holder card__img-holder">
+                                <a href="single-post.html">
+                                    <img src="@FileDirectories.BlogImageDirectory400@first.ImageName" alt="@first.ImageAlt" class="entry__img">
+                                </a>
+                                <a href="/Blog/@first.CategorySlug" class="entry__meta-category entry__meta-category--label entry__meta-category--align-in-corner entry__meta-category--green">@first.CategoryName</a>
+                            </div>
 
-            <div class="col-lg-6">
+                            <div class="entry__body card__body">
+                                <h2 class="entry__title">
+                                    <a href="/Blog/@first.BlogSlug">@first.Title</a>
+                                </h2>
+                                <ul class="entry__meta">
+                                    <li class="entry__meta-author">
+                                        <span>نویسنده:</span>
+                                        <a href="#">@first.Writer</a>
+                                    </li>
+                                     <li class="entry__meta-author">
+                                        <span>تعداد بازدید:</span>
+                                        <a href="#">@first.Seen</a>
+                                    </li>
 
-                <!-- Large post -->
-                <div class="featured-posts-grid__item featured-posts-grid__item--lg">
-                    <article class="entry card featured-posts-grid__entry">
-                        <div class="entry__img-holder card__img-holder">
-                            <a href="single-post.html">
-                                <img src="img/content/thumb/post-8.jpg" alt="" class="entry__img">
-                            </a>
-                            <a href="categories.html" class="entry__meta-category entry__meta-category--label entry__meta-category--align-in-corner entry__meta-category--green">موبایل و گجت</a>
-                        </div>
+                                    <li class="entry__meta-date">
+                                        @first.CreateDate
+                                    </li>
+                                </ul>
+                            </div>
+                        </article>
+                    </div> <!-- end large post -->
+                </div>
 
-                        <div class="entry__body card__body">
-                            <h2 class="entry__title">
-                                <a href="single-post.html">گوشی تاشو هواوی میت ایکس در تاریخ مقرر عرضه می‌شود</a>
-                            </h2>
-                            <ul class="entry__meta">
-                                <li class="entry__meta-author">
-                                    <span>نویسنده:</span>
-                                    <a href="#">بهرامی راد</a>
-                                </li>
-                                <li class="entry__meta-date">
-                                    ۴ اردیبهشت ۱۳۹۸
-                                </li>
-                            </ul>
-                        </div>
-                    </article>
-                </div> <!-- end large post -->
             </div>
-
         </div>
-    </div>
-</section> <!-- end featured posts grid -->
+    </section>
+}
+<!-- end featured posts grid -->

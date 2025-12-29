@@ -105,7 +105,7 @@ namespace Blogs.Application.Services
             string oldImagName = command.ImageName;
             if (command.ImageFile != null)
             {
-                imageName = await _fileService.UploadImage(command.ImageFile, FileDirectories.BlogImageDirectory);
+                imageName = await _fileService.UploadImage(command.ImageFile, FileDirectories.BlogImageFolder);
                 if (imageName == "")
                     return new(false, ValidationMessages.SystemErrorMessage, nameof(command.ImageFile));
                 _fileService.ResizeImage(imageName, FileDirectories.BlogImageFolder, 400);
@@ -120,9 +120,9 @@ namespace Blogs.Application.Services
                 if (command.ImageFile != null)
                 {
 
-                    try { _fileService.DeleteImage($"{FileDirectories.BlogImageDirectory}{imageName}"); } catch { }
-                    try { _fileService.DeleteImage($"{FileDirectories.BlogImageDirectory400}{imageName}"); } catch { }
-                    try { _fileService.DeleteImage($"{FileDirectories.BlogImageDirectory100}{imageName}"); } catch { }
+                    try { _fileService.DeleteImage($"{FileDirectories.BlogImageDirectory}{oldImagName}"); } catch { }
+                    try { _fileService.DeleteImage($"{FileDirectories.BlogImageDirectory400}{oldImagName}"); } catch { }
+                    try { _fileService.DeleteImage($"{FileDirectories.BlogImageDirectory100}{oldImagName}"); } catch { }
                 }
                 return new(true);
             }

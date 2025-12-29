@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace NavinoShop.WebApplication.Areas.Blog.ViewComponents
 {
-    public class FeaturedpostsViewComponent:ViewComponent
+    public class FeaturedpostsViewComponent : ViewComponent
     {
         private readonly IBlogQueryService _blogQueryService;
 
@@ -12,10 +12,11 @@ namespace NavinoShop.WebApplication.Areas.Blog.ViewComponents
             _blogQueryService = blogQueryService;
         }
 
-        public async Task<IViewComponentResult>InvokeAsync()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            
-            return View();
+            var blogs = await _blogQueryService.GetMostViewedPostsAsync(4);
+
+            return View(blogs);
         }
     }
 }

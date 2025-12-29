@@ -2,14 +2,14 @@
 {
     public class LastBlogsQueryModel
     {
-        public LastBlogsQueryModel(string title, string url)
+        public LastBlogsQueryModel(string title, string slug)
         {
             Title = title;
-            Url = url;
+            Slug = slug;
         }
 
         public string Title { get; private set; }
-        public string Url { get; private set; }
+        public string Slug { get; private set; }
 
     }
 }
