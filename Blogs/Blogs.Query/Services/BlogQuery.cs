@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Shared.Application;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
@@ -111,6 +112,55 @@ namespace Blogs.Query.Services
                 .ToListAsync();
         }
 
+        public async Task<List<MostViewdBlogsForIndexQueryModel>> GetBestBlogs()
+        {
+            var categories = await _categoryRepository
+                .GetAllBy(c => c.Active)
+                .Select(c => new
+                {
+                    c.Id,
+                    c.Title,
+                    c.Slug
+                })
+                .ToListAsync();
+
+            List<MostViewdBlogsForIndexQueryModel> result = new();
+
+            foreach (var category in categories)
+            {
+                var blogsQuery = _blogRepository
+                    .GetAllBy(b => b.Active && b.CategoryId == category.Id)
+                    .OrderByDescending(b => b.VisitCount);
+
+                if (!await blogsQuery.AnyAsync())
+                    continue; 
+
+                var blogs = await blogsQuery
+                    .Take(4)
+                    .Select(b => new BestBlogQueryModel
+                    {
+                        Title = b.Title,
+                        ImageName = b.ImageName,
+                        ImageAlt = b.ImageAlt,
+                        CreateDate = b.CreateDate.ToPersainDate(),
+                        BlogSlug = b.Slug,
+                        Writer = b.Writer,
+                        ShortDescription = b.ShortDescription,
+                    })
+                    .ToListAsync();
+
+                result.Add(new MostViewdBlogsForIndexQueryModel
+                {
+                    CategoryId = category.Id,
+                    CategoryTitle = category.Title,
+                    CategorySlug = category.Slug,
+                    BestBlogQueryModels = blogs
+                });
+            }
+
+            return result;
+        }
+
         public async Task<List<MostViewedPosts>> GetMostViewedPostsAsync(int take)
         {
             var blogs = await _blogRepository.GetAllBy(a => a.Active)
@@ -124,7 +174,7 @@ namespace Blogs.Query.Services
                     CreateDate = b.CreateDate.ToPersainDate(),
                     CategoryId = b.CategoryId,
                     SubCategoryId = b.SubCategoryId,
-                    BlogSlug=b.Slug,
+                    BlogSlug = b.Slug,
                     CategoryName = "",
                     CategorySlug = "",
                     Seen = b.VisitCount,

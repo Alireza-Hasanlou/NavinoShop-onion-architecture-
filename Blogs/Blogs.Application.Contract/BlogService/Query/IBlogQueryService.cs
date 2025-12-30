@@ -11,6 +11,7 @@ namespace Blogs.Application.Contract.BlogService.Query
         Task<AdminBlogPageQueryModel> GetBlogsForAdmin(int CategoryId);
         Task<EditBlogQueryModel> GetForEditAsync(int id);
         Task<List<LastBlogsQueryModel>> GetLastBlogsAsync(int take);
+        Task<List<MostViewdBlogsForIndexQueryModel>> GetBestBlogs();
         Task<List<MostViewedPosts>> GetMostViewedPostsAsync(int take);
     }
 }

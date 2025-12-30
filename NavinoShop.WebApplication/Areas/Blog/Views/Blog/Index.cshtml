@@ -35,22 +35,9 @@
                     <h3 class="section-title">آخرین عنوان ها</h3>
 
                     <div class="tabs tab-post__tabs">
-                        <ul class="tabs__list">
-                            <li class="tabs__item">
-                                <a href="#tab-all" class="tabs__trigger">همه</a>
-                            </li>
-                            <li class="tabs__item">
-                                <a href="#tab-world" class="tabs__trigger">تکنولوژی</a>
-                            </li>
-                            <li class="tabs__item">
-                                <a href="#tab-lifestyle" class="tabs__trigger">موبایل</a>
-                            </li>
-                            <li class="tabs__item">
-                                <a href="#tab-business" class="tabs__trigger">کتاب</a>
-                            </li>
-                            <li class="tabs__item tabs__item--active">
-                                <a href="#tab-fashion" class="tabs__trigger">فرهنگ و هنر</a>
-                            </li>
+                        <ul class="tabs__list" id="BestBlogParentul">
+                           
+                            
                         </ul> <!-- end tabs -->
                     </div>
                 </div>
@@ -1635,3 +1622,11 @@
 
 
 </div>
+@section scripts{
+    <script>
+        $(function(){
+
+            GetBestBlogs();
+        })
+    </script>
+}

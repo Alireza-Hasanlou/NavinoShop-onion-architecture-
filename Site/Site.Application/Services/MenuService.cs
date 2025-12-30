@@ -83,7 +83,9 @@ namespace Site.Application.Services
                     return new(false, ValidationMessages.SystemErrorMessage, nameof(command.Title));
             }
             string imageName = "";
-            if (status == MenuStatus.دسته_های_گروه_مجصولات && command.ImageFile != null)
+            if (status == MenuStatus.دسته_های_گروه_مجصولات
+                || status == MenuStatus.زیرمنوی_وبلاگ_تصویردار
+                && command.ImageFile != null)
             {
                 imageName = await _fileService.UploadImage(command.ImageFile, FileDirectories.MenuImageFolder);
                 if (imageName == "")
