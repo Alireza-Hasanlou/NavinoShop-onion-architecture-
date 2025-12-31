@@ -5,21 +5,34 @@
         dataType: "json"
     })
         .done(function (res) {
-            console.log(res);
+            
 
             var parent = $("#BestBlogParentul");
+            console.log(res);
             parent.empty();
 
             for (var i = 0; i < res.length; i++) {
-
-                var item = `
-                <li class="tabs__item">
-                    <a href="#parent_${res[i].CategoryId}" class="tabs__trigger">
-                        ${res[i].CategoryTitle}
+                if (i == 0) {
+                    var item = `
+                <li class="tabs__item tabs__item--active">
+                    <a href="#parent_${res[i].categoryId}" class="tabs__trigger">
+                        ${res[i].categoryTitle}
                     </a>
                 </li>
             `;
-                parent.append(item);
+                    parent.append(item);
+                } else {
+                    var item1 = `
+                <li class="tabs__item">
+                    <a href="#parent_${res[i].categoryId}" class="tabs__trigger">
+                        ${res[i].categoryTitle}
+                    </a>
+                </li>
+            `;
+                    parent.append(item1);
+                }
+
+
             }
         })
         .fail(function (xhr) {

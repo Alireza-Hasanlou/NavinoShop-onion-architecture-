@@ -115,14 +115,50 @@ function ShowRoleUsers(roleId) {
 
 // ================== تولید Slug ==================
 function makeSlug(source, destination) {
-    var titleStr = $('#' + source).val();
-    titleStr = titleStr.replace(/^\s+|\s+$/g, '');
-    titleStr = titleStr.toLowerCase();
-    titleStr = titleStr.replace(/[^a-z0-9_\s-ءاأإآؤئبتثجحخدذرزسشصضطظعغفقكلمنهويةى]/g, '')
+    let text = $('#' + source).val();
+
+    if (!text) {
+        $('#' + destination).val('');
+        return;
+    }
+
+    text = text
+        // normalize unicode (VERY IMPORTANT)
+        .normalize('NFC')
+
+        // trim
+        .trim()
+
+        // Arabic → Persian
+        .replace(/ك/g, 'ک')
+        .replace(/ي/g, 'ی')
+
+        // remove tatweel (ـ)
+        .replace(/\u0640/g, '')
+
+        // remove diacritics
+        .replace(/[\u064B-\u065F]/g, '')
+
+        // remove zero-width characters (نیم‌فاصله و ...)
+        .replace(/[\u200C\u200D\uFEFF]/g, ' ')
+
+        // keep Persian + English + numbers
+        .replace(/[^a-zA-Z0-9\u0600-\u06FF\s-]/g, '')
+
+        // spaces to dash
         .replace(/\s+/g, '-')
-        .replace(/-+/g, '-');
-    $('#' + destination).val(titleStr);
+
+        // multiple dashes
+        .replace(/-+/g, '-')
+
+        // trim dashes
+        .replace(/^-+|-+$/g, '');
+
+    $('#' + destination).val(text);
 }
+
+
+
 
 // ================== بارگذاری زیرگروه‌ها (Ajax SubCategories) ==================
 $(function () {
