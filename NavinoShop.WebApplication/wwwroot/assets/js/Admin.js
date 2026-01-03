@@ -129,10 +129,6 @@ function makeSlug(source, destination) {
         // trim
         .trim()
 
-        // Arabic → Persian
-        .replace(/ك/g, 'ک')
-        .replace(/ي/g, 'ی')
-
         // remove tatweel (ـ)
         .replace(/\u0640/g, '')
 
@@ -143,7 +139,7 @@ function makeSlug(source, destination) {
         .replace(/[\u200C\u200D\uFEFF]/g, ' ')
 
         // keep Persian + English + numbers
-        .replace(/[^a-zA-Z0-9\u0600-\u06FF\s-]/g, '')
+        .replace(/[^a-zA-Z0-9\u0600-\u06FF\s-]/g,'')
 
         // spaces to dash
         .replace(/\s+/g, '-')

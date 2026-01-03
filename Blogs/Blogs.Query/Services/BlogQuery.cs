@@ -116,6 +116,7 @@ namespace Blogs.Query.Services
         {
             var categories = await _categoryRepository
                 .GetAllBy(c => c.Active)
+                .AsNoTracking()
                 .Select(c => new
                 {
                     c.Id,
@@ -128,33 +129,42 @@ namespace Blogs.Query.Services
 
             foreach (var category in categories)
             {
-                var blogsQuery = _blogRepository
-                    .GetAllBy(b => b.Active && b.CategoryId == category.Id)
-                    .OrderByDescending(b => b.VisitCount);
+                var blogsQuery = await _blogRepository
+              .GetAllBy(b => b.Active && b.CategoryId == category.Id)
+              .AsNoTracking()
+              .OrderByDescending(b => b.CreateDate)
+              .Take(2)
+              .Select(b => new
+              {
+                  b.Title,
+                  b.ImageName,
+                  b.ImageAlt,
+                  b.CreateDate,
+                  b.Slug,
+                  b.Writer,
+                  b.ShortDescription
+              }).ToListAsync();
 
-                if (!await blogsQuery.AnyAsync())
-                    continue; 
+                if (blogsQuery.Count == 0)
+                    continue;
 
-                var blogs = await blogsQuery
-                    .Take(4)
-                    .Select(b => new BestBlogQueryModel
-                    {
-                        Title = b.Title,
-                        ImageName = b.ImageName,
-                        ImageAlt = b.ImageAlt,
-                        CreateDate = b.CreateDate.ToPersainDate(),
-                        BlogSlug = b.Slug,
-                        Writer = b.Writer,
-                        ShortDescription = b.ShortDescription,
-                    })
-                    .ToListAsync();
+                var blogslist = blogsQuery.Select(b => new BestBlogQueryModel
+                {
+                    Title = b.Title,
+                    ImageName = FileDirectories.BlogImageDirectory400 + b.ImageName,
+                    ImageAlt = b.ImageAlt,
+                    CreateDate = b.CreateDate.ToPersainDate(),
+                    BlogSlug = b.Slug,
+                    Writer = b.Writer,
+                    ShortDescription = b.ShortDescription
+                }).ToList();
 
                 result.Add(new MostViewdBlogsForIndexQueryModel
                 {
                     CategoryId = category.Id,
                     CategoryTitle = category.Title,
                     CategorySlug = category.Slug,
-                    BestBlogQueryModels = blogs
+                    Blogs = blogslist
                 });
             }
 
@@ -163,43 +173,54 @@ namespace Blogs.Query.Services
 
         public async Task<List<MostViewedPosts>> GetMostViewedPostsAsync(int take)
         {
-            var blogs = await _blogRepository.GetAllBy(a => a.Active)
-                .OrderByDescending(s => s.VisitCount)
-                .Select(b => new MostViewedPosts
+            var blogs = await _blogRepository.GetAllBy(b => b.Active)
+                .AsNoTracking()
+                .OrderByDescending(b => b.VisitCount)
+                .Take(take)
+                .Select(b => new
                 {
-                    Id = b.Id,
-                    Title = b.Title,
-                    ImageName = b.ImageName,
-                    ImageAlt = b.ImageAlt,
-                    CreateDate = b.CreateDate.ToPersainDate(),
-                    CategoryId = b.CategoryId,
-                    SubCategoryId = b.SubCategoryId,
-                    BlogSlug = b.Slug,
-                    CategoryName = "",
-                    CategorySlug = "",
-                    Seen = b.VisitCount,
-                    Writer = b.Writer
-                }).Take(take)
-                  .ToListAsync();
+                    b.Id,
+                    b.Title,
+                    b.ImageName,
+                    b.ImageAlt,
+                    b.CreateDate,
+                    b.CategoryId,
+                    b.SubCategoryId,
+                    b.Slug,
+                    b.VisitCount,
+                    b.Writer,
+                    CategoryKey = b.SubCategoryId > 0 ? b.SubCategoryId : b.CategoryId
+                })
+                .ToListAsync();
 
-            foreach (var item in blogs)
+           
+            var categoryIds = blogs
+                .Select(b => b.CategoryKey)
+                .Distinct()
+                .ToList();
+
+            var categories = await _categoryRepository
+                .GetAllBy(c => categoryIds.Contains(c.Id))
+                .AsNoTracking()
+                .ToDictionaryAsync(c => c.Id);
+
+            
+            return blogs.Select(b => new MostViewedPosts
             {
-                if (item.SubCategoryId > 0)
-                {
-                    var C = await _categoryRepository.GetByIdAsync(item.SubCategoryId);
-                    item.CategorySlug = C.Slug;
-                    item.CategoryName = C.Title;
-                }
-                else
-                {
-
-                    var C = await _categoryRepository.GetByIdAsync(item.CategoryId);
-                    item.CategorySlug = C.Slug;
-                    item.CategoryName = C.Title;
-                }
-            }
-
-            return blogs;
+                Id = b.Id,
+                Title = b.Title,
+                ImageName = b.ImageName,
+                ImageAlt = b.ImageAlt,
+                CreateDate = b.CreateDate.ToPersainDate(),
+                CategoryId = b.CategoryId,
+                SubCategoryId = b.SubCategoryId,
+                BlogSlug = b.Slug,
+                Seen = b.VisitCount,
+                Writer = b.Writer,
+                CategoryName = categories[b.CategoryKey].Title,
+                CategorySlug = categories[b.CategoryKey].Slug
+            }).ToList();
         }
+
     }
 }
