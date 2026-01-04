@@ -1,7 +1,7 @@
 ﻿@using Shared.Application
 @model List<Blogs.Application.Contract.BlogService.Query.MostViewedPosts>
 
-@if (Model.Count() > 0)
+@if (Model.Any())
 {
 <section class="section mb-0">
     <div class="title-wrap title-wrap--line">
@@ -9,18 +9,21 @@
     </div>
 
     <!-- Slider -->
-    <div id="owl-posts" class="owl-carousel owl-theme owl-carousel--arrows-outside owl-rtl">
+    <div class="owl-carousel owl-theme owl-carousel--arrows-outside owl-rtl">
         @foreach (var post in Model)
         {
-            <div class="owl-item" style="width: 150px; margin-left: 30px;">
+            <div class="item">
                 <article class="entry thumb thumb--size-1">
-                    <div class="entry__img-holder thumb__img-holder" style="background-image: url('@FileDirectories.BlogImageDirectory@post.ImageName');">
+                    <div class="entry__img-holder thumb__img-holder"
+                         style="background-image: url('@($"{FileDirectories.BlogImageDirectory}{post.ImageName}")');">
                         <div class="bottom-gradient"></div>
+
                         <div class="thumb-text-holder">
                             <h2 class="thumb-entry-title">
                                 <a href="@post.BlogSlug">@post.Title</a>
                             </h2>
                         </div>
+
                         <a href="@post.BlogSlug" class="thumb-url"></a>
                     </div>
                 </article>
@@ -28,7 +31,4 @@
         }
     </div>
 </section>
-
-
-
 }

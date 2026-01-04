@@ -95,3 +95,4 @@ $(document).on("click", ".tabs__trigger", function (e) {
     var target = $(this).attr("href");
     $(target).addClass("tabs__content-pane--active");
 });
+
