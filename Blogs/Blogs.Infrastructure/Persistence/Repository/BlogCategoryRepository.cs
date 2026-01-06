@@ -12,13 +12,21 @@ using System.Threading.Tasks;
 
 namespace Blogs.Infrastructure.Persistence.Repository
 {
-    internal class BlogCategoryRepository:GenericRepository<BlogCategory,int>,IBlogCategoryRepository
+    internal class BlogCategoryRepository : GenericRepository<BlogCategory, int>, IBlogCategoryRepository
     {
         private readonly BlogDbContext _context;
 
-        public BlogCategoryRepository(BlogDbContext context):base(context) 
+        public BlogCategoryRepository(BlogDbContext context) : base(context)
         {
             _context = context;
+        }
+
+        public int BlogsCount(int id)
+        {
+            return _context.Blogs.Where(i => i.CategoryId == id 
+            || i.SubCategoryId == id
+            && i.Active)
+                .Count();
         }
 
         public async Task<BlogCategory> GetBySlug(string slug)
@@ -28,7 +36,7 @@ namespace Blogs.Infrastructure.Persistence.Repository
 
         public Task<EditBlogCategoryDto> GetForEdit(int id)
         {
-           return _context.BlogCategories.Where(i => i.Id == id).Select(i => new EditBlogCategoryDto
+            return _context.BlogCategories.Where(i => i.Id == id).Select(i => new EditBlogCategoryDto
             {
                 Id = i.Id,
                 Slug = i.Slug,

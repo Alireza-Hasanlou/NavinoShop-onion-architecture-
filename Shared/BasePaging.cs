@@ -25,7 +25,7 @@ namespace Shared
             PageId = pageId;
             Take = take;
             DataCount = data.Count();
-            Take = take;
+            //Take = take;
             Skip = (pageId - 1) * take;
             if (showPageCount < 1) showPageCount = 2;
             StartPage = pageId > showPageCount ? pageId - showPageCount : 1;

@@ -6,7 +6,8 @@ namespace Blogs.Domain.BlogCategoryAgg
 {
     public interface IBlogCategoryRepository:IGenericRepository<BlogCategory,int>
     {
-       Task< BlogCategory> GetBySlug(string slug);
+        int BlogsCount(int id);
+        Task< BlogCategory> GetBySlug(string slug);
         Task <EditBlogCategoryDto> GetForEdit(int id);
     }
 }
