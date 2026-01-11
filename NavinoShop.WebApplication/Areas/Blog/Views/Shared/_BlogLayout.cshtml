@@ -3,6 +3,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
+    @RenderSection("Seo", false);
     <title>@ViewData["title"]</title>
     <partial name="_BlogCss">
 </head>
@@ -20,9 +21,8 @@
 
                 @RenderBody()
 
-
                 <footer class="footer footer--light ">
-                    <div class="container row m-auto " >
+                    <div class="container row m-auto ">
                         <p>
                             طراحی توسط:
 
@@ -34,15 +34,8 @@
                 <div id="back-to-top" class="">
                     <a href="#top" aria-label="Go to top"><i class="ui-arrow-up"></i></a>
                 </div>
-
             </main>
-
-
-
-
-
             <partial name="_BlogScripts" />
 </body>
-
 </html>
 @RenderSection("scripts", false);

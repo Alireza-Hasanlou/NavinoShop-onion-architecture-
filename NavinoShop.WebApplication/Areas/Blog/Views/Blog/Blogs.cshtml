@@ -1,197 +1,153 @@
 ﻿@model Query.Contract.UI.Blog.BlogsUiQueryPaging
 @{
     Layout = "_BlogLayout";
+    ViewData["title"] = Model.SeoUi.MetaTitle;
 }
-<div class="row">
-
-    <!-- Posts -->
-    <div class="col-lg-8 blog__content mb-72">
-        <h1 class="page-title">تکنولوژی</h1>
-
-        <div class="row card-row">
-            @foreach (var Blog in Model.Blogs)
+@section Seo {
+    <partial name="_Seo" model="Model.SeoUi" />
+}
+<div class="container">
+    <ul class="breadcrumbs">
+        @foreach (var item in Model.breadCrumbs.OrderBy(n => n.Number))
+        {
+            <li class="breadcrumbs__item">
+                <a href="@item.Url" class="breadcrumbs__url">@item.Title</a>
+            </li>
+        }
+    </ul>
+</div>
+<div class="main-container container" id="main-container">
+    <div class="row">
+        <!-- Posts -->
+        <div class="col-lg-8 blog__content mb-72">
+            <h1 class="page-title">@Model.Title</h1>
+            @if (Model.Blogs.Count() > 0)
             {
-                <div class="col-md-6">
-                <article class="entry card">
-                    <div class="entry__img-holder card__img-holder">
-                        <a href="single-post.html">
-                            <div class="thumb-container thumb-70">
-                                    <img data-src="@Blog.ImageName" src="@Blog.ImageName" class="entry__img lazyloaded" alt="@Blog.ImageAlt">
-                            </div>
-                        </a>
-                            <a href="/Blogs/@Blog.categorySlug" class="entry__meta-category entry__meta-category--label entry__meta-category--align-in-corner entry__meta-category--violet">@Blog.CategoryTitle</a>
-                    </div>
+                <div class="row card-row">
+                    @foreach (var Blog in Model.Blogs)
+                    {
+                        <div class="col-md-6">
+                            <article class="entry card">
+                                <div class="entry__img-holder card__img-holder">
+                                    <a href="single-post.html">
+                                        <div class="thumb-container thumb-70">
+                                            <img data-src="@Blog.ImageName" src="@Blog.ImageName"
+                                            class="entry__img lazyloaded" alt="@Blog.ImageAlt">
+                                        </div>
+                                    </a>
+                                    <a href="/Blogs/@Blog.categorySlug"
+                                    class="entry__meta-category
+                                           entry__meta-category--label
+                                           entry__meta-category--align-in-corner
+                                           entry__meta-category--violet">@Blog.CategoryTitle</a>
+                                </div>
+                                <div class="entry__body card__body">
+                                    <div class="entry__header">
 
-                    <div class="entry__body card__body">
-                        <div class="entry__header">
+                                        <h2 class="entry__title">
+                                            <a href="/Blog/@Blog.Slug">@Blog.Title</a>
+                                        </h2>
+                                        <ul class="entry__meta">
+                                            <li class="entry__meta-author">
+                                                <span>نویسنده:</span>
+                                                <a href="#">@Blog.Writer</a>
+                                            </li>
+                                            <li class="entry__meta-date">
+                                                @Blog.CreateDate
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="entry__excerpt">
+                                        <p>@Blog.ShortDescription<p>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    }
 
-                            <h2 class="entry__title">
-                                    <a href="/Blog/@Blog.Slug">@Blog.Title</a>
-                            </h2>
-                            <ul class="entry__meta">
-                                <li class="entry__meta-author">
-                                    <span>نویسنده:</span>
-                                    <a href="#">@Blog.Writer</a>
-                                </li>
-                                <li class="entry__meta-date">
-                                   @Blog.CreateDate
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="entry__excerpt">
-                            <p>@Blog.ShortDescription<p>
-                        </div>
-                    </div>
-                </article>
-            </div>
-            }
-
-        </div>
-
-        <!-- Pagination -->
-        <nav class="pagination">
-            
-            <span class="pagination__page pagination__page--current">۱</span>
-            <a href="#" class="pagination__page">۲</a>
-            <a href="#" class="pagination__page">۳</a>
-            <a href="#" class="pagination__page">۴</a>
-            <a href="#" class="pagination__page pagination__icon pagination__page--next"><i class="ui-arrow-left"></i></a>
-        </nav>
-    </div> <!-- end posts -->
-    <!-- Sidebar -->
-    <aside class="col-lg-4 sidebar sidebar--right">
-
-        <!-- Widget Popular Posts -->
-        <aside class="widget widget-popular-posts">
-            <h4 class="widget-title">محبوب ترین مقالات</h4>
-            <ul class="post-list-small">
-                <li class="post-list-small__item">
-                    <article class="post-list-small__entry clearfix">
-                        <div class="post-list-small__img-holder">
-                            <div class="thumb-container thumb-100">
-                                <a href="single-post.html">
-                                    <img data-src="img/content/thumb/post-8.jpg" src="img/content/thumb/post-8.jpg" alt="" class="post-list-small__img--rounded lazyloaded">
-                                </a>
-                            </div>
-                        </div>
-                        <div class="post-list-small__body">
-                            <h3 class="post-list-small__entry-title">
-                                <a href="single-post.html">گوشی تاشو هواوی میت ایکس در تاریخ مقرر عرضه می‌شود</a>
-                            </h3>
-                            <ul class="entry__meta">
-                                <li class="entry__meta-author">
-                                    <span>نویسنده:</span>
-                                    <a href="#">بهرامی راد</a>
-                                </li>
-                                <li class="entry__meta-date">
-                                    ۴ اردیبهشت ۱۳۹۸
-                                </li>
-                            </ul>
-                        </div>
-                    </article>
-                </li>
-                <li class="post-list-small__item">
-                    <article class="post-list-small__entry clearfix">
-                        <div class="post-list-small__img-holder">
-                            <div class="thumb-container thumb-100">
-                                <a href="single-post.html">
-                                    <img data-src="img/content/thumb/post-2.jpg" src="img/content/thumb/post-2.jpg" alt="" class="post-list-small__img--rounded lazyloaded">
-                                </a>
-                            </div>
-                        </div>
-                        <div class="post-list-small__body">
-                            <h3 class="post-list-small__entry-title">
-                                <a href="single-post.html">نمایشگر وان پلاس ۷ قرار است ما را شگفت‌زده کند!</a>
-                            </h3>
-                            <ul class="entry__meta">
-                                <li class="entry__meta-author">
-                                    <span>نویسنده:</span>
-                                    <a href="#">بهرامی راد</a>
-                                </li>
-                                <li class="entry__meta-date">
-                                    ۴ اردیبهشت ۱۳۹۸
-                                </li>
-                            </ul>
-                        </div>
-                    </article>
-                </li>
-                <li class="post-list-small__item">
-                    <article class="post-list-small__entry clearfix">
-                        <div class="post-list-small__img-holder">
-                            <div class="thumb-container thumb-100">
-                                <a href="single-post.html">
-                                    <img data-src="img/content/thumb/post-6.jpg" src="img/content/thumb/post-6.jpg" alt="" class="post-list-small__img--rounded lazyloaded">
-                                </a>
-                            </div>
-                        </div>
-                        <div class="post-list-small__body">
-                            <h3 class="post-list-small__entry-title">
-                                <a href="single-post.html">چرا لانچرهای اندروید دیگر محبوبیت گذشته را ندارند؟</a>
-                            </h3>
-                            <ul class="entry__meta">
-                                <li class="entry__meta-author">
-                                    <span>نویسنده:</span>
-                                    <a href="#">بهرامی راد</a>
-                                </li>
-                                <li class="entry__meta-date">
-                                    ۴ اردیبهشت ۱۳۹۸
-                                </li>
-                            </ul>
-                        </div>
-                    </article>
-                </li>
-                <li class="post-list-small__item">
-                    <article class="post-list-small__entry clearfix">
-                        <div class="post-list-small__img-holder">
-                            <div class="thumb-container thumb-100">
-                                <a href="single-post.html">
-                                    <img data-src="img/content/thumb/post-5.jpg" src="img/content/thumb/post-5.jpg" alt="" class="post-list-small__img--rounded lazyloaded">
-                                </a>
-                            </div>
-                        </div>
-                        <div class="post-list-small__body">
-                            <h3 class="post-list-small__entry-title">
-                                <a href="single-post.html">۵ کتاب روانشناسی که برای زندگی بهتر باید بخوانید</a>
-                            </h3>
-                            <ul class="entry__meta">
-                                <li class="entry__meta-author">
-                                    <span>نویسنده:</span>
-                                    <a href="#">بهرامی راد</a>
-                                </li>
-                                <li class="entry__meta-date">
-                                    ۴ اردیبهشت ۱۳۹۸
-                                </li>
-                            </ul>
-                        </div>
-                    </article>
-                </li>
-            </ul>
-        </aside> <!-- end widget popular posts -->
-        <!-- Widget Newsletter -->
-        <aside class="widget widget_mc4wp_form_widget">
-            <h4 class="widget-title">خبرنامه</h4>
-            <p class="newsletter__text">
-                <i class="ui-email newsletter__icon"></i>
-                برای اطلاع از آخرین خبرها مشترک شوید
-            </p>
-            <form class="mc4wp-form" method="post">
-                <div class="mc4wp-form-fields">
-                    <div class="form-group">
-                        <input type="email" name="EMAIL" placeholder="ایمیل" required="">
-                    </div>
-                    <div class="form-group">
-                        <input type="submit" class="btn btn-lg btn-color" value="عضویت">
-                    </div>
                 </div>
-            </form>
-        </aside> <!-- end widget newsletter -->
-        <!-- Widget Ad 300 -->
-        <aside class="widget widget_media_image">
-            <a href="#">
-                <img src="img/content/mag-1.jpg" alt="">
-            </a>
-        </aside> <!-- end widget ad 300 -->
+            }
+            else
+            {
+                <div class="row card-row">
+                    <div class="alert ">
+                        <h4>موردی یافت نشد!</h4>
+                    </div>
 
-    </aside> <!-- end sidebar -->
+                </div>
 
+            }
+            <!-- Pagination -->
+            <nav class="pagination">
+                @if (Model.PageId > Model.StartPage)
+                {
+                    <a href="/Blogs?slug=@Model.Slug&pageId=@(Model.PageId - 1)&filter=@Model.Filter" class="pagination__page pagination__icon pagination__page--next"><i class="ui-arrow-right"></i></a>
+                }
+                <a href="/Blogs?slug=@Model.Slug&pageId=@Model.StartPage&filter=@Model.Filter" class="pagination__page @((Model.StartPage == Model.PageId) ? "pagination__page--current" : "")">@Model.StartPage</a>
+                @for (int i = Model.StartPage + 1; i < Model.EndPage; i++)
+                {
+                    <a href="/Blogs?slug=@Model.Slug&pageId=@i&filter=@Model.Filter" class="pagination__page @((i == Model.PageId) ? "pagination__page--current" : "")">@i</a>
+                }
+                @if (Model.EndPage != Model.StartPage && Model.EndPage != 0)
+                {
+                    <a href="/Blogs?slug=@Model.Slug&pageId=@Model.EndPage&filter=@Model.Filter" class="pagination__page @((Model.EndPage == Model.PageId) ? "pagination__page--current" : "")">@Model.EndPage</a>
+                }
+
+                @if (Model.PageId < Model.EndPage)
+                {
+                    <a href="/Blogs?slug=@Model.Slug&pageId=@(Model.PageId + 1)&filter=@Model.Filter" class="pagination__page pagination__icon pagination__page--next"><i class="ui-arrow-left"></i></a>
+                }
+
+            </nav>
+        </div> <!-- end posts -->
+
+        <aside class="col-lg-4 sidebar sidebar--right mt-2">
+
+
+            <aside class="widget widget-popular-posts">
+                <h4 class="widget-title">دسته بندی نوشته ها</h4>
+                <ul class="post-list-small">
+                    @foreach (var item in Model.blogCategories)
+                    {
+                        <li class="post-list-small__item">
+                            <article class="post-list-small__entry clearfix">
+                                <div class="post-list-small__body">
+                                    <h3 class="post-list-small__entry-title">
+                                        <a href="/Blogs/@item.Slug">@item.Title<span class="categories-count">@item.BlogCount</span></a>
+                                    </h3>
+
+                                </div>
+                            </article>
+                        </li>
+
+                    }
+
+                </ul>
+            </aside>
+            <aside class="widget widget_mc4wp_form_widget">
+                <h4 class="widget-title">خبرنامه</h4>
+                <p class="newsletter__text">
+                    <i class="ui-email newsletter__icon"></i>
+                    برای اطلاع از آخرین خبرها مشترک شوید
+                </p>
+                <div class="mc4wp-form">
+                    <div class="mc4wp-form-fields">
+                        <div class="form-group">
+                            <input type="email" placeholder="ایمیل" id="InputUsersEmail" required="">
+                        </div>
+                        <div class="form-group">
+                            <input type="button" onclick="AddUsersEmail()" class="btn btn-lg btn-color" value="عضویت">
+                        </div>
+                    </div>
+                    <span id="InputUsersEmailValid" class="m-2"></span>
+                </div>
+            </aside>
+
+            <aside class="widget widget_media_image">
+                @await Component.InvokeAsync("LeftSideBaner")
+            </aside>
+
+        </aside>
+
+    </div>
 </div>
