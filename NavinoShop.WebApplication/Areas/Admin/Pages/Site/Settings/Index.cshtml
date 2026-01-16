@@ -1,7 +1,9 @@
 ﻿@page
+@using Shared.Application
 @model NavinoShop.WebApplication.Areas.Admin.Pages.Site.Settings.IndexModel
 @{
     Layout = "_AdminLayout";
+    var success = TempData["success"] as string;
 }
 
 <div class="Formcontainer">
@@ -47,30 +49,42 @@
 
         <!-- Row 3 -->
         <div class="row">
-            <div class="col">
-                <div class="custom-form-group">
-                    <label for="LogoFile">لوگو</label>
-                    <input asp-for="UpsertSiteSetting.LogoFile" type="file" id="LogoFile">
-                    <span asp-validation-for="UpsertSiteSetting.LogoFile" class="text-danger"></span>
-                </div>
-            </div>
 
+            <div class="col col-md-6 col-sm-12 col-12">
+                <div id="img-container">
+                    <label for="upload-file">
+                        لوگو
+                        <div class="picture-uploader" data-url="@FileDirectories.SiteImageDirectory@Model.UpsertSiteSetting.LogoName">
+                            <div class="picture__image">Choose an image</div>
+
+                            <input asp-for="UpsertSiteSetting.LogoFile" type="file" id="upload-file" class="picture__input" accept="image/*" />
+                        </div>
+                    </label>
+
+                </div>
+                <span asp-validation-for="UpsertSiteSetting.LogoFile" class="text-danger"></span>
+            </div>
             <div class="col">
                 <div class="custom-form-group">
                     <label for="LogoAlt">Alt لوگو</label>
                     <input asp-for="UpsertSiteSetting.LogoAlt" type="text" id="LogoAlt">
-                    <span asp-validation-for="UpsertSiteSetting.LogoAlt" class="text-danger"></span>
                 </div>
             </div>
         </div>
 
         <!-- Row 4 -->
         <div class="row">
-            <div class="col">
-                <div class="custom-form-group">
-                    <label for="FavIconFile">فاو آیکون</label>
-                    <input asp-for="UpsertSiteSetting.FavIconFile" type="file" id="FavIconFile">
-                    <span asp-validation-for="UpsertSiteSetting.FavIconFile" class="text-danger"></span>
+            <div class="col col-md-6 col-sm-12 col-12">
+                <div id="img-container">
+                    <label for="upload-file">
+                        فاو آیکون
+                        <div @* class="picture-uploader"  *@data-url="@FileDirectories.SiteImageDirectory@Model.UpsertSiteSetting.FavIcon">
+                            <div @* class="picture__image" *@>Choose an image</div>
+
+                            <input asp-for="@Model.UpsertSiteSetting.FavIconFile" type="file" @* id="upload-file" class="picture__input" *@ accept="image/*" />
+                        </div>
+                    </label>
+
                 </div>
             </div>
 
@@ -215,9 +229,31 @@
                 </div>
             </div>
         </div>
+        <div class="col col-md-6 col-sm-12 col-12">
+            <div id="img-container">
+                <label for="upload-file">
+                    تصویر درباره ما
+                    <div @* class="picture-uploader" *@ data-url="@FileDirectories.SiteImageDirectory@Model.UpsertSiteSetting.AboutUsImageName">
+                        <div @* class="picture__image" *@>Choose an image</div>
 
+                        <input asp-for="@Model.UpsertSiteSetting.AboutUsImageFile" type="file" @* id="upload-file" class="picture__input" *@ accept="image/*" />
+                    </div>
+                </label>
+
+            </div>
+        </div>
         <button type="submit" class="btn btn-success btn-block">ثبت</button>
 
     </form>
 </div>
 
+@section scripts {
+
+    @if (!string.IsNullOrEmpty(success))
+    {
+        TempData["success"] = null;
+        <script>
+            AlerSweetWithTimer( "@success","success", "center");
+        </script>
+    }
+}

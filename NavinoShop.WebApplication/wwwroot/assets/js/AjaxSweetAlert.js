@@ -13,8 +13,8 @@ function DeleteAjax(Title, Text1, Icon, ConfirmButtonText, Url, DeletedId) {
         if (result.isConfirmed) {
             $.ajax({
                 url: Url,
-                type: "GET", // یا بهتره POST باشه
-                data: { id: DeletedId }, // 👈 آیدی اینجاست
+                type: "GET", 
+                data: { id: DeletedId }, 
                 success: function (res) {
                     if (res.success) {
                         AlerSweetWithTimer(res.title, "success", "center");
@@ -73,6 +73,7 @@ function AjaxSweetNotDelete(title1, text1, icon1, confirmButtonText1, cancelButt
     });
 }
 function AjaxSweetInput(title1, confirmButtonText1, url1, deletedId) {
+    debugger;
     Swal.fire({
         title: title1,
         input: "text",
@@ -187,5 +188,6 @@ function AjaxSweetRefresh(title, text, icon, confirmText, cancelText, url) {
             });
     });
 }
-
+//  fullName,  email,  comment,  ownerId,  parentId
+// /Blog/AddComment/fullName/email/comment/ownerId/parentId
 

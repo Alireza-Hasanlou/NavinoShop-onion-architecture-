@@ -20,6 +20,14 @@ namespace NavinoShop.WebApplication.Services
             return avatarClaim?.Value ?? string.Empty;
         }
 
+        public string GetLoginUserEmail()
+        {
+
+            var EmailClaim = _contextAccessor.HttpContext.User.Claims
+                 .FirstOrDefault(c => c.Type == "Email");
+            return EmailClaim?.Value ?? string.Empty;
+        }
+
         public string GetLoginUserFullName()
         {
             var fullNameClaim = _contextAccessor.HttpContext.User.Claims
@@ -59,7 +67,8 @@ namespace NavinoShop.WebApplication.Services
             new Claim(ClaimTypes.NameIdentifier, command.UserId.ToString()),
             new Claim(ClaimTypes.Name, command.FullName ?? string.Empty),
             new Claim("Avatar", command.Avatar ?? string.Empty),
-            new Claim("Mobile", command.Mobile ?? string.Empty)
+            new Claim("Mobile", command.Mobile ?? string.Empty),
+            new Claim("Email", command.Email ?? string.Empty)
         };
 
                 var identity = new ClaimsIdentity(claims, "Cookies");

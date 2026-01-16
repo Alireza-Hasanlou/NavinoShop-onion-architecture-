@@ -13,6 +13,7 @@ namespace Shared.Application.Auth
         int GetLoginUserId();
         string GetLoginUserAvatar();
         string GetLoginUserFullName();
+        string GetLoginUserEmail();
         string GetLoginUserMobile();
         bool IsUserLogin();
 

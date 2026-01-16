@@ -65,12 +65,13 @@ namespace Site.Application.Contract.SiteSettingService.Command
         [Display(Name = "توضیحات تماس با ما")]
         public string? ContactDescription { get; set; }
 
-
-
         [Display(Name = "توضیحات درباره ما")]
         public string? AboutDescription { get; set; }
         [Display(Name = "عنوان درباره ما")]
         [MaxLength(255, ErrorMessage = ValidationMessages.MaxLengthMessage)]
         public string? AboutTitle { get; set; }
+        [Display(Name = "درباره ما")]
+        public IFormFile? AboutUsImageFile { get; set; }
+        public string? AboutUsImageName { get; set; }
     }
 }

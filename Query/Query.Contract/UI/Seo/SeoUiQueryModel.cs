@@ -1,4 +1,4 @@
-﻿namespace Query.Contract.UI
+﻿namespace Query.Contract.UI.Seo
 {
     public class SeoUiQueryModel
     {

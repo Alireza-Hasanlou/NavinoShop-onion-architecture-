@@ -7,7 +7,6 @@ namespace Query.Contract.Admin.Comment
         public long Id { get; set; }
         public int UserId { get; set; }
         public string UserName { get; set; }
-        public string CommentTitle { get; set; }
         public int OwnerId { get; set; }
         public CommentFor For { get; set; }
         public CommentStatus CommentStatus { get; set; }

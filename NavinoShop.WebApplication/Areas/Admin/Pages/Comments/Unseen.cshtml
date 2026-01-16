@@ -1,7 +1,7 @@
 ﻿@page
 @model NavinoShop.WebApplication.Areas.Admin.Pages.Comments.UnseenModel
 @{
-   
+
     Layout = "_AdminLayout";
     ViewData["title"] = " نظرات دیده نشده ";
     var successMessage = TempData["success"] as string;
@@ -17,7 +17,6 @@
 
 
             <div class="row col-12">
-
             </div>
             <div class="row">
                 <div class="col-sm-12">
@@ -28,7 +27,6 @@
                                 <th> ایمیل</th>
                                 <th> کاربر</th>
                                 <th> نظر</th>
-                                <th> متن نظر</th>
                                 <th> وضعیت</th>
                                 <th></th>
                             </tr>
@@ -48,25 +46,24 @@
                                         <td>
                                             @item.UserName
                                         </td>
-                                        <td>@item.CommentTitle</td>
                                         <td>@item.Text</td>
                                         <td>@item.CommentStatus.ToString().Replace("_", " ")</td>
-                                        <td >
+                                        <td>
                                             <a class="btn btn-success btn-sm" onclick="AjaxSweet(
-                                                 'تایید شود',
-                                                 'پس از تایید, کامنت نمایش داده میشود ',
-                                                 'question',
-                                                 'تایید شود',
-                                                  'انصراف',
-                                                   '/Admin/Comments/Accept/@item.Id',
-                                                   'Deleted_@item.Id')">
+                                                         'تایید شود',
+                                                         'پس از تایید, کامنت نمایش داده میشود ',
+                                                         'question',
+                                                         'تایید شود',
+                                                          'انصراف',
+                                                           '/Admin/Comments/Accept/@item.Id',
+                                                           'Deleted_@item.Id')">
                                                 تایید ؟
                                             </a>
                                             <a class="btn btn-danger btn-sm" onclick="AjaxSweetInput(
-                                                 'دلیل رد کردن',
-                                                 'رد شود',
-                                                   '/Admin/Comments/Reject/@item.Id/why=',
-                                                   'Deleted_@item.Id')">
+                                                         'دلیل رد کردن',
+                                                         'رد شود',
+                                                           '/Admin/Comments/Reject/@item.Id/',
+                                                           'Deleted_@item.Id')">
                                                 رد شود ؟
                                             </a>
                                         </td>
@@ -78,11 +75,6 @@
 
                 </div>
             </div>
-
-
-
-
-
         </div>
     </div>
 </div>

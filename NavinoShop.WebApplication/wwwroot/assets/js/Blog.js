@@ -96,3 +96,165 @@ $(document).on("click", ".tabs__trigger", function (e) {
     $(target).addClass("tabs__content-pane--active");
 });
 
+function GetComments(pageId, OwnerId) {
+
+    var parent = $("#CommentParentli");
+
+    $.ajax({
+        url: "/Blog/GetBlogsComments",
+        type: "GET",
+        data: { ownerId: OwnerId, pageId: pageId },
+        dataType: "json"
+    })
+        .done(function (res) {
+
+            console.log(res.comments);
+            for (let i = 0; i < res.comments.length; i++) {
+
+                // ---------- Tabs ----------
+                parent.append(`
+                                     <div id="commentbody" class="comment-body" >
+                                                    <div class="comment-avatar">
+                                                        <img alt="" src="${res.comments[i].imageName}">
+                                                    </div>
+                                                    <div class="comment-text" id="body_${OwnerId}>
+                                                        <h6 class="comment-author">${res.comments[i].fullName} </h6>
+                                                        <div class="comment-metadata">
+                                                            <a href="#" class="comment-date">${res.comments[i].createDaate}</a>
+                                                        </div>
+                                                        <p>${res.comments[i].text}</p>
+                                                        <a onclick="OpenReplyInput('${res.comments[i].fullName}',${OwnerId},${res.comments[i].id})" class="comment-reply">پاسخ</a>
+                                                    </div>
+                                                </div>
+                                                 <ul class="children" id="Child_${res.comments[i].id}"  >
+                                                  </ul>
+
+                                         `);
+
+                var id = `Child_${res.comments[i].id}`;
+                var replyParent = $(`#${id}`);
+                for (let j = 0; j < res.comments[i].replys.length; j++) {
+                    replyParent.append(`
+
+                                       <li class="comment">
+                                                        <div id="CommentReplyBody" class="comment-body">
+                                                            <div class="comment-avatar">
+                                                                <img alt="" src="${res.comments[i].replys[j].imageName}">
+                                                            </div>
+                                                            <div class="comment-text">
+                                                                <h6 class="comment-author">${res.comments[i].replys[j].fullName}</h6>
+                                                                <div class="comment-metadata">
+                                                                    <a href="#" class="comment-date">${res.comments[i].replys[j].createDaate} </a>
+                                                                </div>
+                                                                 <div class="comment-metadata">
+                                                                    <a style="color: #6e6ef4;" href="#" class="comment-author text-primary">پاسخ به :${res.comments[i].fullName} </a>
+                                                                    <span class="CommentReply">(${res.comments[i].text})</span>
+                                                                </div>
+                                                                <p>${res.comments[i].replys[j].text}</p>
+                                                                <a onclick="OpenReplyInput(${OwnerId})" class="comment-reply">پاسخ</a>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                  
+                                         `);
+
+
+                }
+
+                replyParent.append(`  <hr/>`);
+
+            }
+            var loadDiv = $("#loadMoreCommentDiv");
+            loadDiv.empty();
+            if (res.pageCount > res.pageId + 1) {
+                var pageIdplus = 0;
+                pageIdplus = res.pageId + 1;
+                loadDiv.append(`<a  onclick="LoadMoreComments(${pageIdplus},${res.ownerId} )">بیشتر</a>`)
+
+            }
+
+        })
+        .fail(function (xhr) {
+            console.error("Ajax Error:", xhr.status, xhr.responseText);
+        });
+
+
+
+}
+function LoadMoreComments(pageId, ownerId) {
+
+
+    GetComments(pageId, ownerId);
+
+}
+function AddComment(ownerId) {
+
+    var comment = $("#commenttext").val();
+
+    if (comment === null || comment === "") {
+
+        $("span.errorSpan").text("این فیلد اجباری است");
+        return;
+    }
+    $("span.errorSpan").text(" ");
+    $.ajax({
+        url: "/Blog/AddComment",
+        type: "GET",
+        data: { comment: comment, ownerId: ownerId },
+        dataType: "json"
+    })
+        .done(function (res) {
+
+            if (res.success) {
+                AlerSweetWithTimer("کامنت شما ارسال شد و پس از باز بینی منتشر خواهد شد", "success", "center");
+                // empty textArea
+
+            }
+            else {
+                AlerSweetWithTimer(res.message, "error", "center");
+            }
+
+        }).fail(function (xhr) {
+            console.error("Ajax Error:", xhr.status, xhr.responseText);
+        });
+}
+
+function OpenReplyInput(fullName, ownerId, parentId) {
+
+    AjaxSweetInputReplyComment(`پاسخ به ${fullName}`, `ارسال`, `/Blog/AddComment?ownerId=${ownerId}&parentId=${parentId}&comment=`);
+}
+
+function AjaxSweetInputReplyComment(title1, confirmButtonText1, url1) {
+    Swal.fire({
+        title: title1,
+        input: "text",
+        inputAttributes: {
+            autocapitalize: "off"
+        },
+        showCancelButton: true,
+        confirmButtonText: confirmButtonText1,
+        cancelButtonText: 'انصراف',
+        showLoaderOnConfirm: true,
+        allowOutsideClick: () => !Swal.isLoading()
+    }).then((result) => {
+        if (result.isConfirmed) {
+
+            Loding();
+            $.ajax({
+                type: "Get",
+                url: url1 + result.value
+            }).done(function (res) {
+                if (res) {
+                    AlerSweetWithTimer("نظر شما دریافت شد و پس از بازبینی منتشر خواهد شد", "success", "Center");
+
+
+                }
+                else {
+                    AlerSweetWithTimer("عملیات نا موفق", "error", "Center");
+
+                }
+                EndLoading();
+            });
+        }
+    });
+}

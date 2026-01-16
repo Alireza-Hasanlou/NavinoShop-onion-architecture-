@@ -41,24 +41,13 @@ namespace Query.Service.Admin.Comment
                 OwnerId = c.OwnerId,
                 UserId = c.UserId,
                 UserName = "",
-                CommentTitle = "",
                 Id = c.Id
             }).OrderByDescending(c => c.Id).ToListAsync(); ;
-            
+
             if (!unseenComments.Any())
             {
-                return unseenComments;
+                return new();
             }
-
-
-            var commentIds = unseenComments.Select(c => c.Id).ToList();
-            var childCounts = await _commentRepository
-                .GetAllBy(c => c.ParentId != null && commentIds.Contains(c.ParentId.Value))
-                .Select(c => c.ParentId.Value)
-                .Distinct()
-                .ToListAsync();
-
-
             var userIds = unseenComments
                 .Where(c => c.UserId > 0)
                 .Select(c => c.UserId)
@@ -70,7 +59,6 @@ namespace Query.Service.Admin.Comment
 
             foreach (var comment in unseenComments)
             {
-                comment.HaveChild = childCounts.Contains(comment.Id);
 
                 if (comment.UserId > 0)
                 {
@@ -84,23 +72,32 @@ namespace Query.Service.Admin.Comment
             return unseenComments;
         }
 
-        public async Task<CommentForAdminPaging> GetForAdmin(int pageId, int take, string filter, int ownerId,
+        public async Task<CommentForAdminPaging> GetForAdmin(int pageId, int take, string filter,
             CommentFor commentFor, CommentStatus commentStatus, int? parentId)
         {
 
-
-            var commentQuery = _commentRepository.GetAllBy(q => q.OwnerId == ownerId || q.CommentFor == commentFor || q.Status == commentStatus || q.ParentId == parentId);
-
+            var commentQuery = _commentRepository.GetAllBy();
+            
+            if (commentFor!=CommentFor.همه)
+            {
+                commentQuery = commentQuery.Where(c => c.CommentFor == commentFor);
+            }
+            if (commentStatus != CommentStatus.همه)
+            {
+                commentQuery = commentQuery.Where(c => c.Status == commentStatus);
+            }
+            if (parentId != null)
+            {
+                commentQuery = commentQuery.Where(p => p.ParentId == parentId);
+            }
             if (!string.IsNullOrEmpty(filter))
                 commentQuery.Where(f => f.FullName.Contains(filter) || f.Text.Contains(filter) || f.Email.Contains(filter));
 
             CommentForAdminPaging model = new CommentForAdminPaging();
             model.GetData(commentQuery, pageId, take, 5);
             model.Filter = filter;
-            model.OwnerId = ownerId;
             model.For = commentFor;
             model.CommentStatus = commentStatus;
-            model.OwnerId = ownerId;
             model.PageTitle = $"لیست نظرات _ {commentStatus.ToString().Replace("_", "")} _ {commentFor.ToString().Replace("_", "")}";
             model.ParentId = parentId;
             model.Comments = new();
@@ -118,7 +115,6 @@ namespace Query.Service.Admin.Comment
                     UserId = c.UserId,
                     WhyRejected = c.WhyRejected,
                     UserName = "",
-                    CommentTitle = "",
                     Id = c.Id
                 }).OrderByDescending(c => c.Id).ToListAsync();
             }

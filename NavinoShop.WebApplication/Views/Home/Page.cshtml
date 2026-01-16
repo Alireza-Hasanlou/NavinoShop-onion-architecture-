@@ -1,0 +1,42 @@
+﻿@model Query.Contract.Site.Page.PageUiQueryModel
+@section Seo {
+    <partial name="_Seo" model="Model.Seo" />
+}
+<section class="inner-page" id="contact-page">
+    <div class="container-fluid" id="page-hero">
+        <div class="row">
+            <div class="col-12">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 px-0">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    @foreach (var item in Model.breadCrumbs)
+                                    {
+                                        <li><a href="@item.Url"> @item.Title </a>/</li>
+                                    }
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="content">
+                    <div class="row">
+                        <div class="col-12 col-lg-7">
+                            <div class="title">@Model.Title</div>
+                           @Html.Raw( @Model.Description)
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

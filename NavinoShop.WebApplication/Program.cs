@@ -7,6 +7,8 @@ using Blogs.Query.Bootstrapper;
 using Comments.Query.Bootstrapper;
 using Emails.Query.Bootstrapper;
 using PostModule.Query.Bootstrapper;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 
 var builder = WebApplication.CreateBuilder(args);
 var Services = builder.Services;
@@ -14,10 +16,10 @@ var Configuration = builder.Configuration;
 var ConnectionString = Configuration.GetConnectionString("DefultConnection");
 Services.AddControllersWithViews();
 Services.AddRazorPages();
-
+Services.AddSingleton(HtmlEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Arabic));
 #region Bootstrappers
 
-DependencyBootstrapper.Congig(Services,ConnectionString);
+DependencyBootstrapper.Congig(Services, ConnectionString);
 #endregion
 var app = builder.Build();
 
@@ -47,7 +49,7 @@ app.UseEndpoints(x =>
 
     x.MapControllerRoute(
         name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}");
+        pattern: "{controller=Home}/{action=Index}/{id?}/{Slug?}");
 
 });
 

@@ -109,7 +109,7 @@ function AlerSweetWithTimer(title, icon, position) {
         icon: icon,
         position: position,
         showConfirmButton: false,
-        timer: 2000
+        timer: 3000
     });
 }
 

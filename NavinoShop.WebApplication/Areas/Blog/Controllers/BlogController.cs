@@ -1,9 +1,12 @@
 ﻿using Blogs.Application.Contract.BlogService.Command;
 using Blogs.Application.Contract.BlogService.Query;
+using Comments.Application.Contract.CommentService.Command;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Query.Contract.UI.Blog;
 using Query.Contract.UI.Comments;
+using Shared.Application.Auth;
 using Shared.Domain.Enums;
 
 namespace NavinoShop.WebApplication.Areas.Blog.Controllers
@@ -16,14 +19,22 @@ namespace NavinoShop.WebApplication.Areas.Blog.Controllers
         private readonly IBlogQueryService _blogQueryService;
         private readonly IBlogCommandService _blogCommandService;
         private readonly ICommentsUiQueryService _commentsUiQueryService;
+        private readonly ICommentCommandService _commentCommandService;
+        private readonly IAuthService _authService;
 
         public BlogController(IBlogUiQueryService blogUiQueryService,
             IBlogQueryService blogQueryService,
-            IBlogCommandService blogCommandService)
+            IBlogCommandService blogCommandService,
+            ICommentsUiQueryService commentsUiQueryService,
+            ICommentCommandService commentCommandService,
+            IAuthService authService)
         {
             _blogUiQueryService = blogUiQueryService;
             _blogQueryService = blogQueryService;
             _blogCommandService = blogCommandService;
+            _commentsUiQueryService = commentsUiQueryService;
+            _commentCommandService = commentCommandService;
+            _authService = authService;
         }
 
         public IActionResult Index()
@@ -53,13 +64,36 @@ namespace NavinoShop.WebApplication.Areas.Blog.Controllers
                 return NotFound();
             await _blogCommandService.IncreaseVisitCountAsync(model.Id);
             return View(model);
+
         }
         [HttpGet]
+        [Route("/Blog/GetBlogsComments/{pageId?}/{ownerId?}")]
         public async Task<JsonResult> GetBlogsComments(int pageId = 1, int ownerId = 0)
         {
+
             var comments = await _commentsUiQueryService.GetCommments(ownerId, CommentFor.مقاله, pageId);
             return Json(comments);
 
+
+        }
+
+        [HttpGet]
+        [Route("/Blog/AddComment")]
+        [Authorize]
+        public async Task<JsonResult> AddComment(  string comment, int ownerId, int parentId)
+        {
+            var res = await _commentCommandService.Create(new CreateCommentCommandModel
+            {
+                Email = _authService.GetLoginUserEmail(),
+                FullName = _authService.GetLoginUserFullName(),
+                Text = comment,
+                OwnerId = ownerId,
+                For = CommentFor.مقاله,
+                ParentId = parentId == 0 ? null : parentId,
+                UserId = _authService.GetLoginUserId()
+
+            });
+            return Json(res);
         }
     }
 }

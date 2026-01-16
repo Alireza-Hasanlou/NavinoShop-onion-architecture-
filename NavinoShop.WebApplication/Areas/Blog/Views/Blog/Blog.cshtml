@@ -2,7 +2,9 @@
 @model Query.Contract.UI.Blog.SingleBlogQueryModel
 @{
     ViewData["title"] = Model.Seo.MetaTitle;
+    var blogId = Model.Id;
 }
+
 @section Seo {
     <partial name="_Seo" model="Model.Seo" />
 }
@@ -45,7 +47,7 @@
                                 <span>@Model.VisitCount</span>
                             </li>
                             <li class="entry__meta-comments">
-                                <a href="#">
+                                <a href="#CommentList">
                                     <i class="ui-chat-empty"></i>@Model.CommentCount
                                 </a>
                             </li>
@@ -110,151 +112,77 @@
                     <form id="form" class="comment-form" method="post" action="#">
                         <p class="comment-form-comment">
                             <label for="comment">دیدگاه</label>
-                            <textarea id="comment" name="comment" rows="5" required="required"></textarea>
+                            <textarea name="comment" id="commenttext" rows="5" required="required"></textarea>
                         </p>
-
-                        <div class="row row-20">
-                            <div class="col-lg-6">
-                                <label for="name">نام: *</label>
-                                <input name="name" id="name" type="text">
-                            </div>
-                            <div class="col-lg-6">
-                                <label for="comment">ایمیل: *</label>
-                                <input name="email" id="email" type="email">
-                            </div>
-
+                        <div class="mb-2">
+                            <span class=" errorSpan"></span>
                         </div>
+                      
+                        
 
-                        <p class="comment-form-submit">
-                            <input type="submit" class="btn btn-lg btn-color btn-button" value="ارسال دیدگاه" id="submit-message">
-                        </p>
+                            <p class="comment-form-submit">
+                                <input type="submit" class="btn btn-lg btn-color btn-button" onclick="AddComment('@Model.Id')" value="ارسال دیدگاه" id="submit-message">
+                            </p>
+                        
 
                     </form>
                 </div>
                 <br />
                 <div class="title-wrap title-wrap--line">
-                    <h3 class="section-title">۳ دیدگاه</h3>
+                    <h3 class="section-title">@Model.CommentCount دیدگاه</h3>
                 </div>
-                <ul class="comment-list">
+                <ul class="comment-list" id="CommentList">
 
-                    <li class="comment" id="CommentParentli">
-
-
+                    <li class="comment " id="CommentParentli">
 
 
-                        <ul class="children" id="CommentChild ">
-                        </ul>
+
+
 
                     </li> <!-- end 1-2 comment -->
 
-
-
                 </ul>
-            </div> <!-- end comments -->
+                <div class="col-12 text-center " id="loadMoreCommentDiv"></div>
+            </div>
 
 
         </div> <!-- end content box -->
     </div>
 </div>
 @section scripts {
+
     <script>
 
-
-        $(document).ready(function () {
-                   function GetBlogsComments() { 
-                       console.log("HEllo");
-            $.ajax({
-                url: "/Blog/Blog/GetBlogsComments",
-                type: "GET",
-                data: { ownerId: @Model.Id },
-                dataType: "json"
-            })
-                .done(function (res) {
-                  
-                    var parent = $("#CommentParentli");
-                    var replyParent = $("#CommentChild");
-
-                    parent.empty();
-                    replyParent.empty();
-
-         
-
-                    for (let i = 0; i < res.length; i++) {
-
-                        // ---------- Tabs ----------
-                        parent.append(`
-                    <div class="comment-body" >
-                        <div class="comment-avatar">
-                                    <img alt="" src="${res[i].imageName}">
-                                </div>
-                                <div class="comment-text">
-                                    <h6 class="comment-author">${res[i].fullName}</h6>
-                                    <div class="comment-metadata">
-                                        <a href="#" class="comment-date">${res[i].createDaate}</a>
-                                    </div>
-                                    <p>${res[i].text}</p>
-                                    <a href="#" class="comment-reply">پاسخ</a>
-                                </div>
-                       </div>
-                    `);
-
-                
-
-                            for (let i = 0; i < res.replys.length; i++) {
-
-                                replyParent.append(`<li class="comment">
-                                    <div class="comment-body">
-                                        <div class="comment-avatar">
-                                            <img alt="" src="${res.replys[i].imageName}">
-                                        </div>
-                                        <div class="comment-text">
-                                            <h6 class="comment-author">${res.replys[i].fullName}</h6>
-                                            <div class="comment-metadata">
-                                                <a href="#" class="comment-date">${res.replys[i].createDaate}  </a>
-                                            </div>
-                                            <p>${res.replys[i].text}</p>
-                                            <a href="#" class="comment-reply">پاسخ</a>
-                                        </div>
-                                    </div>
-                                </li>
-                    `);
-
-                            }
-                        
-
-                    }
-                })
-                .fail(function (xhr) {
-                    console.error("Ajax Error:", xhr.status, xhr.responseText);
-                });
-        }
-            GetBestBlogs();
-            $('.owl-carousel').owlCarousel({
-                rtl: true,
-                loop: true,
-                margin: 15,
-                nav: true,
-                dots: false,
-                autoplay: true,
-                autoplayTimeout: 4000,
-                 navText: [
-            '<i class="fa fa-chevron-right"></i>',
-            '<i class="fa fa-chevron-left"></i>'
-        ],
-                responsive: {
-                    0: {
-                        items: 1
-                    },
-                    768: {
-                        items: 3
-                    },
-                    1200: {
-                        items: 4
-                    }
-                }
-            });
-        });
+         $(document).ready(function () {
+             GetComments('1','@Model.Id');
+             GetBestBlogs();
+             $('.owl-carousel').owlCarousel({
+                 rtl: true,
+                 loop: true,
+                 margin: 15,
+                 nav: true,
+                 dots: false,
+                 autoplay: true,
+                 autoplayTimeout: 4000,
+                  navText: [
+             '<i class="fa fa-chevron-right"></i>',
+             '<i class="fa fa-chevron-left"></i>'
+         ],
+                 responsive: {
+                     0: {
+                         items: 1
+                     },
+                     768: {
+                         items: 3
+                     },
+                     1200: {
+                         items: 4
+                     }
+                 }
+             });
+         });
 
 
     </script>
+
 }

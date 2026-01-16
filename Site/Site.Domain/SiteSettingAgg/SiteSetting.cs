@@ -39,7 +39,7 @@ namespace Site.Domain.SiteSettingAgg
             string? logoName, string? logoAlt, string? favIcon, string? enamad, string? samanDehi, 
             string? seoBox, string? android, string? iOS, string? footerDescription, string? footerTitle,
             string? phone1, string? phone2, string? email1, string? email2, 
-            string? address, string? contactDescription, string? aboutDescription, string? aboutTitle)
+            string? address, string? contactDescription, string? aboutDescription, string? aboutTitle,string aboutImageName)
         {
             Instagram = instagram;
             WhatsApp = whatsApp;
@@ -63,6 +63,7 @@ namespace Site.Domain.SiteSettingAgg
             ContactDescription = contactDescription;
             AboutDescription = aboutDescription;
             AboutTitle = aboutTitle;
+            AboutImageName = aboutImageName;
         }
 
         public string? Instagram { get; private set; }
@@ -97,5 +98,6 @@ namespace Site.Domain.SiteSettingAgg
 
         public string? AboutDescription { get; private set; }
         public string? AboutTitle { get; private set; }
+        public string? AboutImageName { get; set; }
     }
 }

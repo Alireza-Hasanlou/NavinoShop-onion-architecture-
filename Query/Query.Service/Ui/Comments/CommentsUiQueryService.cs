@@ -28,11 +28,14 @@ namespace Query.Contract.UI.Comments
                 {
                     c.OwnerId,
                     c.FullName,
+                    c.Email,
                     c.CreateDate,
                     c.Text,
                     c.Childs,
                     c.Id,
-                    c.UserId
+                    c.UserId,
+                    c.ParentId
+                    
 
                 });
 
@@ -44,7 +47,8 @@ namespace Query.Contract.UI.Comments
                 result.GetData(comments, pageId, 2, 2);
                 result.CommentFor = CommentFor.مقاله;
                 result.OwnerId = ownerId;
-                result.Comments = comments.Skip(result.Skip)
+                result.Comments = comments.Where(p=>p.ParentId==null)
+                    .Skip(result.Skip)
                     .Take(result.Take)
                     .OrderByDescending(c => c.CreateDate)
                     .Select(comment => new CommentUiQueryModel
@@ -56,10 +60,15 @@ namespace Query.Contract.UI.Comments
                         Text = comment.Text,
                         ImageName = "",
                         UserId = comment.UserId,
-                        Replys = _commentRepository.GetAllBy(c => c.OwnerId == ownerId
+                        Replys = new()
+                    }).ToList();
+                foreach (var item in result.Comments)
+                {
+                    item.Replys = _commentRepository.GetAllBy(c => c.OwnerId == ownerId
                         && c.CommentFor == CommentFor.مقاله
-                        && c.ParentId == comment.UserId
+                        && c.ParentId == item.Id
                          && c.Status == CommentStatus.تایید_شده)
+                        
                      .Select(r => new CommentUiQueryModel
                      {
 
@@ -71,8 +80,8 @@ namespace Query.Contract.UI.Comments
                          ImageName = "",
                          Replys = new()
 
-                     }).ToList()
-                    }).ToList();
+                     }).ToList();
+                }
 
                 if (result.Comments.Count() > 0)
                 {
@@ -87,7 +96,7 @@ namespace Query.Contract.UI.Comments
                                 foreach (var reply in comment.Replys)
                                 {
                                     var childUser = await _userRepository.GetByIdAsync(reply.UserId);
-                                    reply.ImageName = FileDirectories.UserImageDirectory100 + childUser;
+                                    reply.ImageName = FileDirectories.UserImageDirectory100 + childUser.Avatar;
                                 }
 
                             }

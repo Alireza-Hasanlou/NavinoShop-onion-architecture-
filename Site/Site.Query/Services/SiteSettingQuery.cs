@@ -19,12 +19,21 @@ internal class SiteSettingQuery : ISiteSettingQueryService
         _siteSettingRepository = siteSettingRepository;
     }
 
-
+    public async Task<AboutUsQueryModel> GetAboutUsForUi()
+    {
+        var model = await _siteSettingRepository.GetSingle();
+        return new AboutUsQueryModel
+        {
+            Title = model.AboutTitle,
+            text = model.AboutDescription,
+            ImageName = FileDirectories.SiteImageDirectory + (string.IsNullOrWhiteSpace(model.AboutImageName) ? "" : model.AboutImageName)
+        };
+    }
 
     public async Task<ContactInfoForUiQueryModel> GetContactData()
     {
         var site = await _siteSettingRepository.GetSingle();
-        return new ContactInfoForUiQueryModel(site.Address, site.Phone1,site.Phone2, site.Email1);
+        return new ContactInfoForUiQueryModel(site.Address, site.Phone1, site.Phone2, site.Email1);
     }
 
     public async Task<FavIconForUiQueryModel> GetFavIconForUi()
@@ -36,9 +45,9 @@ internal class SiteSettingQuery : ISiteSettingQueryService
     public async Task<FooterUiQueryModel> GetFooter()
     {
         var site = await _siteSettingRepository.GetSingle();
-        return new FooterUiQueryModel(site.Enamad, site.SamanDehi, site.FooterTitle, site.FooterDescription, 
-            FileDirectories.SiteImageDirectory64 + site.LogoName, site.LogoAlt,site.Instagram,site.Youtube,site.Telegram,site.WhatsApp,
-            site.Phone1,site.Email1,site.Android,site.IOS
+        return new FooterUiQueryModel(site.Enamad, site.SamanDehi, site.FooterTitle, site.FooterDescription,
+            FileDirectories.SiteImageDirectory64 + site.LogoName, site.LogoAlt, site.Instagram, site.Youtube, site.Telegram, site.WhatsApp,
+            site.Phone1, site.Email1, site.Android, site.IOS
             );
     }
 

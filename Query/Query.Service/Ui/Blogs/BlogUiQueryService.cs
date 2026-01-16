@@ -4,14 +4,10 @@ using Comments.Domain.CommentAgg;
 using Microsoft.EntityFrameworkCore;
 using Query.Contract.UI;
 using Query.Contract.UI.Blog;
+using Query.Contract.UI.Seo;
 using Seos.Domain.SeoAgg;
 using Shared.Application;
 using Shared.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Users.Domain.User.Agg.IRepository;
 
 namespace Query.Service.Ui.Blogs
@@ -92,7 +88,10 @@ namespace Query.Service.Ui.Blogs
             };
             #endregion
 
-            result.CommentCount = _commentRepository.GetAllBy(c => c.OwnerId == blog.Id && c.CommentFor == CommentFor.مقاله).Count();
+            result.CommentCount = _commentRepository.GetAllBy(c => c.OwnerId == blog.Id 
+            && c.CommentFor == CommentFor.مقاله
+            && c.Status==CommentStatus.تایید_شده)
+                .Count();
             return result;
         }
 
@@ -195,7 +194,7 @@ namespace Query.Service.Ui.Blogs
             #region Categories
 
             var blogCounts = await _blogRepository
-                .GetAllBy(b => b.Active)
+                .GetAllBy(b => b.Active )
                 .GroupBy(b => b.CategoryId > 0 ? b.CategoryId : b.SubCategoryId)
                 .Select(g => new { CategoryId = g.Key, Count = g.Count() })
                 .ToDictionaryAsync(g => g.CategoryId, g => g.Count);

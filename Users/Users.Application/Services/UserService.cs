@@ -195,6 +195,7 @@ namespace Users.Application.Services
                 FullName = string.IsNullOrEmpty(user.FullName) ? user.Mobile : user.FullName,
                 Mobile = command.Mobile,
                 UserId = user.Id,
+                Email=user.Email,   
             });
 
             if (result)

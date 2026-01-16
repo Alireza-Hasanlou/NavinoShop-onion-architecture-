@@ -1,4 +1,5 @@
-﻿using Shared;
+﻿using Query.Contract.UI.Seo;
+using Shared;
 
 namespace Query.Contract.UI.Blog
 {

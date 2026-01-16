@@ -13,4 +13,12 @@ public interface ISiteSettingQueryService
     Task<FavIconForUiQueryModel> GetFavIconForUi();
     Task<FooterUiQueryModel> GetFooter();
     Task<ContactInfoForUiQueryModel> GetContactData();
+    Task<AboutUsQueryModel> GetAboutUsForUi();
 }
+public class AboutUsQueryModel
+{
+    public string Title { get; set; }
+    public string text { get; set; }
+    public string ImageName { get; set; }
+}
+     

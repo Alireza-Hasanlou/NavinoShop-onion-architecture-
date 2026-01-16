@@ -1,0 +1,46 @@
+﻿@model Site.Application.Contract.SiteSettingService.Query.AboutUsQueryModel
+@{
+    Layout = "_Layout";
+}
+<section class="inner-page" id="contact-page">
+    <div class="container-fluid" id="page-hero">
+        <div class="row">
+            <div class="col-12">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 px-0">
+                            <h1>درباره ما</h1>
+                            <p>با ما بیشتر آشنا شوید.</p>
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li><a href="/Blog"> صفحه نخست </a></li>
+                                    <li> / </li>
+                                    <li  > درباره ما </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="content">
+                    <div class="row">
+                        <div class="col-12 col-lg-7">
+                            <div class="title">معرفی فروشگاه</div>
+                            <p>@Model.text</p>
+                        </div>
+                        <div class="col-12 col-lg-5 align-self-center h-100">
+                            <img src="@Model.ImageName" alt="">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

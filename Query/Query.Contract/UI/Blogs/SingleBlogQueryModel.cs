@@ -1,4 +1,5 @@
 ﻿using Query.Contract.UI.Comments;
+using Query.Contract.UI.Seo;
 
 namespace Query.Contract.UI.Blog
 {

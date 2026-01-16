@@ -1006,3 +1006,28 @@ span.custom-checkbox-shine:after {
         left: 100%;
     }
 }
+/*Blog Comment*/
+.children {
+    margin-right: 20px;
+}
+
+.CommentReply {
+    color: #d2cccc;
+    cursor: pointer;
+}
+
+.errorSpan {
+    color: red;
+}
+
+#CommentReplyBody {
+    background-color: ghostwhite;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+#commentbody {
+    background-color: whitesmoke;
+    padding: 10px;
+    border-radius: 10px;
+}

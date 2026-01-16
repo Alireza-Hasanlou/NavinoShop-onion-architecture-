@@ -35,6 +35,15 @@ internal class SiteSettingService : ISiteSettingService
                 return new(false, ValidationMessages.ImageErrorMessage, nameof(command.LogoFile));
             _fileService.ResizeImage(logoName, FileDirectories.SiteImageFolder, 64);
         }
+        string AboutUsImageName = site.AboutImageName;
+        string oldAboutUsImageName = site.AboutImageName;
+        if (command.AboutUsImageFile != null)
+        {
+            if (!command.AboutUsImageFile.IsImage()) return new(false, ValidationMessages.ImageErrorMessage, nameof(command.AboutUsImageFile));
+            AboutUsImageName = await _fileService.UploadImage(command.AboutUsImageFile, FileDirectories.SiteImageFolder);
+            if (AboutUsImageName == "")
+                return new(false, ValidationMessages.ImageErrorMessage, nameof(command.AboutUsImageFile));
+        }
         string favIconName = site.FavIcon;
         string oldfavIconName = site.FavIcon;
         if (command.FavIconFile != null)
@@ -51,7 +60,7 @@ internal class SiteSettingService : ISiteSettingService
             command.LogoAlt, favIconName, command.Enamad, command.SamanDehi, command.SeoBox,
             command.Android, command
             .IOS, command.FooterDescription, command.FooterTitle, command.Phone1, command.Phone2,
-            command.Email1, command.Email2, command.Address, command.ContactDescription, command.AboutDescription, command.AboutTitle);
+            command.Email1, command.Email2, command.Address, command.ContactDescription, command.AboutDescription, command.AboutTitle, AboutUsImageName);
         if ( await _siteSettingRepository.SaveAsync())
         {
             if(command.LogoFile != null)
@@ -70,6 +79,14 @@ internal class SiteSettingService : ISiteSettingService
                     _fileService.DeleteImage($"{FileDirectories.SiteImageDirectory64}{oldfavIconName}");
                     _fileService.DeleteImage($"{FileDirectories.SiteImageDirectory32}{oldfavIconName}");
                     _fileService.DeleteImage($"{FileDirectories.SiteImageDirectory16}{oldfavIconName}");
+                }
+            }
+            if (command.AboutUsImageFile != null)
+            {
+                if (!string.IsNullOrEmpty(oldAboutUsImageName))
+                {
+                    _fileService.DeleteImage($"{FileDirectories.SiteImageDirectory}{oldAboutUsImageName}");;
+             
                 }
             }
             return new(true);

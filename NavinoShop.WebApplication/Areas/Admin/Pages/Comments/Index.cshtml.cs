@@ -14,10 +14,10 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Comments
             _commentQueryService = commentQueryService;
         }
         public CommentForAdminPaging Comments { get; set; }
-        public async Task<IActionResult> OnGet(int pageId, int take, string filter, int ownerId,
+        public async Task<IActionResult> OnGet(int pageId, int take, string filter,
             CommentFor commentFor, CommentStatus commentStatus, int? parentId)
         {
-            Comments = await _commentQueryService.GetForAdmin(pageId,take,filter,ownerId,commentFor,commentStatus,parentId);
+            Comments = await _commentQueryService.GetForAdmin(pageId,take,filter,commentFor,commentStatus,parentId);
             return Page();
         }
     }

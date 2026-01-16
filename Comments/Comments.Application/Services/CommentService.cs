@@ -6,6 +6,7 @@ using Shared.Application;
 using Shared.Application.Validations;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,8 +35,17 @@ namespace Comments.Application.Services
         {
             Comment comment = new(command.UserId, command.OwnerId, command.For,
                 command.FullName, command.Email, command.Text, command.ParentId);
-            var result= await _commentRepository.CreateAsync(comment);
+            var result = await _commentRepository.CreateAsync(comment);
             if (result.Success) return new(true);
+            return new(false, ValidationMessages.SystemErrorMessage);
+        }
+
+        public async Task<OperationResult> DeleteComment(long id)
+        {
+            var comment = await _commentRepository.GetByIdAsync(id);
+            var res = await _commentRepository.DeleteAsync(comment);
+            if(res.Success)
+                return new(true);   
             return new(false,ValidationMessages.SystemErrorMessage);
         }
 
@@ -45,7 +55,7 @@ namespace Comments.Application.Services
             comment.RejectedComment(command.Why);
             if (await _commentRepository.SaveAsync())
                 return new(true);
-            return new(false,ValidationMessages.SystemErrorMessage);
+            return new(false, ValidationMessages.SystemErrorMessage);
         }
     }
 }

@@ -2,6 +2,7 @@
 {
     public enum CommentFor
     {
+        همه,
         مقاله,
         محصول,
         صفحه

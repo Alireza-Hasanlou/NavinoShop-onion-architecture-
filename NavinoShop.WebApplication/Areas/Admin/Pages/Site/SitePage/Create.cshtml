@@ -31,12 +31,14 @@
                 </div>
 
                 <div class="col col-12  ">
-                  
-                    <div class="custom-form-group">
-                        <label for="Text" class="required">توضیح مختصر</label>
-                        <textarea asp-for="CreatesitePage.Text" id="Text"></textarea>
-                        <span asp-validation-for="CreatesitePage.Text" class="text-danger"></span>
-                    </div>
+
+                <!-- توضیح کامل -->
+                <div class="custom-form-group">
+                    <label for="text" class="required">توضیح</label>
+                    <textarea asp-for="CreatesitePage.Text" id="editor1" rows="10"
+                              cols="80">این ویرایشگر راست چین و فارسی شده و تنظیمات آن به صورت اختصاصی تنظیم شده است...</textarea>
+                    <span asp-validation-for="CreatesitePage.Text" class="text-danger"></span>
+                </div>
                 </div>
                 
 
@@ -46,5 +48,14 @@
             </form>
         </div>
 </div>
+@section scripts {
+
+    <script>
+               $(document).ready(function () {
+                      CKEDITOR.replace('editor1');
+        });
+
+    </script>
+}
 
 
