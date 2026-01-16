@@ -1,4 +1,4 @@
-using Emails.Application.Contract.EmailUserService.Command;
+﻿using Emails.Application.Contract.EmailUserService.Command;
 using Emails.Application.Contract.MessageUserService.Command;
 using Microsoft.AspNetCore.Mvc;
 using NavinoShop.WebApplication.Models;
@@ -56,7 +56,7 @@ namespace NavinoShop.WebApplication.Controllers
             MessageUser.UserId = _authService.GetLoginUserId();
             var result = await _messageUserCommandService.CreateAsync(MessageUser);
             if (result.Success)
-                ViewData["Success"] = true;
+                ViewData["success"] = "پیام شما با موفقیت ارسال شد";
 
             return View();
         }

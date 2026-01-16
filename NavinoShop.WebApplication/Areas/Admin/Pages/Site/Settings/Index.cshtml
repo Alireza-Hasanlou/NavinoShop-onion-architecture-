@@ -1,5 +1,6 @@
 ﻿@page
 @using Shared.Application
+@using Shared.Domain.Enums
 @model NavinoShop.WebApplication.Areas.Admin.Pages.Site.Settings.IndexModel
 @{
     Layout = "_AdminLayout";
@@ -9,7 +10,11 @@
 <div class="Formcontainer">
 
     <form method="post" enctype="multipart/form-data">
-
+        <div class="form-group">
+            <a href="/Admin/Seo/Index?Id=0&where=@WhereSeo.Home"><input type="button" value="سئو صفحه اصلی" class="btn btn-success"></a>
+            <a href="/Admin/Seo/Index?Id=0&where=@WhereSeo.About"><input type="button" value="سئو درباه ما" class="btn btn-warning"></a>
+            <a href="/Admin/Seo/Index?Id=0&where=@WhereSeo.Contact"><input type="button" value="سئو تماس با ما" class="btn btn-primary"></a>
+        </div>
         <div class="row">
             <div class="col">
                 <div class="custom-form-group">

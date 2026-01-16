@@ -4,6 +4,7 @@
 @{
     Layout = "_Layout";
     var info = ViewData["ContactInformation"] as ContactInfoForUiQueryModel;
+    var success = ViewData["success"] as string;
 
 
 }
@@ -62,6 +63,7 @@
                                 <div class="form-group">
                                     <label for="name">نام شما :</label>
                                     <input asp-for="FullName" type="text" class="form-control" id="name">
+                                    <span class="text-danger" asp-validation-for="FullName"></span>
                                 </div>
                                 <div class="form-group">
                                     <label for="tel">تلفن تماس :</label>
@@ -70,14 +72,17 @@
                                 <div class="form-group">
                                     <label for="email">پست الکترونیک :</label>
                                     <input asp-for="Email" type="text" class="form-control" id="email">
+                                    <span class="text-danger" asp-validation-for="Email"></span>
                                 </div>
                                 <div class="form-group">
                                     <label for="subject">موضوع پیام :</label>
                                     <input asp-for="Subject" type="text" class="form-control" id="subject">
+                                    <span class="text-danger" asp-validation-for="Subject"></span>
                                 </div>
                                 <div class="form-group">
                                     <label for="message">متن پیام :</label>
                                     <textarea asp-for="Message" class="form-control" id="message" rows="3"></textarea>
+                                    <span class="text-danger" asp-validation-for="Message"></span>
                                 </div>
                                 <div class="form-group">
                                     <input type="submit" value="ارسال پیام" class="btn btn-success">
@@ -85,7 +90,7 @@
                                 </div>
                                 @if (ViewData["Success"] != null)
                                 {
-                                  <span class="text-success">پیام شما با موفقیت ارسال شد .</span>
+                                    <span class="text-success">پیام شما با موفقیت ارسال شد .</span>
                                 }
                             </form>
                         </div>
@@ -97,4 +102,12 @@
                 </div>
             </div>
         </div>
+    </div>>
 </section>
+@if (!string.IsNullOrEmpty(success))
+{
+    <script>
+        AlerSweetWithTimer("@success","success", "center");
+    </script>
+
+}
