@@ -20,10 +20,10 @@ namespace PostModule.Application.Bootsrapper
         public static void Config(IServiceCollection services)
         {
             services.AddTransient<IStateApplication, StateApplication>();
-            services.AddTransient<ICityApplication, CityApplication>();
+            services.AddTransient<ICityCommandService, CityService>();
             services.AddTransient<IPostApplication, PostApplication>();
             services.AddTransient<IPostPriceApplication, PostPriceApplication>();
-            services.AddTransient<IPackageApplication, PackageApplication>();
+            services.AddTransient<IPackageCommandService, PackageService>();
             services.AddTransient<IUserPostApplication, UserPostApplication>();
             services.AddTransient<IPostCalculateApplication, PostCalculateApplication>();
             services.AddTransient<IPostSettingApplication, PostSettingApplication>();

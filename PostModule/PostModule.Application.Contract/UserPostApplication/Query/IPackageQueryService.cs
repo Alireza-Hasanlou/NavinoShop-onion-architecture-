@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PostModule.Application.Contract.UserPostApplication.Query
 {
-    public interface IPackageQuery
+    public interface IPackageQueryService
     {
        Task< List<PackageAdminQueryModel>> GetAll();
     }

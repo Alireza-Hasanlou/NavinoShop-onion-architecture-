@@ -2,25 +2,27 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PostModule.Application.Contract.CityService;
 using PostModule.Application.Contract.StateQuery;
+using PostModule.Application.Contract.UserPostApplication.Query;
+using PostModule.Query.Services;
 
 namespace NavinoShop.WebApplication.Areas.Admin.Pages.Post.City
 {
     public class CreateModel : PageModel
     {
-        private readonly ICityApplication _cityApplication;
-        private readonly ICityQuery _cityQuery;
+        private readonly ICityCommandService _cityCommandService;
+        private readonly IStateQueryService  _stateQueryService;
 
-        public CreateModel(ICityApplication cityApplication, ICityQuery cityQuery)
+        public CreateModel(ICityCommandService cityCommandService, IStateQueryService stateQueryService)
         {
-            _cityApplication = cityApplication;
-            _cityQuery = cityQuery;
+            _cityCommandService = cityCommandService;
+            _stateQueryService = stateQueryService;
         }
 
         [BindProperty]
         public CreateCityModel Createcity { get; set; }
         public async Task<IActionResult> OnGet(int stateid)
         {
-            var stateTitle = await _cityQuery.GetStateTitle(stateid);
+            var stateTitle = await _stateQueryService.GetStateTitle(stateid);
             ViewData["title"] = $"افزودن شهر جدید به استان {stateTitle}";
             Createcity = new CreateCityModel { StateId = stateid };
             return Page();
@@ -30,7 +32,7 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Post.City
             if (!ModelState.IsValid)
                 return Page();
 
-            var result = await _cityApplication.CreateAsync(Createcity);
+            var result = await _cityCommandService.CreateAsync(Createcity);
             if (result.Success)
             {
                 TempData["success"] = "شهر جدید با موفقیت ایجاد شد";

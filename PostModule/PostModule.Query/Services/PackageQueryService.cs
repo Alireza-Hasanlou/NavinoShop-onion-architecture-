@@ -5,11 +5,11 @@ using Shared.Application;
 
 namespace PostModule.Query.Services
 {
-    public class PackageQuery : IPackageQuery
+    public class PackageQueryService : IPackageQueryService
     {
         private readonly IPackageRepository _packageRepository;
 
-        public PackageQuery(IPackageRepository packageRepository)
+        public PackageQueryService(IPackageRepository packageRepository)
         {
             _packageRepository = packageRepository;
         }

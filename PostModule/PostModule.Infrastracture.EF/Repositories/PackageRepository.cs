@@ -3,6 +3,7 @@ using PostModule.Application.Contract.UserPostApplication.Command;
 using PostModule.Infrastracture.Context;
 using Shared.Insfrastructure;
 using Microsoft.EntityFrameworkCore;
+using Shared.Application;
 
 namespace PostModule.Infrastracture.Repositories;
 
@@ -31,7 +32,7 @@ internal class PackageRepository : GenericRepository<Package, int>, IPackageRepo
             Price = p.Price,
             ImageAlt = p.ImageAlt,
             ImageFile = null,
-            ImageName = p.ImageName
+            ImageName =FileDirectories.PackageImageDirectory+ p.ImageName
         }).SingleOrDefaultAsync(p => p.Id == id);
     }
 }

@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace PostModule.Application.Services
 {
-    internal class CityApplication : ICityApplication
+    internal class CityService : ICityCommandService
     {
         private readonly ICityRepository _cityRepository;
-        public CityApplication(ICityRepository cityRepository)
+        public CityService(ICityRepository cityRepository)
         {
             _cityRepository = cityRepository;
         }

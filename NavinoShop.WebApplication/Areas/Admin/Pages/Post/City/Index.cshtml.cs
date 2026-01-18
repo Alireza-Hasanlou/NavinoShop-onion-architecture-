@@ -9,16 +9,16 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Post.City
 {
     public class IndexModel : PageModel
     {
-        public ICityQuery _cityQuery { get; set; }
+        public IStateQueryService _stateQueryService { get; set; }
 
-        public IndexModel(ICityQuery cityQuery)
+        public IndexModel(IStateQueryService stateQueryService)
         {
-            _cityQuery = cityQuery;
+            _stateQueryService = stateQueryService;
         }
         public StateDetailQueryModel StateDetail { get; set; }
         public async Task<IActionResult> OnGet(int id)
         {           
-            StateDetail = await _cityQuery.GetStateDetail(id);
+            StateDetail = await _stateQueryService.GetStateDetail(id);
             ViewData["title"] = $"شهر های استان {StateDetail.Name}";
             return Page();
         }

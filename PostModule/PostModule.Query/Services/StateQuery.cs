@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace PostModule.Query.Services
 {
-    internal class StateQuery : ICityQuery
+    internal class StateQuery : IStateQueryService
     {
         private readonly PostContext _post_Context;
         public StateQuery(PostContext post_Context)

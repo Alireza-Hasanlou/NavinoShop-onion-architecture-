@@ -9,16 +9,17 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Post.State
 {
     public class IndexModel : PageModel
     {
-        public ICityQuery _cityQuery { get; set; }
+        public IStateQueryService _stateQueryService{ get; set; }
 
-        public IndexModel(ICityQuery cityQuery)
+        public IndexModel(IStateQueryService stateQueryService)
         {
-            _cityQuery = cityQuery;
+            _stateQueryService = stateQueryService;
         }
+
         public List<StateAdminQueryModel> States { get; set; }
         public async Task OnGet()
         {
-            States = await _cityQuery.GetStatesForAdmin();
+            States = await _stateQueryService.GetStatesForAdmin();
         }
     }
 }

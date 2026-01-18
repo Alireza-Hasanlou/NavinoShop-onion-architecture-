@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PostModule.Application.Contract.UserPostApplication.Command;
 
-public interface IPackageApplication
+public interface IPackageCommandService
 {
     Task<OperationResult> Create(CreatePackage command);
     Task<OperationResult> Edit(EditPackage command);

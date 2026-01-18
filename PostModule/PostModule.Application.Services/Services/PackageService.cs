@@ -7,11 +7,11 @@ using Shared.Application.Validations;
 
 namespace PostModule.Application.Services
 {
-    internal class PackageApplication : IPackageApplication
+    internal class PackageService : IPackageCommandService
     {
         private readonly IPackageRepository _packageRepository;
         private readonly IFileService _fileService;
-        public PackageApplication(IPackageRepository packageRepository,IFileService fileService)
+        public PackageService(IPackageRepository packageRepository,IFileService fileService)
         {
             _packageRepository = packageRepository;
             _fileService = fileService;

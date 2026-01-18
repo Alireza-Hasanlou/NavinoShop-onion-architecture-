@@ -10,12 +10,16 @@
   <ItemGroup>
     <Compile Remove="Areas\Account\Models\**" />
     <Compile Remove="Areas\Admin\Models\**" />
+    <Compile Remove="Areas\Admin\Pages\Post\Package\**" />
     <Content Remove="Areas\Account\Models\**" />
     <Content Remove="Areas\Admin\Models\**" />
+    <Content Remove="Areas\Admin\Pages\Post\Package\**" />
     <EmbeddedResource Remove="Areas\Account\Models\**" />
     <EmbeddedResource Remove="Areas\Admin\Models\**" />
+    <EmbeddedResource Remove="Areas\Admin\Pages\Post\Package\**" />
     <None Remove="Areas\Account\Models\**" />
     <None Remove="Areas\Admin\Models\**" />
+    <None Remove="Areas\Admin\Pages\Post\Package\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -2326,7 +2330,6 @@
   <ItemGroup>
     <Folder Include="Areas\Account\Pages\Shared\" />
     <Folder Include="Areas\Admin\Pages\Post\Setting\" />
-    <Folder Include="Areas\Admin\Pages\Post\Package\" />
     <Folder Include="wwwroot\Images\Baner\100\" />
     <Folder Include="wwwroot\Images\Menu\100\" />
     <Folder Include="wwwroot\Images\Site\" />

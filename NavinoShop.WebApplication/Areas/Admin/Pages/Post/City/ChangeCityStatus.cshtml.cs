@@ -7,18 +7,18 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Post.City
 {
     public class ChangeCityStatusModel : PageModel
     {
-        private readonly ICityApplication _cityApplication;
+        private readonly ICityCommandService _cityCommandService;
 
-        public ChangeCityStatusModel(ICityApplication cityApplication)
+        public ChangeCityStatusModel(ICityCommandService cityCommandService)
         {
-            _cityApplication = cityApplication;
+         _cityCommandService = cityCommandService;
         }
         public async Task<JsonResult> OnGet(int id, CityStatus status)
         {
             if (id < 1)
                 return new JsonResult(new { success = false });
 
-            var result = await  _cityApplication.ChangeStatusAsync(id, status);
+            var result = await  _cityCommandService.ChangeStatusAsync(id, status);
             if (result)
                 return new JsonResult(new { success = true });
 

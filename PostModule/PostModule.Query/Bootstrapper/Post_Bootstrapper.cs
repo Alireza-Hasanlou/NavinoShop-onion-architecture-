@@ -17,9 +17,9 @@ namespace PostModule.Query.Bootstrapper
             PostInfrastructureBootstrapper.Config(services, connectionString);
             PostApplicationBootstrapper.Config(services);
 
-            services.AddTransient<ICityQuery, StateQuery>();
+            services.AddTransient<IPackageQueryService, PackageQueryService>();
             services.AddTransient<IPostQuery, PostQuery>();
-            services.AddTransient<IPackageQuery, PackageQuery>();
+            services.AddTransient<IPackageQueryService, PackageQueryService>();
         }
     }
 }

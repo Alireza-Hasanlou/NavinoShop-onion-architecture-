@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PostModule.Application.Contract.CityService
 {
-    public interface ICityApplication
+    public interface ICityCommandService
     {
         Task<OperationResult> CreateAsync(CreateCityModel command);
         Task<OperationResult> EditAsync(EditCityModel command);
