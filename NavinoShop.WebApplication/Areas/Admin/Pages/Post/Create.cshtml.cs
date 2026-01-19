@@ -27,7 +27,7 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Post
             if (result.Success)
             {
                 TempData["success"] = "پست با موفقیت ایجاد شد";
-                return Redirect("/Admin/Posts/Index");
+                return Redirect("/Admin/Post/Index");
             }
             ModelState.AddModelError($"CreatePost.{result.ModelName}", result.Message);
             return Page();

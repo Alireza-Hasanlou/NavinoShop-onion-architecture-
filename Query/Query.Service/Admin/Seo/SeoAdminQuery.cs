@@ -57,7 +57,7 @@ namespace Query.Service.Admin.Seo
                     return $"Seo برای صفحه {page.Title}";
 
                 case WhereSeo.PostPackage:
-                    return $"Seo برای صفخه پست پکیج ";
+                    return $"Seo برای صفحه پست پکیج ";
 
                 default:
                     return string.Empty;

@@ -7,20 +7,21 @@
 
 }
 <div class="Formcontainer">
-@* 
+
     <form id="Formcontainer" method="post" enctype="multipart/form-data">
 
-        <input type="hidden" asp-for="EditState.Id" />
+        <input type="hidden" asp-for="Editcity.Id" />
+        <input type="hidden" asp-for="Editcity.StateId" />
         <div class="col col-12 col-sm-12 ">
 
             <div class="custom-form-group">
-                <label for="title" class="required">عنوان پست</label>
-                <input asp-for="@Model.EditState.Title" type="text" id="Title">
-                <span asp-validation-for="EditState.Title" class="text-danger"></span>
+                <labkel for="title" class="required">نام شهر</labkel>
+                <input asp-for="@Model.Editcity.Title" type="text" id="Title">
+                <span asp-validation-for="Editcity.Title" class="text-danger"></span>
             </div>
         </div>
 
         <button type="submit" class="btn btn-success btn-block">ویرایش </button>
 
-    </form> *@
+    </form>
 </div>

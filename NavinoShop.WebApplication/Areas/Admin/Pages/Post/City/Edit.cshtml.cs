@@ -31,7 +31,7 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Post.City
             if (!ModelState.IsValid)
                 return Page();
 
-            var result = await _cityCommandService.CreateAsync(Editcity);
+            var result = await _cityCommandService.EditAsync(Editcity);
             if (result.Success)
             {
                 TempData["success"] = "شهر با موفقیت ویرایش شد";

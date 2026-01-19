@@ -17,10 +17,10 @@ namespace PostModule.Application.Services
         {
             _postSettingRepository = postSettingRepository;
         }
-        public async Task<UbsertPostSetting> GetForUbsert() =>
-           await _postSettingRepository.GetForUbsert();
+        public async Task<UpsertPostSetting> GetForUpsert() =>
+           await _postSettingRepository.GetForUpsert();
 
-        public async Task<OperationResult> Ubsert(UbsertPostSetting command)
+        public async Task<OperationResult> Upsert(UpsertPostSetting command)
         {
             PostSetting setting = await _postSettingRepository.GetSingle();
             setting.Edit(command.PackageTitle, command.PackageDescription,command.ApiDescription);

@@ -1,0 +1,66 @@
+﻿@page
+@using Shared.Domain.Enums
+@model NavinoShop.WebApplication.Areas.Admin.Pages.Post.Settings.UpsertModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["title"] = "تنظیمات صفحه api";
+   var successMessage = ViewData["success"] as string;
+}
+<div class="Formcontainer">
+
+    <div class="Formcontainer">
+
+        <div class="form-group">
+            <a href="/Admin/Seo/Index?Id=0&where=@WhereSeo.PostPackage" target="_blank"><input type="button" value="سئو پکیج های api" class="btn btn-primary"></a>
+        </div>
+        <form method="post" enctype="multipart/form-data">
+
+            <div class="col  col-12  ">
+
+                <div class="custom-form-group">
+                    <label for="title" class="required">عنوان صفحه پکیج های فروش Api پست</label>
+                    <input asp-for="UpsertPost.PackageTitle" type="text" id="Title">
+                    <span asp-validation-for="UpsertPost.PackageTitle" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col  col-12  ">
+
+                <div class="custom-form-group">
+                    <label for="title" class="required">توضیحات استفاده از Api پست در پنل کاربر</label>
+                    <input asp-for="UpsertPost.PackageDescription" type="text" id="Title">
+                    <span asp-validation-for="UpsertPost.PackageDescription" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col col-12  ">
+
+
+                <div class="custom-form-group">
+                    <label for="text" class="required">توضیحات صفحه پکیج های فروش Api پست</label>
+                    <textarea asp-for="UpsertPost.ApiDescription" id="editor1" rows="10"
+                              cols="80">این ویرایشگر راست چین و فارسی شده و تنظیمات آن به صورت اختصاصی تنظیم شده است...</textarea>
+                    <span asp-validation-for="UpsertPost.ApiDescription" class="text-danger"></span>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success btn-block">افزودن </button>
+
+        </form>
+    </div>
+</div>
+@section scripts {
+    @if (!string.IsNullOrEmpty(successMessage))
+    {
+        TempData["success"] = null;
+        <script>
+            AlerSweetWithTimer("@successMessage","success", "center");
+        </script>
+
+    }
+    <script>
+               $(document).ready(function () {
+                      CKEDITOR.replace('editor1');
+        });
+
+    </script>
+}
+
+

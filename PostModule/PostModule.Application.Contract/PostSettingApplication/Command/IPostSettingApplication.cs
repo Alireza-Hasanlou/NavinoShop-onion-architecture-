@@ -9,7 +9,7 @@ namespace PostModule.Application.Contract.PostSettingApplication.Command
 {
     public interface IPostSettingApplication
     {
-        Task<UbsertPostSetting> GetForUbsert();
-        Task<OperationResult> Ubsert(UbsertPostSetting command);
+        Task<UpsertPostSetting> GetForUpsert();
+        Task<OperationResult> Upsert(UpsertPostSetting command);
     }
 }

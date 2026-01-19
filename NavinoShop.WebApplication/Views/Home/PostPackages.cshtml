@@ -1,0 +1,125 @@
+﻿@model Query.Contract.UI.PostPackage.PackagePageUiQueryModel
+@section Seo {
+    <partial name="_Seo" model="Model.Seo" />
+}
+<div class="container-fluid" id="page-hero">
+    <div class="row">
+        <div class="col-12">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 px-0">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                @foreach (var item in Model.BreadCrumbs)
+                                {
+                                    <li><a href="@item.Url"> @item.Title </a>/</li>
+                                }
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<section id="encode436bvf2vrf" class="pt-4">
+    <h1 class="section-title">@Model.Title</h1>
+    <p>@Html.Raw(Model.Description)</p>
+    <div class="container pt-4">
+
+        <!-- Products -->
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-md-4 most-sales-product mobile" data-aos="fade-up" data-aos-duration="1000">
+            @foreach (var item in Model.packages)
+            {
+                <div class="col">
+                    <!-- Product Box -->
+
+                    <div class="encode4326654321vfb">
+
+                        <a href="product.html"><div class="image" style="background-image: url('@item.ImageName')"></div></a>
+                        <div class="details p-3">
+
+                            <a href="product.html"><h2>@item.Title</h2></a>
+                            <div>
+                                <span>@item.Count درخواست</span>
+
+                            </div>  
+                            <div class="encode4365gbf265g43d">@item.Price تومان</div>
+                        </div>
+                    </div>
+
+
+                    <!-- /Product Box -->
+                </div>
+            }
+        </div>
+
+
+    </div>
+</section>
+@* <section id="encode436bvf2vrf" class="pt-4">
+    <h1 class="section-title">پرفروش ترین محصولات</h1>
+    <div class="container pt-4">
+        <!-- Products -->
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-md-4 most-sales-product mobile" data-aos="fade-up" data-aos-duration="1000">
+            <div class="col">
+                <!-- Product Box -->
+                <div class="encode4326654321vfb">
+                    <a href="product.html"><div class="image" style="background-image: url('assets/images/products/p100.png')"></div></a>
+                    <div class="icons">
+                        <div class="btn btn-outline-secondary encode43243d"></div>
+                        <div class="btn btn-outline-secondary encode43bf243d"></div>
+                    </div>
+                    <div class="details p-3">
+                        <div class="category">
+                            <a href="products.html">گوشی موبایل</a>
+                            &nbsp;/&nbsp;
+                            <a href="products.html">سامسونگ</a>
+                        </div>
+                        <a href="product.html"><h2>گوشی موبایل سامسونگ مدل Galaxy A51 دو سیم کارت</h2></a>
+                        <div class="encode4365gbf265g43d">6.000.000 تومان</div>
+                        <div class="rate">
+                            <i class="fa fa-star-half-alt"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <span class="encode43bf265g43d">(14 رای دهنده)</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Product Box -->
+            </div>
+            <div class="col">
+                <!-- Product Box -->
+                <div class="encode4326654321vfb">
+                    <a href="product.html"><div class="image" style="background-image: url('assets/images/products/p101.png')"></div></a>
+                    <div class="icons">
+                        <div class="btn btn-outline-secondary encode43243d"></div>
+                        <div class="btn btn-outline-secondary encode43bf243d"></div>
+                    </div>
+                    <div class="details p-3">
+                        <div class="category">
+                            <a href="products.html">گوشی موبایل</a>
+                            &nbsp;/&nbsp;
+                            <a href="products.html">سامسونگ</a>
+                        </div>
+                        <a href="product.html"><h2>گوشی موبایل شیائومی مدل POCO M3 M2010J19CG دو سیم‌ کارت</h2></a>
+                        <div class="encode4365gbf265g43d">5.000.000 تومان</div>
+                        <div class="rate">
+                            <i class="fa fa-star-half-alt"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <span class="encode43bf265g43d">(14 رای دهنده)</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Product Box -->
+            </div>
+
+        </div>
+<!-- /Products -->
+    </div>
+</section> *@

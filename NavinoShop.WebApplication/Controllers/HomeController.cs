@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using NavinoShop.WebApplication.Models;
 using NavinoShop.WebApplication.Services;
 using Query.Contract.Site.Page;
+using Query.Contract.UI.PostPackage;
 using Shared.Application.Auth;
 using Site.Application.Contract.SitePageService.Query;
 using Site.Application.Contract.SiteSettingService.Query;
@@ -21,11 +22,13 @@ namespace NavinoShop.WebApplication.Controllers
         private readonly IAuthService _authService;
         private readonly IEmailUseCommandService _emailUseCommandService;
         private readonly ISitePageUiQueryService _sitePageUiQueryService;
+        private readonly IPackageUiQueryService _packageUiQueryService;
 
 
         public HomeController(ILogger<HomeController> logger, IMessageUserCommandService messageUserCommandService,
             ISiteSettingQueryService siteSettingQueryService, IAuthService authService,
-            IEmailUseCommandService emailUseCommandService,ISitePageUiQueryService pageUiQueryService)
+            IEmailUseCommandService emailUseCommandService, ISitePageUiQueryService pageUiQueryService,
+            IPackageUiQueryService packageUiQueryService)
         {
             _logger = logger;
             _messageUserCommandService = messageUserCommandService;
@@ -33,6 +36,7 @@ namespace NavinoShop.WebApplication.Controllers
             _authService = authService;
             _emailUseCommandService = emailUseCommandService;
             _sitePageUiQueryService = pageUiQueryService;
+            _packageUiQueryService = packageUiQueryService;
         }
 
         public IActionResult Index()
@@ -61,22 +65,22 @@ namespace NavinoShop.WebApplication.Controllers
             return View();
         }
         [HttpPost]
-        
+
         public async Task<JsonResult> AddUserEmail(string email)
         {
-            var Userid =  _authService.GetLoginUserId();
+            var Userid = _authService.GetLoginUserId();
             var model = new CreateEmailUserCommandModel { UserId = Userid, Email = email };
             var res = await _emailUseCommandService.Create(model);
             if (res.Success)
             {
                 return new JsonResult(new { success = true });
             }
-            return new JsonResult(new { success = false , message=res.Message});
+            return new JsonResult(new { success = false, message = res.Message });
         }
         [Route("/AboutUs")]
         public async Task<IActionResult> AboutUs()
         {
-            var model= await _siteSettingQueryService.GetAboutUsForUi();
+            var model = await _siteSettingQueryService.GetAboutUsForUi();
             return View(model);
         }
         [HttpGet]
@@ -84,10 +88,17 @@ namespace NavinoShop.WebApplication.Controllers
         public async Task<IActionResult> page(string slug)
         {
             if (string.IsNullOrEmpty(slug)) return NotFound();
-            var page =  await _sitePageUiQueryService.GetPageAsync(slug);
+            var page = await _sitePageUiQueryService.GetPageAsync(slug);
             if (page == null) return NotFound();
             return View(page);
         }
+        [Route("/PostPackages")]
+        public async Task<IActionResult> PostPackages()
+        {
+            var model = await _packageUiQueryService.GetPackgesForUi();
+            return View(model);
+        }
+
         public IActionResult Privacy()
         {
             return View();

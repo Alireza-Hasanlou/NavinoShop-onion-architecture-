@@ -15,7 +15,7 @@ internal class PostSettingRepository : GenericRepository<PostSetting, int>, IPos
         _context = context;
     }
 
-    public async Task<UbsertPostSetting> GetForUbsert()
+    public async Task<UpsertPostSetting> GetForUpsert()
     {
         var s = await GetSingle();
         return new()

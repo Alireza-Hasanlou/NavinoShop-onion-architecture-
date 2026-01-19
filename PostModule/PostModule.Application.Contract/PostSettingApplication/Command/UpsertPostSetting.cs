@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PostModule.Application.Contract.PostSettingApplication.Command
 {
-    public class UbsertPostSetting
+    public class UpsertPostSetting
     {
         [Display(Name = "عنوان صفحه پکیج های فروش Api پست")]
         [MaxLength(255,ErrorMessage =ValidationMessages.MaxLengthMessage)]

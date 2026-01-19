@@ -5,7 +5,7 @@ using Shared.Application;
 
 namespace PostModule.Query.Services
 {
-    public class PackageQueryService : IPackageQueryService
+    public class PackageQueryService : IPostPackageQueryServicd
     {
         private readonly IPackageRepository _packageRepository;
 

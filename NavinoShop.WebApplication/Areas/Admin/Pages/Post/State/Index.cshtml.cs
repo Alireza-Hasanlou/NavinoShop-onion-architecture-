@@ -17,9 +17,10 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Post.State
         }
 
         public List<StateAdminQueryModel> States { get; set; }
-        public async Task OnGet()
+        public async Task<IActionResult> OnGet()
         {
             States = await _stateQueryService.GetStatesForAdmin();
+            return Page();  
         }
     }
 }

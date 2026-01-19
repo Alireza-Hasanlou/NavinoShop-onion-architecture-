@@ -5,7 +5,7 @@ namespace PostModule.Domain.SettingAgg
 {
     public interface IPostSettingRepository : IGenericRepository<PostSetting, int>
     {
-        Task<UbsertPostSetting> GetForUbsert();
+        Task<UpsertPostSetting> GetForUpsert();
         Task<PostSetting> GetSingle();
     }
 }
