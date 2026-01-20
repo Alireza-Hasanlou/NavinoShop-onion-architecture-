@@ -1,0 +1,40 @@
+﻿@model Query.Contract.UI.PostPackage.PackagePageUiQueryModel
+@{
+    Layout = "_Layout";
+}
+@section Seo {
+    <partial name="_Seo" model="Model.Seo" />
+}
+
+<section id="encode436bvf2vrf" class="pt-4">
+    <partial name="_BreadCrumb" model="@Model.BreadCrumbs" />
+    <h1 class="section-title">@Model.Title</h1>
+    <p>@Html.Raw(Model.Description)</p>
+    <div class="container pt-4">
+
+        <!-- Products -->
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-md-4 most-sales-product mobile" data-aos="fade-up" data-aos-duration="1000">
+
+            @foreach (var item in Model.packages)
+            {
+                <div class="col-3 px-2 pb-2 products-compare-item">
+                    <div class="bg-light p-2 text-center">
+                        <div class="title">@item.Title</div>
+                        <div><img src="@item.ImageName" alt="@item.ImageAlt"></div>
+                        <div><p>@item.Description</p></div>
+                        <div class="encode4365gbf265g43d-container">
+                            <span class="encode4365gbf265g43d">@item.Price <span>تومان</span></span>
+                        </div>
+                        <div class="cta-container">
+                            <a href="product.html">
+                                <div class="btn btn-sm btn-primary px-3 px-lg-2 px-xl-4">  خرید محصول</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+
+    </div>
+</section>

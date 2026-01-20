@@ -5,30 +5,9 @@
     Layout = "_Layout";
     var info = ViewData["ContactInformation"] as ContactInfoForUiQueryModel;
     var success = ViewData["success"] as string;
-
-
 }
 <section class="inner-page" id="contact-page">
-    <div class="container-fluid" id="page-hero">
-        <div class="row">
-            <div class="col-12">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12 px-0">
-                            <h1>تماس با ما</h1>
-                            <p>با ما در ارتباط باشید.</p>
-                            <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="/Home/Index">صفحه نخست</a></li>
-
-                                </ol>
-                            </nav>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <partial name="_BreadCrumb" model="@info.BreadCrumbs" />
 
     <div class="container">
         <div class="row">

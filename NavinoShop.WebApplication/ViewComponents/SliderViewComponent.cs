@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Site.Application.Contract.SliderService.Query;
 
-namespace NavinoShop.WebApplication.Views.Shared.Components
+namespace NavinoShop.WebApplication.ViewComponents
 {
     public class SliderViewComponent:ViewComponent
     {

@@ -4,7 +4,7 @@ using Comments.Application.Contract.CommentService.Command;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Query.Contract.UI.Blog;
+using Query.Contract.UI.Blogs;
 using Query.Contract.UI.Comments;
 using Shared.Application.Auth;
 using Shared.Domain.Enums;

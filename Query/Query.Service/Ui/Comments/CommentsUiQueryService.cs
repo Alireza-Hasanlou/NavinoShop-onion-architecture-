@@ -1,11 +1,12 @@
 ﻿using Blogs.Domain.BlogAgg;
 using Comments.Domain.CommentAgg;
 using Microsoft.EntityFrameworkCore;
+using Query.Contract.UI.Comments;
 using Shared.Application;
 using Shared.Domain.Enums;
 using Users.Domain.User.Agg;
 using Users.Domain.User.Agg.IRepository;
-namespace Query.Contract.UI.Comments
+namespace Query.Service.Ui.Comments
 {
     internal class CommentsUiQueryService : ICommentsUiQueryService
     {

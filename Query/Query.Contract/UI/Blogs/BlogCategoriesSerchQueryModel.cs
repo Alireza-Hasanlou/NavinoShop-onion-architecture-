@@ -1,4 +1,4 @@
-﻿namespace Query.Contract.UI.Blog
+﻿namespace Query.Contract.UI.Blogs
 {
     public class BlogCategoriesSerchQueryModel
     {

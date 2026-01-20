@@ -57,8 +57,8 @@ namespace PostModule.Application.Services
             var package = await _packageRepository.GetByIdAsync(command.Id);
             if (await _packageRepository.ExistByAsync(p => p.Title.Trim() == command.Title.Trim() && p.Id != package.Id))
                 return new(false, ValidationMessages.DuplicatedMessage, nameof(command.Title));
-            string imageName = command.ImageName;
-            string oldImageName = command.ImageName;
+            string imageName = package.ImageName;
+            string oldImageName = package.ImageName;
             if (command.ImageFile != null)
             {
                 imageName = await _fileService.UploadImage(command.ImageFile, FileDirectories.PackageImageFolder);

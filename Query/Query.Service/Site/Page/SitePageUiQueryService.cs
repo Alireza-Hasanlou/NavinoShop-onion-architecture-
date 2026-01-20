@@ -1,9 +1,9 @@
 ﻿using Blogs.Domain.BlogAgg;
 using Query.Contract.Site.Page;
-using Query.Contract.UI;
 using Query.Contract.UI.Seo;
 using Seos.Domain.SeoAgg;
 using Shared.Domain.Enums;
+using Shared.Ui;
 using Site.Application.Contract.SitePageService.Query;
 using Site.Domain.SitePageAgg;
 using System;

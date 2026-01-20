@@ -1,4 +1,5 @@
 ﻿using Query.Contract.UI.Seo;
+using Shared.Ui;
 
 namespace Query.Contract.UI.PostPackage
 {

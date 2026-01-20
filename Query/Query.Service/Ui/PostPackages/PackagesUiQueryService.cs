@@ -3,12 +3,12 @@ using PostModule.Application.Contract.PostSettingApplication.Command;
 using PostModule.Domain.Services;
 using PostModule.Domain.SettingAgg;
 using PostModule.Domain.UserPostAgg;
-using Query.Contract.UI;
 using Query.Contract.UI.PostPackage;
 using Query.Contract.UI.Seo;
 using Seos.Domain.SeoAgg;
 using Shared.Application;
 using Shared.Domain.Enums;
+using Shared.Ui;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,12 +34,13 @@ namespace Query.Service.Ui.PostPackages
         {
 
             var postSetting = await _postSettingRepository.GetSingle();
-            var packages = await _packageRepository.GetAllBy()
+            var packages = await _packageRepository.GetAllBy(a=>a.Active)
                 .AsNoTracking()
                 .Select(p => new PackageUiQueryModel
                 {
                     Id = p.Id,
                     Title = p.Title,
+                    Description=p.Description,
                     Count = p.Count,
                     ImageName = FileDirectories.PackageImageDirectory + p.ImageName,
                     ImageAlt = p.ImageAlt,
@@ -53,14 +54,14 @@ namespace Query.Service.Ui.PostPackages
                 new BreadCrumb
                 {
                     Number=1,
-                    Title="خانه",
+                    Title="خانه / ",
                     Url="/"
 
                 },
                  new BreadCrumb
                 {
                     Number=2,
-                    Title="پکیج ها ",
+                    Title=" پکیج ها ",
                     Url="/Packages"
 
                 }};

@@ -1,5 +1,5 @@
-﻿using Query.Contract.UI;
-using Query.Contract.UI.Seo;
+﻿using Query.Contract.UI.Seo;
+using Shared.Ui;
 
 namespace Query.Contract.Site.Page
 {

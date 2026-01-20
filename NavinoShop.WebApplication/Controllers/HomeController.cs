@@ -22,7 +22,7 @@ namespace NavinoShop.WebApplication.Controllers
         private readonly IAuthService _authService;
         private readonly IEmailUseCommandService _emailUseCommandService;
         private readonly ISitePageUiQueryService _sitePageUiQueryService;
-        private readonly IPackageUiQueryService _packageUiQueryService;
+  
 
 
         public HomeController(ILogger<HomeController> logger, IMessageUserCommandService messageUserCommandService,
@@ -36,7 +36,7 @@ namespace NavinoShop.WebApplication.Controllers
             _authService = authService;
             _emailUseCommandService = emailUseCommandService;
             _sitePageUiQueryService = pageUiQueryService;
-            _packageUiQueryService = packageUiQueryService;
+
         }
 
         public IActionResult Index()
@@ -92,13 +92,7 @@ namespace NavinoShop.WebApplication.Controllers
             if (page == null) return NotFound();
             return View(page);
         }
-        [Route("/PostPackages")]
-        public async Task<IActionResult> PostPackages()
-        {
-            var model = await _packageUiQueryService.GetPackgesForUi();
-            return View(model);
-        }
-
+      
         public IActionResult Privacy()
         {
             return View();

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using PostModule.Application.Contract.UserPostApplication.Command;
 using Site.Application.Contract.BanerService.Command;
 
-namespace NavinoShop.WebApplication.Areas.Admin.Pages.Post.Baner
+namespace NavinoShop.WebApplication.Areas.Admin.Pages.Site.Baners
 {
     public class EditModel : PageModel
     {

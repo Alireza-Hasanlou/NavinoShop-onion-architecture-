@@ -2,12 +2,12 @@
 using Blogs.Domain.BlogCategoryAgg;
 using Comments.Domain.CommentAgg;
 using Microsoft.EntityFrameworkCore;
-using Query.Contract.UI;
-using Query.Contract.UI.Blog;
+using Query.Contract.UI.Blogs;
 using Query.Contract.UI.Seo;
 using Seos.Domain.SeoAgg;
 using Shared.Application;
 using Shared.Domain.Enums;
+using Shared.Ui;
 using Users.Domain.User.Agg.IRepository;
 
 namespace Query.Service.Ui.Blogs

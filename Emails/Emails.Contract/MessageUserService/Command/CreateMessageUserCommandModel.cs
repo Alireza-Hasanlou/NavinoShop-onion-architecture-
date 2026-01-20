@@ -25,5 +25,6 @@ namespace Emails.Application.Contract.MessageUserService.Command
         [Required(ErrorMessage = "لطفا پیام خود را وارد کنید")]
         [MaxLength(600, ErrorMessage = " پیام نمیتواند بیشتر از 600 کاراکتر باشد")]
         public string Message { get; set; }
+    
     }
 }

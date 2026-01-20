@@ -2,29 +2,8 @@
 @{
     Layout = "_Layout";
 }
-<section class="inner-page" id="contact-page">
-    <div class="container-fluid" id="page-hero">
-        <div class="row">
-            <div class="col-12">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12 px-0">
-                            <h1>درباره ما</h1>
-                            <p>با ما بیشتر آشنا شوید.</p>
-                            <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb">
-                                    <li><a href="/Blog"> صفحه نخست </a></li>
-                                    <li> / </li>
-                                    <li  > درباره ما </li>
-                                </ol>
-                            </nav>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+<partial name="_BreadCrumb" model="@Model.BreadCrumbs" />
+<section>
     <div class="container">
         <div class="row">
             <div class="col-12">

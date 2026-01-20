@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Query.Contract.UI.Blog
+namespace Query.Contract.UI.Blogs
 {
     public interface IBlogUiQueryService
     {

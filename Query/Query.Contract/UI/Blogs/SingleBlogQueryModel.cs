@@ -1,7 +1,8 @@
 ﻿using Query.Contract.UI.Comments;
 using Query.Contract.UI.Seo;
+using Shared.Ui;
 
-namespace Query.Contract.UI.Blog
+namespace Query.Contract.UI.Blogs
 {
     public class SingleBlogQueryModel
     {

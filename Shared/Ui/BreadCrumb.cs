@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Query.Contract.UI
+namespace Shared.Ui
 {
     public class BreadCrumb
     {

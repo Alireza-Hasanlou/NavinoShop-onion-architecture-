@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Shared.Ui;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,5 +21,6 @@ public class AboutUsQueryModel
     public string Title { get; set; }
     public string text { get; set; }
     public string ImageName { get; set; }
+    public List<BreadCrumb> BreadCrumbs{ get; set; }
 }
      

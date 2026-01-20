@@ -1,9 +1,11 @@
 ﻿using Shared.Application;
+using Shared.Ui;
 using Site.Application.Contract.SiteSettingService.Query;
 using Site.Domain.MenuAgg;
 using Site.Domain.SiteSettingAgg;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +24,26 @@ internal class SiteSettingQuery : ISiteSettingQueryService
     public async Task<AboutUsQueryModel> GetAboutUsForUi()
     {
         var model = await _siteSettingRepository.GetSingle();
+
+        #region BreadCrumb
+        var breadCrumbs = new List<BreadCrumb>()
+            {
+               new BreadCrumb
+                {
+                    Number=1,
+                    Title="خانه",
+                    Url="/"
+
+                },
+                 new BreadCrumb
+                {
+                    Number=2,
+                    Title="درباره ما",
+                    Url=""
+
+                } };
+        #endregion
+
         return new AboutUsQueryModel
         {
             Title = model.AboutTitle,
@@ -33,7 +55,32 @@ internal class SiteSettingQuery : ISiteSettingQueryService
     public async Task<ContactInfoForUiQueryModel> GetContactData()
     {
         var site = await _siteSettingRepository.GetSingle();
-        return new ContactInfoForUiQueryModel(site.Address, site.Phone1, site.Phone2, site.Email1);
+        #region BreadCrumb
+        var breadCrumbs = new List<BreadCrumb>()
+            {
+               new BreadCrumb
+                {
+                    Number=1,
+                    Title=" خانه / ",
+                    Url="/"
+
+                },
+                 new BreadCrumb
+                {
+                    Number=2,
+                    Title=" تماس با ما ",
+                    Url=""
+
+                } };
+        #endregion
+        return new ContactInfoForUiQueryModel()
+        {
+            Address = site.Address,
+            Phone1 = site.Phone1,
+            Phone2 = site.Phone2,
+            Email = site.Email1,
+            BreadCrumbs= breadCrumbs
+        };
     }
 
     public async Task<FavIconForUiQueryModel> GetFavIconForUi()
