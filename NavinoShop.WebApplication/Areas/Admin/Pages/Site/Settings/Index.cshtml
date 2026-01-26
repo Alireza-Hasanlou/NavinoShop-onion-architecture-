@@ -56,19 +56,25 @@
         <div class="row">
 
             <div class="col col-md-6 col-sm-12 col-12">
-                <div id="img-container">
-                    <label for="upload-file">
+                <div class="image-uploader">
+                    <label>
                         لوگو
-                        <div class="picture-uploader" data-url="@FileDirectories.SiteImageDirectory@Model.UpsertSiteSetting.LogoName">
+                        <div class="picture-uploader"
+                             data-url="@FileDirectories.SiteImageDirectory@Model.UpsertSiteSetting.LogoName">
+
                             <div class="picture__image">Choose an image</div>
 
-                            <input asp-for="UpsertSiteSetting.LogoFile" type="file" id="upload-file" class="picture__input" accept="image/*" />
+                            <input asp-for="UpsertSiteSetting.LogoFile"
+                                   type="file"
+                                   class="picture__input myinput"
+                                   accept="image/*" />
                         </div>
                     </label>
-
                 </div>
+
                 <span asp-validation-for="UpsertSiteSetting.LogoFile" class="text-danger"></span>
             </div>
+
             <div class="col">
                 <div class="custom-form-group">
                     <label for="LogoAlt">Alt لوگو</label>
@@ -80,18 +86,25 @@
         <!-- Row 4 -->
         <div class="row">
             <div class="col col-md-6 col-sm-12 col-12">
-                <div id="img-container">
-                    <label for="upload-file">
-                        فاو آیکون
-                        <div @* class="picture-uploader"  *@data-url="@FileDirectories.SiteImageDirectory@Model.UpsertSiteSetting.FavIcon">
-                            <div @* class="picture__image" *@>Choose an image</div>
+                <div class="image-uploader">
+                    <label>
+                        فاوآیکون
+                        <div class="picture-uploader"
+                             data-url="@FileDirectories.SiteImageDirectory@Model.UpsertSiteSetting.FavIcon">
 
-                            <input asp-for="@Model.UpsertSiteSetting.FavIconFile" type="file" @* id="upload-file" class="picture__input" *@ accept="image/*" />
+                            <div class="picture__image">Choose an image</div>
+
+                            <input asp-for="UpsertSiteSetting.FavIconFile"
+                                   type="file"
+                                   class="picture__input"
+                                   accept="image/*" />
                         </div>
                     </label>
-
                 </div>
+
+                <span asp-validation-for="UpsertSiteSetting.FavIconFile" class="text-danger"></span>
             </div>
+
 
             <div class="col">
                 <div class="custom-form-group">
@@ -235,18 +248,25 @@
             </div>
         </div>
         <div class="col col-md-6 col-sm-12 col-12">
-            <div id="img-container">
-                <label for="upload-file">
+            <div class="image-uploader">
+                <label>
                     تصویر درباره ما
-                    <div @* class="picture-uploader" *@ data-url="@FileDirectories.SiteImageDirectory@Model.UpsertSiteSetting.AboutUsImageName">
-                        <div @* class="picture__image" *@>Choose an image</div>
+                    <div class="picture-uploader"
+                         data-url="@FileDirectories.SiteImageDirectory@Model.UpsertSiteSetting.AboutUsImageName">
 
-                        <input asp-for="@Model.UpsertSiteSetting.AboutUsImageFile" type="file" @* id="upload-file" class="picture__input" *@ accept="image/*" />
+                        <div class="picture__image">Choose an image</div>
+
+                        <input asp-for="UpsertSiteSetting.AboutUsImageFile"
+                               type="file"
+                               class="picture__input"
+                               accept="image/*" />
                     </div>
                 </label>
-
             </div>
+
+            <span asp-validation-for="UpsertSiteSetting.AboutUsImageFile" class="text-danger"></span>
         </div>
+
         <button type="submit" class="btn btn-success btn-block">ثبت</button>
 
     </form>

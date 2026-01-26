@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+
+<html dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    @await Component.InvokeAsync("Fav");
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    @RenderSection("Seo", false);
+    <title>@ViewData["Title"]</title>
+
+    <partial name="_Css" />
+    <link href="~/assets/css/style.css" rel="stylesheet" />
+</head>
+<body>
+    <partial name="_Header" />
+    <section class="inner-page" id="profile-page">
+        <div class="container-fluid" id="page-hero">
+            <div class="row">
+                <div class="col-12">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12 px-0">
+                                <h1>ناحیه کاربری</h1>
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+
+
+                                        <li><a href="/">خانه </a>/</li>
+                                        <li><a href="">ناحیه کاربری</a></li>
+
+                                    </ol>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="content">
+                        <div class="row">
+                            <div class="col-12 col-lg-3">
+                                <partial name="_SidePanel" />
+                            </div>
+                            <div class="col-12 col-lg-9 pl-lg-0 pr-lg-2 mt-2 mt-lg-0">
+                                @RenderBody()
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <partial name="_Footer" />
+
+
+    <partial name="_Scripts" />
+
+    <partial name="_Loader" />
+</body>
+</html>

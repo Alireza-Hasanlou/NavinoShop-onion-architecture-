@@ -50,7 +50,7 @@ internal class SiteSettingService : ISiteSettingService
         {
             if (!command.FavIconFile.IsImage()) return new(false, ValidationMessages.ImageErrorMessage, nameof(command.FavIconFile));
             favIconName = await _fileService.UploadImage(command.FavIconFile, FileDirectories.SiteImageFolder);
-            if (logoName == "")
+            if (favIconName == "")
                 return new(false, ValidationMessages.ImageErrorMessage, nameof(command.FavIconFile));
             _fileService.ResizeImage(favIconName, FileDirectories.SiteImageFolder, 64);
             _fileService.ResizeImage(favIconName, FileDirectories.SiteImageFolder, 32);

@@ -22,6 +22,7 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Site.Settings
         }
         public async Task<IActionResult> OnPost()
         {
+            UpsertSiteSetting = await _siteSettingService.GetForUpsert();
             if (!ModelState.IsValid)
                 return Page();
             var result = await _siteSettingService.Upsert(UpsertSiteSetting);

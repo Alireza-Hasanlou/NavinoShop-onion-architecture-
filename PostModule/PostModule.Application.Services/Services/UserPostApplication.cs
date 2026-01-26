@@ -43,7 +43,7 @@ namespace PostModule.Application.Services
                 if(command.PackageId != postOrder.PackageId || command.Price != postOrder.Price)
                 {
                     postOrder.Edit(command.PackageId, command.Price);
-                    return await Task.Run(() => _postOrderRepository.SaveAsync());
+                    return await  _postOrderRepository.SaveAsync();
                 }
                 return true;
             }

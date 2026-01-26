@@ -47,7 +47,8 @@ namespace Site.Infrastructure.Persistence.Repository
                 SamanDehi = site.SamanDehi,
                 SeoBox = site.SeoBox,
                 Telegram = site.Telegram,
-                Youtube = site.Youtube
+                Youtube = site.Youtube,
+                AboutUsImageName=site.AboutImageName
             };
         }
 
