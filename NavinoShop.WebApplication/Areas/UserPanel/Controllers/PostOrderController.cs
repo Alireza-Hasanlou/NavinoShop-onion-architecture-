@@ -69,5 +69,14 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
             } 
             return Redirect("/PostOrder/Orders");
         }
+
+        [HttpGet]
+        [Route("/PostOrder/TestPostApi")]
+        public async Task<IActionResult> TestPostApi()
+        {
+            var userId=  _authService.GetLoginUserId();
+            var userPost= await _userPostApplication.GetUserPostModelForPanel(userId);
+            return View(userPost);
+        }
     }
 }
