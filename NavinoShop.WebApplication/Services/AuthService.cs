@@ -85,7 +85,7 @@ namespace NavinoShop.WebApplication.Services
 
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
 

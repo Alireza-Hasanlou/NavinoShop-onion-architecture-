@@ -3,41 +3,43 @@ using Microsoft.AspNetCore.Mvc;
 using PostModule.Application.Contract.PostApplication;
 using PostModule.Application.Contract.UserPostApplication.Command;
 using PostModule.Domain.UserPostAgg;
+using Query.Contract.UI.UserPanel.PostOrder;
 using Shared.Application.Auth;
 using System.Threading.Tasks;
 
 namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
 {
     [Area("UserPanel")]
+    [Route("/profile/[action]/{id?}")]
     [Authorize]
     public class PostOrderController : Controller
     {
+        private readonly IPostOrderQueryService _postOrderQueryService;
         private readonly IUserPostApplication _userPostApplication;
         private readonly IAuthService _authService;
 
-        public PostOrderController(IUserPostApplication userPostApplication, 
-            IPostApplication postOrderApplication, IAuthService authService)
+        public PostOrderController(IPostOrderQueryService postOrderQueryService,
+            IUserPostApplication userPostApplication, IAuthService authService)
         {
+            _postOrderQueryService = postOrderQueryService;
             _userPostApplication = userPostApplication;
             _authService = authService;
         }
-
-        public IActionResult Orders()
+    
+        public async Task<IActionResult> Orders()
         {
-            return View();
+            int UserId = _authService.GetLoginUserId();
+            var orders = await _postOrderQueryService.GetPostOrderForUserPanelAsync(UserId);
+            return View(orders);
         }
-        [Route("/PostOrder/Cart")]
-        public async Task<IActionResult> Cart()
+
+        public async Task<IActionResult> ApiCart()
         {
             int UserId = _authService.GetLoginUserId();
             var res= await _userPostApplication.GetPostOrderNotPaymentForUser(UserId);
-            if (res==null)
-            {
-                ViewData["exist"] = false;
-            }
             return View(res);
         }
-        [Route("/PostOrder/Create/{packageId}")]
+    
         public async Task<IActionResult> Create(int packageId)
         {
             if (packageId <1 )
@@ -54,6 +56,7 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
             }
             return Redirect("/Packages");
         }
+  
         public async Task<IActionResult> Payment()
         {
             var UserId = _authService.GetLoginUserId();
@@ -71,7 +74,7 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
         }
 
         [HttpGet]
-        [Route("/PostOrder/TestPostApi")]
+        [Route("/PostOrder/TestPostApi")] 
         public async Task<IActionResult> TestPostApi()
         {
             var userId=  _authService.GetLoginUserId();

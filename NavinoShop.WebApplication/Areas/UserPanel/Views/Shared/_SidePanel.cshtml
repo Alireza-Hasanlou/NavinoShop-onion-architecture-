@@ -2,50 +2,55 @@
     var currnetPath = Context.Request.Path.ToString().ToLower().Trim();
 }
 @using NavinoShop.WebApplication.Services
+@using Shared.Application
 @using Shared.Application.Auth
 @inject IAuthService service;
 <!-- Side Panel -->
 <div class="accordion" id="side-panel">
     <div class="accordion-item menu-container">
         <h2 class="accordion-header">
-            <button class="accordion-button bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
-                <span class="row">
+            <button class="accordion-button bg-light" type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#panelsStayOpen-collapseOne"
+            aria-expanded="true"
+            aria-controls="panelsStayOpen-collapseOne">
+                <div class="row">
                     <span class="col-3 col-sm-2 col-lg-3">
-                        <img src="@service.GetLoginUserAvatar()" class="rounded-circle">
+                        <img src="@FileDirectories.UserImageDirectory100@service.GetLoginUserAvatar()" class="rounded-circle">
                     </span>
-                    <span class="col-7 col-sm-8 col-lg-7 pt-0 pt-sm-2 pt-md-3 pt-lg-0 align-self-center">
+                    <div class="col-7 col-sm-8 col-lg-7 pt-0 pt-sm-2 pt-md-3 pt-lg-0 align-self-center">
                         <div id="full-name">@service.GetLoginUserFullName()</div>
                         <div class="mt-2" id="email-mobile">@service.GetLoginUserMobile()</div>
-                    </span>
-                </span>
+                    </div>
+                </div>
             </button>
         </h2>
         <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne" style="">
             <div class="accordion-body">
                 <ul>
                     <li>
-                        <a href="/userpanel/profile" class=" @((currnetPath.Contains("/userpanel/profile")) ? "active" : "") ">
+                        <a href="/profile/personalinfo" class=" @((currnetPath.Contains("/profile/personalinfo")) ? "active" : "") ">
                             <div>
                                 <div class="icon d-inline-block"><img src="/images/icons/profile-menu/profile.webp" class="pl-2"></div> اطلاعات حساب
                             </div>
                         </a>
                     </li>
                     <li>
-                        <a href="" class=" @((currnetPath.Contains("/userpanel/myorders")) ? "active" : "") ">
+                        <a href="/profile/apicart" class=" @((currnetPath.Contains("/profile/apicart")) ? "active" : "") ">
                             <div>
-                                <div class="icon d-inline-block"><img src="/images/icons/profile-menu/orders.webp" class="pl-2"></div> سفارش های من
+                                <div class="icon d-inline-block"><img src="/images/icons/profile-menu/orders.webp" class="pl-2"></div> سفارش های api
                             </div>
                         </a>
                     </li>
                     <li>
-                        <a href="" class=" @((currnetPath.Contains("/userpanel/favorits")) ? "active" : "") ">
+                        <a href="" class=" @((currnetPath.Contains("/profile/favorits")) ? "active" : "") ">
                             <div>
                                 <div class="icon d-inline-block"><img src="/images/icons/profile-menu/favorites.webp" class="pl-2"></div> علاقه مندی ها
                             </div>
                         </a>
                     </li>
                     <li>
-                        <a href="" class=" @((currnetPath.Contains("/userpanel/addresses")) ? "active" : "") ">
+                        <a href="" class=" @((currnetPath.Contains("/profile/addresses")) ? "active" : "") ">
                             <div>
                                 <div class="icon d-inline-block"><img src="/images/icons/profile-menu/addresses.webp" class="pl-2"></div> آدرس های من
                             </div>

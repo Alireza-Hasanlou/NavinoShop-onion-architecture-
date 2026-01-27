@@ -22,7 +22,7 @@ namespace Users.Infrastructure.Persistence.Repository
 
         public async Task<List<UserQueryModel>> GetUsersByIds(List<int> Ids)
         {
-          return await _context.Users.Where(i=>Ids.Contains(i.Id)) .Select(u => new UserQueryModel
+            return await _context.Users.Where(i => Ids.Contains(i.Id)).Select(u => new UserQueryModel
             {
                 Id = u.Id,
                 FullName = u.FullName,
@@ -33,6 +33,20 @@ namespace Users.Infrastructure.Persistence.Repository
         public async Task<User> GetByMobile(string mobile)
         {
             return await _context.Users.SingleOrDefaultAsync(m => m.Mobile == mobile);
+        }
+
+        public async Task<EditUserByUserDto> GetForEditByUserAsync(int userId)
+        {
+            return await _context.Users.Where(i => i.Id == userId)
+                .Select(u => new EditUserByUserDto
+                {
+                    FullName = u.FullName,
+                    Email = u.Email,
+                    Mobile = u.Mobile,
+                    UserGender = u.UserGender,
+                    AvatarName = u.Avatar
+
+                }).SingleAsync();
         }
     }
 }

@@ -12,5 +12,6 @@ namespace Users.Domain.User.Agg.IRepository
     {
         Task<List<UserQueryModel>> GetUsersByIds(List<int>Ids);
         Task <User> GetByMobile(string mobile);
+        Task<EditUserByUserDto> GetForEditByUserAsync(int userId);
     }
 }

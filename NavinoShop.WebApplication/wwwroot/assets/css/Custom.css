@@ -1031,3 +1031,9 @@ span.custom-checkbox-shine:after {
     padding: 10px;
     border-radius: 10px;
 }
+
+#EditProfileBtn {
+    text-align: left;
+    padding-left: 10px;
+    direction: ltr;
+}

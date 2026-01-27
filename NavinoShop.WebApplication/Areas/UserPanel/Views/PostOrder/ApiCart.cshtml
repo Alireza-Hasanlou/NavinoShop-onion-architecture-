@@ -1,6 +1,8 @@
 ﻿@model PostModule.Application.Contract.UserPostApplication.Command.PostOrderUserPanelModel
 <div class="col" style="display: block;">
     <!-- Product Box -->
+    @if (Model!=null)
+    {
     <div class="encode4326654321vfb-row">
         <div class="row">
             <div class="col-12 col-md-4">
@@ -21,10 +23,14 @@
                     <div class="encode4365gbf265g43d mb-2">@Model.Count تعداد درخواست</div>
                     <p> @Model.Description</p>
                     <div class="encode4365gbf265g43d mb-2">@Model.Price تومان</div>
-                    <a href="#"><div class="btn btn-sm btn-success"> پرداخت </div></a>
+                    <a href="/PostOrder/Payment"><div class="btn btn-sm btn-success"> پرداخت </div></a>
                 </div>
             </div>
         </div>
-    </div>
-
+        </div>
+    }
+    else
+    {
+        <span colspan="9" class="text-center text-warning"> موردی برای نمایش موجود نیست</span>
+    }
 </div>

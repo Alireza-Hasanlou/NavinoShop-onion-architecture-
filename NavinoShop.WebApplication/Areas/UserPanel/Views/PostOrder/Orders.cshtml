@@ -1,0 +1,83 @@
+﻿@using Shared.Domain.Enums
+@model List<Query.Contract.UI.UserPanel.PostOrder.PostOrderUserPanelQueryModel>
+@{
+    Layout = "_PanelLayout";
+    ViewData["title"] = "فاکتور های پست";
+
+}
+
+<table class="DataTable table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
+    @if (Model.Count() > 0)
+    {
+        <thead>
+            <tr role="row">
+                <td>#</td>
+                <td>شماره سفارش</td>
+                <td>تصویر</td>
+                <td>نام مجصول</td>
+                <td>تعداد درخواست</td>
+                <td>قیمت</td>
+                <td>وضعیت</td>
+                <td>کد تراکنش</td>
+                <td>تاریخ ترکنش</td>
+                <td></td>
+        </thead>
+        <tbody>
+        </tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td></td>
+                <td>f_@order.Id</td>
+                <td style="width:100px"><img src="@order.ImageName" /></td>
+                <td>@order.packageTitle</td>
+                <td>@order.Count</td>
+                <td>@order.PackagePrice</td>
+
+                @if (order.postOrderStatus == PostOrderStatus.پرداخت_شده)
+                {
+                    <td class="text-success">
+                        پرداخت شده
+                    </td>
+                }
+                else
+                {
+
+                    <td class="text-danger">
+                        پرداخت نشده
+                    </td>
+                }
+                <td>@order.TransactionRef</td>
+                <td>@order.Date</td>
+                <td>
+                     @if (order.postOrderStatus == PostOrderStatus.پرداخت_نشده)
+                    {
+                        <a href="/PostOrder/Cart"><div class="btn btn-sm btn-primary">پرداخت</div></a>
+                    }
+                </td>
+            </tr>
+        }
+    }
+    else
+    {
+<tr>
+    <td colspan="9" class="text-center text-warning"> موردی برای نمایش موجود نیست</td>
+</tr>
+    }
+</table>
+
+@section Scripts {
+    <script>
+
+                $('.DataTable').DataTable({
+            paging: true,
+            autoWidth: true,
+            lengthChange: false,
+            searching: false,
+            ordering: true,
+            info:false,
+        }
+        });
+
+    </script>
+}

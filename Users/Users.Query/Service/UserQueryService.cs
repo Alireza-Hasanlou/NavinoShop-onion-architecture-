@@ -27,9 +27,6 @@ namespace Users.Query.Service
             throw new NotImplementedException();
         }
 
-        public Task<EditUserByUserDto> GetForEditByUserAsync(int userId)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

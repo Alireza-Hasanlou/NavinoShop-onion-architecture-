@@ -1,0 +1,67 @@
+﻿@using Shared.Domain.Enums
+@model Users.Application.Contract.UserService.Command.EditUserByUserCommand
+@{
+    ViewData["title"] = "ویرایش اطلاعات";
+}
+<div class="custom-container bg-light" id="profile-fields">
+    <form method="post">
+        <div class="row pt-2 px-3">
+            <div class="col-12"><h1>اطلاعات شخصی</h1></div>
+        </div>
+        <hr>
+        <div class="container">
+            <input type="hidden" asp-for="AvatarName" />
+            <div class="row">
+                <div class="col-12 col-sm-6 profile-field py-2">
+                    <div class="row">
+                        <div class="col-10">
+                            <div class="title">نام و نام خانوادگی</div>
+                            <input asp-for="FullName" class="value" />
+                            <span asp-validation-for="FullName" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 profile-field py-2">
+                    <div class="row">
+                        <div class="col-10">
+                            <div class="title">شماره تلفن همراه</div>
+                            <input asp-for="Mobile" class="value" />
+                            <span asp-validation-for="Mobile" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 profile-field py-2">
+                    <div class="row">
+                        <div class="col-10">
+                            <div class="title">پست الکترونیک</div>
+                            <input asp-for="Email" class="value" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 profile-field py-2">
+                    <div class="row">
+                        <div class="col-10">
+                            <div class="title">جنسیت</div>
+                            <select asp-for="UserGender">
+                                @foreach (var item in Enum.GetValues(typeof(Gender)).Cast<Gender>())
+                                {
+                                    <option value="@item">@item</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br />
+        <div id="EditProfileBtn">
+            <button type="submit" class="btn btn-sm btn-success">ویرایش</button>
+        </div>
+        <br />
+    </form>
+</div>

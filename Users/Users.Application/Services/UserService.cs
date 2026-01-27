@@ -5,6 +5,7 @@ using Shared.Application.Security;
 using Shared.Application.Service;
 using Shared.Application.Validations;
 using Users.Application.Contract.UserService.Command;
+using Users.Application.Contract.UserService.Query;
 using Users.Domain.User.Agg;
 using Users.Domain.User.Agg.IRepository;
 
@@ -147,12 +148,6 @@ namespace Users.Application.Services
             if (user == null)
                 return new(false, ValidationMessages.UserNotFound, "User");
 
-            if (await _userRepository.ExistByAsync(m => m.Mobile.Trim() == command.Mobile.Trim()))
-                return new(false, ValidationMessages.DuplicatedMessage, "Mobile");
-
-            if (!string.IsNullOrEmpty(command.Email) && await _userRepository.ExistByAsync(e => e.Email.ToLower() == command.Email.ToLower()))
-                return new(false, ValidationMessages.DuplicatedMessage, "Email");
-
             string imageName = user.Avatar;
             string oldimageName = user.Avatar;
             if (command.AvatarFile != null)
@@ -179,6 +174,11 @@ namespace Users.Application.Services
 
             return new(false, ValidationMessages.SystemErrorMessage, "User");
 
+        }
+
+        public async Task<EditUserByUserDto> GetForEditByUserAsync(int userId)
+        {
+            return await _userRepository.GetForEditByUserAsync(userId);
         }
 
         public async Task<OperationResult> LoginAsync(LoginUserCommand command)
