@@ -9,5 +9,6 @@ namespace Query.Contract.UI.UserPanel
     public interface IUserPanelQueryService
     {
         Task<UserPanelQueryModel> GetUserInfoForPanel(int id);
+        Task<List<UserAddressQueryModel>> GetUserAddressesAsync(int UserId);
     }
 }

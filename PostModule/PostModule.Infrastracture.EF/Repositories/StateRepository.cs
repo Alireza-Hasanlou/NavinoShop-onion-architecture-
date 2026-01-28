@@ -42,4 +42,9 @@ internal class StateRepository : GenericRepository<State, int>, IStateRepository
             Title=state.Title
         };
     }
+
+    public async Task<string> GetStateTitle(int stateId)
+    {
+        return await _context.States.Where(i => i.Id == stateId).Select(t => t.Title).SingleAsync();
+    }
 }

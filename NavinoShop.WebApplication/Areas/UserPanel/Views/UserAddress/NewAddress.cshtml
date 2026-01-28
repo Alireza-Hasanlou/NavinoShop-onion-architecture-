@@ -1,0 +1,112 @@
+﻿@using PostModule.Application.Contract.StateQuery
+@model Users.Application.Contract.UserAddressService.Command.CreateUserAddressCommand
+@{
+    Layout = "_PanelLayout";
+    ViewData["title"] = "آدرس های من";
+    var success = ViewData["success"] as string;
+    var States = ViewData["States"] as List<StateForChooseQueryModel>;
+}
+<div class="col-12 col-lg-12 pl-lg-0 pr-lg-2 mt-2 mt-lg-0">
+    <div class="custom-container mb-2" id="new-address">
+        <div class="row pt-2 px-3">
+            <div class="col-12"><h1>افزودن آدرس جدید</h1></div>
+        </div>
+        <hr>
+        <div>
+            <div class="row">
+                <div class="col-12 pt-3">
+                    <form method="post">
+                        <div class="row">
+                            <div class="col-12 col-md-4 pl-2">
+                                <div class="form-group m-1">
+                                    <label for="province">استان:</label>
+                                    <select asp-for="StateId" id="province" class="form-control">
+                                        <option value="0">استان را انتخاب کنید</option>
+                                        @foreach (var item in States)
+                                        {
+                                            <option value="@item.Id">@item.Title</option>
+                                        }
+                                    </select>
+                                </div>
+                                <span asp-validation-for="StateId" class="text-danger"></span>
+                            </div>
+                            <div class="col-12 col-md-4 pl-2">
+                                <div class="form-group m-1">
+                                    <label for="city">شهر:</label>
+                                    <select id="cities" asp-for="CityId" class="form-control">
+                                    </select>
+                                </div>
+                                <span asp-validation-for="CityId" class="text-danger"></span>
+                            </div>
+                            <div class="col-12 col-md-8 pl-2">
+                                <div class="form-group m-1">
+                                    <label for="address">نشانی کامل:</label>
+                                    <textarea type="text" asp-for="AddressDetail" id="address" class="form-control"></textarea>
+                                </div>
+                                <span asp-validation-for="AddressDetail" class="text-danger"></span>
+                            </div>
+                            <div class="col-12 col-md-4 pl-2">
+                                <div class="form-group m-1">
+                                    <label for="postal_code">کد پستی:</label>
+                                    <input type="text" onkeypress="return isNumber(event)" asp-for="PostalCode" id="postal_code" autocomplete="off" class="form-control">
+                                </div>
+                                <span asp-validation-for="PostalCode" class="text-danger"></span>
+                            </div>
+                            <div class="col-12 col-md-4 pl-2">
+                                <div class="form-group m-1">
+                                    <label for="receiver">تحویل گیرنده:</label>
+                                    <input type="text" asp-for="FullName" id="receiver" class="form-control">
+                                </div>
+                                <span asp-validation-for="FullName" class="text-danger"></span>
+                            </div>
+                            <div class="col-12 col-md-4 pl-2">
+                                <div class="form-group m-1">
+                                    <label for="receiver">کد ملی:</label>
+                                    <input type="text" onkeypress="return isNumber(event)" asp-for="NationalCode" id="receiver" class="form-control">
+                                </div>
+                                <span asp-validation-for="NationalCode" class="text-danger"></span>
+                            </div>
+                            <div class="col-12 col-md-4 pl-2">
+                                <div class="form-group m-1">
+                                    <label for="tel">تلفن تماس:</label>
+                                    <input type="text" onkeypress="return isNumber(event)" asp-for="Phone" id="tel" class="form-control">
+                                </div>
+                                <span asp-validation-for="Phone" class="text-danger"></span>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group m-1 pb-3">
+                                    <button type="submit" class="btn btn-primary px-5">ذخیره آدرس</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @await Component.InvokeAsync("MyAddresses")
+</div>
+@section Scripts {
+    <script>
+
+        $(document).ready(function () {
+             $(document).on("change", "#province", function () {
+              var stateId = $("#province").val();
+              GetCitiesForState(stateId);
+             });
+
+        });
+
+
+    </script>
+
+    @if (success != null)
+    {
+        <script>
+            AlerSweetWithTimer('@success','success','center');
+
+        </script>
+
+    }
+}

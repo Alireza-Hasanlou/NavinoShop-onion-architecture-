@@ -4,5 +4,7 @@ namespace Users.Application.Contract.UserAddressService.Query
 {
     public class UserAddressDto:CreateUserAddressCommand
     {
+        public int Id { get; set; }
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Shared.Domain;
+using System.ComponentModel.DataAnnotations;
 
 namespace Users.Domain.User.Agg
 {
@@ -29,7 +30,18 @@ namespace Users.Domain.User.Agg
 
         }
 
+        public void Edit(int stateId, int cityId, string addressDetail, string postalCode,
+                           string phone, string fullName, string nationalCode)
+        {
+            StateId = stateId;
+            CityId = cityId;
+            AddressDetail = addressDetail;
+            PostalCode = postalCode;
+            Phone = phone;
+            FullName = fullName;
+            NationalCode = nationalCode;
 
+        }
     }
 
 

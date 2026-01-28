@@ -16,5 +16,6 @@ namespace PostModule.Domain.Services
 		Task<bool> ChangeStatus(int id, CityStatus status);
 		Task<List<CityViewModel>> GetAllForState(int stateId);
         Task<EditCityModel> GetCityForEdit(int id);
+        Task<string> GetCityTitle(int cityId);
     }
 }

@@ -41,10 +41,10 @@ namespace PostModule.Infrastracture.Repositories
                     break;
             }
 
-           
+
             city.ChangeStatus(status);
 
-          
+
             foreach (var c in citiesToReset)
                 c.ChangeStatus(CityStatus.شهرستان_معمولی);
 
@@ -72,6 +72,11 @@ namespace PostModule.Infrastracture.Repositories
                 Title = city.Title,
                 StateId = city.StateId,
             };
+        }
+
+        public async Task<string> GetCityTitle(int cityId)
+        {
+            return await _context.Cities.Where(i => i.Id == cityId).Select(t => t.Title).SingleAsync();
         }
     }
 }

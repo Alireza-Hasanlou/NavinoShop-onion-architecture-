@@ -14,5 +14,6 @@ namespace PostModule.Domain.Services
     {
         Task<List<StateViewModel>> GetAllStateViewModel();
         Task<EditStateModel> GetStateForEdit(int id);
+        Task<string> GetStateTitle(int stateId);
     }
 }

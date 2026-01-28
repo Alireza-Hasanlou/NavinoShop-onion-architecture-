@@ -6,8 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Users.Application.Contract.UserAddressService.Command;
+using Users.Application.Contract.UserAddressService.Query;
 using Users.Domain.User.Agg;
 using Users.Domain.User.Agg.IRepository;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Users.Application.Services
 {
@@ -22,8 +24,10 @@ namespace Users.Application.Services
 
         public async Task<OperationResult> CreateAsync(CreateUserAddressCommand command, int userId)
         {
+            if (await _userAddressRepository.ExistByAsync(p => p.PostalCode == command.PostalCode))
+                return new(false, ValidationMessages.DuplicatedMessage);
             var userAddress = new UserAddress(command.StateId, command.CityId, command.AddressDetail,
-                command.PostalCode, command.Phone, command.FullName, command.NationalCode, command.UserId);
+                command.PostalCode, command.Phone, command.FullName, command.NationalCode, userId);
             var result = await _userAddressRepository.CreateAsync(userAddress);
             if (result.Success)
                 return new(true);
@@ -38,6 +42,21 @@ namespace Users.Application.Services
             if (result.Success)
                 return new(true);
             return new(false, ValidationMessages.SystemErrorMessage, "UserAddress");
+        }
+
+        public async Task<OperationResult> EditAsync(UserAddressDto command )
+        {
+            var address = await _userAddressRepository.GetByIdAsync(command.Id);
+            address.Edit(command.StateId, command.CityId, command.AddressDetail, command.PostalCode, command.Phone, command.FullName, command.NationalCode);
+            if (await _userAddressRepository.SaveAsync())
+                return new(true);
+            return new(false, ValidationMessages.SystemErrorMessage);
+
+        }
+
+        public async Task<UserAddressDto> GetAddressForEditAsync(int id)
+        {
+            return await _userAddressRepository.GetAddressForEditAsync(id);
         }
     }
 }

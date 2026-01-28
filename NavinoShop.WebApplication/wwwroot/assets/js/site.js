@@ -142,13 +142,13 @@ function AddUsersEmail() {
 
     if (email === "") {
         messageBox.addClass("text-danger").text("لطفا ایمیل را وارد کنید");
-        $("#InputUsersEmail").val(''); 
+        $("#InputUsersEmail").val('');
         return;
     }
 
     if (!validateEmail(email)) {
         messageBox.addClass("text-danger").text("لطفا یک ایمیل معتبر وارد کنید");
-        $("#InputUsersEmail").val(''); 
+        $("#InputUsersEmail").val('');
         return;
     }
 
@@ -177,7 +177,7 @@ function AddUsersEmail() {
                 .text("خطا در ارتباط با سرور");
         })
         .always(function () {
-            $("#InputUsersEmail").val(''); 
+            $("#InputUsersEmail").val('');
             EndLoading();
         });
 }
@@ -204,4 +204,30 @@ function copyUrl(Url) {
         .catch(() => {
             alert("❌ خطا در کپی آدرس!");
         });
+
+}
+
+//UserPanel
+function GetCitiesForState(stateId) {
+    var cities = $("#cities");
+    cities.empty();
+   
+    $.ajax({
+        url: "/profile/GetCitiesForState?StateId=" + stateId,
+        type: "GET",
+        dataType: "json"
+    })
+        .done(function (res) {
+            console.log(res);
+            for (var i = 0; i < res.length; i++) {
+                cities.append(`
+                <option value="${res[i].cityCode}">${res[i].title}</option>
+
+                `);
+            }
+        
+        }).fail(function (xhr) {
+            console.error("Ajax Error:", xhr.status, xhr.responseText);
+        });
+
 }

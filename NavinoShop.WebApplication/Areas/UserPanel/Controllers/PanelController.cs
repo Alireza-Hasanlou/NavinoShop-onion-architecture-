@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PostModule.Application.Contract.StateQuery;
 using Query.Contract.UI.UserPanel;
 using Shared.Application.Auth;
 using System.Threading.Tasks;
+using Users.Application.Contract.UserAddressService.Command;
 using Users.Application.Contract.UserService.Command;
 
 namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
@@ -16,8 +18,7 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
         private readonly IAuthService _authService;
         private readonly IUserCommandService _userCommandService;
 
-        public PanelController(IUserPanelQueryService userPanelQueryService,
-            IAuthService authService, IUserCommandService userCommandService)
+        public PanelController(IUserPanelQueryService userPanelQueryService, IAuthService authService, IUserCommandService userCommandService)
         {
             _userPanelQueryService = userPanelQueryService;
             _authService = authService;
@@ -52,5 +53,6 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
             ModelState.AddModelError("Email", res.Message);
             return View();
         }
+
     }
 }

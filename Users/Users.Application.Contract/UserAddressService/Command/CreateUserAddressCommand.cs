@@ -11,8 +11,7 @@ namespace Users.Application.Contract.UserAddressService.Command
         public int StateId { get; set; }
         [Display(Name = "شهر")]
         public int CityId { get; set; }
-        [Display(Name = "کاربر")]
-        public int UserId { get; set; }
+       
         [Display(Name = "جزییات آدرس")]
         [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
         [MaxLength(500, ErrorMessage = ValidationMessages.MaxLengthMessage)]
