@@ -1,0 +1,37 @@
+﻿@using Shared.Application
+@model Users.Application.Contract.UserService.Query.UserHeaderQueryModel
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="auth-dropdown-container" id="authDropdown">
+        <button class="auth-btn logged-in"
+                id="authBtn"
+                data-fullname="@Model.FullName"
+                data-mobile="@Model.Mobile"
+                data-avatar="@FileDirectories.UserImageDirectory100@Model.Avatar">
+
+            <img src="@FileDirectories.UserImageDirectory100@Model.Avatar" class="auth-avatar">
+            <span>@Model.FullName</span>
+        </button>
+
+        <div onclick="" class="auth-dropdown-menu auth-menu-loggedin" id="authMenu"></div>
+    </div>
+
+}
+else
+{
+    <div class="auth-dropdown-container" id="authDropdown">
+        <button class="auth-btn guest" id="authBtn">
+            <i class="bx bx-user-circle auth-icon"></i>
+            <div class="auth-info">
+                <span class="auth-name">ورود / ثبت‌نام</span>
+                <span class="auth-role">برای ادامه وارد شوید</span>
+            </div>
+            <i class="bx bx-chevron-down auth-arrow"></i>
+        </button>
+        <div class="auth-dropdown-menu auth-menu-guest" id="authMenu">
+     
+        </div>
+    </div>
+}
+
+

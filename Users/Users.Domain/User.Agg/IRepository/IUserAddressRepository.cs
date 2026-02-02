@@ -6,5 +6,6 @@ namespace Users.Domain.User.Agg.IRepository
     public interface IUserAddressRepository : IGenericRepository<UserAddress, int>
     {
         Task<UserAddressDto> GetAddressForEditAsync(int id);
+        Task<int> GetUserAddressCount();
     }
 }

@@ -16,7 +16,7 @@ namespace NavinoShop.WebApplication.Areas.Account.Pages
         public async Task<IActionResult> OnGet()
         {
             await _userService.LogoutAsync();
-            return Redirect("/Account/Login");
+            return Redirect("/");
         }
     }
 }

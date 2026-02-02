@@ -13,6 +13,7 @@ using Query.Contract.UI.Comments;
 using Query.Contract.UI.PostPackage;
 using Query.Contract.UI.UserPanel;
 using Query.Contract.UI.UserPanel.PostOrder;
+using Query.Contract.UI.UserPanel.UserAddress;
 using Query.Service.Admin.Comment;
 using Query.Service.Admin.Email.EmailUser;
 using Query.Service.Admin.Email.MessageUser;
@@ -23,6 +24,7 @@ using Query.Service.Ui.Comments;
 using Query.Service.Ui.PostPackages;
 using Query.Service.Ui.UserPanel;
 using Query.Service.Ui.UserPanel.PostOrder;
+using Query.Service.Ui.UserPanel.UserAddress;
 using Seos.Query.Bootstrapper;
 using Site.Query.Bootstrapper;
 using Users.Query.Bootstrapper;
@@ -60,6 +62,7 @@ namespace Query.Service
             Services.AddTransient<IPackageUiQueryService, PackagesUiQueryService>();
             Services.AddTransient<IUserPanelQueryService, UserPanelQueryService>();
             Services.AddTransient<IPostOrderQueryService, PostOrderQueryService>();
+            Services.AddTransient<IUserAddressUiQueryService, UserAddressUiQueryService>();
             #endregion
         }
     }

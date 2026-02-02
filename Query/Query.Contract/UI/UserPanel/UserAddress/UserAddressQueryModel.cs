@@ -1,5 +1,4 @@
-﻿
-namespace Query.Contract.UI.UserPanel
+﻿namespace Query.Contract.UI.UserPanel.UserAddress
 {
     public class UserAddressQueryModel
     {

@@ -21,24 +21,181 @@ function validateEmail(email) {
 // ===============================
 // 👤 User Dropdown Menu
 // ===============================
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
 
-    const avatarBtn = document.getElementById("btn-login-register");
-    const dropdown = document.getElementById("userDropdown");
+    const authBtn = document.getElementById("authBtn");
+    const authMenu = document.getElementById("authMenu");
 
-    if (!avatarBtn || !dropdown) return;
+    if (!authBtn || !authMenu) return;
 
-    avatarBtn.addEventListener("click", function (e) {
+    authBtn.addEventListener("click", (e) => {
         e.stopPropagation();
-        dropdown.classList.toggle("show");
+
+        if (authMenu.innerHTML.trim() === "") {
+            if (authBtn.dataset.fullname) {
+                authMenu.innerHTML = getLoggedInMenuHtml(authBtn.dataset);
+            } else {
+                authMenu.innerHTML = renderGuestMenu();
+            }
+        }
+
+        authMenu.classList.toggle("show");
     });
 
-    document.addEventListener("click", function (e) {
-        if (!avatarBtn.contains(e.target) && !dropdown.contains(e.target)) {
-            dropdown.classList.remove("show");
-        }
+
+    authMenu.addEventListener("click", (e) => {
+        e.stopPropagation();
+    });
+
+    document.addEventListener("click", () => {
+        authMenu.classList.remove("show");
     });
 });
+
+
+
+function getLoggedInMenuHtml(data) {
+    return `
+        <!-- هدر پروفایل -->
+        <div class="menu-header">
+            <img src="${data.avatar}" class="menu-profile-img">
+            <h3 class="menu-profile-name">${data.fullname}</h3>
+            <p class="menu-profile-email">${data.mobile}</p>
+        </div>
+
+        <li>
+            <a href="/Profile/PersonalInfo" class="auth-menu-item">
+                <i class="bx bxs-dashboard"></i>
+                پروفایل
+            </a>
+        </li>
+
+        <li>
+            <a href="/profile/edit" class="auth-menu-item">
+                <i class="bx bxs-user-circle"></i>
+                ویرایش پروفایل
+            </a>
+        </li>
+
+        <li>
+            <a href="/messages" class="auth-menu-item">
+                <i class="bx bxs-message-alt"></i>
+                پیام‌ها
+                <span class="badge">3</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="/settings" class="auth-menu-item">
+                <i class="bx bxs-cog"></i>
+                تنظیمات
+            </a>
+        </li>
+
+        <li>
+            <a href="/Profile/orders" class="auth-menu-item">
+                <i class="bx bxs-package"></i>
+                سفارش‌های من
+            </a>
+        </li>
+
+        <div class="auth-menu-footer">
+        <a href="/Account/Logout">
+        <button class="logout-btn" id="logoutBtn">
+                خروج از حساب
+            </button>
+            </a>
+     
+        </div>
+    `;
+}
+function renderGuestMenu() {
+    return `
+            
+            <div class="menu-header">
+                <i class='bx bx-user-circle guest-icon'></i>
+                <h3 class="guest-title">خوش آمدید!</h3>
+                <p class="guest-subtitle">برای استفاده از امکانات کامل وارد شوید</p>
+            </div>
+
+            <!-- فرم ورود -->
+
+            <div  class="auth-form">
+                <div class="form-group">
+                    <input type="email" class="form-input" placeholder="ایمیل یا شماره موبایل" id="loginEmail">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-input" placeholder="رمز عبور" id="loginPassword">
+                </div>
+                
+                <div class="form-buttons">
+                    <button class="btn btn-primary" onclick="login()" id="loginBtn">
+                        ورود به حساب
+                    </button>
+                    <a href="/Account/Register">
+                    <button class="btn btn-secondary" id="registerBtn">
+                        ثبت‌نام جدید
+                    </button>
+                    <a/>
+                </div>
+                
+                <div class="quick-links">
+                    <a href="/forgot-password" class="quick-link">فراموشی رمز عبور</a>
+                    <a href="/help" class="quick-link">راهنمای ورود</a>
+                </div>
+            </div>
+
+            <!-- ورود سریع با شبکه‌های اجتماعی -->
+            <div style="padding: 0 20px 20px;">
+                <div style="text-align: center; color: #666; font-size: 13px; margin-bottom: 10px;">یا ورود سریع با</div>
+                <div style="display: flex; gap: 10px;">
+                    <button style="flex:1; padding: 10px; background: #3b5998; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                        <i class='bx bxl-facebook'></i> فیسبوک
+                    </button>
+                    <button style="flex:1; padding: 10px; background: #db4437; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                        <i class='bx bxl-google'></i> گوگل
+                    </button>
+                </div>
+            </div>
+        `;
+}
+
+// ===============================
+// 🖼 Login
+// ===============================
+
+function login() {
+    
+    $.ajax({
+        url: "/Account/Login",
+        type: "POST",
+        data: {
+            mobile: $("#loginEmail").val(),
+            password: $("#loginPassword").val(),
+        },
+        success: function (res) {
+            if (res.success) {
+                AlerSweetWithTimer("ورود با موفقیت انجام شد", "success", "center");
+                setTimeout(function () {
+                    location.reload();
+                }, 3000);
+
+            } else {
+                AlerSweetWithTimer(res.message, "error", "center");
+                     $("#loginEmail").val(''),
+                     $("#loginPassword").val('')
+            }
+        },
+        error: function () {
+            AlerSweetWithTimer("خطا در ارتباط با سرور", "error", "center");
+
+        }
+    });
+
+};
+
+
+
 
 
 // ===============================
@@ -207,11 +364,14 @@ function copyUrl(Url) {
 
 }
 
-//UserPanel
+// ===============================
+// User Panel
+// ===============================
+//Get Cities
 function GetCitiesForState(stateId) {
     var cities = $("#cities");
     cities.empty();
-   
+
     $.ajax({
         url: "/profile/GetCitiesForState?StateId=" + stateId,
         type: "GET",
@@ -225,9 +385,23 @@ function GetCitiesForState(stateId) {
 
                 `);
             }
-        
+
         }).fail(function (xhr) {
             console.error("Ajax Error:", xhr.status, xhr.responseText);
         });
 
 }
+//Profile Image Uploader
+function readImageForWidget(input, previewId) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $('#' + previewId).css('background-image', 'url(' + e.target.result + ')');
+            $('#' + previewId).hide();
+            $('#' + previewId).fadeIn(650);
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+

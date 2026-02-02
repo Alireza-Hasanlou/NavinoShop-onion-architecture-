@@ -27,6 +27,11 @@ namespace Users.Query.Service
             throw new NotImplementedException();
         }
 
-
+        public async Task<UserHeaderQueryModel> GetUserForHeader(int id)
+        {
+            if (id < 1)
+                return (new());
+            return await _userRepository.GetUserForHeader(id);
+        }
     }
 }

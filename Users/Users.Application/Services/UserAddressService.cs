@@ -26,6 +26,8 @@ namespace Users.Application.Services
         {
             if (await _userAddressRepository.ExistByAsync(p => p.PostalCode == command.PostalCode))
                 return new(false, ValidationMessages.DuplicatedMessage);
+            if( await _userAddressRepository.GetUserAddressCount()>=10)
+                return new(false,"تعداد آدرس ها بیش از حد مجاز است");
             var userAddress = new UserAddress(command.StateId, command.CityId, command.AddressDetail,
                 command.PostalCode, command.Phone, command.FullName, command.NationalCode, userId);
             var result = await _userAddressRepository.CreateAsync(userAddress);

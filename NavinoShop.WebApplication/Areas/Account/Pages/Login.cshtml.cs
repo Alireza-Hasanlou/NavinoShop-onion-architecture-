@@ -1,45 +1,39 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
 using Users.Application.Contract.UserService.Command;
 
 namespace NavinoShop.WebApplication.Areas.Account.Pages
 {
+    [IgnoreAntiforgeryToken]
     public class LoginModel : PageModel
     {
 
         private readonly IUserCommandService _userService;
 
-        [BindProperty]
-        public LoginUserCommand loginModel { get; set; }
+       
         public LoginModel(IUserCommandService userService)
         {
             _userService = userService;
         }
 
-        public async Task OnGet(string ReturnUrl = "/")
+        public async Task<JsonResult> OnPost(string mobile, string password)
         {
-            loginModel = new LoginUserCommand() { ReturnUrl = ReturnUrl };
+            if (string.IsNullOrWhiteSpace(mobile) || string.IsNullOrWhiteSpace(password))
+                return new JsonResult(new { success = false, message = "نام کاربری یا رمز عبور صحیح نیست" });
 
-        }
-        public async Task<IActionResult> OnPost()
-        {
-            if (!ModelState.IsValid)
-               return Page();
-
-            var result = await _userService.LoginAsync(loginModel);
+            var result = await _userService.LoginAsync(new LoginUserCommand { Mobile=mobile,Password=password});
             if (result.Success)
             {
-                return Redirect(loginModel.ReturnUrl);
+                return new JsonResult(new { success = true });
             }
             else
             {
-                ModelState.AddModelError(nameof(loginModel), result.Message);
-                return Page();
+                return new JsonResult(new { success = false, message = result.Message });
 
             }
         }
 
-    
+
     }
 }

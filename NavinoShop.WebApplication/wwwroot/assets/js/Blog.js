@@ -207,8 +207,6 @@ function AddComment(ownerId) {
 
             if (res.success) {
                 AlerSweetWithTimer("کامنت شما ارسال شد و پس از باز بینی منتشر خواهد شد", "success", "center");
-                // empty textArea
-
             }
             else {
                 AlerSweetWithTimer(res.message, "error", "center");
@@ -217,6 +215,7 @@ function AddComment(ownerId) {
         }).fail(function (xhr) {
             console.error("Ajax Error:", xhr.status, xhr.responseText);
         });
+    $("#commenttext").val('');
 }
 
 function OpenReplyInput(fullName, ownerId, parentId) {

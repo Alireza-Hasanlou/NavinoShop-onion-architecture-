@@ -3,15 +3,16 @@
 @{
     Layout = "_PanelLayout";
     ViewData["title"] = "ویرایش آدرس";
-    var success = ViewData["success"] as string ;
+    var success = ViewData["success"] as string;
     var States = ViewData["States"] as List<StateForChooseQueryModel>;
     var cities = ViewData["Cities"] as List<CityForChooseQueryModel>;
 }
+
 <div class="col-12 col-lg-12 pl-lg-0 pr-lg-2 mt-2 mt-lg-0">
     <!-- New Address Form -->
     <div class="custom-container mb-2" id="new-address">
         <div class="row pt-2 px-3">
-            <div class="col-12"><h1>افزودن آدرس جدید</h1></div>
+            <div class="col-12"><h1>ویرایش آدرس</h1></div>
         </div>
         <hr>
         <div>
@@ -114,4 +115,5 @@
         </script>
 
     }
+
 }

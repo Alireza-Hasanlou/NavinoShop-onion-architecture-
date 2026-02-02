@@ -22,20 +22,25 @@ namespace Users.Infrastructure.Persistence.Repository
 
         public async Task<UserAddressDto> GetAddressForEditAsync(int id)
         {
-            return await _context.UserAddresses.Where(i=>i.Id==id)
-                .Select(a=> new UserAddressDto
+            return await _context.UserAddresses.Where(i => i.Id == id)
+                .Select(a => new UserAddressDto
                 {
-                    Id = a.Id,  
+                    Id = a.Id,
                     AddressDetail = a.AddressDetail,
                     CityId = a.CityId,
                     FullName = a.FullName,
                     NationalCode = a.NationalCode,
-                    Phone=a.Phone,
+                    Phone = a.Phone,
                     PostalCode = a.PostalCode,
-                    StateId=a.StateId,
-                    
+                    StateId = a.StateId,
+
                 }).SingleOrDefaultAsync();
         }
+
+        public async Task<int> GetUserAddressCount()
+        {
+            return await _context.UserAddresses.CountAsync();
+        }
     }
-    
+
 }

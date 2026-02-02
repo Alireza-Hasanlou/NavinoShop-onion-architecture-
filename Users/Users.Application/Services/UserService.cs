@@ -61,7 +61,7 @@ namespace Users.Application.Services
                 if (!FileSecurity.IsImage(command.AvatarFile))
                     return new(false, ValidationMessages.ImageErrorMessage, "image");
 
-                imageName = await _fileService.UploadImage(command.AvatarFile, FileDirectories.UserImageDirectory);
+                imageName = await _fileService.UploadImage(command.AvatarFile, FileDirectories.UserImageFolder);
                 if (imageName == "")
                     return new(false, ValidationMessages.SystemErrorMessage, "Avatar");
                 _fileService.ResizeImage(imageName, FileDirectories.UserImageFolder, 100);
@@ -155,11 +155,11 @@ namespace Users.Application.Services
                 if (!FileSecurity.IsImage(command.AvatarFile))
                     return new(false, ValidationMessages.ImageErrorMessage, "image");
 
-                imageName = await _fileService.UploadImage(command.AvatarFile, FileDirectories.UserImageDirectory);
+                imageName = await _fileService.UploadImage(command.AvatarFile, FileDirectories.UserImageFolder);
                 if (imageName == "")
                     return new(false, ValidationMessages.SystemErrorMessage, "Avatar");
                 DeleteUserImages(oldimageName);
-                _fileService.ResizeImage(imageName, FileDirectories.UserImageDirectory100, 100);
+                _fileService.ResizeImage(imageName, FileDirectories.UserImageFolder, 100);
             }
             user.Edit(command.FullName, command.Mobile.Trim(), command.Email.Trim().ToLower(), user.Password, imageName, command.UserGender);
             var resut = await _userRepository.SaveAsync();

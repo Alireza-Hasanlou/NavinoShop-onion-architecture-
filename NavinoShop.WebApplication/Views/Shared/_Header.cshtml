@@ -25,39 +25,16 @@
                             <a href="cart.html">
                                 <div class="btn btn-warning w-100"><i class="fa fa-shopping-cart"></i>&nbsp;<span class="d-md-none d-lg-inline-block">سبد خرید</span> (2)</div>
                             </a>
+                            <a></a>
                         </div>
-                        <div class="col-12 col-md-7 col-lg-6 text-center " id="btn-login-register">
-                            @if (!_authService.IsUserLogin())
-                            {
-                                <div id="authBtn">
-                                    <a href="/Account/login">ورود/</a>
-                                    <a href="/Account/register">عضویت</a>
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="user-menu">
-                                    <span>
-                                        <img src="@((FileDirectories.UserImageDirectory100) + (_authService.GetLoginUserAvatar()))" alt="User Avatar" class="user-avatar p-1" id="avatarBtn" />
-                                        @_authService.GetLoginUserFullName()
-                                    </span>
-                                    <div class="Authdropdown-menu" id="userDropdown">
-                                        <div></div>
-                                        <br />
-                                        <span><a href="/Profile/PersonalInfo">@_authService.GetLoginUserMobile()</a></span>
-                                        <hr />
-
-                                        <a href="/Admin">پنل ادمین</a>
-                                        <a href="/Account/Logout">خروج</a>
-                                    </div>
-                                </div>
-
-
-
-                            }
-                            <!-- HTML -->
+                        <div class="col-12 col-md-5 col-lg-6">
+                            <span>
+                                @await Component.InvokeAsync("HeaderDropDownMenu")
+                            </span>
+                        
                         </div>
-                    </div>
+                     
+                    </div>        
                 </div>
             </div>
         </div>

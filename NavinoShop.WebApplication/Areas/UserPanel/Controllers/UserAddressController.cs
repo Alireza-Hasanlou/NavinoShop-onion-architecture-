@@ -57,7 +57,7 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
             if (res.Success)
             {
                 ViewData["success"] = "آدرس جدید با موفقیت اضافه شد";
-                return RedirectToAction("NewAddress", new {Status=true});
+                return RedirectToAction("NewAddress", new { Status = true });
             }
             ModelState.AddModelError(res.ModelName, res.Message);
             return View();
@@ -75,7 +75,7 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
         }
         public async Task<IActionResult> EditAddress(int id)
         {
-           
+
 
             if (id < 1)
                 return RedirectToAction("NewAddress");
@@ -89,6 +89,11 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
         [HttpPost]
         public async Task<IActionResult> EditAddress(UserAddressDto command)
         {
+            if (command.StateId < 1)
+            {
+                ModelState.AddModelError("StateId", "لطفا استان محل سکونت خود رو انتخاب کنید");
+                return View();
+            }
             ViewData["States"] = await _stateQueryService.GetStatesForChoose();
             ViewData["Cities"] = await _stateQueryService.GetCitiesForChoose(command.StateId);
             if (!ModelState.IsValid)

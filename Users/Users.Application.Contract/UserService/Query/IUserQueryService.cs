@@ -8,9 +8,9 @@ namespace Users.Application.Contract.UserService.Query
 {
     public interface IUserQueryService
     {
+        Task<UserHeaderQueryModel> GetUserForHeader(int id);    
         Task<EditUserByAdminDto> GetForEditByAdminAsync(int userId);
         Task<List<UserQueryModel>> GetUsersByIds(List<int> Ids);
         
     }
-   
 }

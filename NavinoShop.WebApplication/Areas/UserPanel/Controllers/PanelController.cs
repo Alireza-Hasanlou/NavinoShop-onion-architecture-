@@ -27,13 +27,19 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
 
         public async Task<IActionResult> PersonalInfo()
         {
+
             var userId = _authService.GetLoginUserId();
             var user = await _userPanelQueryService.GetUserInfoForPanel(userId);
             return View(user);
         }
         [HttpGet]
-        public async Task<IActionResult> EditProfile()
+        public async Task<IActionResult> EditProfile(bool status = false)
         {
+            //Edit User Status
+            if (status)
+            {
+                ViewData["editProfileSuccess"] = "عملیات با موفقیت انجام شد";
+            }
             var userId = _authService.GetLoginUserId();
             var res = await _userCommandService.GetForEditByUserAsync(userId);
             return View(res);
@@ -42,16 +48,15 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
         public async Task<IActionResult> EditProfile(EditUserByUserCommand command)
         {
             if (!ModelState.IsValid)
-                return View();
+                return View(command);
             var userId = _authService.GetLoginUserId();
             var res = await _userCommandService.EditByUserAsync(command, userId);
             if (res.Success)
             {
-                ViewData["editProfileSuccess"] = "عملیات با موفقیت انجام شد";
-                return RedirectToAction("PersonalInfo");
+                return RedirectToAction("EditProfile",new {status=true});
             }
             ModelState.AddModelError("Email", res.Message);
-            return View();
+            return View(command);
         }
 
     }
