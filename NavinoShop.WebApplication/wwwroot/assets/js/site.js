@@ -165,7 +165,8 @@ function renderGuestMenu() {
 // ===============================
 
 function login() {
-    
+   
+     Loding();
     $.ajax({
         url: "/Account/Login",
         type: "POST",
@@ -175,6 +176,7 @@ function login() {
         },
         success: function (res) {
             if (res.success) {
+                
                 AlerSweetWithTimer("ورود با موفقیت انجام شد", "success", "center");
                 setTimeout(function () {
                     location.reload();
@@ -191,7 +193,7 @@ function login() {
 
         }
     });
-
+    EndLoading();
 };
 
 

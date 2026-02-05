@@ -1,0 +1,162 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f5f7fa;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    padding: 30px;
+}
+
+h1 {
+    color: #2c3e50;
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 24px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #34495e;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+select, input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    background: white;
+    transition: border 0.3s;
+}
+
+    select:focus, input:focus {
+        outline: none;
+        border-color: #3498db;
+    }
+
+    select:disabled {
+        background-color: #f8f9fa;
+        color: #95a5a6;
+    }
+
+.btn {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 14px;
+    width: 100%;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 10px;
+}
+
+    .btn:hover {
+        background: #2980b9;
+    }
+
+    .btn:disabled {
+        background: #bdc3c7;
+        cursor: not-allowed;
+    }
+
+.loading {
+    text-align: center;
+    padding: 20px;
+    color: #7f8c8d;
+    display: none;
+}
+
+.error {
+    background: #ffeaea;
+    color: #e74c3c;
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 10px;
+    font-size: 14px;
+    display: none;
+}
+
+.results {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    display: none;
+}
+
+    .results h2 {
+        color: #2c3e50;
+        margin-bottom: 20px;
+        font-size: 20px;
+    }
+
+.price-item {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    border-left: 4px solid #3498db;
+}
+
+.price-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.service-name {
+    font-weight: 600;
+    color: #2c3c50;
+}
+
+.price {
+    color: #27ae60;
+    font-weight: 700;
+}
+
+.delivery-time {
+    color: #7f8c8d;
+    font-size: 14px;
+}
+
+.selected-info {
+    background: #e8f4fc;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+    .selected-info div {
+        margin-bottom: 5px;
+    }
+
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+}
+

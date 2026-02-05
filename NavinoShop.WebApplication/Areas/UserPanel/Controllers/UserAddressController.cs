@@ -33,13 +33,13 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
                 ViewData["success"] = "عملیات با موفقیت انجام شد";
             }
             CreateUserAddressCommand newAddress = new();
-            ViewData["States"] = await _stateQueryService.GetStatesForChoose();
+            ViewData["States"] = await _stateQueryService.States();
             return View(newAddress);
         }
         [HttpPost]
         public async Task<IActionResult> NewAddress(CreateUserAddressCommand command)
         {
-            ViewData["States"] = await _stateQueryService.GetStatesForChoose();
+            ViewData["States"] = await _stateQueryService.States();
             if (command.StateId < 1)
             {
                 ModelState.AddModelError("StateId", "لطفا استان محل سکونت خود رو انتخاب کنید");
@@ -82,8 +82,8 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
             var address = await _userAddressCommandService.GetAddressForEditAsync(id);
             if (address == null)
                 return RedirectToAction("NewAddress");
-            ViewData["States"] = await _stateQueryService.GetStatesForChoose();
-            ViewData["Cities"] = await _stateQueryService.GetCitiesForChoose(address.StateId);
+            ViewData["States"] = await _stateQueryService.States();
+            ViewData["Cities"] = await _stateQueryService.Cities(address.StateId);
             return View(address);
         }
         [HttpPost]
@@ -94,8 +94,8 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
                 ModelState.AddModelError("StateId", "لطفا استان محل سکونت خود رو انتخاب کنید");
                 return View();
             }
-            ViewData["States"] = await _stateQueryService.GetStatesForChoose();
-            ViewData["Cities"] = await _stateQueryService.GetCitiesForChoose(command.StateId);
+            ViewData["States"] = await _stateQueryService.States();
+            ViewData["Cities"] = await _stateQueryService.Cities(command.StateId);
             if (!ModelState.IsValid)
                 return View();
             var res = await _userAddressCommandService.EditAsync(command);
@@ -107,7 +107,7 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
         }
         public async Task<JsonResult> GetCitiesForState(int StateId)
         {
-            var cities = await _stateQueryService.GetCitiesForChoose(StateId);
+            var cities = await _stateQueryService.Cities(StateId);
             return Json(cities);
         }
     }

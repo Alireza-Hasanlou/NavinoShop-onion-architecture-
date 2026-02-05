@@ -18,7 +18,7 @@ namespace PostModule.Query.Services
             _post_Context = post_Context;
         }
 
-        public async Task<List<CityForChooseQueryModel>> GetCitiesForChoose(int stateId) =>
+        public async Task<List<CityForChooseQueryModel>> Cities(int stateId) =>
           await _post_Context.Cities.Where(c => c.StateId == stateId)
             .Select(c => new CityForChooseQueryModel()
             {
@@ -62,7 +62,7 @@ namespace PostModule.Query.Services
             CityCount = s.Cities.Count()
         }).ToListAsync();
 
-        public async Task<List<StateForChooseQueryModel>> GetStatesForChoose()
+        public async Task<List<StateForChooseQueryModel>> States()
         {
             return await _post_Context.States.Select(s => new StateForChooseQueryModel
             {

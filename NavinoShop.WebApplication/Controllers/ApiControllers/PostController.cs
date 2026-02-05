@@ -5,7 +5,7 @@ using PostModule.Application.Contract.StateQuery;
 
 namespace NavinoShop.WebApplication.Controllers.ApiControllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]/[action]/{id?}")]
     [ApiController]
     public class PostController : ControllerBase
     {
@@ -35,8 +35,17 @@ namespace NavinoShop.WebApplication.Controllers.ApiControllers
         public async Task<List<StateQueryModel>> GetStatesWithCities()
         {
             return await _stateQueryService.GetStatesWithCity();
-
-
+        }
+        [HttpGet]
+        public async Task<List<StateForChooseQueryModel>> States()
+        {
+            return await _stateQueryService.States();
+            
+        }
+        [HttpGet]
+        public async Task<List<CityForChooseQueryModel>> Cities(int id)
+        {
+            return await _stateQueryService.Cities(id);
         }
     }
 }

@@ -13,8 +13,8 @@ namespace PostModule.Application.Contract.StateQuery
         Task<List<StateAdminQueryModel>> GetStatesForAdmin();
         Task<StateDetailQueryModel> GetStateDetail(int id);
         Task<string> GetStateTitle(int id);
-        Task<List<StateForChooseQueryModel>> GetStatesForChoose();
-        Task<List<CityForChooseQueryModel>> GetCitiesForChoose(int stateId);
+        Task<List<StateForChooseQueryModel>> States();
+        Task<List<CityForChooseQueryModel>> Cities(int stateId);
         Task<bool> IsStateCorrect(int stateId);
         Task<bool> IsCityCorrect(int stateId, int cityId);
     }

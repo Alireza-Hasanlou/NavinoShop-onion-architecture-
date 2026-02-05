@@ -101,7 +101,7 @@ internal class SiteSettingQuery : ISiteSettingQueryService
     public async Task<LogoForUiQueryModel> GetLogoForUi()
     {
         var site = await _siteSettingRepository.GetSingle();
-        return new LogoForUiQueryModel(string.IsNullOrEmpty(site.LogoName) ? "" : FileDirectories.SiteImageDirectory32 + site.LogoName, site.LogoAlt);
+        return new LogoForUiQueryModel(string.IsNullOrEmpty(site.LogoName) ? "" : FileDirectories.SiteImageDirectory64 + site.LogoName, site.LogoAlt);
     }
 
     public async Task<SocialForUiQueryModel> GetSocialForUi()

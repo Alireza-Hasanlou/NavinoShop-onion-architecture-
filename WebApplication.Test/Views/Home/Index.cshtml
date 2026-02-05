@@ -1,0 +1,73 @@
+﻿
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+<div class="container">
+    <h1><i class="fas fa-shipping-fast"></i> محاسبه قیمت پست</h1>
+
+    <form id="postForm">
+        <div class="form-group">
+            <label for="province">استان مبدا:</label>
+            <select id="province"  required>
+                <option value="">لطفا استان را انتخاب کنید</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="city">شهر مبدا:</label>
+            <select id="city"  required disabled>
+                <option value="">ابتدا استان را انتخاب کنید</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="Destinationprovince">استان مقصد:</label>
+            <select id="Destinationprovince" required>
+                <option value="">لطفا استان را انتخاب کنید</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="city">شهر مقصد:</label>
+            <select id="Destinationcity"  required disabled>
+                <option value="">ابتدا استان را انتخاب کنید</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="weight">وزن محصول (گرم):</label>
+            <input type="number" id="weight" name="weight" min="1" max="50000" placeholder="مثال: 500" required>
+        </div>
+
+        <div class="form-group">
+            <label for="weight">کد api:</label>
+            <input type="text" id="apiCode" name="apiCode" required>
+        </div>
+        <button type="button" id="calculateBtn" class="btn">
+            <i class="fas fa-calculator"></i> محاسبه قیمت
+        </button>
+
+        <div class="error" id="errorMessage"></div>
+    </form>
+
+    <div class="loading" id="loading">
+        <i class="fas fa-spinner fa-spin"></i> در حال محاسبه...
+    </div>
+
+    <div class="results" id="results">
+        <h2>نتایج محاسبه</h2>
+
+        <div class="selected-info" id="selectedInfo">
+            <!-- اطلاعات انتخاب شده نمایش داده می‌شود -->
+        </div>
+
+        <div id="pricesList">
+            <!-- لیست قیمت‌ها اینجا نمایش داده می‌شود -->
+        </div>
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
