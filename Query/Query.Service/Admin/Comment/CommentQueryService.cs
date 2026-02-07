@@ -76,7 +76,7 @@ namespace Query.Service.Admin.Comment
             CommentFor commentFor, CommentStatus commentStatus, int? parentId)
         {
 
-            var commentQuery = _commentRepository.GetAllBy();
+            var commentQuery = _commentRepository.GetAll();
             
             if (commentFor!=CommentFor.همه)
             {

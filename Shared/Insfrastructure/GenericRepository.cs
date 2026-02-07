@@ -24,7 +24,7 @@ namespace Shared.Insfrastructure
                 await SaveAsync();
                 return new OperationResult(true);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
                 return new OperationResult(false);
@@ -55,9 +55,6 @@ namespace Shared.Insfrastructure
 
         public IQueryable<TEntity> GetAllBy(Expression<Func<TEntity, bool>> expression) =>
                          _context.Set<TEntity>().Where(expression).AsNoTracking();
-
-        public IQueryable<TEntity> GetAllBy()=>
-             _context.Set<TEntity>();
 
         public async Task<TEntity?> GetByIdAsync(TKey id) =>
                     await _context.FindAsync<TEntity>(id);

@@ -6,7 +6,6 @@ namespace Shared.Domain
     {
         IQueryable<TEntity> GetAll();
         IQueryable<TEntity> GetAllBy(Expression<Func<TEntity, bool>> expression);
-        IQueryable<TEntity> GetAllBy();
         Task<TEntity?> GetByIdAsync(TKey id);
         Task<OperationResult> CreateAsync(TEntity entity);
         Task<OperationResult> DeleteAsync(TEntity entity);
