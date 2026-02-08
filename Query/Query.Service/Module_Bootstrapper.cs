@@ -27,6 +27,7 @@ using Query.Service.Ui.UserPanel.PostOrder;
 using Query.Service.Ui.UserPanel.UserAddress;
 using Seos.Query.Bootstrapper;
 using Site.Query.Bootstrapper;
+using Transactions.Query.Bootstrapper;
 using Users.Query.Bootstrapper;
 
 namespace Query.Service
@@ -46,6 +47,7 @@ namespace Query.Service
             Email_Bootstrapper.Config(Services, ConnectionString);
             Post_Bootstrapper.Config(Services, ConnectionString);
             Comment_Bootstrapper.Config(Services, ConnectionString);
+            Transaction_Bootstrapper.Config(Services, ConnectionString);
             #endregion
             #region Admin
 
@@ -66,5 +68,5 @@ namespace Query.Service
             #endregion
         }
     }
-    
+
 }

@@ -18,9 +18,9 @@ namespace Transactions.Application.Handlers.TransactionHandler
         public async Task<OperationResult> CreateAsync(CreateTransacionCommandModel commnad)
         {
             if (commnad.Price < 1000)
-                return new OperationResult(false, ValidationMessages.PaymentPriceError);
+                return new OperationResult(false, ValidationMessages.PaymentPriceError, nameof(commnad.Price));
             if (await _transactionRepository.ExistByAsync(a => a.Authority == commnad.Authority) || string.IsNullOrWhiteSpace(commnad.Authority))
-                return new OperationResult(false, "عملیات ناموفق", commnad.Authority);
+                return new OperationResult(false, "عملیات ناموفق", nameof(commnad.Authority));
             var newTransation = new Transaction(commnad.UserId, commnad.Price, commnad.Authority, commnad.TransactionFor, commnad.OwnerId);
 
             var res = await _transactionRepository.CreateAsync(newTransation);
@@ -29,9 +29,15 @@ namespace Transactions.Application.Handlers.TransactionHandler
             return new OperationResult(false, ValidationMessages.SystemErrorMessage);
         }
 
-        public Task<OperationResult> Payment(TransactionStatus status, int id, string refid)
+        public async Task<OperationResult> Payment(TransactionStatus status, long id, string refid)
         {
-            throw new NotImplementedException();
+            var transaction = await _transactionRepository.GetByIdAsync(id);
+            if (transaction == null)
+                return new OperationResult(false, ValidationMessages.SystemErrorMessage);
+            transaction.Payment(status, refid);
+            if (await _transactionRepository.SaveAsync())
+                return new OperationResult(true);
+            return new OperationResult(false, ValidationMessages.SystemErrorMessage);
         }
     }
 }
