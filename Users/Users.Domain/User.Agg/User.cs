@@ -1,6 +1,7 @@
 ﻿using Shared.Domain;
 using Shared.Domain.Enums;
 using System;
+using Users.Domain.WalletAgg;
 
 
 namespace Users.Domain.User.Agg
@@ -17,13 +18,14 @@ namespace Users.Domain.User.Agg
         public Gender UserGender { get; private set; }
         public ICollection<UserAddress> Addresses { get; private set; }
         public ICollection<UserRole> UserRoles { get; private set; }
+        public Wallet Wallet { get; private set; }
 
         protected User()
         {
 
         }
         public User(string fullName, string mobile, string email,
-                    string password, string avatar, 
+                    string password, string avatar,
                     bool active, bool isDelete, Gender gender)
         {
             FullName = fullName;
@@ -36,6 +38,8 @@ namespace Users.Domain.User.Agg
             UserGender = gender;
             Addresses = new List<UserAddress>();
             UserRoles = new List<UserRole>();
+            Wallet = new Wallet();
+
         }
 
         public void Edit(string fullName, string mobile, string email,
@@ -61,14 +65,20 @@ namespace Users.Domain.User.Agg
         public void DeleteChange()
         {
             if (IsDelete)
+            {
                 IsDelete = false;
+            }
+            else
+            {
+                IsDelete = true;
+            }
 
-            IsDelete = true;
+
         }
 
         public static User Register(string mobile, string password)
         {
-            return new User("", mobile, "", password, "Default.png", false, false, Gender.نامشخص);
+            return new User("", mobile, "", password, "DefaultAvatar.png", false, false, Gender.نامشخص);
         }
 
         public void AddRole(int roleId)

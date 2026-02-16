@@ -1,0 +1,257 @@
+﻿@page
+@using Shared.Domain.Enums
+@model NavinoShop.WebApplication.Areas.Admin.Pages.Transactions.IndexModel
+@{
+    Layout = "_AdminLayout";
+}
+
+<style>
+    .filters-card {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 25px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .filter-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 6px;
+        display: block;
+    }
+
+    .search-btn {
+        background: #0d6efd;
+        color: white;
+        border: none;
+        padding: 8px 25px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.2s;
+        height: 38px;
+    }
+
+        .search-btn:hover {
+            background: #0b5ed7;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(13,110,253,0.2);
+        }
+
+    .reset-btn {
+        background: #6c757d;
+        color: white;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+        height: 38px;
+    }
+
+    .table thead th {
+        background-color: #f2f5f9;
+        font-weight: 600;
+        font-size: 0.9rem;
+        border-bottom-width: 1px;
+    }
+
+    .box-body {
+        padding: 20px;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    }
+
+    /* استایل برای بخش بالایی */
+    .top-actions {
+        margin-bottom: 20px;
+    }
+
+    .entries-select {
+        width: auto;
+        display: inline-block;
+        margin: 0 5px;
+    }
+
+    .search-input-group {
+        max-width: 300px;
+    }
+</style>
+<div class="bg-light p-4">
+    <div class="container-fluid">
+        <div class="box-body">
+            <!-- بخش اول: نمایش رکورد و جستجو (منتقل شده به بالا) -->
+            <form method="get">
+                <div class="row top-actions align-items-center mb-4">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center">
+                            <span class="text-nowrap ms-2">نمایش</span>
+                            <select asp-for="TransactionsModel.Take" name="take" class="form-select form-select-sm entries-select" style="width: 70px;">
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                            <span class="text-nowrap">رکورد</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex justify-content-end">
+                            <div class="input-group search-input-group">
+                                <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                                <input asp-for="TransactionsModel.filter" name="filter" type="text" class="form-control" placeholder="جستجو در جدول...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- بخش دوم: 4 دراپ‌داون و باتن جستجو -->
+                <div class="filters-card">
+                    <div class="row g-3 align-items-end">
+                        <!-- دراپ‌داون 1: موتور رندر -->
+                        <div class="col-md-3">
+                            <label class="filter-label"><i class="bi bi-gear me-1"></i>نوع تراکنش</label>
+                            <select asp-items="@Html.GetEnumSelectList(typeof(TransactionType))" asp-for="TransactionsModel.transactionType" name="transactionType" class="form-select">
+                            </select>
+                        </div>
+
+                        <!-- دراپ‌داون 2: مرورگر -->
+                        <div class="col-md-3">
+                            <label class="filter-label"><i class="bi bi-browser-chrome me-1"></i>تراکنش برای</label>
+                            <select asp-items="@Html.GetEnumSelectList(typeof(TransactionFor))" asp-for="TransactionsModel.transactionFor" name="transactionFor" class="form-select">
+                            </select>
+                        </div>
+
+                        <!-- دراپ‌داون 3: سیستم عامل -->
+                        <div class="col-md-2">
+                            <label class="filter-label"><i class="bi bi-pc-display me-1"></i>منبع تراکنش</label>
+                            <select  asp-for="TransactionsModel.transactionStatus" name="transactionSource" class="form-select">
+                                @foreach (var item in @Html.GetEnumSelectList(typeof(TransactionSource)))
+                                {
+                                    <option value="@item.Value">@item.Text.Replace("_", " ")</option>
+                                }
+                            </select>
+                        </div>
+
+                        <!-- دراپ‌داون 4: امتیاز -->
+                        <div class="col-md-2">
+                            <label class="filter-label"><i class="bi bi-star me-1"></i>وضعیت ترکنش</label>
+                            <select asp-for="TransactionsModel.transactionStatus" name="transactionStatus" class="form-select">
+                                @foreach (var item in @Html.GetEnumSelectList(typeof(TransactionStatus)))
+                                {
+                                    <option value="@item.Value">@item.Text.Replace("_", "")</option>
+                                }
+                            </select>
+                        </div>
+
+                        <!-- باتن جستجو + ریست -->
+                        <div class="col-md-2">
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn search-btn flex-grow-1">
+                                    <i class="bi bi-search me-1"></i> جستجو
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+
+            <!-- جدول اصلی -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>کد پیگیری</th>
+                            <th>نام کاربری</th>
+                            <th>شماره تماس</th>
+                            <th>مبلغ</th>
+                            <th>نوع ترکنش </th>
+                            <th>تراکنش برای</th>
+                            <th>منبع ترکنش </th>
+                            <th>وضعیت ترکنش </th>
+                            <th>تارخ اینجاد</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.TransactionsModel.Transactions.Count() > 0)
+                        {
+                            @foreach (var item in Model.TransactionsModel.Transactions)
+                            {
+                                <tr>
+                                    <td>@item.RefId</td>
+                                    <td>@item.UserName</td>
+                                    <td>@item.Mobile</td>
+                                    <td>@item.Price</td>
+                                    <td>@item.TransactionType</td>
+                                    <td class="text-danger">  @item.transactionFor </td>
+                                    <td> @item.TransactionSource.ToString().Replace("_", "") </td>
+                                    <td class="@((item.transactionStatus == TransactionStatus.موفق) ? "text-success" : "text-danger")"> @item.transactionStatus </td>
+                                    <td> @item.TransactionDate </td>
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>کد پیگیری</th>
+                            <th>نام کاربری</th>
+                            <th>شماره تماس</th>
+                            <th>مبلغ</th>
+                            <th>نوع ترکنش </th>
+                            <th>تراکنش برای</th>
+                            <th>منبع ترکنش </th>
+                            <th>وضعیت ترکنش </th>
+                            <th>تارخ اینجاد</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+           
+            <div class="row align-items-center mt-4">
+                <div class="col-md-5">
+                    <div class="dataTables_info">نمایش ۱ تا @Model.TransactionsModel.take از @Model.TransactionsModel.DataCount رکورد</div>
+                </div>
+                @if (Model.TransactionsModel.PageCount > 1)
+                {
+                    <div class="row">
+                        <div class="col-sm-5"></div>
+                        <div class="col-sm-7">
+                            <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
+                                <ul class="pagination">
+
+                                    <li class="paginate_button previous @((Model.TransactionsModel.PageId == Model.TransactionsModel.StartPage) ? "active" : "")" id="DataTables_Table_0_previous">
+                                        <a href="/Admin/TransactionsModel/Index?take=@Model.TransactionsModel.take&pageId=@Model.TransactionsModel.StartPage
+                                                                     &filter=@Model.TransactionsModel.filter&transactionFor=@Model.TransactionsModel.transactionFor&transactionType=@Model.TransactionsModel.transactionType
+                                                                     &transactionStatus=@Model.TransactionsModel.transactionStatus&transactionSource=@Model.TransactionsModel.transactionSource"
+                                           aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0">@Model.TransactionsModel.StartPage</a>
+                                    </li>
+                                    @for (int i = Model.TransactionsModel.StartPage + 1; i < Model.TransactionsModel.EndPage; i++)
+                                    {
+                                        <li class="paginate_button  @((Model.TransactionsModel.PageId == i) ? "active" : "")">
+                                            <a href="/Admin/TransactionsModel/Index?take=@Model.TransactionsModel.take&pageId=@i
+                                                                                 &filter=@Model.TransactionsModel.filter&transactionFor=@Model.TransactionsModel.transactionFor&transactionType=@Model.TransactionsModel.transactionType
+                                                                                 &transactionStatus=@Model.TransactionsModel.transactionStatus&transactionSource=@Model.TransactionsModel.transactionSource"
+                                               aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0">@i</a>
+                                        </li>
+                                    }
+                                    <li class="paginate_button next @((Model.TransactionsModel.PageId == Model.TransactionsModel.EndPage) ? "active" : "")" id="DataTables_Table_0_next">
+                                        <a href="/Admin/TransactionsModel/Index?take=@Model.TransactionsModel.take&pageId=@Model.TransactionsModel.EndPage
+                                                                         &filter=@Model.TransactionsModel.filter&transactionFor=@Model.TransactionsModel.transactionFor&transactionType=@Model.TransactionsModel.transactionType
+                                                                         &transactionStatus=@Model.TransactionsModel.transactionStatus&transactionSource=@Model.TransactionsModel.transactionSource"
+                                           aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0">@Model.TransactionsModel.EndPage</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Users.Domain.User.Agg;
+using Users.Domain.WalletAgg;
 using Users.Infrastructure.Persistence.EFConfig;
 
 namespace Users.Infrastructure.Persistence.Context
@@ -20,6 +21,7 @@ namespace Users.Infrastructure.Persistence.Context
         public DbSet<UserAddress> UserAddresses { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<RolePermission> RolePermissions { get; set; }
+        public DbSet<Wallet> Wallets{ get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

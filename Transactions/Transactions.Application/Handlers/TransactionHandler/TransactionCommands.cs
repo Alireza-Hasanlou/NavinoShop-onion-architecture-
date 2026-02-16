@@ -21,7 +21,8 @@ namespace Transactions.Application.Handlers.TransactionHandler
                 return new OperationResult(false, ValidationMessages.PaymentPriceError, nameof(commnad.Price));
             if (await _transactionRepository.ExistByAsync(a => a.Authority == commnad.Authority) || string.IsNullOrWhiteSpace(commnad.Authority))
                 return new OperationResult(false, "عملیات ناموفق", nameof(commnad.Authority));
-            var newTransation = new Transaction(commnad.UserId, commnad.Price, commnad.Authority, commnad.TransactionFor, commnad.OwnerId);
+            var newTransation = new Transaction(commnad.UserId, commnad.Price, commnad.Authority, commnad.Portal, TransactionStatus.نا_موفق
+                , commnad.TransactionFor, commnad.TransactionType, commnad.TransactionSource, commnad.Description, commnad.OwnerId);
 
             var res = await _transactionRepository.CreateAsync(newTransation);
             if (res.Success)
@@ -34,7 +35,7 @@ namespace Transactions.Application.Handlers.TransactionHandler
             var transaction = await _transactionRepository.GetByIdAsync(id);
             if (transaction == null)
                 return new OperationResult(false, ValidationMessages.SystemErrorMessage);
-            transaction.Payment(status, refid);
+            transaction.Payment(refid);
             if (await _transactionRepository.SaveAsync())
                 return new OperationResult(true);
             return new OperationResult(false, ValidationMessages.SystemErrorMessage);

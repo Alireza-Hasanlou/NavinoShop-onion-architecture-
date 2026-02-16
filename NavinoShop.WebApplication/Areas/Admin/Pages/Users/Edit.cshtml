@@ -1,0 +1,87 @@
+﻿@page
+@using Shared.Application
+@using Shared.Domain.Enums
+@model NavinoShop.WebApplication.Areas.Admin.Pages.Users.EditModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["title"] = "ویرایش کاربر";
+}
+<div class="Formcontainer">
+
+    <div class="Formcontainer">
+
+
+        <form method="post" enctype="multipart/form-data">
+            <input type="hidden" asp-for="EditUserModel.Id" />
+            <input type="hidden" asp-for="EditUserModel.AvatarName" />
+            <div class="row">
+
+                <div class="col  col-md-6 col-sm-12 ">
+                    <div class="custom-form-group">
+                        <label for="Title" class="required">نام و نام خانوادگی</label>
+                        <input asp-for="@Model.EditUserModel.FullName" type="text" id="Title">
+                        <span asp-validation-for="EditUserModel.FullName" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col  col-md-6 col-sm-12 ">
+                    <div class="custom-form-group">
+                        <label for="Gender">جنسیت</label>
+                        <select asp-items="@Html.GetEnumSelectList<Gender>()" asp-for="@Model.EditUserModel.UserGender" type="text" id="Gender" readonly></select>
+                        <span asp-validation-for="EditUserModel.UserGender" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col  col-md-6 col-sm-12 ">
+                    <div class="custom-form-group">
+                        <label for="Mobile" class="required">"شماره تماس "</label>
+                        <input asp-for="@Model.EditUserModel.Mobile" type="number" id="Mobile">
+                        <span asp-validation-for="EditUserModel.Mobile" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col  col-md-6 col-sm-12 ">
+                    <div class="custom-form-group">
+                        <label for="Email" class="required">ایمیل</label>
+                        <input asp-for="@Model.EditUserModel.Email" type="email" id=" Email">
+                        <span asp-validation-for="EditUserModel.Email" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col col-md-6 col-sm-12 col-12">
+
+                    <div class="custom-form-group">
+                        <label  for="Password">   کلمه عبور جدید</label>
+                        <input asp-for="EditUserModel.Password" type="text" id="Password">
+                        <span asp-validation-for="EditUserModel.Password" class="text-danger"></span>
+                    </div>
+                    <span asp-validation-for="EditUserModel.Password"></span>
+                </div>
+                <div class="col col-md-6 col-sm-12 col-12">
+                    <div id="img-container">
+                        <label for="upload-file">
+
+                            <div class="picture-uploader" data-url="@FileDirectories.UserImageDirectory@Model.EditUserModel.AvatarName">
+                                <div class="picture__image"></div>
+                                <input asp-for="@Model.EditUserModel.AvatarFile" type="file" id="upload-file" class="picture__input" accept="image/*" />
+                            </div>
+                        </label>
+
+                    </div>
+                    <span asp-validation-for="EditUserModel.AvatarFile" class="text-danger"></span>
+                </div>
+            </div>
+
+
+
+            <button type="submit" class="btn btn-success btn-block">ویرایش </button>
+
+        </form>
+    </div>
+</div>
+

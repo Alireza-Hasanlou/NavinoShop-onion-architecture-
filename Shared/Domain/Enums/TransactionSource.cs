@@ -1,7 +1,8 @@
 ﻿namespace Shared.Domain.Enums
 {
-    public enum WalletWhy
+    public enum TransactionSource
     {
+        همه,
         توسط_ادمین,
         پرداخت_از_درگاه,
         خرید_از_سایت,

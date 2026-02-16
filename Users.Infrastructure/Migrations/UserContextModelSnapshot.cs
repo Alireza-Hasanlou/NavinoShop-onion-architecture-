@@ -205,6 +205,31 @@ namespace Users.Infrastructure.Migrations
                     b.ToTable("UserRoles");
                 });
 
+            modelBuilder.Entity("Users.Domain.WalletAgg.Wallet", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Balance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Wallets");
+                });
+
             modelBuilder.Entity("Users.Domain.User.Agg.RolePermission", b =>
                 {
                     b.HasOne("Users.Domain.User.Agg.Permission", "Permission")
@@ -254,6 +279,17 @@ namespace Users.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Users.Domain.WalletAgg.Wallet", b =>
+                {
+                    b.HasOne("Users.Domain.User.Agg.User", "User")
+                        .WithOne("Wallet")
+                        .HasForeignKey("Users.Domain.WalletAgg.Wallet", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Users.Domain.User.Agg.Permission", b =>
                 {
                     b.Navigation("RolePermissions");
@@ -271,6 +307,9 @@ namespace Users.Infrastructure.Migrations
                     b.Navigation("Addresses");
 
                     b.Navigation("UserRoles");
+
+                    b.Navigation("Wallet")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

@@ -1,0 +1,127 @@
+﻿@page
+@using Shared.Application
+@model NavinoShop.WebApplication.Areas.Admin.Pages.Users.DetailsModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["title"] = "اطلاعات کاربر";
+}
+
+
+<div class="profile-card">
+    <!-- هدر -->
+    <div class="profile-header">
+        <div class="profile-title">
+            پروفایل کاربر
+            <span>جزئیات اطلاعات</span>
+        </div>
+        <div class="profile-subtitle">
+            مشاهده و مدیریت اطلاعات هویتی و مالی کاربر
+        </div>
+    </div>
+
+    <!-- محتوای اصلی -->
+    <div class="profile-content">
+        <!-- بخش آواتار و اطلاعات پایه -->
+        <div class="user-main-info">
+            <div class="avatar-section">
+                <div class="avatar-image"
+                     style="background-image:url(@FileDirectories.UserImageDirectory100@Model.UserDetailModel.Avatar);
+                       background-repeat:no-repeat; background-position:center ;">
+                </div>
+                <div class="avatar-badge">
+                    آواتار
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label"><span class="icon-placeholder">👤</span> نام و نام خانوادگی</span>
+                    <span class="info-value">@Model.UserDetailModel.FullName</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label"><span class="icon-placeholder">📱</span> شماره موبایل</span>
+                    <span class="info-value">@Model.UserDetailModel.Mobile</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label"><span class="icon-placeholder">✉️</span> آدرس ایمیل</span>
+                    <span class="info-value">@Model.UserDetailModel.Email</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label"><span class="icon-placeholder">📅</span> تاریخ عضویت</span>
+                    <span class="info-value">@Model.UserDetailModel.CreateDate.ToPersainDate()</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- بخش کیف پول و تراکنش‌ها -->
+        <div class="wallet-section">
+            <div class="section-title">
+                <span class="icon-placeholder">💰</span> اطلاعات کیف پول
+            </div>
+
+            <!-- موجودی کیف پول -->
+            <div class="wallet-balance">
+                <span class="balance-label">موجودی کیف پول:</span>
+                <span class="balance-amount">@Model.UserDetailModel.WalletBalancr</span>
+                <span class="balance-currency">تومان</span>
+            </div>
+
+            <!-- آمار تراکنش‌ها -->
+            <div class="transaction-stats">
+                <div class="stat-box">
+                    <div class="stat-header">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-title">تعداد تراکنش‌های موفق</div>
+                    </div>
+                    <div class="stat-number">@Model.UserDetailModel.SuccessTransactionCount</div>
+                    <div class="stat-desc">تراکنش</div>
+                </div>
+
+                <div class="stat-box">
+                    <div class="stat-header">
+                        <div class="stat-icon">💳</div>
+                        <div class="stat-title">مجموع مبالغ تراکنش‌ها</div>
+                    </div>
+                    <div class="stat-number">@Model.UserDetailModel.successTransactionSum</div>
+                    <div class="stat-desc">تومان</div>
+               
+                </div>
+            </div>
+
+        </div>
+
+        <!-- وضعیت حساب کاربری -->
+        <div class="status-section">
+            <div class="status-chip">
+                <span class="icon-placeholder">⚡</span> وضعیت حساب:
+                @if (Model.UserDetailModel.Active)
+                {
+                    <span class="status-badge status-active">فعال</span>
+                }
+                else
+                {
+                    <span class="status-badge delete-badge">غیرفعال</span>
+                }
+
+            </div>
+            <div class="status-chip">
+                <span class="icon-placeholder">🗑️</span> وضعیت حذف:
+                @if (Model.UserDetailModel.IsDelete)
+                {
+                    <span class="status-badge delete-badge">حذف شده</span>
+                }
+                else
+                {
+                    <span class="status-badge status-active">حذف نشده</span>
+                }
+
+            </div>
+
+        </div>
+
+        <!-- فوتر با دکمه ویرایش -->
+        <div class="profile-footer">
+            <a href="/Admin/Users/Edit?Id=@Model.UserDetailModel.UserId" class="edit-btn"> <span class="icon-placeholder">✏️</span>ویرایش پروفایل</a>
+        </div>
+    </div>
+</div>

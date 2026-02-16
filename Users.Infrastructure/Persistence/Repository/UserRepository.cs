@@ -52,11 +52,29 @@ namespace Users.Infrastructure.Persistence.Repository
         public async Task<UserHeaderQueryModel> GetUserForHeader(int id)
         {
             return await _context.Users.Where(u => u.Id == id)
-                .Select(u=>new UserHeaderQueryModel
+                .Select(u => new UserHeaderQueryModel
                 {
-                    FullName= u.FullName,
-                    Avatar =u.Avatar,
-                    Mobile=u.Mobile
+                    FullName = string.IsNullOrEmpty(u.FullName) ? u.Mobile : u.FullName,
+                    Avatar = u.Avatar,
+                    Mobile = u.Mobile
+                }).SingleAsync();
+        }
+
+
+
+        public async Task<UserDetailDto> GetUserDetailAsync(int userId)
+        {
+            return await _context.Users.Where(i => i.Id == userId)
+                .Select(u => new UserDetailDto
+                {
+                    Id = u.Id,
+                    FullName = u.FullName,
+                    Email = u.Email,
+                    Mobile = u.Mobile,
+                    CreateDate = u.CreateDate,
+                    Avatar = u.Avatar,
+                    IsDelete = u.IsDelete,
+                    Active = u.Active
                 }).SingleAsync();
         }
     }

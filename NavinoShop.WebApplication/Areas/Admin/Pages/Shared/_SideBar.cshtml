@@ -34,8 +34,8 @@
             <li class="header">تیتر</li>
             <li><a href="/"><i class="fa fa-book"></i> <span>صفحه‌اصلی‌سایت‌</span></a></li>
             <li class="@(currentPath.Contains("/admin/roles")
-                      || currentPath.Contains("/admin/user") ? "active" : "") treeview">
-                <a href="#">
+                      || currentPath.Contains("/admin/users") ? "active" : "") treeview">
+                <a href="">
                     <i class="fa fa-user"></i> <span>مدیریت کاربران</span>
                     <span class="pull-left-container">
                         <i class="fa fa-angle-right pull-left"></i>
@@ -45,12 +45,15 @@
                     <li class=@(currentPath.Contains("/admin/roles") ? "active" : "")>
                         <a href="/Admin/Roles"><i class="fa fa-user-secret"></i>  سطوح دسترسی</a>
                     </li>
-                    <li class=@(currentPath.Contains("/admin/user") ? "active" : "")>
-                        <a href="/Admin/Users"><i class="fa fa-users"></i>  کاربران سایت</a>
+                    <li class=@(currentPath.Contains("/admin/users/index") ? "active" : "")>
+                        <a href="/Admin/Users/Index"><i class="fa fa-users"></i>  کاربران سایت</a>
+                    </li>
+                    <li class=@(currentPath.Contains("/admin/users/deletedusers") ? "active" : "")>
+                        <a href="/Admin/Users/DeletedUsers"><i class="fa fa-users"></i>  کاربران حذف شده سایت</a>
                     </li>
                 </ul>
             </li>
-
+            <li><a href="/Admin/Transactions/Index"><i class="fa fa-book"></i> <span>تراکنش ها</span></a></li>
             <li class="@(currentPath.Contains("/admin/blogs")|| currentPath.Contains("/admin/blogcategories")
                                                               ? "active" : "") treeview">
                 <a href="#">

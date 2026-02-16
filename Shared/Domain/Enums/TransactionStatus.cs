@@ -2,6 +2,7 @@
 {
     public enum TransactionStatus
     {
+        همه,
         نا_موفق,
         موفق
     }

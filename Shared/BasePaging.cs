@@ -17,7 +17,7 @@ namespace Shared
         public int EndPage { get; private set; }
         public void GetData(IQueryable<object> data, int pageId, int take, int showPageCount)
         {
-            if (take < 1) take = 10;
+            if (take < 10 || take > 100) take = 10;
             PageCount = data.Count() / take;
             if (data.Count() % take > 0) PageCount++;
             if (pageId > PageCount) pageId = PageCount;
@@ -25,7 +25,6 @@ namespace Shared
             PageId = pageId;
             Take = take;
             DataCount = data.Count();
-            //Take = take;
             Skip = (pageId - 1) * take;
             if (showPageCount < 1) showPageCount = 2;
             StartPage = pageId > showPageCount ? pageId - showPageCount : 1;

@@ -165,8 +165,8 @@ function renderGuestMenu() {
 // ===============================
 
 function login() {
-   
-     Loding();
+
+    Loding();
     $.ajax({
         url: "/Account/Login",
         type: "POST",
@@ -176,7 +176,7 @@ function login() {
         },
         success: function (res) {
             if (res.success) {
-                
+
                 AlerSweetWithTimer("ورود با موفقیت انجام شد", "success", "center");
                 setTimeout(function () {
                     location.reload();
@@ -184,8 +184,8 @@ function login() {
 
             } else {
                 AlerSweetWithTimer(res.message, "error", "center");
-                     $("#loginEmail").val(''),
-                     $("#loginPassword").val('')
+                $("#loginEmail").val(''),
+                    $("#loginPassword").val('')
             }
         },
         error: function () {
@@ -406,4 +406,5 @@ function readImageForWidget(input, previewId) {
     }
 }
 
+//GetMoreTransaction
 

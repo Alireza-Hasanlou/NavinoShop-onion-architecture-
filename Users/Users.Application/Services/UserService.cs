@@ -95,7 +95,7 @@ namespace Users.Application.Services
             return new(await _userRepository.SaveAsync());
         }
 
-        public async Task<OperationResult> EditByAdminAsync(EditUserByAdminCommand command)
+        public async Task<OperationResult> EditByAdminAsync(EditUserByAdminDto command)
         {
             var user = await _userRepository.GetByIdAsync(command.Id);
             if (user == null)

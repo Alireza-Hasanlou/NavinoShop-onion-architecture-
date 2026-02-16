@@ -5,7 +5,7 @@ namespace Transactions.Application.Contract.Transaction.Query
     public class TransactionDetailDto
     {
         public int UserId { get; set; }
-        public int Price { get; set; }
+        public decimal Price { get; set; }
         public string RefId { get; set; }
         public string Authority { get; set; }
         public TransactionPortal Portal { get; set; }

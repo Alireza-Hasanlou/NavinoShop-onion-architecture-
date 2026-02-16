@@ -2,6 +2,7 @@
 {
     public enum TransactionFor
     {
+        All,
         Wallet,
         Order,
         PostOrder

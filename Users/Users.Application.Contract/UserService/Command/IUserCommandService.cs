@@ -14,7 +14,7 @@ namespace Users.Application.Contract.UserService.Command
         Task<OperationResult> RegisterAsync(RegisterUserCommand command);
         Task<OperationResult> LoginAsync(LoginUserCommand command);
         Task<OperationResult> CreateAsync(CreateUserCommand command);
-        Task<OperationResult> EditByAdminAsync(EditUserByAdminCommand command);
+        Task<OperationResult> EditByAdminAsync(EditUserByAdminDto command);
         Task<EditUserByUserDto> GetForEditByUserAsync(int userId);
         Task<OperationResult> EditByUserAsync(EditUserByUserCommand command, int userId);
         Task<OperationResult> ChangePasswordAsync(ChangeUserPasswordCommand command);

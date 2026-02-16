@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Users.Domain.User.Agg;
+using Users.Domain.WalletAgg;
 
 namespace Users.Infrastructure.Persistence.EFConfig
 {
@@ -32,6 +33,8 @@ namespace Users.Infrastructure.Persistence.EFConfig
                 .WithOne(r => r.User)
                 .HasForeignKey(k => k.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(u=>u.Wallet).WithOne(u=>u.User).HasForeignKey<Wallet>(k => k.UserId);
         }
     }
 }

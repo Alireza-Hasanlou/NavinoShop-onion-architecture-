@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Users.Application.Bootstrapper;
 using Users.Domain.User.Agg.IRepository;
+using Users.Domain.WalletAgg;
 using Users.Infrastructure.Persistence.Context;
 using Users.Infrastructure.Persistence.Repository;
 
@@ -12,11 +13,11 @@ namespace Users.Infrastructure.Bootstrapper
         public static void Config(IServiceCollection services, string connectionString)
         {
             UserApplicationBootstrapper.Config(services);
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IRoleRepository, RoleRepository>();
-            services.AddScoped<IUserAddressRepository, UserAddressRepository>();
-            services.AddScoped<IPermissionRepository, PermissionRepository>();
-
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IRoleRepository, RoleRepository>();
+            services.AddTransient<IUserAddressRepository, UserAddressRepository>();
+            services.AddTransient<IPermissionRepository, PermissionRepository>();
+            services.AddTransient<IWalletRepository, WalletRepository>();
 
             services.AddDbContext<UserContext>(option =>
             {

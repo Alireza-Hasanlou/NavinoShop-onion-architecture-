@@ -1650,5 +1650,655 @@ span.custom-checkbox-shine:after {
         flex-direction: column;
     }
 }
+/*==================Wallet=================================*/
+
+/* کارت کیف پول */
+.wallet-card {
+    max-width: 600px;
+    margin: auto;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 32px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    padding: 24px 20px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* هدر و موجودی */
+.wallet-header {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 24px;
+}
+
+.wallet-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #5a4a2a;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+}
+
+    .wallet-label i {
+        font-size: 1.2rem;
+    }
+
+.balance-box {
+    background: linear-gradient(135deg, #fff8e7, #fff1d6);
+    border-radius: 20px;
+    padding: 18px 20px;
+    border: 1px solid #ffeac2;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.balance-title {
+    font-size: 0.8rem;
+    color: #8b7a5a;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .balance-title span:last-child {
+        background: #fcb941;
+        padding: 4px 12px;
+        border-radius: 30px;
+        color: #1e1e1e;
+        font-weight: 700;
+        font-size: 0.7rem;
+    }
+
+.balance-amount {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+.amount-number {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #2a2a2a;
+    line-height: 1;
+}
+
+.amount-currency {
+    font-size: 1rem;
+    color: #6b5a3a;
+    font-weight: 600;
+}
+
+/* دکمه افزایش موجودی */
+.charge-btn-wrapper {
+    margin-bottom: 28px;
+    margin-top: 8px;
+}
+
+.charge-btn {
+    width: 100%;
+    background: linear-gradient(145deg, #fcb941, #f0a82b);
+    border: none;
+    border-radius: 50px;
+    padding: 16px 20px;
+    color: #1e1e1e;
+    font-weight: 800;
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 10px 20px -8px rgba(252, 185, 65, 0.5);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+    .charge-btn:hover {
+        background: linear-gradient(145deg, #ffc75a, #fcb941);
+        transform: translateY(-2px);
+        box-shadow: 0 15px 25px -8px rgba(252, 185, 65, 0.7);
+    }
+
+    .charge-btn i {
+        font-size: 1.3rem;
+    }
+
+/* کاردکس‌های آمار واریز و خرج کرد */
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.stat-square {
+    background-color: white;
+    border-radius: 18px;
+    padding: 16px 12px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.03);
+    border: 1px solid #fff0da;
+    transition: all 0.2s;
+}
+
+    .stat-square:hover {
+        border-color: #fcb941;
+        box-shadow: 0 10px 20px rgba(252, 185, 65, 0.1);
+    }
+
+.stat-icon {
+    background: #fcb94120;
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+    color: #fcb941;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.stat-label {
+    font-size: 1.2rem;
+    color: #9b8a6a;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+}
+
+.stat-value {
+    font-size: 1.9rem;
+    font-weight: 800;
+    color: #1e1e1e;
+    line-height: 1.2;
+}
+
+.stat-sub {
+    font-size: 1.2rem;
+    color: #b9a889;
+    margin-right: 4px;
+}
+
+/* تراکنش‌های اخیر */
+.transactions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 18px;
+}
+
+.transactions-title {
+    font-weight: 700;
+    color: #3a3a3a;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+    .transactions-title i {
+        color: #fcb941;
+    }
+
+.view-all {
+    color: #b98f3c;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 2px solid #fcb94160;
+    padding-bottom: 2px;
+}
+
+.transactions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.transaction-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    background: #fefcf7;
+    border-radius: 18px;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+}
+
+    .transaction-item:hover {
+        background: white;
+        border-color: #ffe2b3;
+    }
+
+.transaction-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.transaction-icon {
+    width: 44px;
+    height: 44px;
+    background: #f5f0e6;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fcb941;
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+.transaction-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.transaction-name {
+    font-weight: 700;
+    color: #1e1e1e;
+    font-size: 0.95rem;
+}
+
+.transaction-date {
+    font-size: 0.7rem;
+    color: #ad9f89;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.transaction-amount {
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: 0.3px;
+}
+
+.amount-positive {
+    color: #28a745;
+}
+
+.amount-negative {
+    color: #d94e4e;
+}
+
+/* پایین کارت */
+.wallet-footer {
+    margin-top: 20px;
+    text-align: center;
+    color: #b6a78b;
+    font-size: 2rem;
+    border-top: 1px dashed #fcb94180;
+    padding-top: 16px;
+}
+
+/* آیکون placeholder (چون از font-icon استفاده نمی‌کنیم) */
+.fa, .fas, .far {
+    display: inline-block;
+    font-style: normal;
+}
+
+/* fallback icon style */
+.icon-placeholder {
+    display: inline-block;
+    width: 1.2em;
+    text-align: center;
+}
 
 
+/*==================End Wallet=================================*/
+
+/*==================User Detail For Admin ==========================*/
+.profile-card {
+    max-width: 1000px;
+    width: 100%;
+    background: white;
+    border-radius: 40px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    transition: all 0.3s;
+    margin: auto;
+}
+
+.profile-header {
+    background: #020024;
+    background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(34, 45, 50, 1) 35%, rgba(17, 78, 92, 1) 56%);
+    padding: 40px 40px 30px 40px;
+    color: white;
+}
+
+.profile-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .profile-title span {
+        background: rgba(255,255,255,0.2);
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 400;
+    }
+
+.profile-subtitle {
+    opacity: 0.9;
+    font-size: 0.95rem;
+}
+
+.profile-content {
+    padding: 30px 40px 40px 40px;
+}
+
+/* بخش آواتار و اطلاعات اصلی */
+.user-main-info {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+.avatar-section {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.avatar-image {
+    width: 140px;
+    height: 140px;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    color: white;
+    box-shadow: 0 15px 30px rgba(102, 126, 234, 0.3);
+    border: 4px solid white;
+}
+
+.avatar-badge {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: white;
+    border-radius: 50px;
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    color: #333;
+}
+
+.info-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    background: #f9f9fc;
+    padding: 25px;
+    border-radius: 30px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.info-label {
+    font-size: 1rem;
+    color: #8b8b9c;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.info-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2a2a3a;
+    word-break: break-word;
+}
+
+.info-value-small {
+    font-size: 0.9rem;
+    color: #5a5a6e;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.status-active {
+    background: #e3f7e7;
+    color: #0e7330;
+}
+
+.status-inactive {
+    background: #ffe6e6;
+    color: #b33838;
+}
+
+.delete-badge {
+    background: #ffebeb;
+    color: #b33838;
+    font-size: 1.2rem;
+    padding: 4px 8px;
+    border-radius: 30px;
+    margin-right: 8px;
+}
+
+/* بخش کیف پول و تراکنش‌ها */
+.wallet-section {
+    background: linear-gradient(145deg, #fefcf7, #fffbf2);
+    border-radius: 30px;
+    padding: 30px;
+    margin-bottom: 30px;
+    border: 1px solid #f0e7db;
+}
+
+.section-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1e1e2e;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.wallet-balance {
+    display: flex;
+    align-items: baseline;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+    background: white;
+    padding: 20px 25px;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+}
+
+.balance-label {
+    font-size: 1.2rem;
+    color: #6b6b80;
+}
+
+.balance-amount {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #2d2d3a;
+}
+
+.balance-currency {
+    font-size: 0.9rem;
+    color: #9b9bb0;
+    margin-right: 5px;
+}
+
+.transaction-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.stat-box {
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+    border: 1px solid #f5ede2;
+}
+
+.stat-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.stat-icon {
+    width: 45px;
+    height: 45px;
+    background: #f0eefb;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+}
+
+.stat-title {
+    font-size: 0.85rem;
+    color: #7c7c94;
+    font-weight: 500;
+}
+
+.stat-number {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #1e1e2e;
+    line-height: 1.2;
+}
+
+.stat-desc {
+    font-size: 0.7rem;
+    color: #9f9fb5;
+    margin-top: 5px;
+}
+
+.stat-sum {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #4f4f6a;
+    margin-top: 5px;
+}
+
+/* وضعیت حساب */
+.status-section {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    background: #f8f9ff;
+    padding: 20px 25px;
+    border-radius: 20px;
+    margin-top: 20px;
+}
+
+.status-chip {
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* فوتر */
+.profile-footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px dashed #eae2d9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #9b9bb0;
+    font-size: 0.8rem;
+}
+
+.edit-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+    .edit-btn:hover {
+        background: #5a67d8;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+
+/* آیکون placeholder */
+.icon-placeholder {
+    display: inline-block;
+    width: 1.2em;
+    text-align: center;
+    font-style: normal;
+}
+
+/* ریسپانسیو */
+@media (max-width: 700px) {
+    .profile-content {
+        padding: 20px;
+    }
+
+    .user-main-info {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .avatar-image {
+        width: 120px;
+        height: 120px;
+        font-size: 3rem;
+    }
+
+    .wallet-balance {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .transaction-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/*==================User Detail For Admin End ==========================*/
+/*========================DataTable====================================*/
