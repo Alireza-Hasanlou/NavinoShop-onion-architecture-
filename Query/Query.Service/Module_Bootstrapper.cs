@@ -1,13 +1,14 @@
 ﻿using Blogs.Query.Bootstrapper;
 using Comments.Query.Bootstrapper;
 using Emails.Query.Bootstrapper;
+using Financial.Query.Bootstrapper;
 using Microsoft.Extensions.DependencyInjection;
 using PostModule.Query.Bootstrapper;
 using Query.Contract.Admin.Comment;
 using Query.Contract.Admin.Email.EmailUser;
 using Query.Contract.Admin.Email.MessageUser;
+using Query.Contract.Admin.Financial.Transaction;
 using Query.Contract.Admin.Seo;
-using Query.Contract.Admin.Transaction;
 using Query.Contract.Admin.User;
 using Query.Contract.Site.Page;
 using Query.Contract.UI.Blogs;
@@ -20,8 +21,8 @@ using Query.Contract.UI.UserPanel.Wallet;
 using Query.Service.Admin.Comment;
 using Query.Service.Admin.Email.EmailUser;
 using Query.Service.Admin.Email.MessageUser;
+using Query.Service.Admin.Financial.Transaction;
 using Query.Service.Admin.Seo;
-using Query.Service.Admin.Transaction;
 using Query.Service.Admin.User;
 using Query.Service.Site.Page;
 using Query.Service.Ui.Blogs;
@@ -33,7 +34,6 @@ using Query.Service.Ui.UserPanel.UserAddress;
 using Query.Service.Ui.UserPanel.Wallet;
 using Seos.Query.Bootstrapper;
 using Site.Query.Bootstrapper;
-using Transactions.Query.Bootstrapper;
 using Users.Query.Bootstrapper;
 
 namespace Query.Service
@@ -53,7 +53,7 @@ namespace Query.Service
             Email_Bootstrapper.Config(Services, ConnectionString);
             Post_Bootstrapper.Config(Services, ConnectionString);
             Comment_Bootstrapper.Config(Services, ConnectionString);
-            Transaction_Bootstrapper.Config(Services, ConnectionString);
+            Financial_Bootstrapper.Config(Services, ConnectionString);
             #endregion
             #region Admin
 
@@ -61,6 +61,8 @@ namespace Query.Service
             Services.AddTransient<IEmailAdminQuery, EmailAdminQuery>();
             Services.AddTransient<IMessageUserAdminQuery, MessageUserAdminQuery>();
             Services.AddTransient<ISeoAdminQuery, SeoAdminQuery>();
+            Services.AddTransient<IAdminUserQueryService, AdminUserQueryService>();
+            Services.AddTransient<IAdminTransactionQueryService, AdminTransactionQueryService>();
             #endregion
             #region Ui
 
@@ -72,8 +74,7 @@ namespace Query.Service
             Services.AddTransient<IPostOrderQueryService, PostOrderQueryService>();
             Services.AddTransient<IUserAddressUiQueryService, UserAddressUiQueryService>();
             Services.AddTransient<IWalletQueryService,WalletQueryService>();
-            Services.AddTransient<IAdminUserQueryService, AdminUserQueryService>();
-            Services.AddTransient<IAdminTransactionQueryService, AdminTransactionQueryService>();
+   
             #endregion
         }
     }

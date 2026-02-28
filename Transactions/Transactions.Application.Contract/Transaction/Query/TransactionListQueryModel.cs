@@ -1,6 +1,6 @@
 ﻿using Shared.Domain.Enums;
 
-namespace Transactions.Application.Contract.Transaction.Query
+namespace Financial.Application.Contract.Transaction.Query
 {
     public class TransactionListQueryModel
     {

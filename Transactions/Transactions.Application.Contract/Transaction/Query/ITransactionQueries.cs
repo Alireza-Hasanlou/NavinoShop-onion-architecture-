@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Transactions.Application.Contract.Transaction.Query
+namespace Financial.Application.Contract.Transaction.Query
 {
     public interface ITransactionQueries
     {

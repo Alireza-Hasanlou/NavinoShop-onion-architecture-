@@ -2298,7 +2298,12 @@ span.custom-checkbox-shine:after {
         grid-template-columns: 1fr;
     }
 }
-
-
 /*==================User Detail For Admin End ==========================*/
-/*========================DataTable====================================*/
+
+.Open-modal {
+    display: block;
+    padding-right: 15px;
+}
+.Close-modal {
+    display: none;
+}

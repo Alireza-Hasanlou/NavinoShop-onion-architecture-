@@ -1,4 +1,5 @@
-﻿using Domain.Entity;
+﻿using Financial.Application.Contract.Transaction.Query;
+using Financial.Domain.TransactionAgg;
 using Microsoft.EntityFrameworkCore;
 using Shared.Application;
 using Shared.Domain.Enums;
@@ -7,10 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Transactions.Application.Contract.Transaction.Command;
-using Transactions.Application.Contract.Transaction.Query;
 
-namespace Transactions.Query.Handler
+namespace Financial.Query.Handler
 {
     internal class TransactionsQueries : ITransactionQueries
     {

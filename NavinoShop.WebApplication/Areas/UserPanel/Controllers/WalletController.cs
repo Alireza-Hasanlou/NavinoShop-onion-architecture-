@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Financial.Application.Contract.Transaction.Query;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Query.Contract.UI.UserPanel.Wallet;
 using Shared.Application.Auth;
 using Shared.Domain.Enums;
-using Transactions.Application.Contract.Transaction.Query;
 
 namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
 {

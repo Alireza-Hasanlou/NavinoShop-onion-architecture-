@@ -8,7 +8,8 @@ namespace Shared.Domain.Enums
 {
     public enum TransactionPortal
     {
-        زرین_پال
+        زرین_پال,
+        دستی_ادمین
     }
 
 }

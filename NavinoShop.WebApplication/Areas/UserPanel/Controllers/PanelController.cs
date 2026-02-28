@@ -7,7 +7,7 @@ using Shared.Application.Auth;
 using System.Threading.Tasks;
 using Users.Application.Contract.UserAddressService.Command;
 using Users.Application.Contract.UserService.Command;
-using Users.Application.Contract.WalletService.Query;
+
 
 namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
 {

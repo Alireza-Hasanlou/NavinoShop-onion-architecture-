@@ -62,7 +62,7 @@
             <!-- موجودی کیف پول -->
             <div class="wallet-balance">
                 <span class="balance-label">موجودی کیف پول:</span>
-                <span class="balance-amount">@Model.UserDetailModel.WalletBalancr</span>
+                <span data-format="money" class="balance-amount money">@Model.UserDetailModel.WalletBalancr</span>
                 <span class="balance-currency">تومان</span>
             </div>
 
@@ -82,12 +82,18 @@
                         <div class="stat-icon">💳</div>
                         <div class="stat-title">مجموع مبالغ تراکنش‌ها</div>
                     </div>
-                    <div class="stat-number">@Model.UserDetailModel.successTransactionSum</div>
+                    <div data-format="money" class="stat-number">@Model.UserDetailModel.successTransactionSum</div>
                     <div class="stat-desc">تومان</div>
-               
+
                 </div>
             </div>
+            <div class="profile-footer">
+                <a onclick="open_Modal_Ajax('/Admin/Users/RechargeWallet')" class="btn  btn-lg" style="background: #020024;color:whitesmoke;
+                     background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(34, 45, 50, 1) 35%, rgba(17, 78, 92, 1) 56%);
+                  "> <span class="icon-placeholder">+</span>افزایش موجودی</a>
 
+
+            </div>
         </div>
 
         <!-- وضعیت حساب کاربری -->
@@ -119,7 +125,7 @@
 
         </div>
 
-        <!-- فوتر با دکمه ویرایش -->
+        
         <div class="profile-footer">
             <a href="/Admin/Users/Edit?Id=@Model.UserDetailModel.UserId" class="edit-btn"> <span class="icon-placeholder">✏️</span>ویرایش پروفایل</a>
         </div>

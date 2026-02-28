@@ -107,6 +107,7 @@
                                         <td>
                                             <div class="btn-group">
                                                 <a href="/Admin/Users/Details?Id=@item.Id" class="btn btn-info">جزییات</a>
+                                                <a href="/Admin/Transactions/Index?userId=@item.Id" class="btn btn-warning">تراکنش ها</a>
                                                 <a onclick="DeleteAjax('   آیا از حذف این کاربر هستید؟', 'پس از حذف ،کاربر در دسته کاربران حذف شده قرار میگیرد و دوباره میتوانید آن را برگردانید  ', 'warning', 'بله', '/Admin/Users/ChangeDelete',@item.Id)" class="btn btn-danger">حذف</a>
                                             </div>
                                             

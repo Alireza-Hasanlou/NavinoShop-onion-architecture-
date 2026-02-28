@@ -3,7 +3,6 @@ using Users.Application.Contract.PermissionService.Command;
 using Users.Application.Contract.RoleService.Command;
 using Users.Application.Contract.UserAddressService.Command;
 using Users.Application.Contract.UserService.Command;
-using Users.Application.Contract.WalletService.Commands;
 using Users.Application.Services;
 
 namespace Users.Application.Bootstrapper
@@ -15,8 +14,7 @@ namespace Users.Application.Bootstrapper
             services.AddTransient<IUserCommandService,UserService>();
             services.AddTransient<IUserAddressCommandService, UserAddressService>();
             services.AddTransient<IRoleCommandService, RoleService>();
-            services.AddTransient<IPermissionCommandService, PermissionService>();
-            services.AddTransient<IWalletCommands, WalletCommands>();   
+            services.AddTransient<IPermissionCommandService, PermissionService>();  
         }
     }
 }

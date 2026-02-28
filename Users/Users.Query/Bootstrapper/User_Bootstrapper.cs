@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Users.Application.Contract.RoleService.Query;
 using Users.Application.Contract.UserService.Query;
-using Users.Application.Contract.WalletService.Query;
 using Users.Infrastructure.Bootstrapper;
 using Users.Query.Service;
 
@@ -19,7 +18,7 @@ namespace Users.Query.Bootstrapper
             UserInfrastructureBootstrapper.Config(services, connectionString);
             services.AddTransient<IRoleQueryService, RoleQueryService>();
             services.AddTransient<IUserQueryService, UserQueryService>();
-            services.AddTransient<IWalletQueries, WalletQueries>();
+
         }
     }
 }

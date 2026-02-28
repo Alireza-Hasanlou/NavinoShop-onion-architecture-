@@ -1,4 +1,5 @@
-﻿using Domain.Entity;
+﻿using Financial.Domain.TransactionAgg;
+using Financial.Domain.WalletAgg;
 using Microsoft.EntityFrameworkCore;
 using Query.Contract.Admin.User;
 using Shared.Domain.Enums;
@@ -9,7 +10,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Users.Application.Contract.UserService.Query;
 using Users.Domain.User.Agg.IRepository;
-using Users.Domain.WalletAgg;
 
 namespace Query.Service.Admin.User
 {

@@ -1,7 +1,7 @@
 ﻿using Shared.Domain;
 using Shared.Domain.Enums;
 using System;
-using Users.Domain.WalletAgg;
+
 
 
 namespace Users.Domain.User.Agg
@@ -15,10 +15,11 @@ namespace Users.Domain.User.Agg
         public string Avatar { get; private set; }
         public bool Active { get; private set; }
         public bool IsDelete { get; private set; }
+        public long WalletId { get; set; }
         public Gender UserGender { get; private set; }
         public ICollection<UserAddress> Addresses { get; private set; }
         public ICollection<UserRole> UserRoles { get; private set; }
-        public Wallet Wallet { get; private set; }
+       
 
         protected User()
         {
@@ -38,7 +39,7 @@ namespace Users.Domain.User.Agg
             UserGender = gender;
             Addresses = new List<UserAddress>();
             UserRoles = new List<UserRole>();
-            Wallet = new Wallet();
+          
 
         }
 

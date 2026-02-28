@@ -1,6 +1,6 @@
 ﻿using Shared.Domain.Enums;
 using System.ComponentModel;
-namespace Transactions.Application.Contract.Transaction.Command
+namespace Financial.Application.Contract.Transaction.Command
 {
     public class CreateTransacionCommandModel
     {
@@ -10,7 +10,7 @@ namespace Transactions.Application.Contract.Transaction.Command
         [DisplayName("توضیحات")]
         public string? Description { get; set; }
         [DisplayName("مبلِغ")]
-        public int Price { get; set; }
+        public decimal Price { get; set; }
         [DisplayName("درگاه")]
         public TransactionPortal Portal { get; set; }
         public TransactionFor TransactionFor { get; set; }

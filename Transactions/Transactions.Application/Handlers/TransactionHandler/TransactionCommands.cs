@@ -1,10 +1,12 @@
-﻿using Domain.Entity;
+﻿
+using Financial.Application.Contract.Transaction.Command;
+using Financial.Domain.TransactionAgg;
 using Shared.Application;
 using Shared.Application.Validations;
 using Shared.Domain.Enums;
-using Transactions.Application.Contract.Transaction.Command;
 
-namespace Transactions.Application.Handlers.TransactionHandler
+
+namespace Financial.Application.Handlers.TransactionHandler
 {
     internal class TransactionCommands : ITransactionCommands
     {
@@ -27,10 +29,10 @@ namespace Transactions.Application.Handlers.TransactionHandler
             var res = await _transactionRepository.CreateAsync(newTransation);
             if (res.Success)
                 return new OperationResult(true);
-            return new OperationResult(false, ValidationMessages.SystemErrorMessage);
+            return new OperationResult(false, ValidationMessages.SystemErrorMessage,"",newTransation.Id);
         }
 
-        public async Task<OperationResult> Payment(TransactionStatus status, long id, string refid)
+        public async Task<OperationResult> Payment( long id, string refid)
         {
             var transaction = await _transactionRepository.GetByIdAsync(id);
             if (transaction == null)

@@ -1,4 +1,5 @@
-﻿using Domain.Entity;
+﻿using Financial.Domain.TransactionAgg;
+using Financial.Domain.WalletAgg;
 using Microsoft.EntityFrameworkCore;
 using Query.Contract.UI.UserPanel.Wallet;
 using Shared.Application;
@@ -9,8 +10,6 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using Users.Domain.WalletAgg;
-
 namespace Query.Service.Ui.UserPanel.Wallet
 {
     internal class WalletQueryService : IWalletQueryService

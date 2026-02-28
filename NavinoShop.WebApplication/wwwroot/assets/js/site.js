@@ -408,3 +408,12 @@ function readImageForWidget(input, previewId) {
 
 //GetMoreTransaction
 
+
+$("[data-format='money']").each(function () {
+    var value = $(this).text();
+    $(this).text(Number(value).toLocaleString('en-US'));
+});
+$(".money").on("input", function () {
+    var value = $(this).val().replace(/,/g, '');
+    $(this).val(Number(value).toLocaleString('en-US'));
+});

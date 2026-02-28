@@ -139,7 +139,7 @@ function makeSlug(source, destination) {
         .replace(/[\u200C\u200D\uFEFF]/g, ' ')
 
         // keep Persian + English + numbers
-        .replace(/[^a-zA-Z0-9\u0600-\u06FF\s-]/g,'')
+        .replace(/[^a-zA-Z0-9\u0600-\u06FF\s-]/g, '')
 
         // spaces to dash
         .replace(/\s+/g, '-')
@@ -164,7 +164,7 @@ $(function () {
 
         if (categoryId) {
             $.ajax({
-                url: '/Admin/Blogs/Create?handler=SubCategories', 
+                url: '/Admin/Blogs/Create?handler=SubCategories',
                 type: 'GET',
                 data: { categoryId: categoryId },
                 success: function (data) {
@@ -184,3 +184,53 @@ $(function () {
         }
     });
 });
+
+//RechargeWallet
+
+function open_Modal_Ajax(url) {
+    Get_ajax(url);
+    $('#modal-default').modal('show');
+
+}
+function Get_ajax(url) {
+    var modalContent = $("#modal-content");
+    modalContent.html("");
+    $.get(url, function (res) {
+        console.log(res);
+        modalContent.html(res);
+    });
+}
+function close_Modal_Ajax() {
+    $('#modal-default').modal('hide');
+}
+function RechargeWallet() {
+    var amount = $("#WalletAmount").val();
+    var amountvalidation = $("#amountValidation");
+    amountvalidation.text("");
+
+
+    $.ajax({
+        url: "/Admin/Users/RechargeWallet",
+        type: "POST",
+        data: { Amount: amount },
+        dataType: "json"
+    })
+        .done(function (res) {
+
+            if (res.success) {
+                $("#modal-default").modal("hide");
+                AlerSweetWithTimer(res.message, "success", "center");
+                setTimeout(function () {
+                    location.reload();
+                }, 3000);
+
+            } else {
+                amountvalidation.text(res.message);
+            }
+
+
+        }).fail(function (xhr) {
+
+            console.error("Ajax Error:", xhr.status, xhr.responseText);
+        });
+}
