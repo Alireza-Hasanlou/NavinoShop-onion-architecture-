@@ -17,7 +17,7 @@ namespace Shared
         public int EndPage { get; private set; }
         public void GetData(IQueryable<object> data, int pageId, int take, int showPageCount)
         {
-            if (take < 10 || take > 100) take = 10;
+            if (take < 1 || take > 100) take = 10;
             PageCount = data.Count() / take;
             if (data.Count() % take > 0) PageCount++;
             if (pageId > PageCount) pageId = PageCount;

@@ -41,5 +41,7 @@ namespace Users.Query.Service
         {
            return await _roleRepository.GetAllPermission();
         }
+
+    
     }
 }

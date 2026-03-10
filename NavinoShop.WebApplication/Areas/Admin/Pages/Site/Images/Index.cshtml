@@ -15,7 +15,7 @@
     <!-- /.box-header -->
     <div class="box-body">
         <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
-            <a href="/Admin/Site/Images/Create" class="btn btn-success">افزودن</a>
+            <a href="/Admin/Site/Images/Create" class="btn btn-success" title="افزودن"><i class="fa fa-plus"></i></a>
 
             <div class="row col-12">
                 <form>
@@ -53,11 +53,10 @@
 
                         <thead>
                             <tr role="row">
-                                <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-sort="ascending" aria-label="تصویر: activate to sort column descending" style="width: 256.188px;">تصویر</th>
-                                <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-sort="ascending" aria-label="عنوان: activate to sort column descending" style="width: 256.188px;">عنوان
-                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="تاریخ ایجاد: activate to sort column ascending" style="width: 464.469px;">تاریخ ایجاد</th>
-                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="کپی ادرس: activate to sort column ascending" style="width: 134.828px;">کپی ادرس</th>
-                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="عملیات: activate to sort column ascending" style="width: 134.828px;">عملیات</th>
+                                <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-sort="ascending" aria-label="تصویر: activate to sort column descending" >تصویر</th>
+                                <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-sort="ascending" aria-label="عنوان: activate to sort column descending">عنوان
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="تاریخ ایجاد: activate to sort column ascending">تاریخ ایجاد</th>
+                                <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="عملیات: activate to sort column ascending">عملیات</th>
 
                         </thead>
                         <tbody>
@@ -71,15 +70,11 @@
                                         <td>@item.CreateDate</td>
                                         <td>
                                             <div class="btn-group">
-                                                <a onclick="copyUrl('@(SiteImagesBaseAddressForcopy + item.ImageName)')" class="btn btn-info ">کپی </a>
+                                                <a onclick="copyUrl('@(SiteImagesBaseAddressForcopy + item.ImageName)')" class="btn btn-info "title="کپی"><i class="fa fa-copy"></i> </a>
+                                                  <a onclick="DeleteAjax('   آیا از حذف تصویر @item.Title مطئن هستید؟ ','تصویر به طور کامل از سایت حذف میگردد و این عملیات غیر قابل بازگشت خواهد بود', 'warning', 'بله', '/Admin/Site/Images/Delete',@item.Id)" class="btn btn-danger" title="حذف"><i class="fa fa-trash"></i></a>
                                             </div>
                                         </td>
-                                        <td>
-                                            <div class="btn-group">
-                                                <a onclick="DeleteAjax('   آیا از حذف تصویر @item.Title مطئن هستید؟ ','تصویر به طور کامل از سایت حذف میگردد و این عملیات غیر قابل بازگشت خواهد بود', 'warning', 'بله', '/Admin/Site/Images/Delete',@item.Id)" class="btn btn-danger">حذف</a>
-                                            </div>
-                                          
-                                        </td>
+                          
                                     </tr>
 
 
@@ -133,8 +128,6 @@
             AlerSweetWithTimer( "@successMessage","success", "center");
         </script>
     }
-
-
 
     <script>
 

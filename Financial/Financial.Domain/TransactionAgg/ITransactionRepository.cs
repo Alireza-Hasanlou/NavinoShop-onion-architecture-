@@ -1,0 +1,14 @@
+﻿using Shared.Domain;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Financial.Domain.TransactionAgg
+{
+    public interface ITransactionRepository : IGenericRepository<Transaction, long>
+    {
+        Task<Transaction> GetFirstByUserIdAsync(int userId);
+    }
+}

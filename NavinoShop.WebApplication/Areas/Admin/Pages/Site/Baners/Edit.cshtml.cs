@@ -17,9 +17,9 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Site.Baners
 
         [BindProperty]
         public EditBanerCommandModel EditBaner { get; set; }
-        public async Task<IActionResult> OnGet(int id)
+        public async Task<IActionResult> OnGet(int BanerId)
         {
-            EditBaner = await _banerCommandService.GetForEditAsync(id);
+            EditBaner = await _banerCommandService.GetForEditAsync(BanerId);
             return Page();
         }
         public async Task<IActionResult> OnPost()

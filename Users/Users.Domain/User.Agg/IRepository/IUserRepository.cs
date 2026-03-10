@@ -15,5 +15,6 @@ namespace Users.Domain.User.Agg.IRepository
         Task<EditUserByUserDto> GetForEditByUserAsync(int userId);
         Task<UserHeaderQueryModel> GetUserForHeader(int id);
         Task<UserDetailDto> GetUserDetailAsync(int userId);
+        Task<User> GetForEditByAdmin(int userId);
     }
 }

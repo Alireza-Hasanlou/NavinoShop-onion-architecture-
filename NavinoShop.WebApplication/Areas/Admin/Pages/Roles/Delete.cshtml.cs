@@ -17,6 +17,7 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Roles
         public int RoleId { get; set; }
         public async Task<JsonResult> OnGet(int id)
         {
+
             var result = await _roleCommandService.DeleteAsync(id);
             if (result.Success)
                 return new JsonResult(new {success=true,title="نقش مورد نظر با موفقیت حذف شد"});

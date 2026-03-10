@@ -170,11 +170,12 @@
                             <th>نام کاربری</th>
                             <th>شماره تماس</th>
                             <th>مبلغ</th>
+                            <th>توضیحات</th>
                             <th>نوع ترکنش </th>
                             <th>تراکنش برای</th>
                             <th>منبع ترکنش </th>
                             <th>وضعیت ترکنش </th>
-                            <th>تارخ اینجاد</th>
+                            <th>تاریخ ایجاد</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -186,11 +187,12 @@
                                     <td>@item.RefId</td>
                                     <td>@item.UserName</td>
                                     <td>@item.Mobile</td>
-                                    <td>@item.Price</td>
+                                    <td data-format="money">@item.Price</td>
+                                    <td>@item.Description</td>
                                     <td>@item.TransactionType</td>
                                     <td class="text-danger">  @item.transactionFor </td>
-                                    <td> @item.TransactionSource.ToString().Replace("_", "") </td>
-                                    <td class="@((item.transactionStatus == TransactionStatus.موفق) ? "text-success" : "text-danger")"> @item.transactionStatus </td>
+                                    <td> @item.TransactionSource.ToString().Replace("_", " ") </td>
+                                    <td class="@((item.transactionStatus == TransactionStatus.موفق) ? "text-success" : "text-danger")"> @item.transactionStatus.ToString().Replace("_"," ") </td>
                                     <td> @item.TransactionDate </td>
                                 </tr>
                             }
@@ -203,11 +205,12 @@
                             <th>نام کاربری</th>
                             <th>شماره تماس</th>
                             <th>مبلغ</th>
+                            <th>توضیحات</th>
                             <th>نوع ترکنش </th>
                             <th>تراکنش برای</th>
                             <th>منبع ترکنش </th>
                             <th>وضعیت ترکنش </th>
-                            <th>تارخ اینجاد</th>
+                            <th>تاریخ ایجاد</th>
                         </tr>
                     </tfoot>
                 </table>
@@ -215,7 +218,7 @@
            
             <div class="row align-items-center mt-4">
                 <div class="col-md-5">
-                    <div class="dataTables_info">نمایش ۱ تا @Model.TransactionsModel.take از @Model.TransactionsModel.DataCount رکورد</div>
+                    <div class="dataTables_info"> @Model.TransactionsModel.DataCount رکورد</div>
                 </div>
                 @if (Model.TransactionsModel.PageCount > 1)
                 {

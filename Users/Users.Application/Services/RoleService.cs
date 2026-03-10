@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Users.Application.Contract.RoleService.Command;
 using Users.Domain.User.Agg;
 using Users.Domain.User.Agg.IRepository;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Users.Application.Services
 {
@@ -17,15 +18,16 @@ namespace Users.Application.Services
         private readonly IRoleRepository _roleRepository;
         private readonly IUserRepository _userRepository;
 
-        public RoleService(IRoleRepository roleRepository)
+        public RoleService(IRoleRepository roleRepository, IUserRepository userRepository)
         {
             _roleRepository = roleRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<OperationResult> CreateAsync(CreateRoleCommand command, List<int> permissions)
         {
             if (await _roleRepository.ExistByAsync(t => t.Title == command.Title.Trim().ToLower()))
-                return new(false, ValidationMessages.DuplicatedMessage, "RoleTitle");
+                return new(false, ValidationMessages.DuplicatedMessage,nameof(command.Title));
 
             var role = new Role(command.Title.Trim().ToLower());
             if (permissions.Count > 0)
@@ -46,6 +48,9 @@ namespace Users.Application.Services
 
         public async Task<OperationResult> DeleteAsync(int id)
         {
+            // 1 is SiteManager 2  is User
+            if (id == 1 || id == 2)
+                return new(false, "امکان حذف این نقش وجود ندارد", "Role");
             var role = await _roleRepository.GetByIdAsync(id);
             if (role == null) return new(false, ValidationMessages.SystemErrorMessage);
 
@@ -61,19 +66,5 @@ namespace Users.Application.Services
 
         }
 
-        public async Task<OperationResult> EditUserRoleAsync(int userId, List<int> roles)
-        {
-            var user = await _userRepository.GetByIdAsync(userId);
-            user.ClearRole();
-            foreach (var role in roles)
-            {
-                user.AddRole(role);
-            }
-            var result = await _roleRepository.SaveAsync();
-            if (result)
-                return new(true);
-
-            return new(false, ValidationMessages.SystemErrorMessage, "User");
-        }
     }
 }

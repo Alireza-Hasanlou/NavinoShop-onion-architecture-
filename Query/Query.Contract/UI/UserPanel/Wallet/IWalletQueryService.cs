@@ -9,6 +9,6 @@ namespace Query.Contract.UI.UserPanel.Wallet
 {
     public interface IWalletQueryService
     {
-        Task<WalletDetailQueryModel> GetWalletForUserPanel(int userId);
+        Task<WalletDetailQueryModel> GetWalletForUserPanel( int userId);
     }
 }

@@ -10,22 +10,22 @@ namespace Users.Domain.User.Agg
     {
         public string FullName { get; private set; }
         public string Mobile { get; private set; }
-        public string Email { get; private set; }
+        public string? Email { get; private set; }
         public string Password { get; private set; }
         public string Avatar { get; private set; }
         public bool Active { get; private set; }
         public bool IsDelete { get; private set; }
-        public long WalletId { get; set; }
+        public int WalletId { get; private set; }
         public Gender UserGender { get; private set; }
         public ICollection<UserAddress> Addresses { get; private set; }
         public ICollection<UserRole> UserRoles { get; private set; }
-       
+
 
         protected User()
         {
 
         }
-        public User(string fullName, string mobile, string email,
+        public User(string fullName, string mobile, string? email,
                     string password, string avatar,
                     bool active, bool isDelete, Gender gender)
         {
@@ -39,20 +39,27 @@ namespace Users.Domain.User.Agg
             UserGender = gender;
             Addresses = new List<UserAddress>();
             UserRoles = new List<UserRole>();
-          
+
 
         }
 
         public void Edit(string fullName, string mobile, string email,
-                               string password, string avatar, Gender gender)
+                               string password, string avatar, Gender gender, List<int> RoleIds)
         {
             FullName = fullName;
             Mobile = mobile;
             Email = email;
             Avatar = avatar;
             UserGender = gender;
-            if (!string.IsNullOrEmpty(password))
-                Password = password;
+            Password = password;
+            if (RoleIds.Count() > 0)
+            {
+                ClearRole();
+                foreach (var roleid in RoleIds)
+                {
+                    AddRole(roleid);
+                }
+            }
         }
 
         public void ActivationChange()

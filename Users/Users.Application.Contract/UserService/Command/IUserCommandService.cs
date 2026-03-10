@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Users.Application.Contract.RoleService.Query;
 using Users.Application.Contract.UserService.Query;
 
 namespace Users.Application.Contract.UserService.Command
@@ -14,7 +15,7 @@ namespace Users.Application.Contract.UserService.Command
         Task<OperationResult> RegisterAsync(RegisterUserCommand command);
         Task<OperationResult> LoginAsync(LoginUserCommand command);
         Task<OperationResult> CreateAsync(CreateUserCommand command);
-        Task<OperationResult> EditByAdminAsync(EditUserByAdminDto command);
+        Task<OperationResult> EditByAdminAsync(EditUserByAdminDto command, List<int> roles);
         Task<EditUserByUserDto> GetForEditByUserAsync(int userId);
         Task<OperationResult> EditByUserAsync(EditUserByUserCommand command, int userId);
         Task<OperationResult> ChangePasswordAsync(ChangeUserPasswordCommand command);

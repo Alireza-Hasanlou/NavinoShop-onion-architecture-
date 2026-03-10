@@ -3,6 +3,7 @@ using Shared.Insfrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Users.Application.Contract.UserService.Query;
@@ -64,18 +65,33 @@ namespace Users.Infrastructure.Persistence.Repository
 
         public async Task<UserDetailDto> GetUserDetailAsync(int userId)
         {
-            return await _context.Users.Where(i => i.Id == userId)
-                .Select(u => new UserDetailDto
-                {
-                    Id = u.Id,
-                    FullName = u.FullName,
-                    Email = u.Email,
-                    Mobile = u.Mobile,
-                    CreateDate = u.CreateDate,
-                    Avatar = u.Avatar,
-                    IsDelete = u.IsDelete,
-                    Active = u.Active
-                }).SingleAsync();
+            var query = await _context.Users.Where(i => i.Id == userId)
+                .Include(u => u.UserRoles)
+                .ThenInclude(r => r.Role)
+                .FirstOrDefaultAsync();
+
+            var userDetail = new UserDetailDto
+            {
+                FullName = query.FullName,
+                Avatar = query.Avatar,
+                Mobile = query.Mobile,
+                Active = query.Active,
+                CreateDate = query.CreateDate,
+                Email = query.Email,
+                Id = userId,
+                IsDelete = query.IsDelete,
+                UserRole = new List<string>()
+            };
+            foreach (var item in query.UserRoles)
+            {
+                userDetail.UserRole.Add(item.Role.Title);
+            }
+            return userDetail;
+        }
+
+        public async Task<User> GetForEditByAdmin(int userId)
+        {
+            return await _context.Users.Where(i => i.Id == userId).Include(u => u.UserRoles).SingleAsync();
         }
     }
 }

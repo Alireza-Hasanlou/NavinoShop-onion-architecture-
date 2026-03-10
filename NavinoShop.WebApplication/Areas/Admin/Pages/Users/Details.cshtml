@@ -34,6 +34,7 @@
             </div>
 
             <div class="info-grid">
+                <input type="hidden" value="@Model.UserDetailModel.UserId" id="ownerId" />
                 <div class="info-item">
                     <span class="info-label"><span class="icon-placeholder">👤</span> نام و نام خانوادگی</span>
                     <span class="info-value">@Model.UserDetailModel.FullName</span>
@@ -62,7 +63,7 @@
             <!-- موجودی کیف پول -->
             <div class="wallet-balance">
                 <span class="balance-label">موجودی کیف پول:</span>
-                <span data-format="money" class="balance-amount money">@Model.UserDetailModel.WalletBalancr</span>
+                <span data-format="money" class="balance-amount money">@Model.UserDetailModel.WalletBalance</span>
                 <span class="balance-currency">تومان</span>
             </div>
 
@@ -123,11 +124,21 @@
 
             </div>
 
+            <div class="status-chip">
+                <span class="icon-placeholder"></span> نقش های کاربر:
+
+                @foreach (var item in Model.UserDetailModel.UserRoles)
+                {
+                    <span class="status-badge">@item</span>
+                }
+
+            </div>
+
         </div>
 
-        
+
         <div class="profile-footer">
-            <a href="/Admin/Users/Edit?Id=@Model.UserDetailModel.UserId" class="edit-btn"> <span class="icon-placeholder">✏️</span>ویرایش پروفایل</a>
+            <a href="/Admin/Users/Edit?Id=@Model.UserDetailModel.UserId" class="edit-btn"> <span class="icon-placeholder"><i class="fa fa-edit"></i></span>ویرایش پروفایل</a>
         </div>
     </div>
 </div>

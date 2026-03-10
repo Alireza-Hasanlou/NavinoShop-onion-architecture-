@@ -1,0 +1,43 @@
+﻿@using Shared.Domain.Enums
+
+<div class="modal-body">
+    <div class="col  col-12 ">
+
+        <div class="custom-form-group">
+            <label for="Price">نام و نام خانوارگی</label>
+            <input dir="rtl" type="text" id="FullName">
+        </div>
+    </div>
+    <div class="col  col-12 ">
+
+        <div class="custom-form-group">
+            <label for="description" class="required">شماره موبایل</label>
+            <input type="text" id="Mobile">
+        </div>
+    </div>
+    <div class="col  col-12 ">
+
+        <div class="custom-form-group">
+            <label for="description">ایمیل</label>
+            <input type="text" id="Email">
+        </div>
+    </div>
+    <div class="col  col-12 ">
+
+        <div class="custom-form-group">
+            <label for="description">جنسیت</label>
+            <select id="Gender">
+                @foreach (var item in Enum.GetValues(typeof(Gender)).Cast<Gender>())
+                {
+                    <option value="@item">@item</option>
+                }
+            </select>
+        </div>
+    </div>
+    <span class="text-danger" id="CreateUserValidation"></span>
+</div>
+
+<div class="modal-footer p-4">
+    <button type="button" class="btn btn-default pull-left" onclick="close_Modal_Ajax()">خروج</button>
+    <button type="button" class="btn btn-primary" onclick="CreateUser()">ذخیره</button>
+</div>

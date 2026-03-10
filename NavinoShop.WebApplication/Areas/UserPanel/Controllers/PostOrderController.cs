@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
 {
     [Area("UserPanel")]
-    [Route("/profile/[action]/{id?}")]
     [Authorize]
     public class PostOrderController : Controller
     {
@@ -25,40 +24,42 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
             _userPostApplication = userPostApplication;
             _authService = authService;
         }
-    
+
+        [Route("/PostOrder/Orders")]
         public async Task<IActionResult> Orders()
         {
             int UserId = _authService.GetLoginUserId();
             var orders = await _postOrderQueryService.GetPostOrderForUserPanelAsync(UserId);
             return View(orders);
         }
-
+        [Route("/profile/ApiCart")]
         public async Task<IActionResult> ApiCart()
         {
             int UserId = _authService.GetLoginUserId();
             var res= await _userPostApplication.GetPostOrderNotPaymentForUser(UserId);
             return View(res);
         }
-    
+        [Route("/PostOrder/Create/{packageId}")]
         public async Task<IActionResult> Create(int packageId)
         {
             if (packageId <1 )
-                return Redirect("/Packages");
+                return Redirect("/PostPackages");
             var userId= _authService.GetLoginUserId();
             var model = await _userPostApplication.GetCreatePostModelAsync(userId, packageId);
             if(model == null)
-                return Redirect("/Packages");
+                return Redirect("/PostPackages");
             var res = await _userPostApplication.CreatePostOrderAsync(model);
             if (res)
             {
                 ViewData["success"] = true;     
-                return Redirect("/PostOrder/Cart");
+                return Redirect("/Profile/ApiCart");
             }
-            return Redirect("/Packages");
+            return Redirect("/PostPackages");
         }
-  
+        [Route("/PostOrder/Payment")]
         public async Task<IActionResult> Payment()
         {
+            // نمایش فاکتور های پست ToDo
             var UserId = _authService.GetLoginUserId();
             var package = await _userPostApplication.GetPostOrderNotPaymentForUser(UserId);
             if (package==null)
@@ -70,7 +71,7 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
             {
                 ViewData["success"] = "پرداخت با موفقیت انجام شد ";
             } 
-            return Redirect("/PostOrder/Orders");
+            return Redirect("/Profile/Orders");
         }
 
         [HttpGet]

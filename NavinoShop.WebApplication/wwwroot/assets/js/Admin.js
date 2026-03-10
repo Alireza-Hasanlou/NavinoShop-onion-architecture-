@@ -196,7 +196,6 @@ function Get_ajax(url) {
     var modalContent = $("#modal-content");
     modalContent.html("");
     $.get(url, function (res) {
-        console.log(res);
         modalContent.html(res);
     });
 }
@@ -205,6 +204,8 @@ function close_Modal_Ajax() {
 }
 function RechargeWallet() {
     var amount = $("#WalletAmount").val();
+    var description = $("#description").val();
+    var ownerId = $("#ownerId").val();
     var amountvalidation = $("#amountValidation");
     amountvalidation.text("");
 
@@ -212,7 +213,13 @@ function RechargeWallet() {
     $.ajax({
         url: "/Admin/Users/RechargeWallet",
         type: "POST",
-        data: { Amount: amount },
+        data: {
+            Description: description,
+            Amount: amount,
+            OwnerId: ownerId,
+
+
+        },
         dataType: "json"
     })
         .done(function (res) {
@@ -226,6 +233,47 @@ function RechargeWallet() {
 
             } else {
                 amountvalidation.text(res.message);
+            }
+
+
+        }).fail(function (xhr) {
+
+            console.error("Ajax Error:", xhr.status, xhr.responseText);
+        });
+}
+function CreateUser() {
+    debugger;
+    var fullName = $("#FullName").val();
+    var mobile = $("#Mobile").val();
+    var email = $("#Email").val();
+    var gender = $("#Gender").val();
+    var password = $("#Password").val();
+    var createUserValidation = $("#CreateUserValidation");
+    createUserValidation.text("");
+    $.ajax({
+        url: "/Admin/Users/Create",
+        type: "POST",
+        data: {
+            FullName: fullName,
+            Mobile: mobile,
+            Email: email,
+            Gender: gender,
+            Password: password
+
+        },
+        dataType: "json"
+    })
+        .done(function (res) {
+
+            if (res.success) {
+                $("#modal-default").modal("hide");
+                AlerSweetWithTimer(res.message, "success", "center");
+                setTimeout(function () {
+                    location.reload();
+                }, 3000);
+
+            } else {
+                createUserValidation.text(res.message);
             }
 
 

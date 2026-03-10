@@ -31,10 +31,10 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
             return View(model);
         }
 
-        public async Task<JsonResult> LoadTransaction()
+        public async Task<JsonResult> LoadTransaction(int pageId)
         {
             var userId = _authService.GetLoginUserId();
-            var model = await _transactionQueries.GetTransactionsForUserAsync(userId, TransactionFor.Wallet);
+            var model = await _transactionQueries.GetTransactionsForUserAsync(pageId, userId, TransactionFor.Wallet);
             return Json(model);
         }
     }

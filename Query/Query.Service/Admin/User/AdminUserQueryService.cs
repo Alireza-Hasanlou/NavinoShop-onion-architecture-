@@ -2,6 +2,7 @@
 using Financial.Domain.WalletAgg;
 using Microsoft.EntityFrameworkCore;
 using Query.Contract.Admin.User;
+using Shared.Application;
 using Shared.Domain.Enums;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,15 @@ namespace Query.Service.Admin.User
         {
             var user = await _userRepository.GetUserDetailAsync(userId);
             var wallet = await _walletRepository.GetWalletByUserIdAsync(userId);
-            var transactions = await _transactionRepository.GetAllBy(u => u.UserId == userId
+            if (wallet == null)
+            {
+
+                var res = await _walletRepository.CreateAsync(Wallet.Create(userId));
+                if (!res.Success)
+                    return null;
+                wallet = await _walletRepository.GetWalletByUserIdAsync(userId);
+            }
+            var transactions = await _transactionRepository.GetAllBy(u => u.OwnerId == userId
             && u.TransactionFor == TransactionFor.Wallet
             && u.Status == TransactionStatus.موفق).ToListAsync();
             return new UserDetailQueryModel
@@ -43,7 +52,8 @@ namespace Query.Service.Admin.User
                 Mobile = user.Mobile,
                 CreateDate = user.CreateDate,
                 IsDelete = user.IsDelete,
-                WalletBalancr = wallet.Balance,
+                WalletBalance = wallet.Balance,
+                UserRoles=user.UserRole,
                 SuccessTransactionCount = transactions.Count(),
                 successTransactionSum = transactions.Sum(p => p.Price),
             };

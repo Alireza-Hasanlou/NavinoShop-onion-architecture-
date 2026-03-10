@@ -252,7 +252,10 @@ function login() {
         });
     };
 
-})(jQuery);
+})(jQuery)
+
+
+    
 
 
 // ===============================
@@ -406,8 +409,7 @@ function readImageForWidget(input, previewId) {
     }
 }
 
-//GetMoreTransaction
-
+//Price Sepatator
 
 $("[data-format='money']").each(function () {
     var value = $(this).text();
@@ -417,3 +419,63 @@ $(".money").on("input", function () {
     var value = $(this).val().replace(/,/g, '');
     $(this).val(Number(value).toLocaleString('en-US'));
 });
+
+//GetMoreTransations
+function LoadWalletTransactions(pageId) {
+
+
+    var parent = $(".transactions-list");
+    var loadparent = $("#LoadMore");
+    loadparent.html("");
+    if (pageId == 0) {
+        parent.html("");
+    }
+
+    $.ajax({
+        url: "/profile/LoadTransaction",
+        type: "GET",
+        data: { PageId: pageId }
+    })
+        .done(function (res) {
+
+            for (let i = 0; i < res.transactions.length; i++) {
+                const transaction = res.transactions[i];
+
+                let amountClass = '';
+                let amountSign = '';
+
+
+                if (transaction.transactionType === 'واریز' || transaction.transactionType === 2) {
+                    amountClass = 'amount-positive';
+                    amountSign = '+';
+                } else {
+                    amountClass = 'amount-negative';
+                    amountSign = '-';
+                }
+
+                parent.append(`<div class="transaction-item">
+                            <div class="transaction-info">
+                                <div class="transaction-icon">⬇️</div>
+                                <div class="transaction-details">
+                                    <span class="transaction-name">${transaction.transactionSource}</span>
+                                    <span class="transaction-date"><span class="icon-placeholder">📅</span> ${transaction.transactionDate}</span>
+                                </div>
+                            </div>
+                            <div class="transaction-amount ${amountClass}">${amountSign}${transaction.price}</div>
+                        </div>`);
+            }
+
+            if (res.pageId < res.pageCount) {
+                loadparent.append(` <a onclick="LoadWalletTransactions('${res.pageId}')" style="cursor:pointer; margin:auto;" class="view-all"> بیشتر</a>`);
+            }
+            else if (res.dataCount > 3) {
+
+                loadparent.append(` <a onclick="LoadWalletTransactions('0')" style="cursor:pointer; margin:auto;" class="view-all"> کمتر</a>`);
+            }
+
+
+        })
+        .fail(function (xhr) {
+            console.error("Ajax Error:", xhr.status, xhr.responseText);
+        });
+}

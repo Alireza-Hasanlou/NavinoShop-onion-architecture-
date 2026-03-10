@@ -31,6 +31,7 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Roles
 
         public async Task<IActionResult> OnPost(List<int> permissions)
         {
+
             if (!ModelState.IsValid)
             {
                 Permissions = await _roleQueryService.GetAllPermission();

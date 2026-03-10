@@ -8,7 +8,6 @@
 
 
 <div class="wallet-card">
-    <!-- بالا: موجودی کیف پول -->
     <div class="wallet-header">
         <div class="wallet-label">
             <span class="icon-placeholder">💰</span> کیف پول من
@@ -19,13 +18,11 @@
                 <span>تومان</span>
             </div>
             <div class="balance-amount">
-                <span class="amount-number">@Model.Balance</span>
+                <span data-format="money" class="amount-number">@Model.Balance</span>
                 <span class="amount-currency">تومان</span>
             </div>
         </div>
     </div>
-
-    <!-- باتن افزایش موجودی -->
     <div class="charge-btn-wrapper">
         <button class="charge-btn">
             <span class="icon-placeholder">➕</span>
@@ -38,14 +35,12 @@
         <div class="stat-square">
             <div class="stat-icon">⬇️</div>
             <div class="stat-label">کل واریزی‌ها</div>
-            <div class="stat-value">۱۲<span class="stat-sub">تراکنش</span></div>
-            <div style="font-size:0.8rem; color:#fcb941; margin-top: 8px; font-weight:600;">+@Model.TotalDeposits</div>
+            <div data-format="money" style="font-size:0.8rem; color:#fcb941; margin-top: 8px; font-weight:600;">+@Model.TotalDeposits</div>
         </div>
         <div class="stat-square">
             <div class="stat-icon">⬆️</div>
             <div class="stat-label">کل خرج کرده</div>
-            <div class="stat-value">۵۶<span class="stat-sub">تراکنش</span></div>
-            <div style="font-size:0.8rem; color:#c17a2b; margin-top: 8px; font-weight:600;">-@Model.TotalWithdrawals</div>
+            <div data-format="money" style="font-size:0.8rem; color:#c17a2b; margin-top: 8px; font-weight:600;">-@Model.TotalWithdrawals</div>
         </div>
     </div>
 
@@ -56,81 +51,17 @@
         </div>
 
     </div>
-    @if (Model.LastTransactions.Count() > 0)
-    {
         <div class="transactions-list">
-            @foreach (var item in Model.LastTransactions)
-            {
-
-
-                <div class="transaction-item">
-                    <div class="transaction-info">
-                        <div class="transaction-icon">⬇️</div>
-                        <div class="transaction-details">
-                            <span class="transaction-name">@item.TransactionSource</span>
-                            <span class="transaction-date"><span class="icon-placeholder">📅</span> @item.TransactionDate</span>
-                        </div>
-                    </div>
-                    @if (item.TransactionType == TransactionType.واریز)
-                    {
-                        <div class="transaction-amount amount-positive">+@item.Price</div>
-                    }
-                    else
-                    {
-                        <div class="transaction-amount amount-negative">-@item.Price</div>
-                    }
-
-                </div>
-
-
-            }
         </div>
-    }
-    <a onclick="LoadTransactions()" style="cursor:pointer;" class="view-all"> بیشتر</a>
+    
+    <div id="LoadMore">
+    </div>
+
 </div>
 @section scripts {
     <script>
-                function LoadTransactions() {
-
-            var parent = $(".transactions-list");
-
-            $.ajax({
-                url: "/profile/LoadTransaction",
-                type: "GET",
-            })
-                .done(function (res) {
-
-                    for (let i = 0; i < res.length; i++) {
-                        const transaction = res[i];
-
-                        let amountClass = '';
-                        let amountSign = '';
-
-
-                        if (transaction.transactionType === 'واریز' || transaction.transactionType === 0) {
-                            amountClass = 'amount-positive';
-                            amountSign = '+';
-                        } else {
-                            amountClass = 'amount-negative';
-                            amountSign = '-';
-                        }
-
-                        parent.append(`<div class="transaction-item">
-                            <div class="transaction-info">
-                                <div class="transaction-icon">⬇️</div>
-                                <div class="transaction-details">
-                                    <span class="transaction-name">${transaction.transactionSource}</span>
-                                    <span class="transaction-date"><span class="icon-placeholder">📅</span> ${transaction.transactionDate}</span>
-                                </div>
-                            </div>
-                            <div class="transaction-amount ${amountClass}">${amountSign}${transaction.price}</div>
-                        </div>`);
-                    }
-
-                })
-                .fail(function (xhr) {
-                    console.error("Ajax Error:", xhr.status, xhr.responseText);
-                });
-        }
+        document.addEventListener("DOMContentLoaded", () => {
+            LoadWalletTransactions(0);
+        });
     </script>
 }

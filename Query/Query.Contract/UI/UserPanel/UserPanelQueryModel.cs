@@ -12,7 +12,7 @@ namespace Query.Contract.UI.UserPanel
         public Gender Gender { get; set; }
         public string RegisterDate { get; set; }
         public int TransactionCount { get; set; }
-        public int TransactionSum { get; set; }
+        public decimal TransactionSum { get; set; }
         public string Avatar { get; set; }
     }
 }

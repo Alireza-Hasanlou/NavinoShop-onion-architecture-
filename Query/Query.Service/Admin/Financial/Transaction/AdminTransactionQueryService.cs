@@ -75,6 +75,7 @@ namespace Query.Service.Admin.Financial.Transaction
                     UserName = "",
                     Mobile = "",
                     Price = t.Price,
+                    Description=t.Description,
                     TransactionDate = t.CreateDate.ToPersainDate(),
                     TransactionSource = t.TransactionSource,
                     TransactionType = t.TransactionType,

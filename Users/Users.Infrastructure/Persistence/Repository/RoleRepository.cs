@@ -33,6 +33,8 @@ namespace Users.Infrastructure.Persistence.Repository
 
         public async Task<OperationResult> EditAsync(EditRoleCommand command, List<int> permissions)
         {
+            if(command.Id==1 || command.Id==2)
+                return new(false, "امکان ویرایش این نقش وجود ندارد", "Role");
             var role = await _userContext.Roles.Where(i => i.Id == command.Id).Include(r => r.RolePermissions).SingleAsync();
 
             if (await ExistByAsync(t => t.Title == command.Title.Trim().ToLower() && role.Id != command.Id))
@@ -71,7 +73,7 @@ namespace Users.Infrastructure.Persistence.Repository
         public async Task<List<RoleQueryModel>> GetAllRoles()
         {
             return await _userContext.Roles
-                .Where(r => r.Id != 1) // exclude SiteManager
+                .OrderBy(i=>i.Id)
                 .Select(r => new RoleQueryModel
                 {
                     RoleId = r.Id,
@@ -122,6 +124,11 @@ namespace Users.Infrastructure.Persistence.Repository
             
             return usersInRole;
             
+        }
+
+        public async Task<List<int>> GetUsersRoleIds(int userId)
+        {
+             return await _userContext.UserRoles.Where(i => i.UserId == userId).Select(r => r.RoleId).ToListAsync();
         }
     }
 }

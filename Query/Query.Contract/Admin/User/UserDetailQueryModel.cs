@@ -10,7 +10,8 @@
         public DateTime CreateDate { get; set; }
         public bool Active { get; set; }
         public bool IsDelete { get; set; }
-        public decimal WalletBalancr { get; set; }
+        public List<string> UserRoles { get; set; }
+        public decimal WalletBalance { get; set; }
         public int SuccessTransactionCount { get; set; }
         public decimal successTransactionSum { get; set; }
 

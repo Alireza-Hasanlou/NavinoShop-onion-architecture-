@@ -1,0 +1,23 @@
+﻿
+<div class="modal-body">
+    <div class="col  col-12 ">
+
+        <div class="custom-form-group">
+            <label for="Price" class="required">مبلغ</label>
+            <input class="money" dir="ltr" type="text" id="WalletAmount">
+        </div>
+    </div>
+    <div class="col  col-12 ">
+
+        <div class="custom-form-group">
+            <label for="description" class="required">توضیحات</label>
+            <input  type="text" id="description">
+        </div>
+    </div>
+    <span class="text-danger" id="amountValidation"></span>
+</div>
+<div class="modal-footer p-4">
+    <button type="button" class="btn btn-default pull-left" onclick="close_Modal_Ajax()">خروج</button>
+    <button type="button" class="btn btn-primary" onclick="RechargeWallet()">ذخیره</button>
+</div>
+

@@ -15,7 +15,7 @@
 
     <div class="box-body">
         <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
-            <a href="/Admin/Site/SitePage/Create" class="btn btn-success">افزودن</a>
+            <a href="/Admin/Site/SitePage/Create" class="btn btn-success" title="افزودن"><i class="fa fa-plus"></i></a>
             <div class="row">
                 <div class="col-sm-12">
                     <table class="DataTable table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
@@ -78,8 +78,8 @@
                                         <td>
                                             <div class="btn-group">
 
-                                                <a asp-page="Edit" asp-route-sitePageId="@item.Id" class="btn btn-warning">ویرایش</a>
-                                                <a onclick="DeleteAjax('   آیا از حذف این بنر مطئن هستید؟ ','این عملیات غیر قابل بازگشت خواهد بود', 'warning', 'بله', '/Admin/Site/SitePage/Delete',@item.Id)" class="btn btn-danger">حذف</a>
+                                                <a asp-page="Edit" asp-route-sitePageId="@item.Id" class="btn btn-warning" title="ویرایش"><i class="fa fa-edit"></i></a>
+                                                <a onclick="DeleteAjax('   آیا از حذف این بنر مطئن هستید؟ ','این عملیات غیر قابل بازگشت خواهد بود', 'warning', 'بله', '/Admin/Site/SitePage/Delete',@item.Id)" class="btn btn-danger" title="حذف"><i class="fa fa-trash"></i></a>
                                             </div>
                                         </td>
 

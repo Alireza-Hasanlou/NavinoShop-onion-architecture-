@@ -1,10 +1,12 @@
 ﻿@page
 @using Shared.Application
 @using Shared.Domain.Enums
+@using Users.Application.Contract.RoleService.Query
 @model NavinoShop.WebApplication.Areas.Admin.Pages.Users.EditModel
 @{
     Layout = "_AdminLayout";
     ViewData["title"] = "ویرایش کاربر";
+    var roles = ViewData["Roles"] as List<RoleQueryModel>;
 }
 <div class="Formcontainer">
 
@@ -56,7 +58,7 @@
                 <div class="col col-md-6 col-sm-12 col-12">
 
                     <div class="custom-form-group">
-                        <label  for="Password">   کلمه عبور جدید</label>
+                        <label for="Password">   کلمه عبور جدید</label>
                         <input asp-for="EditUserModel.Password" type="text" id="Password">
                         <span asp-validation-for="EditUserModel.Password" class="text-danger"></span>
                     </div>
@@ -75,9 +77,37 @@
                     </div>
                     <span asp-validation-for="EditUserModel.AvatarFile" class="text-danger"></span>
                 </div>
+
             </div>
 
+            <div class=" col  col-12 col-sm-12">
 
+                <div class="box-header with-border">
+                    <h4> نقش های کاربر را مشخص کنید</h4>
+                </div>
+                @if (roles?.Any() == true)
+                {
+                    foreach (var item in roles)
+                    {
+                        
+                        
+
+
+                            <div>
+                                <label>
+                                    <input type="checkbox"
+                                           class="flat-red"
+                                           name="roles"
+                                           value="@item.RoleId"
+                                           @(Model.EditUserModel.UserRoleIds?.Any(x => x == item.RoleId) == true ? "checked" : "") />
+                                    @item.RoleTitle
+                                </label>
+                            </div>
+                            <br />
+                        
+                    }
+                }
+            </div>
 
             <button type="submit" class="btn btn-success btn-block">ویرایش </button>
 
@@ -85,3 +115,11 @@
     </div>
 </div>
 
+@section scripts {
+    <script>
+
+        $(document).ready(function () {
+            $(".picture-uploader").imageUploader();
+        });
+    </script>
+}

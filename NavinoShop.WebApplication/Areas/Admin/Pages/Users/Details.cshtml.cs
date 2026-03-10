@@ -21,8 +21,13 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Users
                 ViewData["success"] = "آیدی نا معتبر";
                 return RedirectToPage("Index");
             }
-
-            UserDetailModel = await _adminUserQueryService.GetUserDetailAsync(Id);
+            var userDetail = await _adminUserQueryService.GetUserDetailAsync(Id);
+            if (userDetail != null)
+            {
+                UserDetailModel = userDetail;
+                return Page();
+            }
+            ViewData["success"] = "خطا در بازگذاری اطلاعات";
             return Page();
         }
     }

@@ -10,6 +10,7 @@ namespace Users.Application.Contract.UserService.Query
     {
         public int Id { get; set; }
         [Display(Name = "نام کامل")]
+        [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
         [MaxLength(255, ErrorMessage = ValidationMessages.MaxLengthMessage)]
         public string? FullName { get; set; }
         [Display(Name = "شماره همراه")]
@@ -27,5 +28,6 @@ namespace Users.Application.Contract.UserService.Query
         public IFormFile? AvatarFile { get; set; }
         [Display(Name = "جنسیت")]
         public Gender UserGender { get; set; }
+        public List<int >? UserRoleIds { get; set; }
     }
 }

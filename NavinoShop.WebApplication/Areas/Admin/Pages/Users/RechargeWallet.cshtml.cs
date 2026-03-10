@@ -26,44 +26,31 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Users
         {
             return Partial("_RechargeWalletPartialView");
         }
-        public async Task<JsonResult> OnPost(decimal Amount, int userId, string description)
+        public async Task<JsonResult> OnPost(decimal Amount, int OwnerId, string Description)
         {
-            var ownerId = _authService.GetLoginUserId();
-            var transationRes = await _transactionCommands.CreateAsync(new CreateTransacionCommandModel
-            {
-                UserId = userId,
-                OwnerId = ownerId,
-                Authority = "",
-                Description = description,
-                Portal = TransactionPortal.دستی_ادمین,
-                Price = Amount,
-                TransactionFor = TransactionFor.Wallet,
-                TransactionSource = TransactionSource.توسط_ادمین,
-                TransactionType = TransactionType.واریز
+            var userId = _authService.GetLoginUserId();
 
-            });
-            if (transationRes.Success)
+            var Depositres = await _walletCommands.DepositAsync(userId, Amount, OwnerId,
+             TransactionFor.Wallet,
+             TransactionSource.توسط_ادمین,
+             TransactionType.واریز,
+             TransactionPortal.دستی_ادمین,
+             Description, "");
+            if (Depositres.Success)
             {
-                var Depositres = await _walletCommands.DepositAsync(userId, Amount);
-                if (Depositres.Success)
-                {
-                    var paymentRes = await _transactionCommands.Payment((long)transationRes.Data, "");
-                    if (paymentRes.Success)
-                        return new JsonResult(new { success = true, message = "کیف پول کاربر با موفقیت شارژ شد" });
-                    return new JsonResult(new { success = false, message = paymentRes.Message });
-                }
-                else
-                {
-                    return new JsonResult(new { success = false, message = Depositres.Message });
-                }
+
+                return new JsonResult(new { success = true, message = "کیف پول کاربر با موفقیت شارژ شد" });
 
             }
             else
             {
-                return new JsonResult(new { success = false, message = transationRes.Message });
+                return new JsonResult(new { success = false, message = Depositres.Message });
             }
 
         }
+
+
+
 
     }
 }

@@ -10,7 +10,7 @@
 }
 <div class="box">
     <div class="box-header">
-        <h3 class="box-title">تصاویر</h3>
+        <h3 class="box-title">کامنت ها</h3>
     </div>
     <!-- /.box-header -->
     <div class="box-body">
@@ -21,14 +21,14 @@
                 <form>
                     <input type="hidden" asp-for="Comments.PageId" />
 
-                    <div class="row col col-md-12">
-                        <div class="col-lg-3 col-sm-12">
+                    <div class="row col col-lg-12">
+                        <div class="col col-lg-2 col-sm-12">
                             <label>
                                 جستجو:
                                 <input name="filter" type="search" class="form-control input-sm" placeholder="" aria-controls="DataTables_Table_0">
                             </label>
                         </div>
-                        <div class="col-lg-3 col-sm-12">
+                        <div class="col col-lg-2 col-sm-12">
                             <label>
                                 نمایش
                                 <select name="take" aria-controls="DataTables_Table_0" class="form-control input-sm">
@@ -40,7 +40,7 @@
 
                             </label>
                         </div>
-                        <div class="col-lg-3 col-sm-12">
+                        <div class="col col-lg-2 col-sm-12">
                             <label>
                                 کامنت های
                                 <select name="commentFor" aria-controls="DataTables_Table_0" class="form-control input-sm">
@@ -51,9 +51,9 @@
                                 </select>
 
                             </label>
-                            <
+                            
                         </div>
-                        <div class="col-lg-3 col-sm-12">
+                        <div class="col col-lg-2 col-sm-12">
                             <label>
                                 وضعیت کامنت
                                 <select name="commentStatus" aria-controls="DataTables_Table_0" class="form-control input-sm">
@@ -65,11 +65,12 @@
 
                             </label>
                         </div>
+                        <div class="col col-lg-2 col-sm-12">
+                            <button class="btn btn-info" title="جست و جو"><i class="fa fa-search"></i></button>
+                        </div>
                     </div>
 
-                    <div class="col col-md-4 col-sm-6">
-                        <button class="btn btn-info">جست و جو </button>
-                    </div>
+
                     <br />
 
                 </form>
@@ -110,7 +111,7 @@
                                                     پاسخ‌ها
                                                 </a>
                                             }
-                                            <a onclick="DeleteAjax('   آیا از حذف این کامنت مطئن هستید؟ ','این عملیات غیر قابل بازگشت خواهد بود', 'warning', 'بله', '/Admin/Comments/Delete',@item.Id)" class="btn btn-danger">حذف</a>
+                                            <a onclick="DeleteAjax('   آیا از حذف این کامنت مطئن هستید؟ ','این عملیات غیر قابل بازگشت خواهد بود', 'warning', 'بله', '/Admin/Comments/Delete',@item.Id)" class="btn btn-danger" title="حذف"><i class="fa fa-trash"></i></a>
                                         </div>
 
 

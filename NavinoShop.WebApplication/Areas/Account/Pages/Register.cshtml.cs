@@ -1,3 +1,4 @@
+using Financial.Application.Contract.WalletService.Commands;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Shared.Application.Validations;
@@ -6,16 +7,19 @@ using Users.Application.Contract.UserService.Command;
 namespace NavinoShop.WebApplication.Areas.Account.Pages
 {
     [IgnoreAntiforgeryToken]
-    public partial class RegisterModel : PageModel
+    public class RegisterModel : PageModel
     {
         private readonly IUserCommandService _userService;
-        [BindProperty]
-        public RegisterUserCommand registerUserModel { get; set; }
+     
+
         public RegisterModel(IUserCommandService userService)
         {
             _userService = userService;
+  
         }
 
+        [BindProperty]
+        public RegisterUserCommand registerUserModel { get; set; }
         public void OnGet()
         {
 
@@ -29,6 +33,7 @@ namespace NavinoShop.WebApplication.Areas.Account.Pages
             var result = await _userService.RegisterAsync(registerUserModel);
             if (result.Success)
             {
+           
                 return new JsonResult(new { success = true });
             }
             else
