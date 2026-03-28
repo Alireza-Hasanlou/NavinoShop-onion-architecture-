@@ -33,6 +33,7 @@ using Query.Service.Ui.UserPanel.PostOrder;
 using Query.Service.Ui.UserPanel.UserAddress;
 using Query.Service.Ui.UserPanel.Wallet;
 using Seos.Query.Bootstrapper;
+using Shop.Query.Bootstrapper;
 using Site.Query.Bootstrapper;
 using Users.Query.Bootstrapper;
 
@@ -54,6 +55,7 @@ namespace Query.Service
             Post_Bootstrapper.Config(Services, ConnectionString);
             Comment_Bootstrapper.Config(Services, ConnectionString);
             Financial_Bootstrapper.Config(Services, ConnectionString);
+            ShopBootstrapper.Config(Services, ConnectionString);
             #endregion
             #region Admin
 
@@ -73,8 +75,8 @@ namespace Query.Service
             Services.AddTransient<IUserPanelQueryService, UserPanelQueryService>();
             Services.AddTransient<IPostOrderQueryService, PostOrderQueryService>();
             Services.AddTransient<IUserAddressUiQueryService, UserAddressUiQueryService>();
-            Services.AddTransient<IWalletQueryService,WalletQueryService>();
-   
+            Services.AddTransient<IWalletQueryService, WalletQueryService>();
+
             #endregion
         }
     }

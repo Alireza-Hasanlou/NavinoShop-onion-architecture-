@@ -21,6 +21,7 @@
     <ProjectReference Include="..\..\Financial\Financial.Query\Financial.Query.csproj" />
     <ProjectReference Include="..\..\PostModule\PostModule.Query\PostModule.Query.csproj" />
     <ProjectReference Include="..\..\Seos\Seos.Query\Seos.Query.csproj" />
+    <ProjectReference Include="..\..\Shop\Shop.Query\Shop.Query.csproj" />
     <ProjectReference Include="..\..\Site\Site.Query\Site.Query.csproj" />
     <ProjectReference Include="..\..\Users\Users.Query\Users.Query.csproj" />
     <ProjectReference Include="..\Query.Contract\Query.Contract.csproj" />
