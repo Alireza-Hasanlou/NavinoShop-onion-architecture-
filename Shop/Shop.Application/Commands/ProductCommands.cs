@@ -20,7 +20,9 @@ namespace Shop.Application.Commands
         private readonly IFileService _fileService;
         private readonly IProduct_Category_Rel_Repository _PcRelRepository;
 
-        public ProductCommands(IProductRepository productRepository, IFileService fileService, IProduct_Category_Rel_Repository pcRelRepository)
+        public ProductCommands(IProductRepository productRepository,
+            IFileService fileService,
+            IProduct_Category_Rel_Repository pcRelRepository)
         {
             _productRepository = productRepository;
             _fileService = fileService;
@@ -29,22 +31,22 @@ namespace Shop.Application.Commands
 
         public async Task<OperationResult> ChangeActivation(int productId)
         {
-            
+
             var product = await _productRepository.GetByIdAsync(productId);
             product.ActivationChange();
-            if(await _productRepository.SaveAsync())
+            if (await _productRepository.SaveAsync())
                 return new OperationResult(true);
-            return new OperationResult(false,ValidationMessages.SystemErrorMessage);
+            return new OperationResult(false, ValidationMessages.SystemErrorMessage);
         }
 
         public async Task<OperationResult> CreateAsync(CreateProductCommandModel command)
         {
 
-            if (await _productRepository.ExistByAsync(t => t.Title == command.Title))
+            if (await _productRepository.ExistByAsync(t => t.Title.Trim().ToLower() == command.Title.Trim().ToLower()))
                 return new OperationResult(false, ValidationMessages.DuplicatedMessage);
 
 
-            if (await _productRepository.ExistByAsync(s => s.Slug == command.Slug))
+            if (await _productRepository.ExistByAsync(s => s.Slug.Trim().ToLower() == command.Slug.Trim().ToLower()))
                 return new OperationResult(false, ValidationMessages.DuplicatedMessage);
 
             if (command.CategoryIds.Count() < 1)
@@ -63,7 +65,7 @@ namespace Shop.Application.Commands
                 _fileService.ResizeImage(imageName, FileDirectories.ProductImageFolder, 500);
 
             }
-            var newProduct = new Product(command.Title, imageName, command.ImageAlt, command.ShortDescription, command.Text, command.Weight, command.Slug);
+            var newProduct = new Product(command.Title.Trim().ToLower(), imageName, command.ImageAlt.Trim().ToLower(), command.ShortDescription, command.Text, command.Weight, command.Slug.Trim().ToLower());
 
             var rels = new List<Product_Category_Rel>();
             foreach (var item in command.CategoryIds)
@@ -121,6 +123,7 @@ namespace Shop.Application.Commands
                 }
 
             }
+            product.Edit(command.Title, NewImageName, command.ImageAlt.Trim().ToLower(), command.ShortDescription, command.ShortDescription, command.Weight, command.Slug);
             var rels = new List<Product_Category_Rel>();
             foreach (var item in command.CategoryIds)
             {
@@ -150,7 +153,7 @@ namespace Shop.Application.Commands
 
         public async Task<EditProductCommandModel> GetForEditAsync(int productId)
         {
-           return await  _productRepository.GetForEditAsync(productId);
+            return await _productRepository.GetForEditAsync(productId);
         }
     }
 }

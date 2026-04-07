@@ -32,7 +32,7 @@ namespace Shop.Infrastracture.Persistence.Context
         public DbSet<OrderSeller> OrderSellers { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
-        public DbSet<ProductFreature> GetProductFreatures { get; set; }
+        public DbSet<ProductFreature> ProductFreatures { get; set; }
         public DbSet<ProductGallery> ProductGalleries { get; set; }
         public DbSet<Product_Seller> Product_Sellers { get; set; }
         public DbSet<Seller> Sellers { get; set; }

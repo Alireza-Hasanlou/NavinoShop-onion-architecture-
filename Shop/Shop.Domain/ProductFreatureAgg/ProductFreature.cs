@@ -6,23 +6,30 @@ namespace Shop.Domain.ProductFreatureAgg
 {
     public class ProductFreature : BaseEntity<int>
     {
-        public ProductFreature(int productCategory, string title, string value)
+        public ProductFreature(int productId, string title, string value)
         {
-            ProductCategory = productCategory;
+            ProductId = productId;
             Title = title;
             Value = value;
-            Product = new();
+
         }
         public ProductFreature()
         {
-
+            Product = new();
         }
 
-        public int ProductCategory { get; private set; }
+        public int ProductId { get; private set; }
         public string Title { get; private set; }
         public string Value { get; private set; }
         public Product Product { get; private set; }
 
+        public void Edit( string title, string value)
+        {
+         
+            Title = title;
+            Value = value;
+
+        }
     }
 
 }
