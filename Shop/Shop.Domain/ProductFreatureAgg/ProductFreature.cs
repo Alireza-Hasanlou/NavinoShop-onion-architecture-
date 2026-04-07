@@ -1,7 +1,8 @@
 ﻿
 using Shared.Domain;
+using Shop.Domain.ProductAgg;
 
-namespace Shop.Domain.ProductAgg
+namespace Shop.Domain.ProductFreatureAgg
 {
     public class ProductFreature : BaseEntity<int>
     {

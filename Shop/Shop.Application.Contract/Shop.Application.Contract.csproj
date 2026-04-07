@@ -11,10 +11,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="OrderAddress\Query\" />
+    <Folder Include="OrderItem\Query\" />
+    <Folder Include="OrderSeller\Query\" />
+    <Folder Include="Order\Query\" />
     <Folder Include="ProductCategory\Query\" />
     <Folder Include="ProductFeature\Query\" />
-    <Folder Include="ProductGallery\Query\" />
     <Folder Include="Product\Query\" />
+    <Folder Include="Product_Seller\Query\" />
+    <Folder Include="Seller\Query\" />
+    <Folder Include="ShopSetting\Query\" />
   </ItemGroup>
 
 </Project>

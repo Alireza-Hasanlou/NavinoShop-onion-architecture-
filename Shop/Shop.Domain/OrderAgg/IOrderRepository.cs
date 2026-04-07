@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shop.Domain.ProductFreatureAgg
+namespace Shop.Domain.OrderAgg
 {
-    public interface IProductFeatureRepository:IGenericRepository<ProductFreature,int>
+    public interface IOrderRepository:IGenericRepository<Order,int>
     {
     }
 }

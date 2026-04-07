@@ -1,5 +1,7 @@
 ﻿using Shared.Domain;
-namespace Shop.Domain.ProductAgg
+using Shop.Domain.ProductAgg;
+
+namespace Shop.Domain.ProductGalleryAgg
 {
         public class ProductGallery : BaseEntity<int>
         {

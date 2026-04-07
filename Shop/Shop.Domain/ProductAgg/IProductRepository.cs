@@ -1,4 +1,5 @@
 ﻿using Shared.Domain;
+using Shop.Application.Contract.Product.Command;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace Shop.Domain.ProductAgg
 {
-    public interface IProductRepository :IGenericRepository<Product,int>
+    public interface IProductRepository : IGenericRepository<Product, int>
     {
+        Task<EditProductCommandModel> GetForEditAsync(int productId);
     }
 }

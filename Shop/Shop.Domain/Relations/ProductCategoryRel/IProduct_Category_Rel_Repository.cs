@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shop.Domain.ProductFreatureAgg
+namespace Shop.Domain.Relations.ProductCategoryRel
 {
-    public interface IProductFeatureRepository:IGenericRepository<ProductFreature,int>
+    public interface IProduct_Category_Rel_Repository : IGenericRepository<Product_Category_Rel, int>
     {
     }
 }

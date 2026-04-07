@@ -1,0 +1,156 @@
+﻿using Shared;
+using Shared.Application;
+using Shared.Application.Service;
+using Shared.Application.Validations;
+using Shop.Application.Contract.Product.Command;
+using Shop.Domain.ProductAgg;
+using Shop.Domain.Relations.ProductCategoryRel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+
+namespace Shop.Application.Commands
+{
+    internal class ProductCommands : IProductCommands
+    {
+        private readonly IProductRepository _productRepository;
+        private readonly IFileService _fileService;
+        private readonly IProduct_Category_Rel_Repository _PcRelRepository;
+
+        public ProductCommands(IProductRepository productRepository, IFileService fileService, IProduct_Category_Rel_Repository pcRelRepository)
+        {
+            _productRepository = productRepository;
+            _fileService = fileService;
+            _PcRelRepository = pcRelRepository;
+        }
+
+        public async Task<OperationResult> ChangeActivation(int productId)
+        {
+            
+            var product = await _productRepository.GetByIdAsync(productId);
+            product.ActivationChange();
+            if(await _productRepository.SaveAsync())
+                return new OperationResult(true);
+            return new OperationResult(false,ValidationMessages.SystemErrorMessage);
+        }
+
+        public async Task<OperationResult> CreateAsync(CreateProductCommandModel command)
+        {
+
+            if (await _productRepository.ExistByAsync(t => t.Title == command.Title))
+                return new OperationResult(false, ValidationMessages.DuplicatedMessage);
+
+
+            if (await _productRepository.ExistByAsync(s => s.Slug == command.Slug))
+                return new OperationResult(false, ValidationMessages.DuplicatedMessage);
+
+            if (command.CategoryIds.Count() < 1)
+                return new OperationResult(false, "لطفا حداقل یک دسته بندی برای محصول انتخاب کنید");
+
+            if (command.Weight < 1)
+                return new OperationResult(false, "وزن محصول نمیتواند کمتر از 1 گرم باشد");
+
+            if (command.ImageFile == null || !command.ImageFile.IsImage())
+                return new OperationResult(false, ValidationMessages.ImageErrorMessage, nameof(command.ImageFile));
+
+            var imageName = await _fileService.UploadImage(command.ImageFile, FileDirectories.ProductImageFolder);
+            if (!string.IsNullOrEmpty(imageName))
+            {
+                _fileService.ResizeImage(imageName, FileDirectories.ProductImageFolder, 100);
+                _fileService.ResizeImage(imageName, FileDirectories.ProductImageFolder, 500);
+
+            }
+            var newProduct = new Product(command.Title, imageName, command.ImageAlt, command.ShortDescription, command.Text, command.Weight, command.Slug);
+
+            var rels = new List<Product_Category_Rel>();
+            foreach (var item in command.CategoryIds)
+            {
+                rels.Add(new Product_Category_Rel(item));
+            }
+
+            newProduct.EditProductCategoryRelation(rels);
+            var res = await _productRepository.CreateAsync(newProduct);
+            if (res.Success)
+                return new OperationResult(true);
+
+
+            if (command.ImageFile != null)
+            {
+                _fileService.DeleteImage(FileDirectories.ProductImageDirectory);
+                _fileService.DeleteImage(FileDirectories.ProductImageDirectory100);
+                _fileService.DeleteImage(FileDirectories.ProductImageDirectory500);
+
+            }
+            return new OperationResult(false, ValidationMessages.SystemErrorMessage);
+        }
+
+        public async Task<OperationResult> EditAsync(EditProductCommandModel command)
+        {
+            var product = await _productRepository.GetByIdAsync(command.Id);
+            if (product == null)
+                return new OperationResult(false, "محصول مورد نظر یافت نشد");
+
+            if (await _productRepository.ExistByAsync(t => t.Title == command.Title && t.Id != command.Id))
+                return new OperationResult(false, ValidationMessages.DuplicatedMessage);
+
+
+            if (await _productRepository.ExistByAsync(s => s.Slug == command.Slug && s.Id != command.Id))
+                return new OperationResult(false, ValidationMessages.DuplicatedMessage);
+
+            if (command.CategoryIds.Count() < 1)
+                return new OperationResult(false, "لطفا حداقل یک دسته بندی برای محصول انتخاب کنید");
+
+            if (command.Weight < 1)
+                return new OperationResult(false, "وزن محصول نمیتواند کمتر از 1 گرم باشد");
+            var OldimageName = command.ImageName;
+            var NewImageName = command.ImageName;
+            if (command.ImageFile != null)
+            {
+                if (!command.ImageFile.IsImage())
+                    return new OperationResult(false, ValidationMessages.ImageErrorMessage, nameof(command.ImageFile));
+
+                NewImageName = await _fileService.UploadImage(command.ImageFile, FileDirectories.ProductImageFolder);
+                if (!string.IsNullOrEmpty(NewImageName))
+                {
+                    _fileService.ResizeImage(NewImageName, FileDirectories.ProductImageFolder, 100);
+                    _fileService.ResizeImage(NewImageName, FileDirectories.ProductImageFolder, 500);
+
+                }
+
+            }
+            var rels = new List<Product_Category_Rel>();
+            foreach (var item in command.CategoryIds)
+            {
+                rels.Add(new Product_Category_Rel(item));
+            }
+
+            product.EditProductCategoryRelation(rels);
+            if (await _productRepository.SaveAsync())
+            {
+
+                if (command.ImageFile != null)
+                {
+                    _fileService.DeleteImage($"{FileDirectories.ProductImageDirectory}{OldimageName}");
+                    _fileService.DeleteImage($"{FileDirectories.ProductImageDirectory500}{OldimageName}");
+                    _fileService.DeleteImage($"{FileDirectories.ProductImageDirectory100}{OldimageName}");
+
+                }
+                return new OperationResult(true);
+            }
+
+            _fileService.DeleteImage($"{FileDirectories.ProductImageDirectory}{NewImageName}");
+            _fileService.DeleteImage($"{FileDirectories.ProductImageDirectory500}{NewImageName}");
+            _fileService.DeleteImage($"{FileDirectories.ProductImageDirectory100}{NewImageName}");
+
+            return new OperationResult(false, ValidationMessages.SystemErrorMessage);
+        }
+
+        public async Task<EditProductCommandModel> GetForEditAsync(int productId)
+        {
+           return await  _productRepository.GetForEditAsync(productId);
+        }
+    }
+}
