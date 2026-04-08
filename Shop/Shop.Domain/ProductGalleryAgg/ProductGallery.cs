@@ -3,24 +3,24 @@ using Shop.Domain.ProductAgg;
 
 namespace Shop.Domain.ProductGalleryAgg
 {
-        public class ProductGallery : BaseEntity<int>
-        {
-            public int ProductCategory { get; private set; }
-            public string ImageName { get; private set; }
-            public string ImageAlt { get; set; }
-            public Product Product { get; set; }
+    public class ProductGallery : BaseEntity<int>
+    {
+        public int ProductId { get; private set; }
+        public string ImageName { get; private set; }
+        public string ImageAlt { get; set; }
+        public Product Product { get; set; }
 
-            public ProductGallery(int productCategory, string imageName, string imageAlt)
-            {
-                ProductCategory = productCategory;
-                ImageName = imageName;
-                ImageAlt = imageAlt;
-                Product = new();
-            }
-            public ProductGallery()
-            {
-                
-            }
+        public ProductGallery(int productId, string imageName, string imageAlt)
+        {
+            ProductId = productId;
+            ImageName = imageName;
+            ImageAlt = imageAlt;
+
         }
-    
+        public ProductGallery()
+        {
+            Product = new();
+        }
+    }
+
 }

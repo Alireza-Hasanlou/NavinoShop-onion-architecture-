@@ -17,7 +17,6 @@
     <Folder Include="Order\Query\" />
     <Folder Include="ProductCategory\Query\" />
     <Folder Include="ProductFeature\Query\" />
-    <Folder Include="Product\Query\" />
     <Folder Include="Product_Seller\Query\" />
     <Folder Include="Seller\Query\" />
     <Folder Include="ShopSetting\Query\" />

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Shop.Domain.Relations.ProductCategoryRel
 {
-    public interface IProduct_Category_Rel_Repository : IGenericRepository<Product_Category_Rel, int>
+    public interface IProduct_Category_Repository : IGenericRepository<Product_Category_Rel, int>
     {
     }
 }

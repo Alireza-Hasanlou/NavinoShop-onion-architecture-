@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shop.Application.Contract.Product_Seller.Command
+namespace Shop.Application.Contract.Product.Query
 {
-    public interface IProduct_SellerCommands
+    public interface IProductQueries
     {
+       
     }
+
 }

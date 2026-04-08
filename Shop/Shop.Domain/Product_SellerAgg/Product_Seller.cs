@@ -1,4 +1,5 @@
 ﻿using Shared.Domain;
+using Shared.Domain.Enums;
 using Shop.Domain.OrderItemAgg;
 using Shop.Domain.ProductAgg;
 using Shop.Domain.SellerAgg;
@@ -19,7 +20,7 @@ namespace Shop.Domain.Product_SellerAgg
             Seller = new();
             OrderItems = new List<OrderItem>();
         }
-        public Product_Seller(int productId, int price, int unit, int sellerId,int weight)
+        public Product_Seller(int productId, int price, string unit, int sellerId,int weight)
         {
             ProductId = productId;
             Price = price;
@@ -31,7 +32,8 @@ namespace Shop.Domain.Product_SellerAgg
 
         public int ProductId { get; private set; }
         public int Price { get; private set; }
-        public int Unit{ get; private set; }
+        public int Amount { get; private set; }
+        public string Unit{ get; private set; }
         public int SellerId { get; private set; }
         public int Weight { get; private set; }
 
@@ -39,13 +41,26 @@ namespace Shop.Domain.Product_SellerAgg
         public Seller Seller { get; private set; }
         public ICollection<OrderItem> OrderItems { get; private set; }
 
-        public void Edit( int price, int unit,int wight)
+        public void Edit( int price, string unit,int weight)
         {
             Price = price;
             Unit = unit;
-            Weight= wight;
+            Weight= weight;
             SetActivation(false);
         }
-
+        public void ChangeAmount(int amount, StoreProductType type)
+        {
+            switch (type)
+            {
+                case StoreProductType.افزایش:
+                    Amount = Amount + amount;
+                    break;
+                case StoreProductType.کاهش:
+                    Amount = (Amount - amount) < 0 ? 0 : (Amount - amount);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }

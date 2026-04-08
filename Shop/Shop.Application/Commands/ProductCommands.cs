@@ -18,11 +18,11 @@ namespace Shop.Application.Commands
     {
         private readonly IProductRepository _productRepository;
         private readonly IFileService _fileService;
-        private readonly IProduct_Category_Rel_Repository _PcRelRepository;
+        private readonly IProduct_Category_Repository _PcRelRepository;
 
         public ProductCommands(IProductRepository productRepository,
             IFileService fileService,
-            IProduct_Category_Rel_Repository pcRelRepository)
+            IProduct_Category_Repository pcRelRepository)
         {
             _productRepository = productRepository;
             _fileService = fileService;
@@ -59,13 +59,14 @@ namespace Shop.Application.Commands
                 return new OperationResult(false, ValidationMessages.ImageErrorMessage, nameof(command.ImageFile));
 
             var imageName = await _fileService.UploadImage(command.ImageFile, FileDirectories.ProductImageFolder);
-            if (!string.IsNullOrEmpty(imageName))
-            {
-                _fileService.ResizeImage(imageName, FileDirectories.ProductImageFolder, 100);
-                _fileService.ResizeImage(imageName, FileDirectories.ProductImageFolder, 500);
+            if (string.IsNullOrEmpty(imageName))
+                return new OperationResult(false, "خطا در بازگذاری تصویر", nameof(command.ImageFile));
 
-            }
-            var newProduct = new Product(command.Title.Trim().ToLower(), imageName, command.ImageAlt.Trim().ToLower(), command.ShortDescription, command.Text, command.Weight, command.Slug.Trim().ToLower());
+            _fileService.ResizeImage(imageName, FileDirectories.ProductImageFolder, 100);
+            _fileService.ResizeImage(imageName, FileDirectories.ProductImageFolder, 500);
+
+            var newProduct = new Product(command.Title.Trim().ToLower(), imageName, command.ImageAlt.Trim().ToLower(), command.ShortDescription,
+                command.Text, command.Weight, command.Slug.Trim().ToLower());
 
             var rels = new List<Product_Category_Rel>();
             foreach (var item in command.CategoryIds)
@@ -115,12 +116,13 @@ namespace Shop.Application.Commands
                     return new OperationResult(false, ValidationMessages.ImageErrorMessage, nameof(command.ImageFile));
 
                 NewImageName = await _fileService.UploadImage(command.ImageFile, FileDirectories.ProductImageFolder);
-                if (!string.IsNullOrEmpty(NewImageName))
-                {
-                    _fileService.ResizeImage(NewImageName, FileDirectories.ProductImageFolder, 100);
-                    _fileService.ResizeImage(NewImageName, FileDirectories.ProductImageFolder, 500);
+                if (string.IsNullOrEmpty(NewImageName))
+                    return new OperationResult(false, "خطا در بازگذاری تصویر", nameof(command.ImageFile));
 
-                }
+                _fileService.ResizeImage(NewImageName, FileDirectories.ProductImageFolder, 100);
+                _fileService.ResizeImage(NewImageName, FileDirectories.ProductImageFolder, 500);
+
+
 
             }
             product.Edit(command.Title, NewImageName, command.ImageAlt.Trim().ToLower(), command.ShortDescription, command.ShortDescription, command.Weight, command.Slug);
