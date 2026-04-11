@@ -12,20 +12,21 @@ using System.Threading.Tasks;
 namespace Shop.Domain.Product_SellerAgg
 {
     // Connect a Product to Seller
-    public class Product_Seller : BaseEntityCreateUpdateActive<int>
+    public class ProductSell : BaseEntityCreateUpdateActive<int>
     {
-        public Product_Seller()
+        public ProductSell()
         {
             Product = new();
             Seller = new();
             OrderItems = new List<OrderItem>();
         }
-        public Product_Seller(int productId, int price, string unit, int sellerId,int weight)
+        public ProductSell(int productId, int price, string unit, int sellerId, int weight)
         {
             ProductId = productId;
             Price = price;
             Unit = unit;
             SellerId = sellerId;
+            Amount = 0;
             Weight = weight;
             SetActivation(false);
         }
@@ -33,7 +34,7 @@ namespace Shop.Domain.Product_SellerAgg
         public int ProductId { get; private set; }
         public int Price { get; private set; }
         public int Amount { get; private set; }
-        public string Unit{ get; private set; }
+        public string Unit { get; private set; }
         public int SellerId { get; private set; }
         public int Weight { get; private set; }
 
@@ -41,11 +42,11 @@ namespace Shop.Domain.Product_SellerAgg
         public Seller Seller { get; private set; }
         public ICollection<OrderItem> OrderItems { get; private set; }
 
-        public void Edit( int price, string unit,int weight)
+        public void Edit(int price, string unit, int weight)
         {
             Price = price;
             Unit = unit;
-            Weight= weight;
+            Weight = weight;
             SetActivation(false);
         }
         public void ChangeAmount(int amount, StoreProductType type)

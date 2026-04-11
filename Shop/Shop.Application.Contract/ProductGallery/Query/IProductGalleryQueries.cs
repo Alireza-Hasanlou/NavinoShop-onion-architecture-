@@ -8,6 +8,6 @@ namespace Shop.Application.Contract.ProductGallery.Query
 {
     public interface IProductGalleryQueries
     {
-        Task<ProductGalleryAdminPaging> GetProductGalleriesForAdmin();
+        Task<ProductGalleryAdminPage> GetProductGalleriesForAdmin( int productId);
     }
 }

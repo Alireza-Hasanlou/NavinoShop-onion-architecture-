@@ -2,7 +2,7 @@
 
 namespace Shop.Application.Contract.ProductGallery.Query
 {
-    public class ProductGalleryAdminPaging : BasePaging
+    public class ProductGalleryAdminPage
     {
         public int ProductId { get; set; }
         public string Title { get; set; }

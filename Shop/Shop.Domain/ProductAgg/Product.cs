@@ -21,7 +21,7 @@ namespace Shop.Domain.ProductAgg
             Poduct_Category_Rels = new List<Product_Category_Rel>();
             ProductFreatures = new List<ProductFreature>();
             ProductGalleries = new List<ProductGallery>();
-            ProductSells = new List<Product_Seller>();
+            ProductSells = new List<ProductSell>();
         }
 
         public Product(string title, string imageName, string imageAlt, string shortDescription, string description, int weight, string slug)
@@ -46,7 +46,7 @@ namespace Shop.Domain.ProductAgg
         public ICollection<Product_Category_Rel> Poduct_Category_Rels { get; private set; }
         public ICollection<ProductFreature> ProductFreatures { get; private set; }
         public ICollection<ProductGallery> ProductGalleries { get; private set; }
-        public ICollection<Product_Seller> ProductSells { get; private set; }
+        public ICollection<ProductSell> ProductSells { get; private set; }
 
 
         public void EditProductCategoryRelation(List<Product_Category_Rel> product_Category_Rels)

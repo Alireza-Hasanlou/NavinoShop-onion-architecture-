@@ -10,13 +10,4 @@
     <ProjectReference Include="..\..\Shared\Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="OrderAddress\Query\" />
-    <Folder Include="OrderItem\Query\" />
-    <Folder Include="OrderSeller\Query\" />
-    <Folder Include="Order\Query\" />
-    <Folder Include="Product_Seller\Query\" />
-    <Folder Include="ShopSetting\Query\" />
-  </ItemGroup>
-
 </Project>

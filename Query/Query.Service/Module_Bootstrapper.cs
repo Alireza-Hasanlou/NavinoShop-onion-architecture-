@@ -1,5 +1,6 @@
 ﻿using Blogs.Query.Bootstrapper;
 using Comments.Query.Bootstrapper;
+using Discount.Query.Bootstrapper;
 using Emails.Query.Bootstrapper;
 using Financial.Query.Bootstrapper;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,6 +36,7 @@ using Query.Service.Ui.UserPanel.Wallet;
 using Seos.Query.Bootstrapper;
 using Shop.Query.Bootstrapper;
 using Site.Query.Bootstrapper;
+using Store.Query.Bootstrapper;
 using Users.Query.Bootstrapper;
 
 namespace Query.Service
@@ -56,6 +58,8 @@ namespace Query.Service
             Comment_Bootstrapper.Config(Services, ConnectionString);
             Financial_Bootstrapper.Config(Services, ConnectionString);
             ShopBootstrapper.Config(Services, ConnectionString);
+            DiscountBootstrapper.Config(Services,ConnectionString);
+            StoreBootstrapper.Config(Services, ConnectionString);
             #endregion
             #region Admin
 

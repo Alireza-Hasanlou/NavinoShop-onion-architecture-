@@ -14,7 +14,7 @@ namespace Shop.Domain.OrderItemAgg
         public OrderItem()
         {
             OrderSeller = new OrderSeller();
-            Product_Seller = new Product_Seller();
+            ProductSell = new ProductSell();
         }
 
         public OrderItem(int orderSellerId, int productSellId, int count, int price, int priceAfterOff)
@@ -32,7 +32,7 @@ namespace Shop.Domain.OrderItemAgg
         public int Price { get; private set; }
         public int PriceAfterOff { get; private set; }
         public OrderSeller OrderSeller { get; private set; }
-        public Product_Seller Product_Seller { get; private set; }
+        public ProductSell ProductSell { get; private set; }
         public void Edit(int count, int price, int priceAfterOff)
         {
             Count = count;
