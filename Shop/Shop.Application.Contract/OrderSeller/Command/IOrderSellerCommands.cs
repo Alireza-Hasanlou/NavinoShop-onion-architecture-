@@ -4,4 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shop.Application.Contract.OrderSeller
+namespace Shop.Application.Contract.OrderSeller.Command;
+public interface IOrderSellerCommands
+{
+
+}

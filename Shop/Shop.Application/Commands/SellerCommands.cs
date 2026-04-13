@@ -4,13 +4,8 @@ using Shared.Application.Service;
 using Shared.Application.Validations;
 using Shared.Domain.Enums;
 using Shop.Application.Contract.Seller.Command;
-using Shop.Domain.ProductAgg;
 using Shop.Domain.SellerAgg;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Shop.Application.Commands
 {

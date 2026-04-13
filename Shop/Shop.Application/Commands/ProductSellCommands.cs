@@ -1,15 +1,15 @@
 ﻿using Shared.Application;
 using Shared.Application.Validations;
-using Shop.Application.Contract.Product_Seller.Command;
-using Shop.Domain.Product_SellerAgg;
+using Shop.Application.Contract.ProductSell.Command;
+using Shop.Domain.ProductSellAgg;
 
 namespace Shop.Application.Commands
 {
-    internal class ProductSellerCommands : IProduct_Seller_Commands
+    internal class ProductSellCommands : IProductSellCommands
     {
-        private readonly IProduct_SellerRepository _product_SellerRepository;
+        private readonly IProductSellRepository _product_SellerRepository;
 
-        public ProductSellerCommands(IProduct_SellerRepository product_SellerRepository)
+        public ProductSellCommands(IProductSellRepository product_SellerRepository)
         {
             _product_SellerRepository = product_SellerRepository;
         }
@@ -19,19 +19,19 @@ namespace Shop.Application.Commands
             throw new NotImplementedException();
         }
 
-        public async Task<OperationResult> CreateAsync(CreateProductSellerCommandModel command)
+        public async Task<OperationResult> CreateAsync(CreateProductSellCommandModel command)
         {
             if (command.ProductId == 0)
                 return new(false, ValidationMessages.RequiredMessage, nameof(command.ProductId));
-            var ProductSeller = new Product_Seller(command.ProductId, command.Price, command.Unit, command.SellerId, command.Weight);
-            var res = await _product_SellerRepository.CreateAsync(ProductSeller);
+            var ProductSell = new ProductSell(command.ProductId, command.Price, command.Unit, command.SellerId, command.Weight);
+            var res = await _product_SellerRepository.CreateAsync(ProductSell);
             if(res.Success)
                 return new(true);
 
             return new(false, ValidationMessages.SystemErrorMessage, nameof(command.Unit));
 
         }
-        public async Task<OperationResult> EditAsync(EditProductSellerCommandModel command)
+        public async Task<OperationResult> EditAsync(EditProductSellCommandModel command)
         {
             var p = await _product_SellerRepository.GetByIdAsync(command.Id);
             p.Edit(command.Price, command.Unit, command.Weight);
@@ -41,7 +41,7 @@ namespace Shop.Application.Commands
         }
 
 
-        public async Task<OperationResult> EditProductSellAmountAsync(List<EditProductSellerAmountCommandModel> sels)
+        public async Task<OperationResult> EditProductSellAmountAsync(List<EditProductSellAmountCommandModel> sels)
         {
             foreach (var item in sels)
             {
@@ -53,7 +53,7 @@ namespace Shop.Application.Commands
             return new(false, ValidationMessages.SystemErrorMessage);
         }
 
-        public async Task<EditProductSellerCommandModel> GetForEditAsync(int id)
+        public async Task<EditProductSellCommandModel> GetForEditAsync(int id)
         {
             var p = await _product_SellerRepository.GetByIdAsync(id);
             return new()

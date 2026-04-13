@@ -1,6 +1,7 @@
 ﻿using Shared.Domain;
 using Shared.Domain.Enums;
-using Shop.Domain.Product_SellerAgg;
+using Shop.Domain.OrderSellerAgg;
+using Shop.Domain.ProductSellAgg;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace Shop.Domain.SellerAgg
         public Seller()
         {
             ProductSells = new List<ProductSell>();
+            OrderSellers= new List<OrderSeller>();
         }
         public Seller(int userId, string title, int stateId, int cityId,
             string address, string mapUrl, string imageName, string licenseImage,
@@ -55,6 +57,7 @@ namespace Shop.Domain.SellerAgg
         public string? Email { get; private set; }
         public SellerStatus Status { get; private set; }
         public ICollection<ProductSell> ProductSells { get; private set; }
+        public ICollection<OrderSeller> OrderSellers { get; private set; }
         public void Edit(string title, int stateId, int cityId,
     string address, string mapUrl, string imageName,
     string imageAlt, string? instagram, string? telegram, string? whatsup,

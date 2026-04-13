@@ -1,4 +1,4 @@
-﻿using Comments.Infrastructure.Bootstrapper;
+﻿using Discount.Application.Boostrapper;
 using Discount.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

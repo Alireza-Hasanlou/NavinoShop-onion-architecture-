@@ -1,0 +1,65 @@
+﻿@using Query.Contract.UI.UserPanel.Seller
+@model List<SellerUserPanelQueryModel>
+@{
+    Layout = "_PanelLayout";
+    ViewData["title"] = "فروشگاه های من ";
+
+}
+<div class="col-12">
+    <div class="form-group m-1 pb-3">
+        <a href="/Seller/RequestForSales" class="btn btn-primary px-5">ثبت فروشگاه جدید</a>
+    </div>
+</div>
+<table class="DataTable table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
+    @if (Model.Count() > 0)
+    {
+        <thead>
+            <tr role="row">
+                <td>تصویر</td>
+                <td>عنوان</td>
+                <td>آدرس</td>
+                <td>شماره تماس </td>
+                <td>وضعیت</td>
+                <td>تاریخ ایجاد</td>
+                <td></td>
+        </thead>
+        <tbody>  
+            @foreach (var shop in Model)
+        {
+            <tr>
+                <td style="width:100px"><img src="@shop.ImageName" /></td>
+                <td>@shop.Title</td>
+                <td>@shop.CityName</td>
+                <td>@shop.Phone</td>
+                <td> @shop.SellerStatus.ToString().Replace("_", " ")</td>
+                <td>@shop.CreateDate</td>
+                <td>   <a asp-action="Edit" asp-route-Id="@shop.Id" class="btn btn-warning">  <i class="fa fa-edit"></i></a></td>
+            </tr>
+        }
+        </tbody>
+
+    }
+    else
+    {
+        <tr>
+            <td colspan="9" class="text-center text-warning"> موردی برای نمایش موجود نیست</td>
+        </tr>
+    }
+</table>
+
+@section Scripts {
+    <script>
+
+                $('.DataTable').DataTable({
+            paging:false,
+            autoWidth: true,
+            lengthChange: false,
+            searching: false,
+            ordering: true,
+            scroll: true,
+            info: false,
+
+        });
+
+    </script>
+}

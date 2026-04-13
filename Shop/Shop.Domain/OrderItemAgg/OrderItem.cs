@@ -1,6 +1,6 @@
 ﻿using Shared.Domain;
 using Shop.Domain.OrderSellerAgg;
-using Shop.Domain.Product_SellerAgg;
+using Shop.Domain.ProductSellAgg;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +11,7 @@ namespace Shop.Domain.OrderItemAgg
 {
     public class OrderItem : BaseEntityCreate<int>
     {
-        public OrderItem()
-        {
-            OrderSeller = new OrderSeller();
-            ProductSell = new ProductSell();
-        }
+
 
         public OrderItem(int orderSellerId, int productSellId, int count, int price, int priceAfterOff)
         {
@@ -50,7 +46,7 @@ namespace Shop.Domain.OrderItemAgg
         {
             get
             {
-                return Count * SumPriceAfterOff;
+                return Count * PriceAfterOff;
             }
         }
     }

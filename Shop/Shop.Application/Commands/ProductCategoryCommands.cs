@@ -1,18 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Shared;
+﻿using Shared;
 using Shared.Application;
 using Shared.Application.Service;
 using Shared.Application.Validations;
-using Shared.Insfrastructure;
 using Shop.Application.Contract.ProductCategory.Commands;
-using Shop.Domain.ProductAgg;
 using Shop.Domain.ProductCategoryAgg;
-using Shop.Domain.Relations.ProductCategoryRel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+
 
 namespace Shop.Application.Commands
 {

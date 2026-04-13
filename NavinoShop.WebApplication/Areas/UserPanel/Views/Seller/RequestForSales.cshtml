@@ -1,0 +1,180 @@
+﻿@using Shared.Application
+@using Shop.Application.Contract.Seller.Command
+@model RequestForSelasCommandModel
+@{
+    Layout = "_PanelLayout";
+}
+
+<div class="Formcontainer">
+
+    <form method="post" enctype="multipart/form-data">
+
+        <div class="row">
+
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="WhatsApp">نام فروشگاه </label>
+                    <input asp-for="Title" type="text" id="title">
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="Instagram">لینک اینستاگرام </label>
+                    <input asp-for="Instagram" type="text" id="Instagram">
+                    <span asp-validation-for="Instagram" class="text-danger"></span>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="Telegram">لینک تلگرام</label>
+                    <input asp-for="Telegram" type="text" id="Telegram">
+                    <span asp-validation-for="Telegram" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="WhatsApp">  لینک واتس آپ </label>
+                    <input asp-for="WhatsApp" type="tel" id="WhatsApp">
+                    <span asp-validation-for="WhatsApp" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="tel1">شماره تماس 1</label>
+                    <input asp-for="Phone1" type="tel" id="tel1">
+                    <span asp-validation-for="Phone1" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="tel2">شماره تماس 2 </label>
+                    <input asp-for="Phone2" type="tel" id="tel2">
+                    <span asp-validation-for="Phone2" class="text-danger"></span>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+
+            <div class="col col-md-6 col-sm-12 col-12">
+                <div class="image-uploader">
+                    <label>
+                        تصویر فروشگاه
+                        <div class="picture-uploader"
+                             data-url="">
+
+                            <div class="picture__image">یک تصویر انتخاب کنید</div>
+
+                            <input asp-for="ImageFile"
+                                   type="file"
+                                   class="picture__input myinput"
+                                   accept="image/*" />
+                        </div>
+                    </label>
+                </div>
+
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
+            </div>
+            <div class="col col-md-6 col-sm-12 col-12">
+                <div class="image-uploader">
+                    <label>
+                        تصویر مجوز
+                        <div class="picture-uploader"
+                             data-url="">
+
+                            <div class="picture__image">یک تصویر انتخاب کنید</div>
+
+                            <input asp-for="LicenseImage"
+                                   type="file"
+                                   class="picture__input"
+                                   accept="image/*" />
+                        </div>
+                    </label>
+                </div>
+
+                <span asp-validation-for="LicenseImage" class="text-danger"></span>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="LogoAlt"> Alt تصویر فروشگاه   </label>
+                    <input asp-for="ImageAlt" type="text" id="LogoAlt">
+                </div>
+            </div>
+
+
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="Email">ایمیل</label>
+                    <input asp-for="Email" type="text" id="Email">
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="province">استان مبدا:</label>
+                    <select asp-for="StateId" id="province" required>
+                        <option value="">لطفا استان را انتخاب کنید</option>
+                    </select>
+                    <span asp-validation-for="StateId" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="city">شهر مبدا:</label>
+                    <select asp-for="CityId" id="city" required disabled>
+                        <option value="">ابتدا استان را انتخاب کنید</option>
+                    </select>
+                    <span asp-validation-for="CityId" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="GoogleMapUrl">لینک نقشه مپ </label>
+                    <input asp-for="GoogleMapUrl" type="text" id="GoogleMapUrl">
+                    <span asp-validation-for="GoogleMapUrl" class="text-danger"></span>
+                </div>
+            </div>
+
+
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="Address">جزییات آدرس</label>
+                    <textarea asp-for="Address" id="Address"></textarea>
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+            </div>
+
+        </div>
+
+        <button type="submit" class="btn btn-success btn-block w-100">ثبت</button>
+
+    </form>
+</div>
+
+@section scripts {
+    <script>
+
+        $(document).ready(function () {
+            $(".picture-uploader").imageUploader();
+        });
+
+    </script>
+}

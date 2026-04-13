@@ -5,12 +5,7 @@ using Shared.Application.Validations;
 using Shop.Application.Contract.Product.Command;
 using Shop.Domain.ProductAgg;
 using Shop.Domain.Relations.ProductCategoryRel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+
 
 namespace Shop.Application.Commands
 {

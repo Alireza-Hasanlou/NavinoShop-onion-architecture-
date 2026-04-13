@@ -1,13 +1,8 @@
 ﻿using Shared.Application;
 using Shared.Application.Validations;
 using Shop.Application.Contract.ProductFeature.Command;
-using Shop.Domain.ProductAgg;
 using Shop.Domain.ProductFreatureAgg;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Shop.Application.Commands
 {

@@ -27,7 +27,9 @@ internal class MenuQuery : IMenuQueryService
         {
             model.PageTitle = "لیست منو های سردسته";
 
-            model.Menus = await _menuRepository.GetAllBy(m => m.ParentId == null).Select(m => new MenuForAdminQueryModel
+            model.Menus = await _menuRepository.GetAllBy(m => m.ParentId == null)
+                .OrderByDescending(x=>x.CreateDate)
+                .Select(m => new MenuForAdminQueryModel
             {
                 Active = m.Active,
                 CreationDate = m.CreateDate.ToPersainDate(),
@@ -46,7 +48,9 @@ internal class MenuQuery : IMenuQueryService
             model.PageTitle = $"لیست زیر منو های {menuParent.Title} - وضعیت {menuParent.Status.ToString().Replace("_", " ")}";
             model.Status = menuParent.Status;
 
-            model.Menus = await _menuRepository.GetAllBy(m => m.ParentId == parentId).Select(m => new MenuForAdminQueryModel
+            model.Menus = await _menuRepository.GetAllBy(m => m.ParentId == parentId)
+                .OrderByDescending(x=>x.CreateDate)
+                .Select(m => new MenuForAdminQueryModel
             {
                 Active = m.Active,
                 CreationDate = m.CreateDate.ToPersainDate(),

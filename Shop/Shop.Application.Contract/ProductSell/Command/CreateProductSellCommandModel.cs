@@ -1,10 +1,10 @@
 ﻿using Shared.Application.Validations;
 using System.ComponentModel.DataAnnotations;
 
-namespace Shop.Application.Contract.Product_Seller.Command
+namespace Shop.Application.Contract.ProductSell.Command
 {
 
-    public class CreateProductSellerCommandModel
+    public class CreateProductSellCommandModel
     {
         public int ProductId { get; set; }
         public int SellerId { get; set; }
@@ -18,5 +18,6 @@ namespace Shop.Application.Contract.Product_Seller.Command
         public int Weight { get; set; }
 
     }
+}
 
 

@@ -43,9 +43,9 @@ namespace NavinoShop.WebApplication.Controllers.ApiControllers
             
         }
         [HttpGet]
-        public async Task<List<CityForChooseQueryModel>> Cities(int id)
+        public async Task<List<CityForChooseQueryModel>> Cities(int stateId)
         {
-            return await _stateQueryService.Cities(id);
+            return await _stateQueryService.Cities(stateId);
         }
     }
 }

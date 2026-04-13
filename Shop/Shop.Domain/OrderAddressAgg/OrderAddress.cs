@@ -1,4 +1,5 @@
 ﻿using Shared.Domain;
+using Shop.Domain.OrderAgg;
 
 namespace Shop.Domain.OrderAddressAgg
 {
@@ -12,9 +13,10 @@ namespace Shop.Domain.OrderAddressAgg
         public string FullName { get; private set; }
         public string NationalCode { get; private set; }
         public int OrderId { get; private set; }
+        public Order Order { get; private set; }
         public OrderAddress()
         {
-            
+          Order = new Order();  
         }
         public OrderAddress(int stateId, int cityId, string addressDetail, string postalCode,
                            string phone, string fullName, string nationalCode, int orderId)

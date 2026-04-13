@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Persistence\EFConfig\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Shop.Application\Shop.Application.csproj" />
   </ItemGroup>
 

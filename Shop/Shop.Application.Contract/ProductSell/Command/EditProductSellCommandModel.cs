@@ -1,11 +1,11 @@
 ﻿using Shared.Application.Validations;
 using System.ComponentModel.DataAnnotations;
 
-namespace Shop.Application.Contract.Product_Seller.Command
+namespace Shop.Application.Contract.ProductSell.Command
 {
 
 
-    public class EditProductSellerCommandModel
+    public class EditProductSellCommandModel
     {
         public int Id { get; set; }
         public int  SellerId { get; set; }

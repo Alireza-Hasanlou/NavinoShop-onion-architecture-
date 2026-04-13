@@ -1,9 +1,9 @@
 ﻿
 using Shared.Domain;
-using Shop.Domain.Product_SellerAgg;
 using Shop.Domain.ProductCategoryAgg;
 using Shop.Domain.ProductFreatureAgg;
 using Shop.Domain.ProductGalleryAgg;
+using Shop.Domain.ProductSellAgg;
 using Shop.Domain.Relations.ProductCategoryRel;
 using System;
 using System.Collections.Generic;

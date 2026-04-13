@@ -17,6 +17,7 @@ using Query.Contract.UI.Comments;
 using Query.Contract.UI.PostPackage;
 using Query.Contract.UI.UserPanel;
 using Query.Contract.UI.UserPanel.PostOrder;
+using Query.Contract.UI.UserPanel.Seller;
 using Query.Contract.UI.UserPanel.UserAddress;
 using Query.Contract.UI.UserPanel.Wallet;
 using Query.Service.Admin.Comment;
@@ -31,6 +32,7 @@ using Query.Service.Ui.Comments;
 using Query.Service.Ui.PostPackages;
 using Query.Service.Ui.UserPanel;
 using Query.Service.Ui.UserPanel.PostOrder;
+using Query.Service.Ui.UserPanel.Seller;
 using Query.Service.Ui.UserPanel.UserAddress;
 using Query.Service.Ui.UserPanel.Wallet;
 using Seos.Query.Bootstrapper;
@@ -58,8 +60,8 @@ namespace Query.Service
             Comment_Bootstrapper.Config(Services, ConnectionString);
             Financial_Bootstrapper.Config(Services, ConnectionString);
             ShopBootstrapper.Config(Services, ConnectionString);
-            DiscountBootstrapper.Config(Services,ConnectionString);
-            StoreBootstrapper.Config(Services, ConnectionString);
+            //DiscountBootstrapper.Config(Services,ConnectionString);
+            //StoreBootstrapper.Config(Services, ConnectionString);
             #endregion
             #region Admin
 
@@ -80,6 +82,7 @@ namespace Query.Service
             Services.AddTransient<IPostOrderQueryService, PostOrderQueryService>();
             Services.AddTransient<IUserAddressUiQueryService, UserAddressUiQueryService>();
             Services.AddTransient<IWalletQueryService, WalletQueryService>();
+            Services.AddTransient<ISellerUserPanelQueries,SellerUserPanelQueryService>(); 
 
             #endregion
         }

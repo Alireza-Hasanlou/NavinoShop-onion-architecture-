@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shop.Domain.Product_SellerAgg
+namespace Shop.Domain.ProductSellAgg
 {
     // Connect a Product to Seller
     public class ProductSell : BaseEntityCreateUpdateActive<int>
@@ -57,7 +57,7 @@ namespace Shop.Domain.Product_SellerAgg
                     Amount = Amount + amount;
                     break;
                 case StoreProductType.کاهش:
-                    Amount = (Amount - amount) < 0 ? 0 : (Amount - amount);
+                    Amount = Amount - amount < 0 ? 0 : Amount - amount;
                     break;
                 default:
                     break;

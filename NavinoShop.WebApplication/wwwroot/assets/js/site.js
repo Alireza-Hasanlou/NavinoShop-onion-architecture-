@@ -255,7 +255,7 @@ function login() {
 })(jQuery)
 
 
-    
+
 
 
 // ===============================
@@ -479,3 +479,90 @@ function LoadWalletTransactions(pageId) {
             console.error("Ajax Error:", xhr.status, xhr.responseText);
         });
 }
+
+// Load State and Cities
+
+
+$(document).ready(function () {
+
+    /* =======================
+       Elements
+    ======================= */
+    const $province = $("#province");
+    const $city = $("#city");
+    const $error = $("#errorMessage");
+
+    console.log($province);
+    /* =======================
+       Load Provinces
+    ======================= */
+    function loadProvinces() {
+        $.get("/Api/Post/States")
+            .done(res => {
+                fillSelect($province, res);
+            })
+            .fail(() => showError("خطا در بارگذاری استان‌ها"));
+    }
+
+    function fillSelect($select, items) {
+        $select.empty().append('<option value="">انتخاب استان</option>');
+        $.each(items, (_, item) => {
+            $select.append(`<option value="${item.id}">${item.title}</option>`);
+        });
+    }
+
+    /* =======================
+       Load Cities
+    ======================= */
+    function loadCities(provinceId, $targetSelect) {
+        if (!provinceId) {
+            $targetSelect
+                .html('<option value="" disabled selected>ابتدا استان را انتخاب کنید</option>')
+                .prop("disabled", true);
+            return;
+        }
+
+        $.get("/Api/Post/Cities", { stateId: provinceId })
+            .done(res => {
+                $targetSelect.empty();
+
+                if (!res || res.length === 0) {
+                    $targetSelect
+                        .append(`<option value="" disabled>شهری یافت نشد</option>`)
+                        .prop("disabled", true);
+                } else {
+                    $targetSelect.append('<option value="" disabled selected>انتخاب شهر</option>');
+
+                    $.each(res, (_, city) => {
+                        $targetSelect.append(
+                            `<option value="${city.cityCode}">${city.title}</option>`
+                        );
+                    });
+
+                    $targetSelect.prop("disabled", false);
+                }
+            })
+            .fail(() => showError("خطا در بارگذاری شهرها"));
+    }
+
+
+
+    /* =======================
+       Utils
+    ======================= */
+    function showError(msg) {
+        $error.text(msg).show();
+        setTimeout(() => $error.hide(), 4000);
+    }
+
+    /* =======================
+       Events
+    ======================= */
+    $province.on("change", function () {
+
+        loadCities(this.value, $city);
+    });
+
+
+    loadProvinces();
+});

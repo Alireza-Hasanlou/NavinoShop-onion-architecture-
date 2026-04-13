@@ -73,7 +73,7 @@ namespace Shop.Query.Queries
             return model;
         }
 
-        public async List<ProductCategoryForAddProductSeller> GetCategoryForAddProductSells(int id)
+        public async Task<List<ProductCategoryForAddProductSeller>> GetCategoryForAddProductSells(int id)
         {
             return await _productCategoryRepository.GetAll()
                .Select(x => new ProductCategoryForAddProductSeller
@@ -83,5 +83,7 @@ namespace Shop.Query.Queries
                })
                .ToListAsync();
         }
+
+
     }
 }

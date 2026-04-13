@@ -2,11 +2,6 @@
 using Shop.Application.Contract.ProductFeature.Query;
 using Shop.Domain.ProductAgg;
 using Shop.Domain.ProductFreatureAgg;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Shop.Query.Queries
 {

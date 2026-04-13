@@ -23,12 +23,12 @@ namespace Shop.Domain.OrderSellerAgg
         public string? PostTitle { get; private set; }
         public int PostPrice { get; private set; }
         public Order Order { get; private set; }
-        public List<OrderItem> OrderItems { get; private set; }
+        public ICollection<OrderItem> OrderItems { get; private set; }
         public Seller Seller { get; private set; }
         public OrderSeller()
         {
             Order = new();
-            OrderItems = new();
+            OrderItems = new List<OrderItem>();
             Seller = new();
         }
 
@@ -39,7 +39,6 @@ namespace Shop.Domain.OrderSellerAgg
             DiscountId = 0;
             DiscountPercent = 0;
             PostPrice = 0;
-            OrderItems = new();
             DiscountTitle = "";
             PostId = 0;
             PostTitle = "";
