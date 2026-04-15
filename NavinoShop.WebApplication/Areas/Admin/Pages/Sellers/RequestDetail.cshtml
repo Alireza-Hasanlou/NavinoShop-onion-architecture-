@@ -1,0 +1,143 @@
+﻿@page
+@model NavinoShop.WebApplication.Areas.Admin.Pages.Sellers.RequestDetailModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["title"] = "جزییات درخواست";
+}
+
+
+
+<div class="seller-card-container">
+
+    <!-- هدر -->
+    <div class="seller-card-header">
+        <div class="seller-card-avatar">
+            <img src="@Model.seller.UserImaneName" alt="Profile">
+        </div>
+        <h2 class="seller-card-title">@Model.seller.UserName</h2>
+        <span class="seller-card-status">وضعیت: @Model.seller.Status.ToString().Replace("_", " ")</span>
+    </div>
+
+    <!-- بدنه -->
+    <div class="seller-card-body">
+
+        <!-- آدرس -->
+        <div class="seller-card-section">
+            <div class="seller-card-location">
+                <span class="seller-card-location-icon">📍</span>
+                <div>
+                    <div class="seller-card-location-sub">@Model.seller.CityName</div>
+                    <div class="seller-card-location-text">@Model.seller.Address</div>
+
+                </div>
+            </div>
+            <a href="@Model.seller.MapUrl" class="seller-card-map-link">مشاهده در نقشه ↗</a>
+        </div>
+
+        <div class="seller-card-grid">
+            <div class="seller-card-grid-item">
+                <div class="seller-card-grid-label">تلفن 1</div>
+                <div class="seller-card-grid-value">@Model.seller.Phone1</div>
+            </div>
+            <div class="seller-card-grid-item">
+                <div class="seller-card-grid-label">تلفن 2</div>
+                <div class="seller-card-grid-value">@Model.seller.Phone2</div>
+            </div>
+            <div class="seller-card-grid-item">
+                <div class="seller-card-grid-label">ایمیل</div>
+                <div class="seller-card-grid-value">@Model.seller.Email</div>
+            </div>
+            <div class="seller-card-grid-item">
+                <div class="seller-card-grid-label">اینستاگرام</div>
+                <div class="seller-card-grid-value">@Model.seller.Instagram</div>
+            </div>
+            <div class="seller-card-grid-item">
+                <div class="seller-card-grid-label">واتساپ</div>
+                <div class="seller-card-grid-value">@Model.seller.Whatsup</div>
+            </div>
+            <div class="seller-card-grid-item">
+                <div class="seller-card-grid-label">تلگرام</div>
+                <div class="seller-card-grid-value">@Model.seller.Telegram</div>
+            </div>
+            <div class="seller-card-grid-item">
+                <div class="seller-card-grid-label">Alt تصویر فروشگاه</div>
+                <div class="seller-card-grid-value">@Model.seller.ImageAlt</div>
+            </div>
+            <div class="seller-card-grid-item">
+                <div class="seller-card-grid-label">تاریخ ارسال درخواست</div>
+                <div class="seller-card-grid-value">@Model.seller.RequestDate</div>
+            </div>
+
+        </div>
+
+        <!-- مدارک -->
+        <div class="seller-card-section">
+            <div class="seller-card-docs-container">
+                <div class="col col-md-6 col-sm-12 col-12">
+                    <div class="image-uploader">
+                        <label> تصویر فروشگاه </label>
+
+                        <div class="picture-uploader"
+                             data-url="@Model.seller.ShopImageName">
+
+                            <div class="picture__image"></div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="col col-md-6 col-sm-12 col-12">
+                    <div class="image-uploader">
+                        <label> تصویر مجوز </label>
+
+                        <div class="picture-uploader"
+                             data-url="@Model.seller.LicenseImage">
+
+                            <div class="picture__image"></div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    @if (Model.seller.Status == Shared.Domain.Enums.SellerStatus.درخواست_ارسال_شده)
+    {
+
+        <div class="seller-card-footer">
+            <button onclick="AjaxSweetInputWithRedirect(  'دلیل رد کردن',
+                                                             'رد شود',
+                                                               '/Admin/Sellers/Reject/@Model.seller.Id/',
+                                                               '/Admin/Sellers/Index')"
+                    class="seller-card-btn reject">
+                رد درخواست
+            </button>
+            <button onclick="AjaxSweetWithRedirect(
+                                                                 'تایید شود',
+                                                                 'پس از تایید, کاربر امکان فروش در سایت را دارد ',
+                                                                 'question',
+                                                                 'تایید شود',
+                                                                  'انصراف',
+                                                                   '/Admin/Sellers/Accept/@Model.seller.Id',
+                                                                   '/Admin/Sellers/Index')"
+                    class="seller-card-btn accept">
+                قبول درخواست
+            </button>
+        </div>
+    }
+
+
+</div>
+
+@section scripts {
+    <script>
+
+        $(document).ready(function () {
+            $(".picture-uploader").imageUploader();
+        });
+
+    </script>
+}

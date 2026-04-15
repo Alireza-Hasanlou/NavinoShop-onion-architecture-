@@ -93,5 +93,7 @@ namespace Users.Infrastructure.Persistence.Repository
         {
             return await _context.Users.Where(i => i.Id == userId).Include(u => u.UserRoles).SingleAsync();
         }
+
+
     }
 }

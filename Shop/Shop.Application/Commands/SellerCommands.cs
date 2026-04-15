@@ -20,18 +20,18 @@ namespace Shop.Application.Commands
             _fileService = fileService;
         }
 
-        public async Task<OperationResult> ChangeSellerStatus(int UserId, SellerStatus sellerStatus)
+        public async Task<OperationResult> ChangeSellerStatus(int Id, SellerStatus sellerStatus,string ? whyRejected)
         {
-           var seller= await _sellerRepository.GetByIdAsync(UserId);
-            seller.ChangeStatus(sellerStatus);
-            if(await _sellerRepository.SaveAsync())
-                return new OperationResult(true);   
-            return new OperationResult(false , ValidationMessages.SystemErrorMessage);
+            var seller = await _sellerRepository.GetByIdAsync(Id);
+            seller.ChangeStatus(sellerStatus, whyRejected);
+            if (await _sellerRepository.SaveAsync())
+                return new OperationResult(true);
+            return new OperationResult(false, ValidationMessages.SystemErrorMessage);
         }
 
-        public async Task<OperationResult> EditRequestForSales(int UserId, EditRequestForSelasCommandModel command)
+        public async Task<OperationResult> EditRequestForSales( EditRequestForSelasCommandModel command)
         {
-            var seller = await _sellerRepository.GetByIdAsync(UserId);
+            var seller = await _sellerRepository.GetByIdAsync(command.Id);
             if (seller == null)
                 return new OperationResult(false, "فروشنده ای با شناسه ارسال شده یافت نشد");
             if (await _sellerRepository.ExistByAsync(t => t.Title.Trim().ToLower() == command.Title.Trim().ToLower() && t.Id != command.Id))
@@ -72,6 +72,30 @@ namespace Shop.Application.Commands
                 _fileService.DeleteImage($"{FileDirectories.SellerImageDirectory500}{imageName}");
             }
             return new OperationResult(false, ValidationMessages.SystemErrorMessage);
+        }
+
+        public async Task<EditRequestForSelasCommandModel> GetForEditRequestForSales(int Id)
+        {
+            var request = await _sellerRepository.GetByIdAsync(Id);
+
+            return new EditRequestForSelasCommandModel
+            {
+                Id = request.Id,
+                Address = request.Address,
+                CityId = request.CityId,
+                Email = request.Email,
+                GoogleMapUrl = request.MapUrl,
+                ImageName = FileDirectories.SellerImageDirectory + request.ImageName,
+                Instagram = request.Instagram,
+                ImageAlt = request.ImageAlt,
+                Phone1 = request.Phone1,
+                Phone2 = request.Phone2,
+                StateId = request.StateId,
+                Telegram = request.Telegram,
+                Title = request.Title,
+                WhatsApp = request.Whatsup,
+                LicenseImageName = FileDirectories.SellerImageDirectory + request.LicenseImage
+            };
         }
 
         public async Task<OperationResult> RequestForSales(int UserId, RequestForSelasCommandModel command)

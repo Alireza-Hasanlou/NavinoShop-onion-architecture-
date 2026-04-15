@@ -1,0 +1,90 @@
+﻿@page
+@using Shared.Application
+@model NavinoShop.WebApplication.Areas.Admin.Pages.Sellers.IndexModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["title"] = " درخواست های فروشندگی ";
+    var successMessage = TempData["success"] as string;
+}
+<div class="box">
+    <!-- /.box-header -->
+    <div class="box-body">
+        <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+            <a href="/Admin/Roles/Create" class="btn btn-success" title="افزودن"><i class="fa fa-plus"></i></a>
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="DataTable table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
+                        <thead>
+                            <tr role="row">
+                                <th>تصویر فروشگاه </th>
+                                <th>تصویر مجوز </th>
+                                <th>عنوان فروشگاه </th>
+                                <th>نام کاربری </th>
+                                <th>شماره تماس </th>
+                                <th>آدرس</th>
+                                <th>وضعیت</th>
+                                <th>تاریخ ارسال درخواست</th>
+                                <th>دلیل رد</th>
+                                <th>چزییات</th>
+                        </thead>
+                        <tbody>
+                            @if (Model.Sellers.Count > 0)
+                            {
+                                @foreach (var item in Model.Sellers)
+                                {
+                                    <tr role="row" class="odd">
+                                        <td>
+                                            <img width="100px" src="@(FileDirectories.SellerImageDirectory100 + item.ImageName)" />
+                                        </td>
+                                        <td>
+                                            <img width="100px" src="@(FileDirectories.SellerImageDirectory100 + item.LicenseImage)" />
+                                        </td>
+                                        <td class="sorting_1">@item.Title</td>
+                                        <td>@item.UserName</td>
+                                        <td>@item.Phone1</td>
+                                        <td>@item.CityName</td>
+                                        @if (item.Status==Shared.Domain.Enums.SellerStatus.درخواست_تایید_شده)
+                                        {
+                                             <td class="text-success">@item.Status.ToString().Replace("_", " ")</td> 
+                                        }
+                                        else if (item.Status == Shared.Domain.Enums.SellerStatus.درخواست_تایید_نشده)
+                                        {
+                                            <td class="text-danger">@item.Status.ToString().Replace("_", " ")</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="text-secondary">@item.Status.ToString().Replace("_", " ")</td>
+                                        }
+                                        <td>@item.RequestDate.ToPersainDate()</td>
+                                        <td>@((string.IsNullOrEmpty(item.WhyRejected)) ? "-" : item.WhyRejected)</td>
+                                        <td> <a asp-page="RequestDetail" asp-route-Id="@item.Id" class="btn btn-info"><i class="fa fa-eye"></i></a></td>
+
+                                    </tr>
+
+                                }
+                            }
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- /.box-body -->
+</div>
+@section scripts {
+    @if (!string.IsNullOrEmpty(successMessage))
+    {
+        TempData["success"] = "";
+        <script>
+            AlerSweetWithTimer( "@successMessage","success", "center");
+        </script>
+    }
+}
+
+
+
+
+

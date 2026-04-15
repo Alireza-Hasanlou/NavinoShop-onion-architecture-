@@ -13,8 +13,8 @@ function DeleteAjax(Title, Text1, Icon, ConfirmButtonText, Url, DeletedId) {
         if (result.isConfirmed) {
             $.ajax({
                 url: Url,
-                type: "GET", 
-                data: { id: DeletedId }, 
+                type: "GET",
+                data: { id: DeletedId },
                 success: function (res) {
                     if (res.success) {
                         AlerSweetWithTimer(res.title, "success", "center");
@@ -93,12 +93,50 @@ function AjaxSweetInput(title1, confirmButtonText1, url1, deletedId) {
                 url: url1 + result.value
             }).done(function (res) {
                 if (res) {
+               
                     AlerSweetWithTimer("عملیات موفق", "success", "Center");
                     setTimeout($(`#${deletedId}`).hide('slow'), 3000);
-
+                   
                 }
                 else {
-                    AlerSweetWithTimer("عملیات نا موفق", "error", "Center");
+                    AlerSweetWithTimer("عملیات نا موفق \n " + res.message, "error", "Center");
+                    setTimeout(function () {
+                        location.reload();
+                    }, 3000);
+                }
+                EndLoading();
+            });
+        }
+    });
+}
+function AjaxSweetInputWithRedirect(title1, confirmButtonText1, url1, RedirectUrl) {
+
+    Swal.fire({
+        title: title1,
+        input: "text",
+        inputAttributes: {
+            autocapitalize: "off"
+        },
+        showCancelButton: true,
+        confirmButtonText: confirmButtonText1,
+        cancelButtonText: 'انصراف',
+        showLoaderOnConfirm: true,
+        allowOutsideClick: () => !Swal.isLoading()
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Loding();
+
+            $.ajax({
+                type: "Get",
+                url: url1 + result.value
+            }).done(function (res) {
+                if (res) {
+                    AlerSweetWithTimer("عملیات موفق", "success", "Center");
+                    setTimeout(function () {
+                        window.location.href = RedirectUrl;
+                    }, 3000);
+                } else {
+                    AlerSweetWithTimer("عملیات نا موفق \n " + res.message, "error", "Center");
                     setTimeout(function () {
                         location.reload();
                     }, 3000);
@@ -132,10 +170,52 @@ function AjaxSweet(title1, text1, icon1, confirmButtonText1, cancelButtonText1, 
                     if (res) {
                         AlerSweetWithTimer("عملیات موفق", "success", "Center");
 
-                      
+
                         setTimeout(() => {
                             $(`#${deletedId}`).fadeOut('slow');
                         }, 1000);
+                    } else {
+                        AlerSweetWithTimer("عملیات ناموفق", "error", "Center");
+                    }
+                })
+                .fail(function () {
+
+                    AlertSweetTimer("خطا در برقراری ارتباط با سرور", "error", "Center");
+                    EndLoading();
+                });
+
+
+        }
+    });
+}
+function AjaxSweetWithRedirect(title1, text1, icon1, confirmButtonText1, cancelButtonText1, url1, RedirectUrl) {
+    Swal.fire({
+        title: title1,
+        text: text1,
+        icon: icon1,
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: confirmButtonText1,
+        cancelButtonText: cancelButtonText1
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Loding();
+            console.log("Start Load");
+            $.ajax({
+                type: "GET",
+                url: url1
+            })
+                .done(function (res) {
+                    EndLoading();
+
+                    if (res) {
+                        AlerSweetWithTimer("عملیات موفق", "success", "Center");
+
+
+                        setTimeout(function () {
+                            window.location.href = RedirectUrl;
+                        }, 3000);
                     } else {
                         AlerSweetWithTimer("عملیات ناموفق", "error", "Center");
                     }
@@ -173,7 +253,7 @@ function AjaxSweetRefresh(title, text, icon, confirmText, cancelText, url) {
             .done(res => {
                 EndLoading();
 
-                if (res.success ) {
+                if (res.success) {
                     AlerSweetWithTimer("عملیات موفق", "success", "Center");
 
                     setTimeout(() => location.reload(), 2000);

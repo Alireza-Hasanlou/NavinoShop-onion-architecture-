@@ -86,7 +86,7 @@ namespace Users.Domain.User.Agg
 
         public static User Register(string mobile, string password)
         {
-            return new User("", mobile, "", password, "DefaultAvatar.png", false, false, Gender.نامشخص);
+            return new User(mobile, mobile, "", password, "DefaultAvatar.png", false, false, Gender.نامشخص);
         }
 
         public void AddRole(int roleId)

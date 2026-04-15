@@ -53,5 +53,7 @@ namespace Shop.Application.Contract.Seller.Command
         [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
         [MaxLength(255, ErrorMessage = ValidationMessages.MaxLengthMessage)]
         public string? Email { get; set; }
+        public string? LicenseImageName { get; set; }
+
     }
 }

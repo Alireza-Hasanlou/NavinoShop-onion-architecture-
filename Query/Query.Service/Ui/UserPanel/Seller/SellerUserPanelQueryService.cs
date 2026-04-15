@@ -36,6 +36,7 @@ namespace Query.Service.Ui.UserPanel.Seller
                     ImageName = FileDirectories.SellerImageDirectory100 + s.ImageName,
                     Phone = s.Phone1,
                     CityName = "",
+                    whyRejected=s.WhyRejected,
                     StateId = s.StateId,
                     CreateDate = s.CreateDate.ToPersainDate(),
                     SellerStatus = s.Status,

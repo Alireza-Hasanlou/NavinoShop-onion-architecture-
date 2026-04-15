@@ -49,5 +49,26 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
             return RedirectToAction("Myshops", new { status = res.Success });
 
         }
+
+        public async Task<IActionResult> EditRequestForSales(int Id)
+        {
+            if (Id < 1)
+                return RedirectToAction("MyShops");
+
+            var Request = await _sellerCommands.GetForEditRequestForSales(Id);
+            return View(Request);
+
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditRequestForSales(EditRequestForSelasCommandModel command)
+        {
+            //if(!ModelState.IsValid)
+            //    return View(command);
+
+            //var res = await _sellerCommands.EditRequestForSales(command);
+            //if(res.Success)
+
+            return View(command);
+        }
     }
 }

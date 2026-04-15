@@ -21,6 +21,7 @@
                 <td>شماره تماس </td>
                 <td>وضعیت</td>
                 <td>تاریخ ایجاد</td>
+                <td>دلیل رد </td>
                 <td></td>
         </thead>
         <tbody>  
@@ -31,8 +32,20 @@
                 <td>@shop.Title</td>
                 <td>@shop.CityName</td>
                 <td>@shop.Phone</td>
-                <td> @shop.SellerStatus.ToString().Replace("_", " ")</td>
+            @if (shop.SellerStatus==Shared.Domain.Enums.SellerStatus.درخواست_تایید_شده)
+                                        {
+                                             <td class="text-success">@shop.SellerStatus.ToString().Replace("_", " ")</td> 
+                                        }
+                                        else if (shop.SellerStatus == Shared.Domain.Enums.SellerStatus.درخواست_تایید_نشده)
+                                        {
+                                            <td class="text-danger">@shop.SellerStatus.ToString().Replace("_", " ")</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="text-secondary">@shop.SellerStatus.ToString().Replace("_", " ")</td>
+                                        }
                 <td>@shop.CreateDate</td>
+                 <td>@shop.whyRejected</td>
                 <td>   <a asp-action="Edit" asp-route-Id="@shop.Id" class="btn btn-warning">  <i class="fa fa-edit"></i></a></td>
             </tr>
         }

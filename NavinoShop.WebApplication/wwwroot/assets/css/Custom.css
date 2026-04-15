@@ -2307,3 +2307,189 @@ span.custom-checkbox-shine:after {
 .Close-modal {
     display: none;
 }
+
+/* تنظیمات کلی فونت و جهت */
+.seller-card-container {
+    direction: rtl;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    max-width: 850px;
+    margin: 20px auto;
+    overflow: hidden;
+    border: 1px solid #eef2f6;
+    box-sizing: border-box;
+}
+
+/* هدر و تصویر پروفایل */
+.seller-card-header {
+    background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(34, 45, 50, 1) 35%, rgba(17, 78, 92, 1) 56%);
+    padding: 40px 40px 30px 40px;
+    color: white;
+    padding: 24px;
+    text-align: center;
+    position: relative;
+}
+
+.seller-card-avatar {
+    width: 80px;
+    height: 80px;
+    background: white;
+    border-radius: 50%;
+    margin: 0 auto 12px;
+    overflow: hidden;
+    border: 4px solid rgba(255,255,255,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .seller-card-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.seller-card-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.seller-card-status {
+    background: rgba(255,255,255,0.2);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    margin-top: 8px;
+    display: inline-block;
+}
+
+/* بدنه اطلاعات */
+.seller-card-body {
+    padding: 24px;
+}
+
+.seller-card-section {
+    margin-bottom: 20px;
+}
+
+.seller-card-location {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.seller-card-location-icon {
+    color: #667eea;
+    font-size: 18px;
+}
+
+.seller-card-location-text {
+    font-weight: 600;
+    color: #333;
+}
+
+.seller-card-location-sub {
+    font-size: 13px;
+    color: #777;
+}
+
+.seller-card-map-link {
+    display: inline-block;
+    font-size: 12px;
+    color: #667eea;
+    text-decoration: none;
+    margin-top: 4px;
+}
+
+/* شبکه اطلاعات تماس */
+.seller-card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.seller-card-grid-item {
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 10px;
+}
+
+.seller-card-grid-label {
+    font-size: 11px;
+    color: #888;
+    margin-bottom: 4px;
+}
+
+.seller-card-grid-value {
+    font-weight: 600;
+    color: #333;
+}
+
+/* بخش مدارک */
+.seller-card-docs-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.seller-card-docs-container {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+}
+
+.seller-card-docs-item {
+    min-width: 100px;
+    height: 100px;
+    background: #eee;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #888;
+}
+
+/* دکمه‌های عملیات */
+.seller-card-footer {
+    padding: 20px 24px;
+    background: #f8f9fa;
+    border-top: 1px solid #eef2f6;
+    display: flex;
+    gap: 12px;
+}
+
+.seller-card-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-size: 14px;
+    color: white;
+}
+
+    .seller-card-btn.reject {
+        background: #ef4444;
+    }
+
+        .seller-card-btn.reject:hover {
+            background: #dc2626;
+        }
+
+    .seller-card-btn.accept {
+        background: #10b981;
+    }
+
+        .seller-card-btn.accept:hover {
+            background: #059669;
+        }

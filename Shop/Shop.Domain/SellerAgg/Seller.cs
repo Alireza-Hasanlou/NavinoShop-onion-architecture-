@@ -15,7 +15,7 @@ namespace Shop.Domain.SellerAgg
         public Seller()
         {
             ProductSells = new List<ProductSell>();
-            OrderSellers= new List<OrderSeller>();
+            OrderSellers = new List<OrderSeller>();
         }
         public Seller(int userId, string title, int stateId, int cityId,
             string address, string mapUrl, string imageName, string licenseImage,
@@ -49,6 +49,7 @@ namespace Shop.Domain.SellerAgg
         public string ImageName { get; private set; }
         public string LicenseImage { get; private set; }
         public string ImageAlt { get; private set; }
+        public string? WhyRejected { get; private set; }
         public string? Instagram { get; private set; }
         public string? Telegram { get; private set; }
         public string? Whatsup { get; private set; }
@@ -76,11 +77,14 @@ namespace Shop.Domain.SellerAgg
             Phone1 = phone1;
             Phone2 = phone2;
             Email = email;
-        
+
         }
-        public void ChangeStatus(SellerStatus status)
+        public void ChangeStatus(SellerStatus status, string? whyRejected)
         {
             Status = status;
+
+            if (!string.IsNullOrEmpty(whyRejected))
+                WhyRejected = whyRejected;
         }
         public void EditLicenseImage(string licenseImage)
         {
@@ -88,3 +92,8 @@ namespace Shop.Domain.SellerAgg
         }
     }
 }
+
+
+
+
+

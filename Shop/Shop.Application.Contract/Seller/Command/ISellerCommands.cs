@@ -11,7 +11,8 @@ namespace Shop.Application.Contract.Seller.Command
     public interface ISellerCommands
     {
         Task<OperationResult> RequestForSales(int UserId, RequestForSelasCommandModel command);
-        Task<OperationResult> EditRequestForSales(int UserId, EditRequestForSelasCommandModel command);
-        Task<OperationResult> ChangeSellerStatus(int UserId,SellerStatus sellerStatus );
+        Task<OperationResult> EditRequestForSales( EditRequestForSelasCommandModel command);
+        Task<EditRequestForSelasCommandModel> GetForEditRequestForSales(int Id);
+        Task<OperationResult> ChangeSellerStatus(int Id,SellerStatus sellerStatus,string ? whyRejected );
     }
 }

@@ -13,5 +13,6 @@ namespace Query.Contract.UI.UserPanel.Seller
         public string Phone { get; set; }
         public SellerStatus SellerStatus { get; set; }
         public string CreateDate { get; set; }
+        public string whyRejected { get; set; }
     }
 }
