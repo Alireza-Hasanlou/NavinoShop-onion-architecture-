@@ -2,6 +2,7 @@
 using PostModule.Domain.Services;
 using Query.Contract.Admin.Seller;
 using Shared.Application;
+using Shared.Domain.Enums;
 using Shop.Domain.SellerAgg;
 using Users.Domain.User.Agg.IRepository;
 
@@ -22,10 +23,10 @@ namespace Query.Service.Admin.Seller
             _cityRepository = cityRepository;
         }
 
-
-        public async Task<List<SellersRequrstAdminQueryModel>> GetAllSalesRequrstForAdmin()
+        public async Task<List<SellersRequrstAdminQueryModel>> GetAllRejectedRequestsForAdmin()
         {
             var sellers = await _sellerRepository.GetAll()
+                .Where(s => s.Status == SellerStatus.درخواست_تایید_نشده)
                 .Select(s => new SellersRequrstAdminQueryModel
                 {
                     Id = s.Id,
@@ -57,7 +58,79 @@ namespace Query.Service.Admin.Seller
             }
 
             return sellers;
+        }
 
+        public async Task<List<SellersRequrstAdminQueryModel>> GetAllSalesRequrstForAdmin()
+        {
+            var sellers = await _sellerRepository.GetAll()
+                .Where(s => s.Status == SellerStatus.درخواست_ارسال_شده)
+                .Select(s => new SellersRequrstAdminQueryModel
+                {
+                    Id = s.Id,
+                    ImageName = s.ImageName,
+                    LicenseImage = s.LicenseImage,
+                    Phone1 = s.Phone1,
+                    UserId = s.UserId,
+                    Title = s.Title,
+                    StateId = s.StateId,
+                    CityId = s.CityId,
+                    Status = s.Status,
+                    RequestDate = s.CreateDate,
+                    CityName = "",
+                    UserName = ""
+                }).ToListAsync();
+
+            var userIds = sellers.Select(s => s.UserId).ToList();
+            var users = await _userRepository.GetUsersByIds(userIds);
+            foreach (var item in sellers)
+            {
+
+                var state = await _stateRepository.GetByIdAsync(item.StateId);
+                var city = await _cityRepository.GetByIdAsync(item.CityId);
+                item.CityName = $"{state.Title}_{city.Title}";
+
+                var user = users.FirstOrDefault(u => u.Id == item.UserId);
+                item.UserName = user?.FullName ?? user?.Mobile;
+            }
+
+            return sellers;
+
+        }
+
+        public async Task<List<SellersRequrstAdminQueryModel>> GetAllSellersForAdmin()
+        {
+            var sellers = await _sellerRepository.GetAll()
+                 .Where(s => s.Status == SellerStatus.درخواست_تایید_شده)
+                 .Select(s => new SellersRequrstAdminQueryModel
+                 {
+                     Id = s.Id,
+                     ImageName = s.ImageName,
+                     LicenseImage = s.LicenseImage,
+                     Phone1 = s.Phone1,
+                     UserId = s.UserId,
+                     Title = s.Title,
+                     StateId = s.StateId,
+                     CityId = s.CityId,
+                     Status = s.Status,
+                     RequestDate = s.CreateDate,
+                     CityName = "",
+                     UserName = ""
+                 }).ToListAsync();
+
+            var userIds = sellers.Select(s => s.UserId).ToList();
+            var users = await _userRepository.GetUsersByIds(userIds);
+            foreach (var item in sellers)
+            {
+
+                var state = await _stateRepository.GetByIdAsync(item.StateId);
+                var city = await _cityRepository.GetByIdAsync(item.CityId);
+                item.CityName = $"{state.Title}_{city.Title}";
+
+                var user = users.FirstOrDefault(u => u.Id == item.UserId);
+                item.UserName = user?.FullName ?? user?.Mobile;
+            }
+
+            return sellers;
         }
 
         public async Task<SellerRequestDetailQueryModel> GetSellerRequestDetail(int Id)

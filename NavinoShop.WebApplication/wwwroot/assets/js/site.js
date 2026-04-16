@@ -58,6 +58,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 function getLoggedInMenuHtml(data) {
+    debugger;
+    var isAdmin = false;
+    if (data.isuseradmin) {
+        isAdmin = true;
+    }
     return `
         <!-- هدر پروفایل -->
         <div class="menu-header">
@@ -65,7 +70,13 @@ function getLoggedInMenuHtml(data) {
             <h3 class="menu-profile-name">${data.fullname}</h3>
             <p class="menu-profile-email">${data.mobile}</p>
         </div>
-
+           ${isAdmin ? `
+        <li>
+            <a href="/Admin" class="auth-menu-item">
+                <i class="bx bxs-user-circle"></i>
+              پنل ادمین
+            </a>
+        </li>` : ''}
         <li>
             <a href="/Profile/PersonalInfo" class="auth-menu-item">
                 <i class="bx bxs-dashboard"></i>

@@ -33,7 +33,7 @@ namespace Users.Infrastructure.Persistence.Repository
 
         public async Task<OperationResult> EditAsync(EditRoleCommand command, List<int> permissions)
         {
-            if(command.Id==1 || command.Id==2)
+            if (command.Id == 1 || command.Id == 2)
                 return new(false, "امکان ویرایش این نقش وجود ندارد", "Role");
             var role = await _userContext.Roles.Where(i => i.Id == command.Id).Include(r => r.RolePermissions).SingleAsync();
 
@@ -73,7 +73,7 @@ namespace Users.Infrastructure.Persistence.Repository
         public async Task<List<RoleQueryModel>> GetAllRoles()
         {
             return await _userContext.Roles
-                .OrderBy(i=>i.Id)
+                .OrderBy(i => i.Id)
                 .Select(r => new RoleQueryModel
                 {
                     RoleId = r.Id,
@@ -108,7 +108,7 @@ namespace Users.Infrastructure.Persistence.Repository
         {
 
 
-          var usersInRole = await  _userContext.Roles.Where(i => i.Id == roleId).Include(u => u.UserRoles).ThenInclude(u => u.User).Select(role => new UsersRoleQuryModel
+            var usersInRole = await _userContext.Roles.Where(i => i.Id == roleId).Include(u => u.UserRoles).ThenInclude(u => u.User).Select(role => new UsersRoleQuryModel
             {
                 RoleTitle = role.Title,
                 Users = role.UserRoles.Select(item => new UsersQueryModel
@@ -120,15 +120,24 @@ namespace Users.Infrastructure.Persistence.Repository
                 }).ToList()
             }).SingleOrDefaultAsync();
 
-            if(usersInRole == null) return new();   
-            
+            if (usersInRole == null) return new();
+
             return usersInRole;
-            
+
         }
 
         public async Task<List<int>> GetUsersRoleIds(int userId)
         {
-             return await _userContext.UserRoles.Where(i => i.UserId == userId).Select(r => r.RoleId).ToListAsync();
+            return await _userContext.UserRoles.Where(i => i.UserId == userId).Select(r => r.RoleId).ToListAsync();
+        }
+
+        public async Task<bool> IsUserAdminAsync(int userId)
+        {
+            return await _userContext.UserRoles
+                .Where(u => u.UserId == userId)
+                .Include(r => r.Role)
+                 .Where(a => a.Role.Title.Trim().ToLower() == "admin")
+                .AnyAsync();
         }
     }
 }

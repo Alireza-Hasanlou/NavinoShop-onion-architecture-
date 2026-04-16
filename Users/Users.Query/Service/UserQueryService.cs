@@ -51,7 +51,11 @@ namespace Users.Query.Service
         {
             if (id < 1)
                 return new();
-            return await _userRepository.GetUserForHeader(id);
+            // 1 is Admin Panel 
+            var isAdmin = _roleRepository.CheckPermission(id, 1);
+            var user= await _userRepository.GetUserForHeader(id);
+            user.IsUserAdmin = isAdmin;
+            return user;
         }
 
         public async Task<AdminUserPaging> GetUsersForAdminAsync(int pageId, int take, string filter)

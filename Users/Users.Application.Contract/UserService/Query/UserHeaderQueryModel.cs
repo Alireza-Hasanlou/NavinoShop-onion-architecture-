@@ -5,5 +5,7 @@
         public string FullName { get; set; }
         public string Avatar { get; set; }
         public string Mobile { get; set; }
+        public bool IsUserAdmin { get; set; }
+
     }
 }

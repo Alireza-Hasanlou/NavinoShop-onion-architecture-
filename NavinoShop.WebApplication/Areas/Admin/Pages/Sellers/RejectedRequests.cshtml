@@ -1,9 +1,9 @@
 ﻿@page
+@model NavinoShop.WebApplication.Areas.Admin.Pages.Sellers.RejectedRequestsModel
 @using Shared.Application
-@model NavinoShop.WebApplication.Areas.Admin.Pages.Sellers.IndexModel
 @{
     Layout = "_AdminLayout";
-    ViewData["title"] = " لیست فروشندگان  ";
+    ViewData["title"] = " درخواست های تایید نشده   ";
     var successMessage = TempData["success"] as string;
 }
 <div class="box">
@@ -23,6 +23,7 @@
                                 <th>آدرس</th>
                                 <th>وضعیت</th>
                                 <th>تاریخ ارسال درخواست</th>
+                                <th>دلیل رد</th>
                                 <th>چزییات</th>
                         </thead>
                         <tbody>
@@ -54,6 +55,7 @@
                                             <td class="text-secondary">@item.Status.ToString().Replace("_", " ")</td>
                                         }
                                         <td>@item.RequestDate.ToPersainDate()</td>
+                                        <td>@((string.IsNullOrEmpty(item.WhyRejected)) ? "-" : item.WhyRejected)</td>
                                         <td> <a asp-page="RequestDetail" asp-route-Id="@item.Id" class="btn btn-info"><i class="fa fa-eye"></i></a></td>
 
                                     </tr>

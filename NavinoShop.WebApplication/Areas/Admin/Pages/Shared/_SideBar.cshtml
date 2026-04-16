@@ -180,9 +180,27 @@
                     </li>
                 </ul>
             </li>
-            <li class=@(currentPath.Contains("/admin/sellers") ? "active" : "")>
-                <a href="/Admin/Sellers/Index"><i class="fa fa-book"></i> <span>درخواست های فروشندگی ‌</span></a>
+            <li class="@(currentPath.Contains("/admin/sellers")? "active" : "") treeview">
+                                                                                              
+                <a href="#">
+                    <i class="fa fa-newspaper-o"></i> <span>مدیریت فروشندگان</span>
+                    <span class="pull-left-container">
+                        <i class="fa fa-angle-right pull-left"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class=@(currentPath.Contains("/admin/sellers/index") ? "active" : "")>
+                        <a href="/Admin/Sellers/Index"><i class="fa fa-newspaper-o"></i> لیست فروشندگان</a>
+                    </li>
+                    <li class=@(currentPath.Contains("/admin/sellers/salesrequests") ? "active" : "")>
+                        <a href="/Admin/Sellers/SalesRequests"><i class="fa fa-newspaper-o"></i>  درخواست های فروشندگی</a>
+                    </li>
+                    <li class=@(currentPath.Contains("/admin/sellers/rejectedrequests") ? "active" : "")>
+                        <a href="/Admin/Sellers/RejectedRequests"><i class="fa fa-newspaper-o"></i>  درخواست های تایید نشده</a>
+                    </li>
+                </ul>
             </li>
+           
         </ul>
 
 

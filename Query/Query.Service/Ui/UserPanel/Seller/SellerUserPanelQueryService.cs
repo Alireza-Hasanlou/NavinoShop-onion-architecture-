@@ -28,6 +28,7 @@ namespace Query.Service.Ui.UserPanel.Seller
         public async Task<List<SellerUserPanelQueryModel>> GetSellersForUserPanel(int UserId)
         {
             var Sellers = await _sellerRepository.GetAllBy(i => i.UserId == UserId)
+                .OrderByDescending(c=>c.CreateDate)
                 .Select(s => new SellerUserPanelQueryModel
                 {
                     Title = s.Title,

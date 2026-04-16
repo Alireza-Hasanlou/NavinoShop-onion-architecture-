@@ -210,10 +210,10 @@ namespace Users.Application.Services
                 if (user == null)
                 {
                     var newUser = User.Register(command.Mobile.Trim(), Key);
-                    //2 Is customer
-                    newUser.AddRole(2);
+                    //3 Is customer
+                    newUser.AddRole(3);
                     // send sms active code
-
+                    //TODO
                     return new(true, "", "");
                 }
                 else

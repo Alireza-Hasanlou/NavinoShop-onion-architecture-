@@ -1,7 +1,9 @@
-﻿@{
+﻿@model UserPanelSieMneuQueryModel
+@{
     var currnetPath = Context.Request.Path.ToString().ToLower().Trim();
 }
 @using NavinoShop.WebApplication.Services
+@using Query.Contract.UI.UserPanel
 @using Shared.Application
 @using Shared.Application.Auth
 @inject IAuthService service;
@@ -10,10 +12,10 @@
     <div class="accordion-item menu-container">
         <h2 class="accordion-header">
             <button class="accordion-button bg-light" type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#panelsStayOpen-collapseOne"
-            aria-expanded="true"
-            aria-controls="panelsStayOpen-collapseOne">
+                    data-bs-toggle="collapse"
+                    data-bs-target="#panelsStayOpen-collapseOne"
+                    aria-expanded="true"
+                    aria-controls="panelsStayOpen-collapseOne">
                 <div class="row">
                     <span class="col-3 col-sm-2 col-lg-3">
                         <img src="@FileDirectories.UserImageDirectory100@service.GetLoginUserAvatar()" class="rounded-circle">
@@ -28,27 +30,42 @@
         <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne" style="">
             <div class="accordion-body">
                 <ul>
+
+                    @if (Model.IsAdmim)
+                    {
+                        <li>
+                            <a href="/Admin">
+                                <div>
+                                    <div class="icon d-inline-block"><img src="/images/icons/profile-menu/addresses.webp" class="pl-2"></div> پنل ادمین
+                                </div>
+                            </a>
+                        </li>
+                    }
                     <li>
-                        <a href="/profile/personalinfo" class=" @((currnetPath.Contains("/profile/personalinfo")) ? "active" : "") ">
-                            <div>
-                                <div class="icon d-inline-block"><img src="/images/icons/profile-menu/profile.webp" class="pl-2"></div> اطلاعات حساب
-                            </div>
-                        </a>
+                    <a href="/profile/personalinfo" class=" @((currnetPath.Contains("/profile/personalinfo")) ? "active" : "") ">
+                        <div>
+                            <div class="icon d-inline-block"><img src="/images/icons/profile-menu/profile.webp" class="pl-2"></div> اطلاعات حساب
+                        </div>
+                    </a>
                     </li>
                     <li>
                         <a href="/profile/Wallet" class=" @((currnetPath.Contains("/profile/wallet")) ? "active" : "") ">
                             <div>
-                                <div class="icon d-inline-block"><img src="/images/icons/profile-menu/profile.webp" class="pl-2"></div> کیف پول 
+                                <div class="icon d-inline-block"><img src="/images/icons/profile-menu/profile.webp" class="pl-2"></div> کیف پول
                             </div>
                         </a>
                     </li>
-                    <li>
-                        <a href="/profile/apicart" class=" @((currnetPath.Contains("/profile/apicart")) ? "active" : "") ">
-                            <div>
-                                <div class="icon d-inline-block"><img src="/images/icons/profile-menu/orders.webp" class="pl-2"></div> سیدخرید api
-                            </div>
-                        </a>
-                    </li>
+                    @if (Model.HavePostOrder)
+                    {
+                        <li>
+                            <a href="/profile/apicart" class=" @((currnetPath.Contains("/profile/apicart")) ? "active" : "") ">
+                                <div>
+                                    <div class="icon d-inline-block"><img src="/images/icons/profile-menu/orders.webp" class="pl-2"></div> سیدخرید api
+                                </div>
+                            </a>
+                        </li>
+                    }
+
                     <li>
                         <a href="/PostOrder/Orders" class=" @((currnetPath.Contains("/postOrder/orders")) ? "active" : "") ">
                             <div>
@@ -70,13 +87,27 @@
                             </div>
                         </a>
                     </li>
-                    <li>
-                        <a href="/Seller/MyShops" class=" @((currnetPath.Contains("/seller/myshops")) ? "active" : "") ">
-                            <div>
-                                <div class="icon d-inline-block"><img src="/images/icons/profile-menu/addresses.webp" class="pl-2"></div> فروشگاه های من
-                            </div>
-                        </a>
-                    </li>
+                    @if (Model.IsSeller)
+                    {
+                        <li>
+                            <a href="/Seller/MyShops" class=" @((currnetPath.Contains("/seller/myshops")) ? "active" : "") ">
+                                <div>
+                                    <div class="icon d-inline-block"><img src="/images/icons/profile-menu/addresses.webp" class="pl-2"></div> فروشگاه های من
+                                </div>
+                            </a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <a href="/Seller/RequestForSales" ">
+                                <div>
+                                    <div class="icon d-inline-block"><img src="/images/icons/profile-menu/addresses.webp" class="pl-2"></div> افزودن فروشگاه
+                                </div>
+                            </a>
+                        </li>
+                    }
+
                     <li><hr></li>
                     <li>
                         <a href="/Logout">

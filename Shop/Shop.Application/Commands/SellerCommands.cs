@@ -20,7 +20,7 @@ namespace Shop.Application.Commands
             _fileService = fileService;
         }
 
-        public async Task<OperationResult> ChangeSellerStatus(int Id, SellerStatus sellerStatus,string ? whyRejected)
+        public async Task<OperationResult> ChangeSellerStatus(int Id, SellerStatus sellerStatus, string? whyRejected)
         {
             var seller = await _sellerRepository.GetByIdAsync(Id);
             seller.ChangeStatus(sellerStatus, whyRejected);
@@ -29,7 +29,7 @@ namespace Shop.Application.Commands
             return new OperationResult(false, ValidationMessages.SystemErrorMessage);
         }
 
-        public async Task<OperationResult> EditRequestForSales( EditRequestForSelasCommandModel command)
+        public async Task<OperationResult> EditRequestForSales(EditRequestForSelasCommandModel command)
         {
             var seller = await _sellerRepository.GetByIdAsync(command.Id);
             if (seller == null)
@@ -44,32 +44,48 @@ namespace Shop.Application.Commands
                 if (!command.ImageFile.IsImage())
                     return new OperationResult(false, ValidationMessages.ImageErrorMessage, nameof(command.ImageFile));
 
-                imageName = await _fileService.UploadImage(command.ImageFile, FileDirectories.ProductImageFolder);
+                imageName = await _fileService.UploadImage(command.ImageFile, FileDirectories.SellerImageFolder);
                 if (string.IsNullOrEmpty(imageName))
                     return new OperationResult(false, "خطا در بازگذاری تصویر", nameof(command.ImageFile));
 
                 _fileService.ResizeImage(imageName, FileDirectories.SellerImageFolder, 100);
                 _fileService.ResizeImage(imageName, FileDirectories.SellerImageFolder, 500);
             }
-
-            seller.Edit(command.Title, command.StateId, command.CityId, command.Address
-                , command.GoogleMapUrl, imageName, command.ImageAlt, command.Instagram,
-                command.Telegram, command.WhatsApp, command.Phone1, command.Phone2, command.Email);
-            if (await _sellerRepository.SaveAsync())
+            var licenseImage = command.LicenseImageName;
+            var oldlicenseImage = command.LicenseImageName;
+            if (command.LicenseImage != null)
             {
-                _fileService.DeleteImage($"{FileDirectories.SellerImageDirectory}{oldImageName}");
-                _fileService.DeleteImage($"{FileDirectories.SellerImageDirectory100}{oldImageName}");
-                _fileService.DeleteImage($"{FileDirectories.SellerImageDirectory500}{oldImageName}");
+                if (!command.LicenseImage.IsImage())
+                    return new OperationResult(false, ValidationMessages.ImageErrorMessage, nameof(command.ImageFile));
 
-                return new OperationResult(true);
+                licenseImage = await _fileService.UploadImage(command.LicenseImage, FileDirectories.SellerImageFolder);
+                if (string.IsNullOrEmpty(imageName))
+                    return new OperationResult(false, "خطا در بازگذاری تصویر", nameof(command.ImageFile));
+
+                _fileService.ResizeImage(licenseImage, FileDirectories.SellerImageFolder, 100);
+                _fileService.ResizeImage(licenseImage, FileDirectories.SellerImageFolder, 500);
             }
 
-
-            if (command.ImageFile != null)
+            seller.Edit(command.Title, command.StateId, command.CityId, command.Address
+                , command.GoogleMapUrl, imageName, licenseImage, command.ImageAlt, command.Instagram,
+                command.Telegram, command.WhatsApp, command.Phone1, command.Phone2, command.Email);
+            seller.ChangeStatus(SellerStatus.درخواست_ارسال_شده, "");
+            if (await _sellerRepository.SaveAsync())
             {
-                _fileService.DeleteImage($"{FileDirectories.SellerImageDirectory}{imageName}");
-                _fileService.DeleteImage($"{FileDirectories.SellerImageDirectory100}{imageName}");
-                _fileService.DeleteImage($"{FileDirectories.SellerImageDirectory500}{imageName}");
+                DeleteSellerImage(oldImageName);
+                DeleteSellerImage(oldlicenseImage);
+                return new OperationResult(true);
+            }
+            else
+            {
+                if (command.ImageFile != null)
+                {
+                    DeleteSellerImage(imageName);
+                }
+                if (command.LicenseImage != null)
+                {
+                    DeleteSellerImage(licenseImage);
+                }
             }
             return new OperationResult(false, ValidationMessages.SystemErrorMessage);
         }
@@ -77,6 +93,8 @@ namespace Shop.Application.Commands
         public async Task<EditRequestForSelasCommandModel> GetForEditRequestForSales(int Id)
         {
             var request = await _sellerRepository.GetByIdAsync(Id);
+            if (request == null)
+                return null;
 
             return new EditRequestForSelasCommandModel
             {
@@ -85,7 +103,7 @@ namespace Shop.Application.Commands
                 CityId = request.CityId,
                 Email = request.Email,
                 GoogleMapUrl = request.MapUrl,
-                ImageName = FileDirectories.SellerImageDirectory + request.ImageName,
+                ImageName = request.ImageName,
                 Instagram = request.Instagram,
                 ImageAlt = request.ImageAlt,
                 Phone1 = request.Phone1,
@@ -94,7 +112,7 @@ namespace Shop.Application.Commands
                 Telegram = request.Telegram,
                 Title = request.Title,
                 WhatsApp = request.Whatsup,
-                LicenseImageName = FileDirectories.SellerImageDirectory + request.LicenseImage
+                LicenseImageName = request.LicenseImage
             };
         }
 
@@ -132,20 +150,21 @@ namespace Shop.Application.Commands
 
             if (command.ImageFile != null)
             {
-                _fileService.DeleteImage($"{FileDirectories.SellerImageDirectory}{imageName}");
-                _fileService.DeleteImage($"{FileDirectories.SellerImageDirectory100}{imageName}");
-                _fileService.DeleteImage($"{FileDirectories.SellerImageDirectory500}{imageName}");
+                DeleteSellerImage(imageName);
             }
             if (command.LicenseImage != null)
             {
-                _fileService.DeleteImage($"{FileDirectories.SellerImageDirectory}{licenseImage}");
-                _fileService.DeleteImage($"{FileDirectories.SellerImageDirectory100}{licenseImage}");
-                _fileService.DeleteImage($"{FileDirectories.SellerImageDirectory500}{licenseImage}");
+                DeleteSellerImage(licenseImage);
             }
 
             return new OperationResult(false, ValidationMessages.SystemErrorMessage);
         }
-
+        private void DeleteSellerImage(string imageName)
+        {
+            _fileService.DeleteImage($"{FileDirectories.SellerImageDirectory}{imageName}");
+            _fileService.DeleteImage($"{FileDirectories.SellerImageDirectory100}{imageName}");
+            _fileService.DeleteImage($"{FileDirectories.SellerImageDirectory500}{imageName}");
+        }
 
     }
 }

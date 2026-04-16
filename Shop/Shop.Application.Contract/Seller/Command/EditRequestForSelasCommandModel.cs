@@ -22,11 +22,9 @@ namespace Shop.Application.Contract.Seller.Command
         [Display(Name = "لینک نقشه گوگل")]
         public string? GoogleMapUrl { get; set; }
         [Display(Name = "تصویر مجوز فروشگاه")]
-        [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
-        public IFormFile LicenseImage { get; set; }
+        public IFormFile? LicenseImage { get; set; }
         [Display(Name = "تصویر")]
-        [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
-        public IFormFile ImageFile { get; set; }
+        public IFormFile? ImageFile { get; set; }
         [Display(Name = "Alt تصویر")]
         [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
         [MaxLength(355, ErrorMessage = ValidationMessages.MaxLengthMessage)]

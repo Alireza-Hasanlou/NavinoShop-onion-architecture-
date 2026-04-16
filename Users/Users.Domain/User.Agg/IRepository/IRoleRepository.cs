@@ -14,5 +14,6 @@ namespace Users.Domain.User.Agg.IRepository
         Task<EditRoleQueryModel> GetForEdit(int id);
         Task<UsersRoleQuryModel> GetUsersInRole(int roleId);
         Task<List<int>> GetUsersRoleIds(int userId);
+        Task<bool> IsUserAdminAsync(int userId);
     }
 }

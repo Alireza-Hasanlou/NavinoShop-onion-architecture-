@@ -11,7 +11,7 @@ namespace Shop.Infrastracture.Persistence.Repository
         private readonly ShopContext _shopContext;
         public SellerRepository(ShopContext shopContext) : base(shopContext)
         {
-
+            _shopContext = shopContext;
         }
         public async Task<int> GetSellerUserIdAsync(int sellerId)
         {

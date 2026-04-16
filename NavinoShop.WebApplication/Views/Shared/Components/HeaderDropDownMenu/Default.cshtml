@@ -7,7 +7,8 @@
                 id="authBtn"
                 data-fullname="@Model.FullName"
                 data-mobile="@Model.Mobile"
-                data-avatar="@FileDirectories.UserImageDirectory100@Model.Avatar">
+                data-avatar="@FileDirectories.UserImageDirectory100@Model.Avatar"
+                data-isUserAdmin="@Model.IsUserAdmin">
 
             <img src="@FileDirectories.UserImageDirectory100@Model.Avatar" class="auth-avatar">
             <span>@Model.FullName</span>

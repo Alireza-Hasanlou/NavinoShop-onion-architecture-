@@ -60,7 +60,7 @@ namespace Shop.Domain.SellerAgg
         public ICollection<ProductSell> ProductSells { get; private set; }
         public ICollection<OrderSeller> OrderSellers { get; private set; }
         public void Edit(string title, int stateId, int cityId,
-    string address, string mapUrl, string imageName,
+    string address, string mapUrl, string imageName, string licenseImage,
     string imageAlt, string? instagram, string? telegram, string? whatsup,
     string phone1, string? phone2, string? email)
         {
@@ -70,6 +70,7 @@ namespace Shop.Domain.SellerAgg
             Address = address;
             MapUrl = mapUrl;
             ImageName = imageName;
+            LicenseImage = licenseImage;
             ImageAlt = imageAlt;
             Instagram = instagram;
             Telegram = telegram;
@@ -77,14 +78,13 @@ namespace Shop.Domain.SellerAgg
             Phone1 = phone1;
             Phone2 = phone2;
             Email = email;
+         
 
         }
         public void ChangeStatus(SellerStatus status, string? whyRejected)
         {
             Status = status;
-
-            if (!string.IsNullOrEmpty(whyRejected))
-                WhyRejected = whyRejected;
+            WhyRejected = whyRejected;
         }
         public void EditLicenseImage(string licenseImage)
         {

@@ -8,7 +8,7 @@ using Shop.Application.Contract.Seller.Query;
 namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
 {
     [Area("UserPanel")]
-    [Route("/[controller]/[action]")]
+    [Route("/[controller]/[action]/{Id?}")]
     [Authorize]
     public class SellerController : Controller
     {
@@ -56,18 +56,22 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
                 return RedirectToAction("MyShops");
 
             var Request = await _sellerCommands.GetForEditRequestForSales(Id);
+            if (Request == null)
+                return RedirectToAction("MyShops");
             return View(Request);
 
         }
         [HttpPost]
         public async Task<IActionResult> EditRequestForSales(EditRequestForSelasCommandModel command)
         {
-            //if(!ModelState.IsValid)
-            //    return View(command);
+            if (!ModelState.IsValid)
+                return View(command);
 
-            //var res = await _sellerCommands.EditRequestForSales(command);
-            //if(res.Success)
+            var res = await _sellerCommands.EditRequestForSales(command);
+            if (res.Success)
+                return RedirectToAction("MyShops", new { status = true });
 
+            TempData["error"]= res.Message;
             return View(command);
         }
     }

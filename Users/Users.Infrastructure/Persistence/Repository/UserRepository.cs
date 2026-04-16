@@ -52,6 +52,8 @@ namespace Users.Infrastructure.Persistence.Repository
 
         public async Task<UserHeaderQueryModel> GetUserForHeader(int id)
         {
+
+         
             return await _context.Users.Where(u => u.Id == id)
                 .Select(u => new UserHeaderQueryModel
                 {
