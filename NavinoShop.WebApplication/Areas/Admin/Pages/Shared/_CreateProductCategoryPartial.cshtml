@@ -1,0 +1,27 @@
+﻿@model int
+<div class="modal-body">
+    <form>
+
+        <h4>افزودن دسته بندی </h4>
+        <div class="col  col-12 ">
+            <input type="hidden" id="parentId" value="@Model" />
+            <div class="custom-form-group">
+                <label for="productcategorytitle" onchange="makeSlug('productcategorytitle','productcategorySlug')" class="required">عنوان</label>
+                <input dir="rtl" type="text" id="productcategorytitle">
+            </div>
+        </div>
+        <div class="col  col-12 ">
+
+            <div class="custom-form-group">
+                <label for="productcategorySlug" class="required">سربرگ</label>
+                <input dir="rtl" type="text" id="productcategorySlug">
+            </div>
+        </div>
+        <span class="text-danger" id="productcategoryvalidation"></span>
+    </form>
+</div>
+<div class="modal-footer p-4">
+    <button type="button" class="btn btn-default pull-left" onclick="close_Modal_Ajax()">خروج</button>
+    <button type="button" class="btn btn-primary" onclick="CreateProductCategory()">ذخیره</button>
+</div>
+

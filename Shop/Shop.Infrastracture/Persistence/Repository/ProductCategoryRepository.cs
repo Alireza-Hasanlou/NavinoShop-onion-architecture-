@@ -24,9 +24,7 @@ namespace Shop.Infrastracture.Persistence.Repository
             return await _shopContext.ProductCategories.Where(i => i.Id == productCategoryId)
                   .Select(x => new EditProductCategoryCommandModel
                   {
-                      ProductCategoryId = productCategoryId,
-                      ImageAlt = x.ImageAlt,
-                      ImageName = x.ImageName,
+                      Id = productCategoryId,
                       Slug = x.Slug,
                       ParentId = x.ParentId,
                       Title = x.Title,

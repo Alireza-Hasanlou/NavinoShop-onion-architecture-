@@ -2493,3 +2493,343 @@ span.custom-checkbox-shine:after {
         .seller-card-btn.accept:hover {
             background: #059669;
         }
+
+
+/*============wide modal =======================*/
+.product-form-wrapper * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.product-form-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+.product-form-body {
+    padding: 30px;
+}
+
+.product-form-row {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.product-form-col {
+    flex: 1;
+    min-width: 280px;
+}
+
+.product-form-group {
+    margin-bottom: 20px;
+}
+
+.product-form-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #1f2937;
+    font-size: 14px;
+}
+
+    .product-form-label .required-star {
+        color: #ef4444;
+        margin-right: 4px;
+    }
+
+.product-form-control,
+.product-form-select,
+.product-form-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+    .product-form-control:focus,
+    .product-form-select:focus,
+    .product-form-textarea:focus {
+        outline: none;
+        border-color: #8b5cf6;
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+    }
+
+.product-form-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.product-form-info {
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 5px;
+}
+
+.product-form-image-preview {
+    margin-top: 12px;
+    text-align: center;
+    display: none;
+}
+
+    .product-form-image-preview img {
+        max-width: 150px;
+        max-height: 150px;
+        border-radius: 8px;
+        border: 1px solid #d1d5db;
+        padding: 4px;
+    }
+
+.product-form-submit {
+    background: #8b5cf6;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.2s;
+    margin-top: 10px;
+}
+
+    .product-form-submit:hover {
+        background: #7c3aed;
+    }
+
+.product-form-validation {
+    color: #ef4444;
+    font-size: 12px;
+    margin-top: 5px;
+    display: none;
+}
+
+.product-form-control.is-invalid,
+.product-form-select.is-invalid,
+.product-form-textarea.is-invalid {
+    border-color: #ef4444;
+}
+
+.picture-uploader {
+    border: 2px dashed #d1d5db;
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #f9fafb;
+}
+
+    .picture-uploader:hover {
+        border-color: #8b5cf6;
+        background: #f3f4f6;
+    }
+
+.picture__image {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.picture__input {
+    display: none;
+}
+
+.scroll-checkbox-wrapper {
+    margin-top: 20px;
+}
+
+.scroll-checkbox-container {
+    padding: 3px;
+}
+
+.scroll-checkbox-box {
+    background: white;
+    border-radius: 14px;
+    padding: 12px 20px;
+    max-height: 250px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+    .scroll-checkbox-box::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .scroll-checkbox-box::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    .scroll-checkbox-box::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+    }
+
+        .scroll-checkbox-box::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+.scroll-checkbox-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #e5e7eb;
+    transition: all 0.2s;
+}
+
+    .scroll-checkbox-item:last-child {
+        border-bottom: none;
+    }
+
+    .scroll-checkbox-item:hover {
+        background: #f9fafb;
+        padding-right: 5px;
+    }
+
+.custom-checkbox-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.custom-checkbox-input {
+    display: none;
+}
+
+.custom-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    width: 100%;
+    margin: 0;
+}
+
+.custom-checkbox-text {
+    font-size: 14px;
+    color: #374151;
+    font-weight: 500;
+    user-select: none;
+}
+
+.custom-checkbox-label::before {
+    content: "";
+    width: 18px;
+    height: 18px;
+    border: 2px solid #d1d5db;
+    border-radius: 6px;
+    background: white;
+    transition: all 0.2s;
+    display: inline-block;
+}
+
+.custom-checkbox-input:checked + .custom-checkbox-label::before {
+    background: #8b5cf6;
+    border-color: #8b5cf6;
+    content: "✓";
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.custom-checkbox-input:checked + .custom-checkbox-label .custom-checkbox-text {
+    color: #8b5cf6;
+}
+
+.scroll-checkbox-header {
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #e5e7eb;
+    font-weight: bold;
+    color: #374151;
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.scroll-checkbox-count {
+    background: #f3f4f6;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    color: #6b7280;
+}
+
+.scroll-checkbox-select-all {
+    background: none;
+    border: none;
+    color: #8b5cf6;
+    font-size: 12px;
+    cursor: pointer;
+    padding: 0;
+    font-weight: 500;
+}
+
+    .scroll-checkbox-select-all:hover {
+        text-decoration: underline;
+    }
+
+.product-modal .modal-dialog {
+    max-width: 95%;
+    width: 100%;
+    margin: 1.75rem auto;
+}
+
+@media (min-width: 1400px) {
+    .product-modal .modal-dialog {
+        max-width: 1200px;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1399.98px) {
+    .product-modal .modal-dialog {
+        max-width: 95%;
+    }
+}
+
+.product-modal .modal-body {
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+    .product-modal .modal-body::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .product-modal .modal-body::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    .product-modal .modal-body::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 10px;
+    }
+
+@media (max-width: 768px) {
+    .product-form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .product-form-body {
+        padding: 20px;
+    }
+
+    .scroll-checkbox-box {
+        max-height: 200px;
+    }
+}
+

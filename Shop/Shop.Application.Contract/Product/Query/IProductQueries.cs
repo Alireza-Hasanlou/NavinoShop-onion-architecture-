@@ -8,7 +8,6 @@ namespace Shop.Application.Contract.Product.Query
 {
     public interface IProductQueries
     {
-       
+        Task<ProductsForAdminPaging> GetAllProductsForAdmin(int pageId, int take, string filter ,int categoryId);
     }
-
 }

@@ -51,7 +51,7 @@ namespace Shop.Domain.ProductAgg
 
         public void EditProductCategoryRelation(List<Product_Category_Rel> product_Category_Rels)
         {
-            Poduct_Category_Rels.Clear();
+            
             Poduct_Category_Rels = product_Category_Rels;
         }
         public void Edit(string title, string imageName, string imageAlt, string shortDescription, string description, int weight, string slug)

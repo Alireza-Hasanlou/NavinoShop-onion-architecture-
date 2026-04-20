@@ -10,6 +10,6 @@ namespace Shop.Application.Contract.Product.Command
         [DisplayName("وزن")]
         [Required(ErrorMessage =ValidationMessages.RequiredMessage)]
         public int Weight { get; set; }
-        public List<int> CategoryIds { get; set; }
+        public List<int> categoryIds { get; set; }
     }
 }

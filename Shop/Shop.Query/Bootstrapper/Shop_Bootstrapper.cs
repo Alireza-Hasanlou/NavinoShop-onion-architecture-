@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Shop.Application.Contract.Product.Query;
 using Shop.Application.Contract.ProductCategory.Query;
 using Shop.Application.Contract.ProductFeature.Query;
 using Shop.Application.Contract.ProductGallery.Query;
@@ -19,6 +20,7 @@ namespace Shop.Query.Bootstrapper
             services.AddTransient<IProductCategoryQueries, ProductCategoryQueries>();
             services.AddTransient<IProductFeatureQueries, ProductFeatureQueries>();
             services.AddTransient<IProductGalleryQueries, ProductGalleryQueries>();
+            services.AddTransient<IProductQueries, ProductQueries>();   
         }
     }
 }

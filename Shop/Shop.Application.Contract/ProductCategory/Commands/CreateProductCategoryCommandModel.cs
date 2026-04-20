@@ -2,7 +2,7 @@
 
 namespace Shop.Application.Contract.ProductCategory.Commands
 {
-    public class CreateProductCategoryCommandModel: Title_Slug_Image_ImageAlt
+    public class CreateProductCategoryCommandModel: Title_Slug
     {
         public int  ParentId { get; set; }
     }

@@ -41,13 +41,15 @@ namespace Shop.Query.Queries
             if (id < 1)
             {
                 model.Title = "همه دسته بندی ها ";
-                model.productCategories = await productCategories.Select(x => new ProductCategoryQueryModel
+                model.productCategories = await productCategories
+                    .Where(p=>p.ParentId==0)
+                    .Select(x => new ProductCategoryQueryModel
                 {
                     Id = x.Id,
+                    ParentId = x.ParentId,
                     Title = x.Title,
                     Active = x.Active,
                     CreationDate = x.CreateDate.ToPersainDate(),
-                    ImageName = x.ImageName,
                     UpdateDate = x.UpdateDate.ToPersainDate(),
                 }).ToListAsync();
 
@@ -56,15 +58,15 @@ namespace Shop.Query.Queries
             {
                 model.ProductCategoryId = id;
                 var parent = await _productCategoryRepository.GetByIdAsync(id);
-                model.Title = $"تمایش زیرگروه های درسته بندی {parent.Title}";
+                model.Title = $"نمایش زیرگروه های دسته بندی {parent.Title}";
                 model.productCategories = await productCategories.Where(p => p.ParentId == parent.Id)
                .Select(x => new ProductCategoryQueryModel
                {
                    Id = x.Id,
+                   ParentId = x.ParentId,   
                    Title = x.Title,
                    Active = x.Active,
                    CreationDate = x.CreateDate.ToPersainDate(),
-                   ImageName = x.ImageName,
                    UpdateDate = x.UpdateDate.ToPersainDate(),
                }).ToListAsync();
 

@@ -3,7 +3,9 @@ using Shared.Application;
 using Shared.Application.Service;
 using Shared.Application.Validations;
 using Shop.Application.Contract.Product.Command;
+using Shop.Application.Contract.ProductCategory.Query;
 using Shop.Domain.ProductAgg;
+using Shop.Domain.ProductCategoryAgg;
 using Shop.Domain.Relations.ProductCategoryRel;
 
 
@@ -13,15 +15,13 @@ namespace Shop.Application.Commands
     {
         private readonly IProductRepository _productRepository;
         private readonly IFileService _fileService;
-        private readonly IProduct_Category_Repository _PcRelRepository;
+        private readonly IProductCategoryQueries _productCategoryQueries;
 
-        public ProductCommands(IProductRepository productRepository,
-            IFileService fileService,
-            IProduct_Category_Repository pcRelRepository)
+        public ProductCommands(IProductRepository productRepository, IFileService fileService, IProductCategoryQueries productCategoryQueries)
         {
             _productRepository = productRepository;
             _fileService = fileService;
-            _PcRelRepository = pcRelRepository;
+            _productCategoryQueries = productCategoryQueries;
         }
 
         public async Task<OperationResult> ChangeActivation(int productId)
@@ -44,7 +44,7 @@ namespace Shop.Application.Commands
             if (await _productRepository.ExistByAsync(s => s.Slug.Trim().ToLower() == command.Slug.Trim().ToLower()))
                 return new OperationResult(false, ValidationMessages.DuplicatedMessage);
 
-            if (command.CategoryIds.Count() < 1)
+            if (command.categoryIds?.Count < 1)
                 return new OperationResult(false, "لطفا حداقل یک دسته بندی برای محصول انتخاب کنید");
 
             if (command.Weight < 1)
@@ -63,8 +63,9 @@ namespace Shop.Application.Commands
             var newProduct = new Product(command.Title.Trim().ToLower(), imageName, command.ImageAlt.Trim().ToLower(), command.ShortDescription,
                 command.Text, command.Weight, command.Slug.Trim().ToLower());
 
+            //TODO how to add parent ID
             var rels = new List<Product_Category_Rel>();
-            foreach (var item in command.CategoryIds)
+            foreach (var item in command.categoryIds)
             {
                 rels.Add(new Product_Category_Rel(item));
             }
@@ -98,7 +99,7 @@ namespace Shop.Application.Commands
             if (await _productRepository.ExistByAsync(s => s.Slug == command.Slug && s.Id != command.Id))
                 return new OperationResult(false, ValidationMessages.DuplicatedMessage);
 
-            if (command.CategoryIds.Count() < 1)
+            if (command.SelectedCategory?.Count < 1)
                 return new OperationResult(false, "لطفا حداقل یک دسته بندی برای محصول انتخاب کنید");
 
             if (command.Weight < 1)
@@ -122,7 +123,7 @@ namespace Shop.Application.Commands
             }
             product.Edit(command.Title, NewImageName, command.ImageAlt.Trim().ToLower(), command.ShortDescription, command.ShortDescription, command.Weight, command.Slug);
             var rels = new List<Product_Category_Rel>();
-            foreach (var item in command.CategoryIds)
+            foreach (var item in command.SelectedCategory)
             {
                 rels.Add(new Product_Category_Rel(item));
             }
@@ -150,7 +151,10 @@ namespace Shop.Application.Commands
 
         public async Task<EditProductCommandModel> GetForEditAsync(int productId)
         {
-            return await _productRepository.GetForEditAsync(productId);
+            var prodouct = await _productRepository.GetForEditAsync(productId);
+            prodouct.Categories = await _productCategoryQueries.GetCategoriesForAddProduct();
+            return prodouct;
+
         }
     }
 }

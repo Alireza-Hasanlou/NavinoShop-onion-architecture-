@@ -1,0 +1,29 @@
+﻿@using Shop.Application.Contract.ProductCategory.Commands
+@model EditProductCategoryCommandModel
+<div class="modal-body">
+    <h4>ویرایش دسته بندی </h4>
+    <input type="hidden" value="@Model"  id="parentId" />
+    <form>
+    <div class="col  col-12 ">
+            <input type="hidden" value="@Model.ParentId" id="parentId" asp-for="ParentId" />
+            <input type="hidden" id="id" value="@Model.Id" asp-for="Id" />
+        <div class="custom-form-group">
+            <label for="productcategorytitle" onchange="makeSlug('productcategorytitle','productcategorySlug')" class="required">عنوان</label>
+            <input asp-for="Title" dir="rtl" type="text" id="productcategorytitle">
+        </div>
+    </div>
+    <div class="col  col-12 ">
+
+        <div class="custom-form-group">
+            <label for="productcategorySlug" class="required">سربرگ</label>
+            <input asp-for="Slug" dir="rtl" type="text" id="productcategorySlug">
+        </div>
+    </div>
+    <span class="text-danger" id="productcategoryvalidation"></span>
+    </form>
+</div>
+<div class="modal-footer p-4">
+    <button type="button" class="btn btn-default pull-left" onclick="close_Modal_Ajax()">خروج</button>
+    <button type="button" class="btn btn-primary" onclick="EditProductCategory()">ذخیره</button>
+</div>
+

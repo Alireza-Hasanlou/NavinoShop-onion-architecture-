@@ -19,6 +19,11 @@ namespace Shop.Infrastracture.Persistence.Repository
             _shopContext = context;
         }
 
+        public async Task<Product> GetForAddRelToCategory(int id)
+        {
+            return await _shopContext.Products.Include(x => x.Poduct_Category_Rels).SingleAsync(i => i.Id == id);
+        }
+
         public async Task<EditProductCommandModel> GetForEditAsync(int productId)
         {
             var product = await _shopContext.Products.Where(i => i.Id == productId)
@@ -34,8 +39,9 @@ namespace Shop.Infrastracture.Persistence.Repository
                        Slug = i.Slug,
                    }).SingleAsync();
 
-            product.CategoryIds = await _shopContext.product_Category_Rels.Where(i => i.ProductId == productId)
+            product.SelectedCategory = await _shopContext.product_Category_Rels.Where(i => i.ProductId == productId)
                 .Select(c => c.CategoryId)
+                 .Distinct()
                 .ToListAsync();
             return product;
 

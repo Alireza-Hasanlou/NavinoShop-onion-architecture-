@@ -54,6 +54,24 @@
                 </ul>
             </li>
             <li><a href="/Admin/Transactions/Index"><i class="fa fa-book"></i> <span>تراکنش ها</span></a></li>
+            <li class="@(currentPath.Contains("/admin/products")|| currentPath.Contains("/admin/productcategories")? "active" : "") treeview">
+                                                                                              
+                <a href="#">
+                    <i class="fa fa-newspaper-o"></i> <span>مدیریت محصولات</span>
+                    <span class="pull-left-container">
+                        <i class="fa fa-angle-right pull-left"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class=@(currentPath.Contains("/admin/productcategories/") ? "active" : "")>
+                        <a href="/Admin/ProductCategories/Index"><i class="fa fa-newspaper-o"></i>  دسته بندی ها</a>
+                    </li>
+                    <li class=@(currentPath.Contains("/admin/products/") ? "active" : "")>
+                        <a href="/Admin/Products/Index"><i class="fa fa-newspaper-o"></i> محصولات</a>
+                    </li>
+                </ul>
+            </li>
+
             <li class="@(currentPath.Contains("/admin/blogs")|| currentPath.Contains("/admin/blogcategories")
                                                                               ? "active" : "") treeview">
                 <a href="#">
