@@ -2,6 +2,8 @@
 using Shared.Application;
 using Shop.Application.Contract.ProductCategory.Query;
 using Shop.Domain.ProductCategoryAgg;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Threading.Tasks;
 
 
@@ -22,17 +24,42 @@ namespace Shop.Query.Queries
             return productCategory != null && productCategory.ParentId > 0 ? true : false;
         }
 
-        public async Task<List<ProductCategoryForAddProduct>> GetCategoriesForAddProduct()
+
+
+        public async Task<List<CategoryTreeItem>> GetCategoriesForAddProduct()
         {
-            return await _productCategoryRepository.GetAll()
-                .Select(x => new ProductCategoryForAddProduct
-                {
-                    Id = x.Id,
-                    Parent = x.ParentId,
-                    Title = x.Title,
-                })
-                .ToListAsync();
+            var productCategories = await _productCategoryRepository.GetAll().ToListAsync();
+
+            if (productCategories == null || !productCategories.Any())
+                return new List<CategoryTreeItem>();
+
+            var lookup = productCategories.ToLookup(c => c.ParentId);
+
+            List<CategoryTreeItem> BuildTree(int parentId, int level = 0)
+            {
+                return lookup[parentId]
+                    .Select(c => new CategoryTreeItem
+                    {
+                        Id = c.Id,
+                        Title = c.Title,
+                        ParentId = c.ParentId,
+                        Level = level,
+                        HasChildren = lookup[c.Id].Any(),
+                        IsChecked = false,
+                        Children = BuildTree(c.Id, level + 1) 
+                    })
+                    .ToList();
+            }
+            var categoryTree = BuildTree(0, 0);
+
+            return categoryTree;
+
         }
+
+
+
+
+
 
         public async Task<ProductCategoryAdminPageQueryModel> GetCategoriesForAdmin(int id)
         {
@@ -42,16 +69,17 @@ namespace Shop.Query.Queries
             {
                 model.Title = "همه دسته بندی ها ";
                 model.productCategories = await productCategories
-                    .Where(p=>p.ParentId==0)
+                    .Where(p => p.ParentId == 0)
+                    .OrderByDescending(c => c.CreateDate)
                     .Select(x => new ProductCategoryQueryModel
-                {
-                    Id = x.Id,
-                    ParentId = x.ParentId,
-                    Title = x.Title,
-                    Active = x.Active,
-                    CreationDate = x.CreateDate.ToPersainDate(),
-                    UpdateDate = x.UpdateDate.ToPersainDate(),
-                }).ToListAsync();
+                    {
+                        Id = x.Id,
+                        ParentId = x.ParentId,
+                        Title = x.Title,
+                        Active = x.Active,
+                        CreationDate = x.CreateDate.ToPersainDate(),
+                        UpdateDate = x.UpdateDate.ToPersainDate(),
+                    }).ToListAsync();
 
             }
             else
@@ -63,7 +91,7 @@ namespace Shop.Query.Queries
                .Select(x => new ProductCategoryQueryModel
                {
                    Id = x.Id,
-                   ParentId = x.ParentId,   
+                   ParentId = x.ParentId,
                    Title = x.Title,
                    Active = x.Active,
                    CreationDate = x.CreateDate.ToPersainDate(),
@@ -88,4 +116,6 @@ namespace Shop.Query.Queries
 
 
     }
+
+
 }

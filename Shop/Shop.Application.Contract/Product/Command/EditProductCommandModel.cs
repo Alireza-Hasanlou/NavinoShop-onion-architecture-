@@ -11,7 +11,7 @@ namespace Shop.Application.Contract.Product.Command
         public int Weight { get; set; }
         public string ImageName { get; set; }
         public List<int>? SelectedCategory { get; set; }
-        public List<ProductCategoryForAddProduct>? Categories { get; set; }
+        public List<CategoryTreeItem> Categories { get; set; } = new();
     }
 
 

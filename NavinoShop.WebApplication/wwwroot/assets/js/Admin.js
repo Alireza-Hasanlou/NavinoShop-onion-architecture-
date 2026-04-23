@@ -359,6 +359,7 @@ function EditProductCategory() {
 // Main create product function
 function CreateProduct() {
     // اعتبارسنجی
+
     let isValid = true;
     $('.product-form-validation').hide();
     $('.product-form-control, .product-form-textarea, .picture__input').removeClass('is-invalid');
@@ -436,16 +437,12 @@ function CreateProduct() {
 
     // ارسال دسته‌بندی‌ها به صورت آرایه
     var selectedCategories = [];
-    $('.category-checkbox:checked').each(function () {
+    $('.pct-checkbox:checked').each(function () {
         var catId = parseInt($(this).val());
         selectedCategories.push(catId);
         formData.append("CategoryIds", catId); // ارسال هر کدام جداگانه
     });
-
-    // برای دیباگ
-    console.log("دسته‌بندی‌های انتخاب شده:", selectedCategories);
-    console.log("تعداد دسته‌بندی‌ها:", selectedCategories.length);
-
+    
     // ارسال درخواست Ajax
     $.ajax({
         url: "/Admin/Products/Create",
@@ -571,16 +568,23 @@ function EditProduct() {
 
 
     // Collect selected categories
-    const selectedCategories = [];
-    $('.category-checkbox:checked').each(function () {
-        const catId = parseInt($(this).val());
-        if (!isNaN(catId)) {
-            selectedCategories.push(catId);
-            formData.append("SelectedCategory", catId);
-        }
+    //const selectedCategories = [];
+    //$('.category-checkbox:checked').each(function () {
+    //    const catId = parseInt($(this).val());
+    //    if (!isNaN(catId)) {
+    //        selectedCategories.push(catId);
+    //        formData.append("SelectedCategory", catId);
+    //    }
+    //});
+    //formData.append("CategoryIdsJson", JSON.stringify(selectedCategories));
+    var selectedCategories = [];
+    $('.pct-checkbox:checked').each(function () {
+        var catId = parseInt($(this).val());
+        selectedCategories.push(catId);
+        formData.append("SelectedCategory", catId); // ارسال هر کدام جداگانه
     });
-    formData.append("CategoryIdsJson", JSON.stringify(selectedCategories));
 
+    
     // Get the submit button
     const $submitButton = $('.btn-primary');
     const originalButtonText = $submitButton.text();
@@ -601,10 +605,7 @@ function EditProduct() {
         success: function (response) {
             if (response.success) {
                 // Close modal
-                const $modal = $("#modal-default");
-                if ($modal.length) {
-                    $modal.modal("hide");
-                }
+                $("#modal-default").modal("hide");
 
                 // Show success message
                 const successMessage = response.message || "محصول با موفقیت ویرایش شد";
@@ -631,11 +632,9 @@ function EditProduct() {
                 }
 
                 if (typeof AlerSweetWithTimer === 'function') {
+                    $("#modal-default").modal("hide");
                     AlerSweetWithTimer(errorMessage, "error", "center");
-                } else {
-                    alert(errorMessage);
-                }
-
+                } 
                 // Highlight fields with server-side errors if provided
                 if (response.invalidFields && Array.isArray(response.invalidFields)) {
                     response.invalidFields.forEach(field => {
@@ -685,7 +684,6 @@ function EditProduct() {
 (function ($) {
     'use strict';
 
-    // تابع شمارش کاراکترها (قابل استفاده برای هر textarea/input)
     window.CharCounter = function (selector, counterSelector, maxLength) {
         var $element = $(selector);
         var $counter = $(counterSelector);
@@ -707,60 +705,129 @@ function EditProduct() {
         }
     };
 
-    // تابع ساخت خودکار Slug (قابل استفاده برای هر جفت عنوان/slug)
-    window.AutoSlug = function (titleSelector, slugSelector, options) {
-        var $title = $(titleSelector);
-        var $slug = $(slugSelector);
-        var settings = $.extend({
-            maxLength: 300,
-            forceLowercase: true,
-            replaceSpace: '-',
-            removeSpecialChars: true
-        }, options);
 
-        if ($title.length && $slug.length) {
-            $title.on('blur', function () {
-                if (!$slug.val() || !$slug.val().trim()) {
-                    var slug = $(this).val();
 
-                    if (settings.forceLowercase) {
-                        slug = slug.toLowerCase();
-                    }
-
-                    if (settings.removeSpecialChars) {
-                        slug = slug.replace(/[^\w\u0600-\u06FF\s]/g, '');
-                    }
-
-                    if (settings.replaceSpace) {
-                        slug = slug.replace(/\s+/g, settings.replaceSpace);
-                        slug = slug.replace(new RegExp(settings.replaceSpace + '+', 'g'), settings.replaceSpace);
-                    }
-
-                    slug = slug.replace(/^-|-$/g, '');
-                    slug = slug.substring(0, settings.maxLength);
-
-                    $slug.val(slug);
-                }
-            });
-        }
-    };
-
-    // تابع شمارش چک‌باکس‌ها (قابل استفاده برای هر گروه چک‌باکس)
-    window.CheckboxCounter = function (checkboxSelector, counterSelector, onChange) {
-        function updateCount() {
-            var checkedCount = $(checkboxSelector + ':checked').length;
-            $(counterSelector).text(checkedCount);
-
-            if (typeof onChange === 'function') {
-                onChange(checkedCount);
-            }
-        }
-
-        var $checkboxes = $(checkboxSelector);
-        if ($checkboxes.length) {
-            $checkboxes.on('change', updateCount);
-            updateCount();
-        }
-    };
+    
 
 })(jQuery);
+
+//ProductCategoryTree
+function initProductCategoryTree() {
+    // باز و بسته شدن شاخه‌ها با انیمیشن
+    $('.pct-toggle-icon').off('click').on('click', function (e) {
+        e.stopPropagation();
+        const $icon = $(this);
+        const $children = $icon.closest('.pct-node').find('.pct-children');
+
+        $icon.toggleClass('collapsed');
+
+        if ($children.hasClass('collapsed')) {
+            $children.removeClass('collapsed');
+            $children.slideDown(300, function () {
+                $(this).css('display', '');
+            });
+        } else {
+            $children.addClass('collapsed');
+            $children.slideUp(300);
+        }
+    });
+
+    // کلیک روی هدر گره برای باز/بسته شدن
+    $('.pct-node-header').off('click').on('click', function (e) {
+        if (!$(e.target).is('input') && !$(e.target).is('label') && !$(e.target).closest('label').length) {
+            const $toggleIcon = $(this).find('.pct-toggle-icon');
+            if ($toggleIcon.length) {
+                $toggleIcon.trigger('click');
+            }
+        }
+    });
+
+    // رویداد تیک خوردن چکباکس‌ها
+    $('.pct-checkbox').off('change').on('change', function () {
+        const $checkbox = $(this);
+        const isChecked = $checkbox.is(':checked');
+        const parentId = $checkbox.data('parent');
+        const currentId = $checkbox.val();
+
+        if (isChecked) {
+            // تیک زدن والدین
+            checkParentsInTree(parentId);
+            // تیک زدن فرزندان
+            checkChildrenInTree(currentId, true);
+        } else {
+            // برداشتن تیک فرزندان
+            checkChildrenInTree(currentId, false);
+            // بررسی وضعیت والدین
+            updateParentStateInTree(parentId);
+        }
+
+        // به روزرسانی تعداد
+        const selectedCount = $('.pct-checkbox:checked').length;
+        $('#selectedCount').text(selectedCount);
+    });
+
+    // اطمینان از بسته بودن همه زیرمجموعه‌ها در ابتدا
+    $('.pct-children').addClass('collapsed').hide();
+    $('.pct-toggle-icon').addClass('collapsed');
+}
+
+// تابع تیک زدن والدین
+function checkParentsInTree(parentId) {
+    if (parentId && parentId !== 0) {
+        const $parentCheckbox = $(`#pct-cat-${parentId}`);
+        if ($parentCheckbox.length && !$parentCheckbox.is(':checked')) {
+            $parentCheckbox.prop('checked', true);
+            const grandParentId = $parentCheckbox.data('parent');
+            if (grandParentId && grandParentId !== 0) {
+                checkParentsInTree(grandParentId);
+            }
+        }
+    }
+}
+
+// تابع تیک زدن یا برداشتن فرزندان (بازگشتی)
+function checkChildrenInTree(categoryId, isChecked) {
+    const $parentNode = $(`#pct-cat-${categoryId}`).closest('.pct-node');
+    const $childCheckboxes = $parentNode.find('.pct-children .pct-checkbox');
+
+    $childCheckboxes.each(function () {
+        const $child = $(this);
+        if ($child.is(':checked') !== isChecked) {
+            $child.prop('checked', isChecked);
+            const childId = $child.val();
+            // فراخوانی بازگشتی برای فرزندان更深
+            const $grandChildren = $child.closest('.pct-node').find('.pct-children .pct-checkbox');
+            if ($grandChildren.length > 0) {
+                checkChildrenInTree(childId, isChecked);
+            }
+        }
+    });
+}
+
+// تابع بررسی وضعیت والدین
+function updateParentStateInTree(parentId) {
+    if (parentId && parentId !== 0) {
+        const $parentCheckbox = $(`#pct-cat-${parentId}`);
+        const $parentNode = $parentCheckbox.closest('.pct-node');
+        const $siblingCheckboxes = $parentNode.find('.pct-children .pct-checkbox');
+
+        const totalSiblings = $siblingCheckboxes.length;
+        const checkedSiblings = $siblingCheckboxes.filter(':checked').length;
+        const allUnchecked = checkedSiblings === 0;
+        const allChecked = checkedSiblings === totalSiblings && totalSiblings > 0;
+
+        if (allUnchecked && $parentCheckbox.is(':checked')) {
+            $parentCheckbox.prop('checked', false);
+            const grandParentId = $parentCheckbox.data('parent');
+            if (grandParentId && grandParentId !== 0) {
+                updateParentStateInTree(grandParentId);
+            }
+        } else if (allChecked && !$parentCheckbox.is(':checked')) {
+            $parentCheckbox.prop('checked', true);
+            const grandParentId = $parentCheckbox.data('parent');
+            if (grandParentId && grandParentId !== 0) {
+                checkParentsInTree(grandParentId);
+            }
+        }
+    }
+}

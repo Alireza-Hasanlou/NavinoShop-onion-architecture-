@@ -1,0 +1,45 @@
+﻿@using Shop.Application.Contract.ProductCategory.Query
+@model CategoryTreeItem
+
+@{
+    var nodeId = $"pct-node-{Model.Id}";
+    var hasChildren = Model.Children != null && Model.Children.Any();
+    var rootClass = Model.ParentId == 0 ? "pct-node-root" : "";
+}
+
+<div class="pct-node @rootClass" id="@nodeId" data-id="@Model.Id" data-parent="@Model.ParentId">
+    <div class="pct-node-header">
+        <div class="pct-checkbox-wrapper">
+            <input type="checkbox"
+                   class="pct-checkbox"
+                   id="pct-cat-@Model.Id"
+                   name="categoryIds"
+                   value="@Model.Id"
+                   data-id="@Model.Id"
+                   data-parent="@Model.ParentId"
+                   @(Model.IsChecked ? "checked" : "") />
+            <label class="pct-label" for="pct-cat-@Model.Id">
+                <span class="pct-title">@Model.Title</span>
+            </label>
+        </div>
+        @if (hasChildren)
+        {
+            <span class="pct-toggle-icon" title="باز/بسته کردن زیرمجموعه">▼</span>
+            <span class="pct-children-count">@Model.Children.Count</span>
+        }
+        else
+        {
+            <span class="pct-leaf-icon">●</span>
+        }
+    </div>
+
+    @if (hasChildren)
+    {
+        <div class="pct-children collapsed" style="display: none;">
+            @foreach (var child in Model.Children)
+            {
+                @await Html.PartialAsync("_CategoryTreeNodePartial", child)
+            }
+        </div>
+    }
+</div>

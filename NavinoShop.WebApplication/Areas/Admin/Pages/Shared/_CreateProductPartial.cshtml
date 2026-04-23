@@ -1,5 +1,5 @@
 ﻿@using Shop.Application.Contract.ProductCategory.Query
-@model List<ProductCategoryForAddProduct>
+@model List<CategoryTreeItem>
 <div class="product-form-wrapper">
 
     <div class="product-form-body">
@@ -12,7 +12,7 @@
                         <label class="product-form-label">
                             عنوان <span class="required-star">*</span>
                         </label>
-                        <input type="text" class="product-form-control" id="Title" name="Title"
+                        <input type="text" class="product-form-control" onchange="makeSlug('Title','Slug')" id="Title" name="Title"
                                placeholder="عنوان محصول" maxlength="250">
                         <div class="product-form-info"><span id="titleCount">0</span>/250 کاراکتر</div>
                         <div class="product-form-validation" data-for="Title">لطفا عنوان را وارد کنید</div>
@@ -40,7 +40,6 @@
                         <div class="product-form-validation" data-for="ShortDescription">لطفا توضیح مختصر را وارد کنید</div>
                     </div>
 
-                    <!-- دسته بندی ها با قابلیت اسکرول -->
                     <div class="scroll-checkbox-wrapper">
                         <div class="scroll-checkbox-container">
                             <div class="scroll-checkbox-box">
@@ -49,17 +48,13 @@
                                     <span class="scroll-checkbox-count" id="selectedCount">0</span>
                                 </div>
 
-                                @foreach (var item in Model)
-                                {
-                                    <div class="scroll-checkbox-item">
-                                        <div class="custom-checkbox-container">
-                                            <input class="custom-checkbox-input category-checkbox" id="cat-@item.Id" name="categoryIds" type="checkbox" value="@item.Id">
-                                            <label class="custom-checkbox-label" for="cat-@item.Id">
-                                                <span class="custom-checkbox-text">@item.Title</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                }
+                                <!-- درخت دسته بندی حرفه‌ای -->
+                                <div class="product-category-tree" id="productCategoryTree">
+                                    @foreach (var item in Model.Where(x => x.ParentId == 0))
+                                    {
+                                        @await Html.PartialAsync("_CategoryTreeNodePartial", item)
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -99,18 +94,16 @@
                     </div>
 
                     <!-- آپلود تصویر -->
-                    <div class="col  col-sm-12 col-12">
+                    <div class="col col-sm-12 col-12">
                         <div id="img-container">
                             <label for="upload-file">
                                 تصویر محصول
                                 <div class="picture-uploader" data-url="">
                                     <div class="picture__image">Choose an image</div>
-
                                     <input type="file" id="upload-file" class="picture__input" accept="image/*" />
                                 </div>
                             </label>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -123,6 +116,8 @@
     <button type="button" class="btn btn-primary" onclick="CreateProduct()">ذخیره</button>
 </div>
 
+
+
 <script>
     $(document).ready(function() {
         $(".picture-uploader").imageUploader();
@@ -130,11 +125,13 @@
         CharCounter('#ShortDescription', '#shortDescCount', 600);
         CharCounter('#Title', '#titleCount', 250);
         CharCounter('#ImageAlt', '#AltCount', 250);
-         CharCounter('#Slug', '#slugCount', 600);
+        CharCounter('#Slug', '#slugCount', 600);
 
-        AutoSlug('#Title', '#Slug', { maxLength: 300 });
+    
 
-        CheckboxCounter('.category-checkbox', '#selectedCount');
+        // راه اندازی درخت دسته بندی حرفه‌ای
+        initProductCategoryTree();
+
     });
-</script>
 
+</script>

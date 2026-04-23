@@ -4,7 +4,9 @@
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public int Parent { get; set; }
+        public int ParentId { get; set; }
+        public List<CategoryTreeItem> Children { get; set; } = new();
+
     }
 }
 

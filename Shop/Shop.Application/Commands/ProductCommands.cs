@@ -153,8 +153,26 @@ namespace Shop.Application.Commands
         {
             var prodouct = await _productRepository.GetForEditAsync(productId);
             prodouct.Categories = await _productCategoryQueries.GetCategoriesForAddProduct();
+            CheckedProduct(prodouct.Categories, prodouct.SelectedCategory);
             return prodouct;
 
+
+
+        }
+
+        private void CheckedProduct(List<CategoryTreeItem> categories, List<int> selectedCategoris)
+        {
+            foreach (var item in categories)
+            {
+                if (selectedCategoris.Contains(item.Id))
+                {
+                    item.IsChecked = true;
+                }
+                if (item.Children.Any())
+                {
+                    CheckedProduct(item.Children, selectedCategoris);
+                }
+            }
         }
     }
 }

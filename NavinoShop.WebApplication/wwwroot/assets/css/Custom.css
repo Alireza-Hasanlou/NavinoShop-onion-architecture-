@@ -2643,143 +2643,6 @@ span.custom-checkbox-shine:after {
     display: none;
 }
 
-.scroll-checkbox-wrapper {
-    margin-top: 20px;
-}
-
-.scroll-checkbox-container {
-    padding: 3px;
-}
-
-.scroll-checkbox-box {
-    background: white;
-    border-radius: 14px;
-    padding: 12px 20px;
-    max-height: 250px;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-    .scroll-checkbox-box::-webkit-scrollbar {
-        width: 6px;
-    }
-
-    .scroll-checkbox-box::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
-    }
-
-    .scroll-checkbox-box::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
-        border-radius: 10px;
-    }
-
-        .scroll-checkbox-box::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
-
-.scroll-checkbox-item {
-    padding: 10px 0;
-    border-bottom: 1px solid #e5e7eb;
-    transition: all 0.2s;
-}
-
-    .scroll-checkbox-item:last-child {
-        border-bottom: none;
-    }
-
-    .scroll-checkbox-item:hover {
-        background: #f9fafb;
-        padding-right: 5px;
-    }
-
-.custom-checkbox-container {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-}
-
-.custom-checkbox-input {
-    display: none;
-}
-
-.custom-checkbox-label {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    width: 100%;
-    margin: 0;
-}
-
-.custom-checkbox-text {
-    font-size: 14px;
-    color: #374151;
-    font-weight: 500;
-    user-select: none;
-}
-
-.custom-checkbox-label::before {
-    content: "";
-    width: 18px;
-    height: 18px;
-    border: 2px solid #d1d5db;
-    border-radius: 6px;
-    background: white;
-    transition: all 0.2s;
-    display: inline-block;
-}
-
-.custom-checkbox-input:checked + .custom-checkbox-label::before {
-    background: #8b5cf6;
-    border-color: #8b5cf6;
-    content: "✓";
-    color: white;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.custom-checkbox-input:checked + .custom-checkbox-label .custom-checkbox-text {
-    color: #8b5cf6;
-}
-
-.scroll-checkbox-header {
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-    border-bottom: 2px solid #e5e7eb;
-    font-weight: bold;
-    color: #374151;
-    font-size: 13px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.scroll-checkbox-count {
-    background: #f3f4f6;
-    padding: 2px 8px;
-    border-radius: 20px;
-    font-size: 11px;
-    color: #6b7280;
-}
-
-.scroll-checkbox-select-all {
-    background: none;
-    border: none;
-    color: #8b5cf6;
-    font-size: 12px;
-    cursor: pointer;
-    padding: 0;
-    font-weight: 500;
-}
-
-    .scroll-checkbox-select-all:hover {
-        text-decoration: underline;
-    }
-
 .product-modal .modal-dialog {
     max-width: 95%;
     width: 100%;
@@ -2804,32 +2667,190 @@ span.custom-checkbox-shine:after {
     padding: 20px;
 }
 
-    .product-modal .modal-body::-webkit-scrollbar {
-        width: 8px;
+/* ========== ProductCategoryTree ========== */
+/* کانتینر اصلی درخت */
+.product-category-tree {
+    padding: 8px;
+    max-height: 450px;
+    overflow-y: auto;
+    background: #fafbfc;
+    border-radius: 8px;
+}
+
+/* اسکرول بار زیبا */
+.product-category-tree::-webkit-scrollbar {
+    width: 6px;
+}
+
+.product-category-tree::-webkit-scrollbar-track {
+    background: #e9ecef;
+    border-radius: 10px;
+}
+
+.product-category-tree::-webkit-scrollbar-thumb {
+    background: #c0c4c8;
+    border-radius: 10px;
+}
+
+    .product-category-tree::-webkit-scrollbar-thumb:hover {
+        background: #a0a4a8;
     }
 
-    .product-modal .modal-body::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
+/* گره درخت */
+.pct-node {
+    margin: 4px 0;
+    list-style: none;
+}
+
+/* هدر گره */
+.pct-node-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    border-radius: 6px;
+    background: white;
+    border: 1px solid transparent;
+}
+
+    .pct-node-header:hover {
+        background: linear-gradient(95deg, #f0f4ff 0%, #f8f9ff 100%);
+        border-color: #e0e7ff;
+        transform: translateX(-2px);
     }
 
-    .product-modal .modal-body::-webkit-scrollbar-thumb {
-        background: #888;
-        border-radius: 10px;
+/* کانتینر چکباکس */
+.pct-checkbox-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* چکباکس سفارشی */
+.pct-checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #6366f1;
+    transition: all 0.2s;
+}
+
+    .pct-checkbox:hover {
+        transform: scale(1.05);
     }
 
-@media (max-width: 768px) {
-    .product-form-row {
-        flex-direction: column;
-        gap: 0;
+/* لیبل */
+.pct-label {
+    cursor: pointer;
+    margin: 0;
+    user-select: none;
+}
+
+.pct-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1e293b;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.pct-node-header:hover .pct-title {
+    color: #6366f1;
+}
+
+/* آیکون باز/بسته */
+.pct-toggle-icon {
+    cursor: pointer;
+    padding: 6px 10px;
+    font-size: 11px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+    color: #94a3b8;
+    background: #f1f5f9;
+    border-radius: 6px;
+    margin-right: 5px;
+}
+
+    .pct-toggle-icon:hover {
+        background: #e2e8f0;
+        color: #6366f1;
     }
 
-    .product-form-body {
-        padding: 20px;
+    .pct-toggle-icon.collapsed {
+        transform: rotate(-90deg);
     }
 
-    .scroll-checkbox-box {
-        max-height: 200px;
+/* آیکون برگ (بدون فرزند) */
+.pct-leaf-icon {
+    padding: 6px 10px;
+    font-size: 11px;
+    color: #cbd5e1;
+    margin-right: 5px;
+}
+
+/* فرزندان درخت */
+.pct-children {
+    margin-right: 28px;
+    padding-right: 12px;
+    border-right: 2px solid #e2e8f0;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+    .pct-children.collapsed {
+        display: none;
+    }
+
+/* استایل برای گره‌های سطح اول */
+.pct-node-root > .pct-node-header {
+    background: linear-gradient(95deg, #f8fafc 0%, #ffffff 100%);
+    border: 1px solid #e2e8f0;
+}
+
+    .pct-node-root > .pct-node-header .pct-title {
+        font-weight: 600;
+        color: #0f172a;
+    }
+
+/* استایل برای گره‌های انتخاب شده */
+.pct-checkbox:checked ~ .pct-label .pct-title {
+    color: #6366f1;
+    font-weight: 600;
+}
+
+/* افکت ریپل برای کلیک */
+.pct-node-header:active {
+    transform: scale(0.99);
+}
+
+/* انیمیشن باز شدن */
+@@keyframes pctFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
+
+.pct-node {
+    animation: pctFadeIn 0.25s ease-out;
+}
+
+/* Badge تعداد فرزندان */
+.pct-children-count {
+    background: #e2e8f0;
+    color: #475569;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 20px;
+    margin-right: 8px;
+}
+
 
