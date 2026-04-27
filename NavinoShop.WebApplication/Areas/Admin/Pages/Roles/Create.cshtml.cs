@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using NavinoShop.WebApplication.Utility.ViewModels;
 using Shared.Application.Validations;
 using Users.Application.Contract.RoleService.Command;
 using Users.Application.Contract.RoleService.Query;

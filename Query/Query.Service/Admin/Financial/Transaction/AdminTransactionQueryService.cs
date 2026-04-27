@@ -74,8 +74,9 @@ namespace Query.Service.Admin.Financial.Transaction
                     RefId = t.RefId,
                     UserName = "",
                     Mobile = "",
+                    transationBy_Id = t.TransationById,
                     Price = t.Price,
-                    Description=t.Description,
+                    Description = t.Description,
                     TransactionDate = t.CreateDate.ToPersainDate(),
                     TransactionSource = t.TransactionSource,
                     TransactionType = t.TransactionType,
@@ -83,7 +84,7 @@ namespace Query.Service.Admin.Financial.Transaction
                     transactionStatus = t.Status
                 })
                 .ToListAsync();
-
+            var userIds = await transactions.Select(u => new { u.UserId, u.TransationById }).ToListAsync();
             if (userId > 0)
             {
                 var user = await _userRepository.GetByIdAsync(userId);
@@ -97,16 +98,19 @@ namespace Query.Service.Admin.Financial.Transaction
             }
             else
             {
-                var userIds = await transactions.Select(u => u.UserId).ToListAsync();
-                var users = await _userRepository.GetUsersByIds(userIds);
+
+                var users = await _userRepository.GetUsersByIds(userIds.Select(u => u.UserId).ToList());
+                var transationbys = await _userRepository.GetUsersByIds(userIds.Select(u => u.TransationById).ToList());
                 foreach (var item in model.Transactions)
                 {
                     var user = users.Single(i => i.Id.Equals(item.UserId));
                     item.UserName = !string.IsNullOrEmpty(user.FullName) ? user.FullName : "فاقد نام کاربری!";
                     item.Mobile = user.Mobile;
+                    item.transationBy_Name = users.Single(i => i.Id.Equals(item.transationBy_Id)).FullName;
+
                 }
 
-               
+
             }
             return model;
         }

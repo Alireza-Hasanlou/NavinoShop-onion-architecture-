@@ -9,6 +9,8 @@ namespace Shared.Domain.Enums
     public enum TransactionPortal
     {
         زرین_پال,
+        به_پرداخت_ملت,
+        سامان,
         دستی_ادمین
     }
 

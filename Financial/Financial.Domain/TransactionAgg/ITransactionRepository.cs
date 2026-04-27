@@ -9,6 +9,6 @@ namespace Financial.Domain.TransactionAgg
 {
     public interface ITransactionRepository : IGenericRepository<Transaction, long>
     {
-        Task<Transaction> GetFirstByUserIdAsync(int userId);
+       
     }
 }

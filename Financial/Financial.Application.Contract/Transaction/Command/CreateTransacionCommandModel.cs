@@ -5,12 +5,12 @@ namespace Financial.Application.Contract.Transaction.Command
     public class CreateTransacionCommandModel
     {
         public int UserId { get; set; }
-        public int OwnerId { get; set; }
+        public int TransationById { get; set; }
         public string Authority { get; set; }
         [DisplayName("توضیحات")]
         public string? Description { get; set; }
         [DisplayName("مبلِغ")]
-        public decimal Price { get; set; }
+        public int Price { get; set; }
         [DisplayName("درگاه")]
         public TransactionPortal Portal { get; set; }
         public TransactionFor TransactionFor { get; set; }

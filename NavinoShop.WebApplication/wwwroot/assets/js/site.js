@@ -1,6 +1,27 @@
 ﻿
 
 
+$(document).ready(function () {
+    $(document).ajaxStart(function () {
+        Loading();
+    });
+    $(document).ajaxStop(function () {
+        EndLoading();
+    });
+    $(document).ajaxSend(function (event, jqXHR, settings) {
+        Loading();
+    });
+
+    $(document).ajaxComplete(function (event, jqXHR, settings) {
+        EndLoading();
+    });
+
+  
+    $(document).ajaxError(function (event, jqXHR, settings, error) {
+        EndLoading();
+        console.log('خطا در درخواست:', error);
+    });
+});
 // ===============================
 // 🧮 Validation Helpers
 // ===============================
@@ -294,12 +315,12 @@ function AlerSweetWithTimer(title, icon, position) {
 // ⏳ Loader
 // ===============================
 function Loding() {
-    const loader = document.getElementById("loader");
+    const loader = $("loader");
     if (loader) loader.style.display = "flex";
 }
 
 function EndLoading() {
-    const loader = document.getElementById("loader");
+    const loader = $("#loader");
     if (loader) loader.style.display = "none";
 }
 

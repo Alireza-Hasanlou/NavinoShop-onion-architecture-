@@ -21,7 +21,7 @@ namespace Financial.Query.Handler
             return new TransactionDetailDto
             {
                 UserId = transaction.UserId,
-                OwnerId = transaction.OwnerId,
+                TransationById = transaction.TransationById,
                 Authority = transaction.Authority,
                 Portal = transaction.Portal,
                 Price = transaction.Price,
@@ -35,7 +35,7 @@ namespace Financial.Query.Handler
         {
             pageId++;
             var model = new TransactionListLoading();
-            var transations = _transactionRepository.GetAllBy(t => t.OwnerId == UserId
+            var transations = _transactionRepository.GetAllBy(t => t.UserId == UserId
             && t.TransactionFor == transactionFor
             && t.Status == TransactionStatus.موفق);
             model.GetData(transations, pageId, 3, 5);
@@ -51,6 +51,21 @@ namespace Financial.Query.Handler
                     TransactionDate = t.CreateDate.ToPersainDate()
                 }).ToList();
             return model;
+        }
+
+        public async Task<TransationViewModel> GetTransationForPayment(long transationId)
+        {
+            var transation= await _transactionRepository.GetByIdAsync(transationId);
+            return new TransationViewModel
+            {
+                Id = transation.Id,
+                UserId = transation.UserId,
+                RefId = transation.RefId,
+                Portal = transation.Portal,
+                Price = transation.Price,
+                Status = transation.Status,
+                TransactionFor = transation.TransactionFor,
+            };
         }
     }
 }

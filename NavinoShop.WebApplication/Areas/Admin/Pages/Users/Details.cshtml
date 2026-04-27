@@ -34,7 +34,7 @@
             </div>
 
             <div class="info-grid">
-                <input type="hidden" value="@Model.UserDetailModel.UserId" id="ownerId" />
+                <input type="hidden" value="@Model.UserDetailModel.UserId" id="UserId" />
                 <div class="info-item">
                     <span class="info-label"><span class="icon-placeholder">👤</span> نام و نام خانوادگی</span>
                     <span class="info-value">@Model.UserDetailModel.FullName</span>
@@ -89,7 +89,7 @@
                 </div>
             </div>
             <div class="profile-footer">
-                <a onclick="open_Modal_Ajax('/Admin/Users/RechargeWallet')" class="btn  btn-lg" style="background: #020024;color:whitesmoke;
+                <a onclick="open_Modal_Ajax('/Admin/Users/RechargeWallet','')" class="btn  btn-lg" style="background: #020024;color:whitesmoke;
                      background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(34, 45, 50, 1) 35%, rgba(17, 78, 92, 1) 56%);
                   "> <span class="icon-placeholder">+</span>افزایش موجودی</a>
 

@@ -26,25 +26,35 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Users
         {
             return Partial("_RechargeWalletPartialView");
         }
-        public async Task<JsonResult> OnPost(decimal Amount, int OwnerId, string Description)
+        public async Task<JsonResult> OnPost(int UserId, int Amount, string Description)
         {
-            var userId = _authService.GetLoginUserId();
+            var AdminId = _authService.GetLoginUserId();
 
-            var Depositres = await _walletCommands.DepositAsync(userId, Amount, OwnerId,
-             TransactionFor.Wallet,
-             TransactionSource.توسط_ادمین,
-             TransactionType.واریز,
-             TransactionPortal.دستی_ادمین,
-             Description, "");
-            if (Depositres.Success)
+            var transationRes = await _transactionCommands.CreateAsync(new CreateTransacionCommandModel
             {
+                UserId = UserId,
+                Description = Description,
+                Portal = TransactionPortal.دستی_ادمین,
+                TransactionFor = TransactionFor.Wallet,
+                TransactionSource = TransactionSource.توسط_ادمین,
+                Price = Amount,
+                TransactionType = TransactionType.واریز,
+                Authority = "",
+                TransationById = AdminId
 
-                return new JsonResult(new { success = true, message = "کیف پول کاربر با موفقیت شارژ شد" });
+            });
+            if (transationRes.Success)
+            {
+              var transationId= Convert.ToInt64(transationRes.Data);
+                var Depositres = await _walletCommands.DepositAsync(UserId, Amount, transationId);
+                if (Depositres.Success)
+                    return new JsonResult(new { success = true, message = "کیف پول کاربر با موفقیت شارژ شد" });
 
+                return new JsonResult(new { success = false, message = Depositres.Message });
             }
             else
             {
-                return new JsonResult(new { success = false, message = Depositres.Message });
+                return new JsonResult(new { success = false, message = transationRes.Message });
             }
 
         }

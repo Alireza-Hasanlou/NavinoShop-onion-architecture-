@@ -20,36 +20,22 @@ namespace Financial.Application.Handlers.WalletHandler
             _transactionRepository = transactionRepository;
         }
 
-        public async Task<OperationResult> DepositAsync(int userId, decimal amount, int ownerId, TransactionFor transactionFor, TransactionSource transactionSource,
-             TransactionType transactionType, TransactionPortal potral, string description, string authority)
+        public async Task<OperationResult> DepositAsync(int userId, int amount, long transationId)
         {
             if (amount < 1000)
                 return new OperationResult(false, ValidationMessages.PaymentPriceError);
-            var wallet = await _walletRepository.GetWalletByUserIdAsync(ownerId);
+            var wallet = await _walletRepository.GetWalletByUserIdAsync(userId);
             if (wallet == null)
                 return new OperationResult(false, ValidationMessages.SystemErrorMessage);
-            var newTransaction = await _transactionRepository.CreateAsync(new Transaction(userId, amount, authority, potral, TransactionStatus.نا_موفق,
-                transactionFor, transactionType, transactionSource, description, ownerId));
-            if (newTransaction.Success)
-            {
-                wallet.Deposit(amount);
-                var Depositres = await _walletRepository.SaveAsync();
-                if (Depositres)
-                {
-                    var transaction = await _transactionRepository.GetFirstByUserIdAsync(userId);
-                    transaction.Payment("");
-                    var Payres= await _walletRepository.SaveAsync();
-                    if(Payres)
-                        return new OperationResult(true);
 
-                }
-
-            } 
+            wallet.Deposit(amount);
+            var Depositres = await _walletRepository.SaveAsync();
+            if (Depositres)
+                return new OperationResult(false);
             return new OperationResult(false, ValidationMessages.SystemErrorMessage);
         }
 
-        public async Task<OperationResult> WithdrawAsync(int userId, decimal amount, int ownerId, TransactionFor transactionFor, TransactionSource transactionSource,
-             TransactionType transactionType, TransactionPortal potral, string description, string authority)
+        public async Task<OperationResult> WithdrawAsync(int userId, int amount, long transationId)
         {
             if (amount < 1000)
                 return new OperationResult(false, ValidationMessages.PaymentPriceError);
@@ -61,7 +47,9 @@ namespace Financial.Application.Handlers.WalletHandler
             var res = await _walletRepository.SaveAsync();
             if (res)
                 return new OperationResult(true);
+
             return new OperationResult(false, ValidationMessages.SystemErrorMessage);
+
         }
     }
 }

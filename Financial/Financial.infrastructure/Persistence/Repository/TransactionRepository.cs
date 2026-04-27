@@ -19,9 +19,6 @@ namespace Financial.infrastructure.Persistence.Repository
             _Context = context;
         }
 
-        public Task<Transaction> GetFirstByUserIdAsync(int userId)
-        {
-            return _Context.Transactions.Where(i => i.UserId == userId).OrderByDescending(d => d.CreateDate).FirstAsync();
-        }
+    
     }
 }

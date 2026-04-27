@@ -36,10 +36,10 @@ namespace Query.Service.Ui.Comments
                     c.Id,
                     c.UserId,
                     c.ParentId
-                    
+
 
                 });
-
+       //TODO 
 
             if (comments.Count() > 0)
             {
@@ -48,7 +48,7 @@ namespace Query.Service.Ui.Comments
                 result.GetData(comments, pageId, 2, 2);
                 result.CommentFor = CommentFor.مقاله;
                 result.OwnerId = ownerId;
-                result.Comments = comments.Where(p=>p.ParentId==null)
+                result.Comments = comments.Where(p => p.ParentId == null)
                     .Skip(result.Skip)
                     .Take(result.Take)
                     .OrderByDescending(c => c.CreateDate)
@@ -69,7 +69,7 @@ namespace Query.Service.Ui.Comments
                         && c.CommentFor == CommentFor.مقاله
                         && c.ParentId == item.Id
                          && c.Status == CommentStatus.تایید_شده)
-                        
+
                      .Select(r => new CommentUiQueryModel
                      {
 

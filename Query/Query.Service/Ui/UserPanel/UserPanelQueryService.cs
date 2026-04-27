@@ -34,7 +34,7 @@ namespace Query.Service.Ui.UserPanel
         public async Task<UserPanelQueryModel> GetUserInfoForPanel(int id)
         {
             var user = await _userRepository.GetByIdAsync(id);
-            var transactions = await _transactionRepository.GetAllBy(u => u.OwnerId == id
+            var transactions = await _transactionRepository.GetAllBy(u => u.UserId == id
            && u.TransactionFor == TransactionFor.Wallet
            && u.Status == TransactionStatus.موفق).ToListAsync();
             return new UserPanelQueryModel()

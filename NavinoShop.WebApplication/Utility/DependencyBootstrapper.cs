@@ -22,6 +22,7 @@ namespace NavinoShop.WebApplication.Utility
                 option.LoginPath = "/Account/Login";
                 option.LogoutPath = "/Account/Logout";
                 option.AccessDeniedPath = "/Account/AccessDenied";
+              
                
                 option.ExpireTimeSpan = TimeSpan.FromDays(20);
             });

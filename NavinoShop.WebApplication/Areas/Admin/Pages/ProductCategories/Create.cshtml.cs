@@ -21,6 +21,7 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.ProductCategories
 
         public async Task<IActionResult> Onpost(int ParentId, string ProductCategoryTitle, string Slug)
         {
+            
             var res = await _productCategoryCommands.CreateAsync(new CreateProductCategoryCommandModel
             {
                 ParentId = ParentId,

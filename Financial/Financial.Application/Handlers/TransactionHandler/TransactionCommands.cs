@@ -21,23 +21,33 @@ namespace Financial.Application.Handlers.TransactionHandler
         {
             if (commnad.Price < 1000)
                 return new OperationResult(false, ValidationMessages.PaymentPriceError, nameof(commnad.Price));
-            if (await _transactionRepository.ExistByAsync(a => a.Authority == commnad.Authority) || string.IsNullOrWhiteSpace(commnad.Authority))
-                return new OperationResult(false, "عملیات ناموفق", nameof(commnad.Authority));
+            if (!string.IsNullOrEmpty(commnad.Authority))
+            {
+                if (await _transactionRepository.ExistByAsync(a => a.Authority == commnad.Authority))
+                    return new OperationResult(false, "عملیات ناموفق", nameof(commnad.Authority));
+            }
             var newTransation = new Transaction(commnad.UserId, commnad.Price, commnad.Authority, commnad.Portal, TransactionStatus.نا_موفق
-                , commnad.TransactionFor, commnad.TransactionType, commnad.TransactionSource, commnad.Description, commnad.OwnerId);
+                , commnad.TransactionFor, commnad.TransactionType, commnad.TransactionSource, commnad.Description, commnad.TransationById);
 
             var res = await _transactionRepository.CreateAsync(newTransation);
             if (res.Success)
-                return new OperationResult(true);
-            return new OperationResult(false, ValidationMessages.SystemErrorMessage,"",newTransation.Id);
+                return new OperationResult(true, "", "", newTransation.Id);
+            return new OperationResult(false, ValidationMessages.SystemErrorMessage, "", newTransation.Id);
         }
 
-        public async Task<OperationResult> Payment( long id, string refid)
+        public async Task<OperationResult> DeleteAsync(long transationId)
+        {
+            var transation = await _transactionRepository.GetByIdAsync(transationId);
+            var res = await _transactionRepository.DeleteAsync(transation);
+            return new OperationResult(res.Success);
+        }
+
+        public async Task<OperationResult> Payment(TransactionStatus status,long id, string refid)
         {
             var transaction = await _transactionRepository.GetByIdAsync(id);
             if (transaction == null)
                 return new OperationResult(false, ValidationMessages.SystemErrorMessage);
-            transaction.Payment(refid);
+            transaction.Payment(status,refid);
             if (await _transactionRepository.SaveAsync())
                 return new OperationResult(true);
             return new OperationResult(false, ValidationMessages.SystemErrorMessage);

@@ -7,7 +7,7 @@ namespace Financial.Domain.TransactionAgg
     public class Transaction : BaseEntityCreate<long>
     {
         public Transaction(int userId,
-            decimal price,
+            int price,
             string authority,
             TransactionPortal portal,
             TransactionStatus status,
@@ -15,7 +15,7 @@ namespace Financial.Domain.TransactionAgg
             TransactionType transactionType,
             TransactionSource transactionSource,
             string description,
-            int ownerId)
+            int transationById)
         {
             UserId = userId;
             Price = price;
@@ -27,12 +27,12 @@ namespace Financial.Domain.TransactionAgg
             TransactionType = transactionType;
             TransactionSource = transactionSource;
             Description = description;
-            OwnerId = ownerId;
-            Wallet=new Wallet();    
+            TransationById = transationById;
+            Wallet = new Wallet();
         }
 
         public int UserId { get; private set; }
-        public decimal Price { get; private set; }
+        public int Price { get; private set; }
         public string? RefId { get; private set; }
         public string Authority { get; private set; }
         public TransactionPortal Portal { get; private set; }
@@ -41,14 +41,11 @@ namespace Financial.Domain.TransactionAgg
         public TransactionType TransactionType { get; private set; }
         public TransactionSource TransactionSource { get; private set; }
         public string Description { get; private set; }
-        public int OwnerId { get; private set; }
+        public int TransationById { get; private set; } // If transaction crate by Admin
         public Wallet Wallet { get; set; }
-        public bool Payment(string refId)
+        public bool Payment(TransactionStatus status, string refId)
         {
-            if (Status == TransactionStatus.موفق)
-                return false;
-
-            Status = TransactionStatus.موفق;
+            Status = status;
 
             if (!string.IsNullOrEmpty(refId))
             {

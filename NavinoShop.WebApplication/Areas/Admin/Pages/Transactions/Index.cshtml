@@ -128,7 +128,7 @@
                         <!-- دراپ‌داون 3: سیستم عامل -->
                         <div class="col-md-2">
                             <label class="filter-label"><i class="bi bi-pc-display me-1"></i>منبع تراکنش</label>
-                            <select  asp-for="TransactionsModel.transactionStatus" name="transactionSource" class="form-select">
+                            <select asp-for="TransactionsModel.transactionStatus" name="transactionSource" class="form-select">
                                 @foreach (var item in @Html.GetEnumSelectList(typeof(TransactionSource)))
                                 {
                                     <option value="@item.Value">@item.Text.Replace("_", " ")</option>
@@ -191,8 +191,16 @@
                                     <td>@item.Description</td>
                                     <td>@item.TransactionType</td>
                                     <td class="text-danger">  @item.transactionFor </td>
-                                    <td> @item.TransactionSource.ToString().Replace("_", " ") </td>
-                                    <td class="@((item.transactionStatus == TransactionStatus.موفق) ? "text-success" : "text-danger")"> @item.transactionStatus.ToString().Replace("_"," ") </td>
+                                    @if (item.TransactionSource == TransactionSource.توسط_ادمین)
+                                    {
+                                        <td>ادمین(@item.transationBy_Name) </td>
+                                    }
+                                    else
+                                    {
+                                        <td> @item.TransactionSource.ToString().Replace("_", " ") </td>
+                                    }
+
+                                    <td class="@((item.transactionStatus == TransactionStatus.موفق) ? "text-success" : "text-danger")"> @item.transactionStatus.ToString().Replace("_", " ") </td>
                                     <td> @item.TransactionDate </td>
                                 </tr>
                             }
@@ -215,7 +223,7 @@
                     </tfoot>
                 </table>
             </div>
-           
+
             <div class="row align-items-center mt-4">
                 <div class="col-md-5">
                     <div class="dataTables_info"> @Model.TransactionsModel.DataCount رکورد</div>
@@ -230,23 +238,23 @@
 
                                     <li class="paginate_button previous @((Model.TransactionsModel.PageId == Model.TransactionsModel.StartPage) ? "active" : "")" id="DataTables_Table_0_previous">
                                         <a href="/Admin/TransactionsModel/Index?take=@Model.TransactionsModel.take&pageId=@Model.TransactionsModel.StartPage
-                                                                     &filter=@Model.TransactionsModel.filter&transactionFor=@Model.TransactionsModel.transactionFor&transactionType=@Model.TransactionsModel.transactionType
-                                                                     &transactionStatus=@Model.TransactionsModel.transactionStatus&transactionSource=@Model.TransactionsModel.transactionSource"
+                                                                             &filter=@Model.TransactionsModel.filter&transactionFor=@Model.TransactionsModel.transactionFor&transactionType=@Model.TransactionsModel.transactionType
+                                                                             &transactionStatus=@Model.TransactionsModel.transactionStatus&transactionSource=@Model.TransactionsModel.transactionSource"
                                            aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0">@Model.TransactionsModel.StartPage</a>
                                     </li>
                                     @for (int i = Model.TransactionsModel.StartPage + 1; i < Model.TransactionsModel.EndPage; i++)
                                     {
                                         <li class="paginate_button  @((Model.TransactionsModel.PageId == i) ? "active" : "")">
                                             <a href="/Admin/TransactionsModel/Index?take=@Model.TransactionsModel.take&pageId=@i
-                                                                                 &filter=@Model.TransactionsModel.filter&transactionFor=@Model.TransactionsModel.transactionFor&transactionType=@Model.TransactionsModel.transactionType
-                                                                                 &transactionStatus=@Model.TransactionsModel.transactionStatus&transactionSource=@Model.TransactionsModel.transactionSource"
+                                                                                                 &filter=@Model.TransactionsModel.filter&transactionFor=@Model.TransactionsModel.transactionFor&transactionType=@Model.TransactionsModel.transactionType
+                                                                                                 &transactionStatus=@Model.TransactionsModel.transactionStatus&transactionSource=@Model.TransactionsModel.transactionSource"
                                                aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0">@i</a>
                                         </li>
                                     }
                                     <li class="paginate_button next @((Model.TransactionsModel.PageId == Model.TransactionsModel.EndPage) ? "active" : "")" id="DataTables_Table_0_next">
                                         <a href="/Admin/TransactionsModel/Index?take=@Model.TransactionsModel.take&pageId=@Model.TransactionsModel.EndPage
-                                                                         &filter=@Model.TransactionsModel.filter&transactionFor=@Model.TransactionsModel.transactionFor&transactionType=@Model.TransactionsModel.transactionType
-                                                                         &transactionStatus=@Model.TransactionsModel.transactionStatus&transactionSource=@Model.TransactionsModel.transactionSource"
+                                                                                 &filter=@Model.TransactionsModel.filter&transactionFor=@Model.TransactionsModel.transactionFor&transactionType=@Model.TransactionsModel.transactionType
+                                                                                 &transactionStatus=@Model.TransactionsModel.transactionStatus&transactionSource=@Model.TransactionsModel.transactionSource"
                                            aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0">@Model.TransactionsModel.EndPage</a>
                                     </li>
                                 </ul>

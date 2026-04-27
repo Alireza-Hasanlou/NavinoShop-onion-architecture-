@@ -39,7 +39,7 @@ namespace Query.Service.Admin.User
                     return null;
                 wallet = await _walletRepository.GetWalletByUserIdAsync(userId);
             }
-            var transactions = await _transactionRepository.GetAllBy(u => u.OwnerId == userId
+            var transactions = await _transactionRepository.GetAllBy(u => u.UserId == userId
             && u.TransactionFor == TransactionFor.Wallet
             && u.Status == TransactionStatus.موفق).ToListAsync();
             return new UserDetailQueryModel
