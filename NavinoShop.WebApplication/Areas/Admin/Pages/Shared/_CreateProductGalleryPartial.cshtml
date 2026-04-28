@@ -1,0 +1,42 @@
+﻿
+<div class="modal-body">
+    <form>
+
+        <h4>افزودن تصویر جدید به محصول </h4>
+        <div class="col  col-12 ">
+
+            <!-- Alt تصویر -->
+            <div class="product-form-group">
+                <label class="product-form-label">
+                    Alt تصویر <span class="required-star">*</span>
+                </label>
+                <input type="text" class="product-form-control" id="ImageAlt" name="ImageAlt"
+                                 maxlength="150">
+            </div>
+        </div>
+        <div class="col  col-12 ">
+
+            <div id="img-container">
+                <label for="upload-file">
+                    تصویر محصول
+                    <div class="picture-uploader" data-url="">
+                        <div class="picture__image">Choose an image</div>
+                        <input type="file" id="upload-file" class="picture__input" accept="image/*" />
+                    </div>
+                </label>
+            </div>
+        </div>
+        <span class="text-danger" id="galleryErrorMessage"></span>
+    </form>
+</div>
+<div class="modal-footer p-4">
+    <button type="button" class="btn btn-default pull-left" onclick="close_Modal_Ajax()">خروج</button>
+    <button type="button" class="btn btn-primary" onclick="CreateGallery()">ذخیره</button>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".picture-uploader").imageUploader();
+    });
+
+</script>

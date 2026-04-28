@@ -783,7 +783,6 @@ function CreateProductFeatuer() {
             } else {
                 $errorMsg.text(res.message).addClass("text-danger");
                 $submitBtn.prop('disabled', false).text('ایجاد ویژگی');
-                EndLoading();
             }
         })
         .fail(function (xhr) {
@@ -910,5 +909,162 @@ function EditProductFeatuer() {
 
             $submitBtn.prop('disabled', false).text('ویرایش ویژگی');
 
+        });
+        
+}
+function CreateGallery() {
+    // تنظیمات
+    const config = {
+        altMaxLength: 200,
+        maxFileSize: 5 * 1024 * 1024, // 5 مگابایت
+        allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'webp']
+    };
+
+    // دریافت عناصر
+    const $imageAlt = $("#ImageAlt");
+    const $imageFile = $("#upload-file");
+    const $errorMsg = $("#galleryErrorMessage"); // اگر المان خاصی برای خطا دارید
+    const $modal = $("#modal-default");
+
+    // پاک کردن خطاهای قبلی
+    $(".product-form-validation").hide();
+    $(".is-invalid").removeClass("is-invalid");
+    if ($errorMsg.length) $errorMsg.text("").hide();
+
+    let isValid = true;
+
+    // 1. اعتبارسنجی Alt
+    const altValue = $imageAlt.val().trim();
+    if (!altValue) {
+        $('.product-form-validation[data-for="ImageAlt"]').show();
+        $imageAlt.addClass('is-invalid');
+        isValid = false;
+    } else if (altValue.length > config.altMaxLength) {
+        $('.product-form-validation[data-for="ImageAlt"]').text(`Alt نمی‌تواند بیشتر از ${config.altMaxLength} کاراکتر باشد`).show();
+        $imageAlt.addClass('is-invalid');
+        isValid = false;
+    }
+
+    // 2. اعتبارسنجی فایل تصویر
+    const imageFile = $imageFile[0].files[0];
+    if (!imageFile) {
+        $('.product-form-validation[data-for="ImageFile"]').show();
+        $imageFile.addClass('is-invalid');
+        isValid = false;
+    } else {
+        // بررسی حجم فایل
+        if (imageFile.size > config.maxFileSize) {
+            $('.product-form-validation[data-for="ImageFile"]').text(`حجم فایل نباید بیشتر از ${config.maxFileSize / (1024 * 1024)} مگابایت باشد`).show();
+            $imageFile.addClass('is-invalid');
+            isValid = false;
+        }
+
+        // بررسی پسوند فایل
+        const fileExtension = imageFile.name.split('.').pop().toLowerCase();
+        if (!config.allowedExtensions.includes(fileExtension)) {
+            $('.product-form-validation[data-for="ImageFile"]').text(`پسوندهای مجاز: ${config.allowedExtensions.join(', ')}`).show();
+            $imageFile.addClass('is-invalid');
+            isValid = false;
+        }
+    }
+
+    // اگر اعتبارسنجی ناموفق بود
+    if (!isValid) {
+        const $firstInvalid = $('.is-invalid:first');
+        if ($firstInvalid.length) {
+            $('html, body').animate({
+                scrollTop: $firstInvalid.offset().top - 100
+            }, 300);
+        }
+        return false;
+    }
+
+
+    const formData = new FormData();
+    formData.append("ImageAlt", altValue);
+    formData.append("ImageFile", imageFile);
+    formData.append("ProductId", $("#ProductId").val()); 
+
+
+    const $submitBtn = $("#submitGalleryBtn"); 
+    if ($submitBtn.length) {
+        $submitBtn.prop('disabled', true).text('در حال ارسال...');
+    }
+
+    $.ajax({
+        url: "/Admin/ProductGallery/Create",
+        type: "POST",
+        data: formData,
+        dataType: "json",
+        processData: false,  
+        contentType: false,  
+        cache: false,
+        timeout: 30000 
+    })
+        .done(function (response) {
+            if (response.success) {
+           
+                if ($modal.length) $modal.modal("hide");
+
+           
+                $imageAlt.val("");
+                $imageFile.val("");
+
+                if (typeof AlerSweetWithTimer === 'function') {
+                    AlerSweetWithTimer(response.message || "تصویر با موفقیت اضافه شد", "success", "center");
+                } else {
+                    alert(response.message || "تصویر با موفقیت اضافه شد");
+                }
+                setTimeout(function () {
+                    location.reload();
+                }, 2000);
+            } else {
+   
+                const errorMsg = response.message || "خطا در ثبت تصویر";
+                if ($errorMsg.length) {
+                    $errorMsg.text(errorMsg).addClass("text-danger").show();
+                } else {
+                    $('.product-form-validation[data-for="ImageFile"]').text(errorMsg).show();
+                }
+
+                // فعال کردن مجدد دکمه
+                if ($submitBtn.length) {
+                    $submitBtn.prop('disabled', false).text('ایجاد تصویر');
+                }
+
+            }
+        })
+        .fail(function (xhr) {
+            let errorMsg = "خطا در ارتباط با سرور. لطفاً مجدداً تلاش کنید.";
+
+            if (xhr.status === 400) {
+                errorMsg = "اطلاعات ارسال شده معتبر نیست.";
+     
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    const errors = xhr.responseJSON.errors;
+                    for (let key in errors) {
+                        if (errors.hasOwnProperty(key)) {
+                            $(`.product-form-validation[data-for="${key}"]`).text(errors[key].join(', ')).show();
+                            $(`#${key}`).addClass('is-invalid');
+                        }
+                    }
+                }
+            } else if (xhr.status === 413) {
+                errorMsg = "حجم فایل ارسالی بیش از حد مجاز است.";
+            } else if (xhr.status === 500) {
+                errorMsg = "خطای داخلی سرور. لطفاً با پشتیبانی تماس بگیرید.";
+            }
+
+            console.error("Ajax Error:", xhr.status, xhr.responseText);
+
+            if ($errorMsg.length) {
+                $errorMsg.text(errorMsg).addClass("text-danger").show();
+            } else {
+                alert(errorMsg);
+            }
+
+            if ($submitBtn.length) {
+                $submitBtn.prop('disabled', false).text('ایجاد تصویر');
+            }
         });
 }
