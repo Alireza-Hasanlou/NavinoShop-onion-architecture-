@@ -30,24 +30,31 @@ namespace Shop.Application.Commands
 
         }
 
+        public async Task<OperationResult> DeleteAsync(int FeatureId)
+        {
+            var feature = await _productFeatureRepository.GetByIdAsync(FeatureId);
+            var res = await _productFeatureRepository.DeleteAsync(feature);
+            return new OperationResult(res.Success, res.Message);
+        }
+
         public async Task<OperationResult> EditAsync(EditProductFeatureCommandModel command)
         {
             var productFeature = await _productFeatureRepository.GetByIdAsync(command.Id);
             if (productFeature == null)
-                return new OperationResult(false, "خطا در پیدان کردن فیچر");
-            if (await _productFeatureRepository.ExistByAsync(t => t.Title.Trim().ToLower() == command.Title.Trim().ToLower()))
+                return new OperationResult(false, "خطا در یافتن ویژگی");
+            if (await _productFeatureRepository.ExistByAsync(t => t.Title.Trim().ToLower() == command.Title.Trim().ToLower() && t.Id != command.Id))
                 return new OperationResult(false, ValidationMessages.DuplicatedMessage);
 
-            productFeature.Edit(command.Title,command.Value);
-            if(await _productFeatureRepository.SaveAsync())
+            productFeature.Edit(command.Title, command.Value);
+            if (await _productFeatureRepository.SaveAsync())
                 return new OperationResult(true);
-            return new OperationResult (false, ValidationMessages.SystemErrorMessage);  
+            return new OperationResult(false, ValidationMessages.SystemErrorMessage);
 
         }
 
         public async Task<EditProductFeatureCommandModel> GetForEditAsync(int FeatureId)
         {
-           return await _productFeatureRepository.GetForEditAsync(FeatureId);
+            return await _productFeatureRepository.GetForEditAsync(FeatureId);
         }
     }
 }

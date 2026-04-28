@@ -1,27 +1,4 @@
 ﻿
-
-
-$(document).ready(function () {
-    $(document).ajaxStart(function () {
-        Loading();
-    });
-    $(document).ajaxStop(function () {
-        EndLoading();
-    });
-    $(document).ajaxSend(function (event, jqXHR, settings) {
-        Loading();
-    });
-
-    $(document).ajaxComplete(function (event, jqXHR, settings) {
-        EndLoading();
-    });
-
-  
-    $(document).ajaxError(function (event, jqXHR, settings, error) {
-        EndLoading();
-        console.log('خطا در درخواست:', error);
-    });
-});
 // ===============================
 // 🧮 Validation Helpers
 // ===============================
@@ -516,8 +493,6 @@ function LoadWalletTransactions(pageId) {
 }
 
 // Load State and Cities
-
-
 $(document).ready(function () {
 
     /* =======================
@@ -600,4 +575,107 @@ $(document).ready(function () {
 
 
     loadProvinces();
+});
+
+//ChargeWallet
+$(document).ready(function () {
+    // تبدیل ریال به تومان و نمایش زیر اینپات
+    $('#rialAmount').on('input', function () {
+        let rialValue = $(this).val();
+
+        if (rialValue !== '' && rialValue > 0) {
+            let tomanValue = (parseInt(rialValue) / 10).toFixed(0);
+            $('#tomanHint').text('معادل تومان: ' + tomanValue + ' تومان');
+        } else {
+            $('#tomanHint').text('');
+        }
+
+        $('#WalleterrorMsg').text('');
+    });
+
+    // تابع شارژ
+    $('#chargeBtn').on('click', function () {
+        let rialAmount = $('#rialAmount').val();
+        let selectedGateway = $('input[name="paymentGateway"]:checked').val();
+
+        // بررسی خالی بودن یا صفر یا منفی
+        if (!rialAmount || rialAmount <= 0) {
+            $('#WalleterrorMsg').text('لطفاً مبلغ معتبر به ریال وارد کنید.');
+            return;
+        }
+
+        // محاسبه تومان
+        let toman = parseInt(rialAmount) / 10;
+
+        // بررسی کمتر از 1000 تومان
+        if (toman < 1000) {
+            $('#WalleterrorMsg').text('مبلغ شارژ نباید کمتر از ۱۰۰۰ تومان باشد.');
+            return;
+        }
+
+        // بررسی انتخاب درگاه پرداخت
+        if (!selectedGateway) {
+            $('#WalleterrorMsg').text('لطفاً درگاه پرداخت را انتخاب کنید.');
+            return;
+        }
+
+        var chargeWalletDescription = $("#chargeWalletDescription").val();
+        var portal = selectedGateway;
+
+        // نمایش لودینگ
+        Loding();
+
+        $.ajax({
+            url: "/Profile/ChargeWallet",
+            type: "POST",
+            data: {
+                Amount: rialAmount,
+                Description: chargeWalletDescription,
+                Portal: portal,
+            },
+            dataType: "json"
+        })
+            .done(function (res) {
+                if (res.success) {
+                    closeModal();
+                    if (typeof AlerSweetWithTimer === 'function') {
+                        AlerSweetWithTimer(res.message, "success", "center");
+                    } else {
+                        alert(res.message);
+                    }
+                    setTimeout(function () {
+                        location.reload();
+                    }, 3000);
+                } else {
+                    if (typeof AlerSweetWithTimer === 'function') {
+                        AlerSweetWithTimer(res.message, "error", "center");
+                    } else {
+                        alert(res.message);
+                    }
+                }
+            })
+            .fail(function (xhr) {
+                console.error("Ajax Error:", xhr.status, xhr.responseText);
+                $('#WalleterrorMsg').text('خطا در ارتباط با سرور. لطفاً مجدداً تلاش کنید.');
+            })
+            .always(function () {
+                // این قسمت همیشه اجرا می‌شود (چه موفق چه خطا)
+                EndLoading();
+            });
+    });
+
+    // بستن مدال
+    function closeModal() {
+        $('#chargeModal').fadeOut();
+        $('#rialAmount').val('');
+        $('#tomanHint').text('');
+        $('#WalleterrorMsg').text('');
+        $('#chargeWalletDescription').val('');
+        $('input[name="paymentGateway"]').first().prop('checked', true);
+    }
+
+    $('.WalletModal-closeBtn').on('click', closeModal);
+    $(window).on('click', function (e) {
+        if ($(e.target).is('#chargeModal')) closeModal();
+    });
 });

@@ -1,0 +1,27 @@
+﻿
+<div class="modal-body">
+    <form>
+
+        <h4>افزودن ویژگی جدید به محصول </h4>
+        <div class="col  col-12 ">
+            
+            <div class="custom-form-group">
+                <label for="FeatureTitle" class="required">عنوان</label>
+                <input dir="rtl" type="text"  id="FeatureTitle">
+            </div>
+        </div>
+        <div class="col  col-12 ">
+
+            <div class="custom-form-group">
+                <label for="FeatuerValue" class="required">مقدار</label>
+                <input dir="rtl" type="text" id="FeatuerValue">
+            </div>
+        </div>
+        <span class="text-danger" id="FeatureValidation"></span>
+    </form>
+</div>
+<div class="modal-footer p-4">
+    <button type="button" class="btn btn-default pull-left" onclick="close_Modal_Ajax()">خروج</button>
+    <button type="button" class="btn btn-primary" onclick="CreateProductFeatuer()">ذخیره</button>
+</div>
+

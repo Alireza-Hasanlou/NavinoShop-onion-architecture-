@@ -1,0 +1,68 @@
+﻿@page
+@model NavinoShop.WebApplication.Areas.Admin.Pages.ProductFeatures.IndexModel
+@using Shared.Application
+@using Shared.Domain.Enums
+@{
+    Layout = "_AdminLayout";
+    ViewData["title"] = "ویژگی های محصول";
+    var successMessage = TempData["success"] as string;
+
+}
+<div class="box">
+    <div class="box-body">
+        <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+            <div class="box-header">
+                <h3 class="box-title">@Model.PrductFeatures.Title</h3>
+                <input type="hidden" id="ProductId" value="@Model.PrductFeatures.ProductId" />
+            </div>
+
+            <div class="row">
+                <div class="col col-lg-2 col-sm-12">
+                    <a onclick="open_Modal_Ajax('/Admin/ProductFeatures/Create','')" class="btn btn-success"><i class="fa fa-plus"></i></a>
+                </div>
+                <div class="col-md-12">
+                    <table class="DataTable table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
+                        <thead>
+                            <tr role="row">
+                                <th>عنوان</th>
+                                <th> مقدار</th>
+                                <th>عملیات</th>
+
+                        </thead>
+                        <tbody>
+                            @if (Model.PrductFeatures.ProductFeatures.Count > 0)
+                            {
+                                @foreach (var item in Model.PrductFeatures.ProductFeatures)
+                                {
+                                    <tr id="@item.Id" role="row" class="odd">
+                                        <td class="sorting_1">@item.Title</td>
+                                        <td>@item.Value</td>
+                                        <td>
+
+                                            <div class="btn-group">
+
+                                                <a onclick="open_Modal_Ajax('/Admin/ProductFeatures/Edit?featureId=@item.Id','')" class="btn btn-warning" title="ویرایش"><i class="fa fa-edit"></i></a>
+                                                <a onclick="DeleteAjax('   آیا از حذف  @item.Title مطئن هستید؟ ','این عملیات غیر قابل بازگشت خواهد بود', 'warning', 'بله', '/Admin/ProductFeatures/Delete',@item.Id)" class="btn btn-danger" title="حذف"><i class="fa fa-trash"></i></a>
+                                            </div>
+
+
+                                        </td>
+
+                                    </tr>
+
+                                }
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+

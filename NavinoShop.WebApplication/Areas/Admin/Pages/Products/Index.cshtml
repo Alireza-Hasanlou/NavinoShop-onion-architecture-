@@ -113,7 +113,8 @@
                                     <td>@item.UpdateDate.ToPersainDate()</td>
                                     <td>
                                         <div class="btn-group">
-                                            <a onclick="open_Modal_Ajax('/Admin/Products/Edit?Id=@item.Id','product-modal')" class="btn btn-warning">ویرایش</a>
+                                            <a onclick="open_Modal_Ajax('/Admin/Products/Edit?Id=@item.Id','product-modal')" title="ویرایش" class="btn btn-warning"><i class="fa fa-edit"></i></a>
+                                            <a href="/Admin/ProductFeatures/Index?ProductId=@item.Id" class="btn btn-info" title="ویژگی ها محصول"><i class="fa fa-info"></i></a>
                                             <a href="/Admin/Seo/Index?Id=@item.Id&where=@WhereSeo.Product" class="btn btn-danger" target="_blank">سئو</a>
                                         </div>
                                     </td>

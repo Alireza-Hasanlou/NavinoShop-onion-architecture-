@@ -12,6 +12,7 @@ namespace Shop.Application.Contract.ProductFeature.Command
     {
         Task<OperationResult> CreateAsync(CreateProductFeatureCommandModel command);
         Task<OperationResult> EditAsync(EditProductFeatureCommandModel command);
+        Task<OperationResult> DeleteAsync(int FeatureId);
         Task<EditProductFeatureCommandModel> GetForEditAsync(int FeatureId);
 
     }

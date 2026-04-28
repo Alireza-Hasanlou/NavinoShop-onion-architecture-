@@ -20,7 +20,6 @@ $('.DataTable').DataTable({
 $(document).ready(function () {
     $(".picture-uploader").imageUploader();
 });
-
 function renderRoleUsersModal(res) {
     if (!res || !res.users || res.users.length === 0) {
         Swal.fire({
@@ -691,4 +690,225 @@ function updateParentStateInTree(parentId) {
             }
         }
     }
+}
+
+function CreateProductFeatuer() {
+
+    const config = {
+        titleMinLength: 2,
+        titleMaxLength: 100,
+        valueMinLength: 1,
+        valueMaxLength: 100
+    };
+
+
+    const $title = $("#FeatureTitle");
+    const $value = $("#FeatuerValue");
+    const $productId = $("#ProductId");
+    const $errorMsg = $("#FeatureValidation");
+    const $modal = $("#modal-default");
+    const $submitBtn = $("#chargeBtn");
+    $errorMsg.text("");
+    $(".is-invalid").removeClass("is-invalid");
+
+
+    let isValid = true;
+    const title = $title.val().trim();
+    const value = $value.val().trim();
+
+    if (!title) {
+        $errorMsg.text("لطفا عنوان ویژگی را وارد کنید");
+        $title.addClass('is-invalid');
+        isValid = false;
+    } else if (title.length < config.titleMinLength) {
+        $errorMsg.text(`عنوان باید حداقل ${config.titleMinLength} کاراکتر باشد`);
+        $title.addClass('is-invalid');
+        isValid = false;
+    } else if (title.length > config.titleMaxLength) {
+        $errorMsg.text(`عنوان باید حداکثر ${config.titleMaxLength} کاراکتر باشد`);
+        $title.addClass('is-invalid');
+        isValid = false;
+    }
+
+    if (!value && isValid) {
+        $errorMsg.text("لطفا مقدار ویژگی را وارد کنید");
+        $value.addClass('is-invalid');
+        isValid = false;
+    } else if (value && value.length > config.valueMaxLength && isValid) {
+        $errorMsg.text(`مقدار باید حداکثر ${config.valueMaxLength} کاراکتر باشد`);
+        $value.addClass('is-invalid');
+        isValid = false;
+    }
+
+    if (!isValid) {
+        const $firstInvalid = $('.is-invalid:first');
+        if ($firstInvalid.length) {
+            $('html, body').animate({
+                scrollTop: $firstInvalid.offset().top - 100
+            }, 300);
+        }
+        return;
+    }
+
+
+
+    const formData = new FormData();
+    formData.append("ProductId", $productId.val());
+    formData.append("Title", title);
+    formData.append("Value", value);
+
+
+    $submitBtn.prop('disabled', true).text('در حال ثبت...');
+
+    $.ajax({
+        url: "/Admin/ProductFeatures/Create",
+        type: "POST",
+        data: formData,
+        dataType: "json",
+        processData: false, 
+        contentType: false,  
+        cache: false
+    })
+        .done(function (res) {
+            if (res.success) {
+                $modal.modal("hide");
+
+      
+                $title.val("");
+                $value.val("");
+
+                AlerSweetWithTimer("ویژگی جدید با موفقیت اضافه شد", "success", "center");
+
+                setTimeout(() => location.reload(), 3000);
+            } else {
+                $errorMsg.text(res.message).addClass("text-danger");
+                $submitBtn.prop('disabled', false).text('ایجاد ویژگی');
+                EndLoading();
+            }
+        })
+        .fail(function (xhr) {
+            let errorMsg = "خطا در ارتباط با سرور. لطفاً مجدداً تلاش کنید.";
+
+            if (xhr.status === 400) {
+                errorMsg = "اطلاعات ارسال شده معتبر نیست.";
+            } else if (xhr.status === 500) {
+                errorMsg = "خطای داخلی سرور. لطفاً با پشتیبانی تماس بگیرید.";
+            }
+
+            $errorMsg.text(errorMsg).addClass("text-danger");
+            console.error("Ajax Error:", xhr.status, xhr.responseText);
+
+            $submitBtn.prop('disabled', false).text('ایجاد ویژگی');
+  
+        });
+}
+function EditProductFeatuer() {
+
+    const config = {
+        titleMinLength: 2,
+        titleMaxLength: 100,
+        valueMinLength: 1,
+        valueMaxLength: 100
+    };
+
+
+    const $title = $("#FeatureTitle");
+    const $value = $("#FeatuerValue");
+    const $Id = $("#FeatureId");
+    const $errorMsg = $("#FeatureValidation");
+    const $modal = $("#modal-default");
+    const $submitBtn = $("#chargeBtn");
+    $errorMsg.text("");
+    $(".is-invalid").removeClass("is-invalid");
+
+
+    let isValid = true;
+    const title = $title.val().trim();
+    const value = $value.val().trim();
+
+    if (!title) {
+        $errorMsg.text("لطفا عنوان ویژگی را وارد کنید");
+        $title.addClass('is-invalid');
+        isValid = false;
+    } else if (title.length < config.titleMinLength) {
+        $errorMsg.text(`عنوان باید حداقل ${config.titleMinLength} کاراکتر باشد`);
+        $title.addClass('is-invalid');
+        isValid = false;
+    } else if (title.length > config.titleMaxLength) {
+        $errorMsg.text(`عنوان باید حداکثر ${config.titleMaxLength} کاراکتر باشد`);
+        $title.addClass('is-invalid');
+        isValid = false;
+    }
+
+    if (!value && isValid) {
+        $errorMsg.text("لطفا مقدار ویژگی را وارد کنید");
+        $value.addClass('is-invalid');
+        isValid = false;
+    } else if (value && value.length > config.valueMaxLength && isValid) {
+        $errorMsg.text(`مقدار باید حداکثر ${config.valueMaxLength} کاراکتر باشد`);
+        $value.addClass('is-invalid');
+        isValid = false;
+    }
+
+    if (!isValid) {
+        const $firstInvalid = $('.is-invalid:first');
+        if ($firstInvalid.length) {
+            $('html, body').animate({
+                scrollTop: $firstInvalid.offset().top - 100
+            }, 300);
+        }
+        return;
+    }
+
+
+
+    const formData = new FormData();
+    formData.append("Id", $Id.val());
+    formData.append("Title", title);
+    formData.append("Value", value);
+
+
+    $submitBtn.prop('disabled', true).text('در حال ثبت...');
+
+    $.ajax({
+        url: "/Admin/ProductFeatures/Edit",
+        type: "POST",
+        data: formData,
+        dataType: "json",
+        processData: false,
+        contentType: false,
+        cache: false
+    })
+        .done(function (res) {
+            if (res.success) {
+                $modal.modal("hide");
+
+
+                $title.val("");
+                $value.val("");
+
+                AlerSweetWithTimer("ویژگی جدید با موفقیت ویرایش شد", "success", "center");
+
+                setTimeout(() => location.reload(), 3000);
+            } else {
+                $errorMsg.text(res.message).addClass("text-danger");
+                $submitBtn.prop('disabled', false).text('ویرایش ویژگی');
+                EndLoading();
+            }
+        })
+        .fail(function (xhr) {
+            let errorMsg = "خطا در ارتباط با سرور. لطفاً مجدداً تلاش کنید.";
+
+            if (xhr.status === 400) {
+                errorMsg = "اطلاعات ارسال شده معتبر نیست.";
+            } else if (xhr.status === 500) {
+                errorMsg = "خطای داخلی سرور. لطفاً با پشتیبانی تماس بگیرید.";
+            }
+
+            $errorMsg.text(errorMsg).addClass("text-danger");
+            console.error("Ajax Error:", xhr.status, xhr.responseText);
+
+            $submitBtn.prop('disabled', false).text('ویرایش ویژگی');
+
+        });
 }
