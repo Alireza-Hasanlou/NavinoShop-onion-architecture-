@@ -16,7 +16,12 @@ namespace Shop.Query.Queries
 
         public async Task<int> GetSellerUserIdAsync(int sellerId)
         {
-            return await  _sellerRepository.GetSellerUserIdAsync(sellerId);
+            return await _sellerRepository.GetSellerUserIdAsync(sellerId);
+        }
+
+        public async Task<bool> IsSellerForUser(int userId, int sellerId)
+        {
+            return await _sellerRepository.ExistByAsync(x => x.UserId == userId && x.Id == sellerId);
         }
     }
 }

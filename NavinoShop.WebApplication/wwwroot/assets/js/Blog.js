@@ -82,6 +82,7 @@
         });
 }
 $(document).on("click", ".tabs__trigger", function (e) {
+   
     e.preventDefault();
 
     // remove active from all tabs

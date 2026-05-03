@@ -9,6 +9,6 @@ namespace Shop.Application.Contract.Seller.Query
     public interface ISellerQueries
     {
         Task<int> GetSellerUserIdAsync(int sellerId);
-
+        Task<bool> IsSellerForUser(int userId, int sellerId);
     }
 }

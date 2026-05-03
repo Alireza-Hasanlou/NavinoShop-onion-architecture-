@@ -9,5 +9,6 @@ namespace Shop.Domain.OrderSellerAgg
 {
     public interface IOrderSellerRepository:IGenericRepository<OrderSeller,int>
     {
+      
     }
 }

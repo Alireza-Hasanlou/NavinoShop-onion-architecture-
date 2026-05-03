@@ -1,6 +1,6 @@
 ﻿using Shared.Domain;
 using Shop.Application.Contract.Product.Command;
-
+using Shop.Application.Contract.Product.Query;
 
 namespace Shop.Domain.ProductAgg
 {
@@ -8,5 +8,6 @@ namespace Shop.Domain.ProductAgg
     {
         Task<EditProductCommandModel> GetForEditAsync(int productId);
         Task<Product> GetForAddRelToCategory(int id);
+        Task<List<ProductsForAddtoShopQueryModel>> GetProductsForAddToShop(List<int> categoryIds);
     }
 }

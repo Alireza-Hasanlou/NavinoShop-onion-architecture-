@@ -13,27 +13,30 @@ namespace Shop.Domain.OrderItemAgg
     {
 
 
-        public OrderItem(int orderSellerId, int productSellId, int count, int price, int priceAfterOff)
+        public OrderItem(int orderSellerId, int productSellId, int count, int price, int priceAfterOff, string unit)
         {
             OrderSellerId = orderSellerId;
             ProductSellId = productSellId;
             Count = count;
             Price = price;
             PriceAfterOff = priceAfterOff;
+            Unit = unit;
         }
 
         public int OrderSellerId { get; internal set; }
         public int ProductSellId { get; private set; }
         public int Count { get; private set; }
         public int Price { get; private set; }
+        public string Unit { get; set; }
         public int PriceAfterOff { get; private set; }
         public OrderSeller OrderSeller { get; private set; }
         public ProductSell ProductSell { get; private set; }
-        public void Edit(int count, int price, int priceAfterOff)
+        public void Edit(int count, int price, int priceAfterOff, string unit)
         {
             Count = count;
             Price = price;
             PriceAfterOff = priceAfterOff;
+            Unit = unit;
         }
         public int SumPrice
         {

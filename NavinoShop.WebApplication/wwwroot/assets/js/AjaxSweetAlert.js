@@ -93,10 +93,10 @@ function AjaxSweetInput(title1, confirmButtonText1, url1, deletedId) {
                 url: url1 + result.value
             }).done(function (res) {
                 if (res) {
-               
+
                     AlerSweetWithTimer("عملیات موفق", "success", "Center");
                     setTimeout($(`#${deletedId}`).hide('slow'), 3000);
-                   
+
                 }
                 else {
                     AlerSweetWithTimer("عملیات نا موفق \n " + res.message, "error", "Center");
@@ -268,6 +268,3 @@ function AjaxSweetRefresh(title, text, icon, confirmText, cancelText, url) {
             });
     });
 }
-//  fullName,  email,  comment,  ownerId,  parentId
-// /Blog/AddComment/fullName/email/comment/ownerId/parentId
-

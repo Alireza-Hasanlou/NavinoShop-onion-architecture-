@@ -1,0 +1,139 @@
+﻿@using Shop.Application.Contract.ProductSell.Command
+@model CreateProductSellCommandModel
+<style>
+    #productSelect {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+        background-color: #fff;
+        cursor: pointer;
+    }
+
+        #productSelect:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+        }
+
+        #productSelect:disabled {
+            background-color: #f5f5f5;
+            cursor: not-allowed;
+        }
+
+    #loadingSpinner {
+        color: #4CAF50;
+        font-size: 14px;
+        margin-top: 10px;
+    }
+
+    .fa-spinner {
+        animation: spin 1s linear infinite;
+    }
+
+    @@keyframes spin {
+        0%
+
+    {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+
+    }
+</style>
+
+<div class="product-form-wrapper">
+
+    <div class="product-form-body">
+        <form id="productForm" method="post" enctype="multipart/form-data">
+            <div class="product-form-row">
+                <input type="hidden" id="SellerId" value="@Model.SellerId" />
+                <div class="product-form-col">
+                    <div class="scroll-checkbox-wrapper">
+                        <div class="scroll-checkbox-container">
+                            <div class="scroll-checkbox-box">
+                                <div class="scroll-checkbox-header">
+                                    <span>دسته بندی های محصول</span>
+                                    <span class="scroll-checkbox-count" id="selectedCount">0</span>
+                                </div>
+
+                                <!-- درخت دسته بندی حرفه‌ای -->
+                                <div class="product-category-tree" id="productCategoryTree">
+                                    @foreach (var item in Model.categories.Where(x => x.ParentId == 0))
+                                    {
+                                        @await Html.PartialAsync("_CategoryTreeNodePartial", item)
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  
+                </div>
+
+                <div class="product-form-col">
+                    <label class="product-form-label">
+                        محصول <span class="required-star">*</span>
+                    </label>
+                    <select id="productSelect" style="width: 100%;">
+                        <option value="0">لطفا ابتدا دسته بندی را مشخص کنید</option>
+                    </select>
+                    <!-- اسپینر لودینگ -->
+                    <div id="loadingSpinner" style="display: none; text-align: center;">
+                        <i class="fa fa-spinner fa-spin"></i> در حال بارگذاری محصولات...
+                
+                    </div>
+                    <div class="product-form-group">
+                        <label class="product-form-label">
+                           قیمت <span class="required-star">*</span>
+                        </label>
+                        <input type="number" class="product-form-control money" id="Price" name="Price"
+                               placeholder="لطفا قیمت را به ریال وارد کنید" step="500" maxlength="11">
+                        <div class="product-form-validation" data-for="Price">لطفا قیمت را وارد کنید</div>
+                    </div>
+
+                    <!-- وزن -->
+                    <div class="product-form-group">
+                        <label class="product-form-label">
+                            وزن (گرم) <span class="required-star">*</span>
+                        </label>
+                        <input type="number" class="product-form-control " id="Weight" name="Weight"
+                               placeholder="وزن به گرم" min="0" step="100">
+                        <div class="product-form-validation" data-for="Weight">لطفا وزن را وارد کنید</div>
+                    </div>
+
+                    <!-- توضیحات کامل -->
+                    <div class="product-form-group">
+                        <label class="product-form-label">
+                          واحد فروش <span class="required-star">*</span>
+                        </label>
+                        <input class="product-form-control" id="Unit" name="Text"
+                                  placeholder="لطفا واحد فروش را وارد کنید"/>
+                        <div class="product-form-validation" data-for="Unit">لطفا واحد فروش را وارد کنید</div>
+                    </div>
+
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal-footer p-4">
+    <button type="button" class="btn btn-default pull-left" onclick="close_Modal_Ajax()">خروج</button>
+    <button type="button" class="btn btn-primary" onclick="CreateProductSell()">ذخیره</button>
+</div>
+
+
+
+<script>
+    $(document).ready(function() {
+
+        initProductCategoryTree();
+
+    });
+
+</script>

@@ -1,0 +1,39 @@
+﻿@using Shop.Application.Contract.ProductSell.Command
+@model EditProductSellCommandModel
+<div class="modal-body">
+    <h4>ویرایش محصول </h4>
+    <input type="hidden" value="@Model" id="parentId" />
+    <form>
+        <div class="col  col-12 ">
+            <input type="hidden" value="@Model.Id" id="ProductSellId" asp-for="Id" />
+            <input type="hidden" id="SellerId" value="@Model.SellerId" asp-for="SellerId" />
+            <div class="custom-form-group">
+                <label for="ProductSellPrice" class="required">قیمت</label>
+                <input asp-for="Price" dir="ltr" class="product-form-control" type="text" id="ProductSellPrice">
+                <div class="product-form-validation" data-for="Price">لطفا قیمت را وارد کنید</div>
+            </div>
+        </div>
+        <div class="col  col-12 ">
+
+            <div class="custom-form-group">
+                <label for="ProcutSellWight" class="required">وزن</label>
+                <input asp-for="Weight" dir="ltr" class="product-form-control" type="text" id="ProcutSellWight">
+                <div class="product-form-validation" data-for="Weight">لطفا وزن را وارد کنید</div>
+            </div>
+        </div>
+        <div class="col  col-12 ">
+
+            <div class="custom-form-group">
+                <label for="ProcutSellUnit" class="required">واحد فروش</label>
+                <input asp-for="Weight" class="product-form-control" dir="ltr" type="text" id="ProcutSellUnit">
+                <div class="product-form-validation" data-for="Unit">لطفا واحد فروش را وارد کنید</div>
+            </div>
+        </div>
+        <span class="text-danger" id="ProcutSellvalidation"></span>
+    </form>
+</div>
+<div class="modal-footer p-4">
+    <button type="button" class="btn btn-default pull-left" onclick="close_Modal_Ajax()">خروج</button>
+    <button type="button" class="btn btn-primary" onclick="EditProductSell()">ذخیره</button>
+</div>
+

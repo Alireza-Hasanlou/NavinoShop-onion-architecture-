@@ -103,16 +103,7 @@ namespace Shop.Query.Queries
             return model;
         }
 
-        public async Task<List<ProductCategoryForAddProductSeller>> GetCategoryForAddProductSells(int id)
-        {
-            return await _productCategoryRepository.GetAll()
-               .Select(x => new ProductCategoryForAddProductSeller
-               {
-                   Id = x.Id,
-                   Title = x.Title,
-               })
-               .ToListAsync();
-        }
+
 
 
     }

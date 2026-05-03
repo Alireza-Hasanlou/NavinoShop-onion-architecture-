@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Shop.Application.Bootstrapper;
+using Shop.Domain.OrderItemAgg;
+using Shop.Domain.OrderSellerAgg;
 using Shop.Domain.ProductAgg;
 using Shop.Domain.ProductCategoryAgg;
 using Shop.Domain.ProductFreatureAgg;
@@ -31,10 +33,12 @@ namespace Shop.Infrastracture.Bootstrapper
             services.AddTransient<ISellerRepository, SellerRepository>();
             services.AddTransient<IProductRepository, ProductRepository>();
             services.AddTransient<IProductCategoryRepository, ProductCategoryRepository>();
-            services.AddTransient<IProductFeatureRepository , ProductFreatureRepository>();
+            services.AddTransient<IProductFeatureRepository, ProductFreatureRepository>();
             services.AddTransient<IProduct_Category_Repository, Product_Category_Repository>();
             services.AddTransient<IProductGalleryRepository, ProductGalleryRepository>();
-            services.AddTransient<IProductSellRepository, ProductSellRepository>(); 
+            services.AddTransient<IProductSellRepository, ProductSellRepository>();
+            services.AddTransient<IOrderSellerRepository, OrderSellerRepository>();
+            services.AddTransient<IOrderItemRepository, OrderItemRepository>();
         }
     }
 }

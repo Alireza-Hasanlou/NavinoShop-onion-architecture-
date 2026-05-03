@@ -31,6 +31,7 @@ namespace Query.Service.Ui.UserPanel.Seller
                 .OrderByDescending(c=>c.CreateDate)
                 .Select(s => new SellerUserPanelQueryModel
                 {
+                 
                     Title = s.Title,
                     Id = s.Id,
                     CityId = s.CityId,

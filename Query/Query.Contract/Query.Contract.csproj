@@ -12,4 +12,8 @@
     <ProjectReference Include="..\..\Site\Site.Domain\Site.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UI\Products\" />
+  </ItemGroup>
+
 </Project>

@@ -51,6 +51,11 @@
                     {
                            <td>   <a asp-action="EditRequestForSales" asp-route-Id="@shop.Id" class="btn btn-warning">  <i class="fa fa-edit"></i></a></td>
                     }
+                        @if(shop.SellerStatus == Shared.Domain.Enums.SellerStatus.درخواست_تایید_شده)
+                    {
+                           <td>   <a href="/Seller/SellersProducts?sellerId=@shop.Id"  class="btn btn-warning"> محصولات</a></td>
+                    }
+
                  
             </tr>
         }

@@ -7,25 +7,35 @@ namespace Shop.Application.Commands
 {
     internal class ProductSellCommands : IProductSellCommands
     {
-        private readonly IProductSellRepository _product_SellerRepository;
+        private readonly IProductSellRepository _productSellRepository;
 
         public ProductSellCommands(IProductSellRepository product_SellerRepository)
         {
-            _product_SellerRepository = product_SellerRepository;
+            _productSellRepository = product_SellerRepository;
         }
 
-        public Task<OperationResult> ActivationChangeAsync(int id)
-        {
-            throw new NotImplementedException();
+        public async Task<OperationResult> ActivationChangeAsync(int sellerId, int id)
+         {
+            var productSell = await _productSellRepository.GetByIdAsync(id);
+            if (productSell == null)
+                return new OperationResult(false, "محصولی با شناسه ارسالی یافت نشد");
+
+            productSell.ActivationChange();
+            if (await _productSellRepository.SaveAsync())
+                return new OperationResult(true);
+            return new OperationResult(false, ValidationMessages.SystemErrorMessage);
+
         }
 
         public async Task<OperationResult> CreateAsync(CreateProductSellCommandModel command)
         {
             if (command.ProductId == 0)
-                return new(false, ValidationMessages.RequiredMessage, nameof(command.ProductId));
+                return new(false, "لطفا محصول مورد نظر را انتخاب کنید", nameof(command.ProductId));
+            if (await _productSellRepository.ExistByAsync(x => x.ProductId == command.ProductId))
+                return new OperationResult(false, "محصول در حال حاضر در فروشگاه شما موجود است", nameof(command.ProductId));
             var ProductSell = new ProductSell(command.ProductId, command.Price, command.Unit, command.SellerId, command.Weight);
-            var res = await _product_SellerRepository.CreateAsync(ProductSell);
-            if(res.Success)
+            var res = await _productSellRepository.CreateAsync(ProductSell);
+            if (res.Success)
                 return new(true);
 
             return new(false, ValidationMessages.SystemErrorMessage, nameof(command.Unit));
@@ -33,11 +43,13 @@ namespace Shop.Application.Commands
         }
         public async Task<OperationResult> EditAsync(EditProductSellCommandModel command)
         {
-            var p = await _product_SellerRepository.GetByIdAsync(command.Id);
+            var p = await _productSellRepository.GetByIdAsync(command.Id);
+            if (p == null)
+                return new(false, "محصولی با شناسه ارسالی یافت نشد");
             p.Edit(command.Price, command.Unit, command.Weight);
-            if (await _product_SellerRepository.SaveAsync()) return new(true);
+            if (await _productSellRepository.SaveAsync()) return new(true);
             return new(false, ValidationMessages.SystemErrorMessage, nameof(command.Unit));
- 
+
         }
 
 
@@ -45,17 +57,17 @@ namespace Shop.Application.Commands
         {
             foreach (var item in sels)
             {
-                var sell = await _product_SellerRepository.GetByIdAsync(item.SellId);
+                var sell = await _productSellRepository.GetByIdAsync(item.SellId);
                 sell.ChangeAmount(item.count, item.Type);
             }
-            if( await _product_SellerRepository.SaveAsync())
+            if (await _productSellRepository.SaveAsync())
                 return new(true);
             return new(false, ValidationMessages.SystemErrorMessage);
         }
 
         public async Task<EditProductSellCommandModel> GetForEditAsync(int id)
         {
-            var p = await _product_SellerRepository.GetByIdAsync(id);
+            var p = await _productSellRepository.GetByIdAsync(id);
             return new()
             {
                 Id = p.Id,

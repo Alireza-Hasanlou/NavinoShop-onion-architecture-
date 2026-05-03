@@ -2,7 +2,8 @@
 
 namespace Shop.Domain.ProductSellAgg
 {
-    public interface IProductSellRepository:IGenericRepository<ProductSell, int>
+    public interface IProductSellRepository : IGenericRepository<ProductSell, int>
     {
+    
     }
 }

@@ -46,8 +46,7 @@ namespace Shop.Domain.ProductSellAgg
         {
             Price = price;
             Unit = unit;
-            Weight = weight;
-            SetActivation(false);
+            Weight = weight; 
         }
         public void ChangeAmount(int amount, StoreProductType type)
         {

@@ -9,5 +9,8 @@ namespace Query.Contract.UI.UserPanel.Seller
     public interface ISellerUserPanelQueries
     {
         Task<List<SellerUserPanelQueryModel>> GetSellersForUserPanel(int UserId);
+        //ToDo SHopDetail
     }
+
+
 }

@@ -145,26 +145,6 @@ $(function () {
     });
 });
 
-function open_Modal_Ajax(url, modalclass) {
-    $('#modal-default').removeClass("product-modal");
-    if (modalclass !== undefined && modalclass !== null && modalclass.trim() !== '') {
-        $('#modal-default').addClass(modalclass);
-    }
-    Get_ajax(url);
-    $('#modal-default').modal('show');
-}
-
-function Get_ajax(url) {
-    var modalContent = $("#modal-content");
-    modalContent.html("");
-    $.get(url, function (res) {
-        modalContent.html(res);
-    });
-}
-
-function close_Modal_Ajax() {
-    $('#modal-default').modal('hide');
-}
 
 function RechargeWallet() {
     var amount = $("#WalletAmount").val();
@@ -594,103 +574,6 @@ function EditProduct() {
         }
     };
 })(jQuery);
-
-function initProductCategoryTree() {
-    $('.pct-toggle-icon').off('click').on('click', function (e) {
-        e.stopPropagation();
-        const $icon = $(this);
-        const $children = $icon.closest('.pct-node').find('.pct-children');
-        $icon.toggleClass('collapsed');
-        if ($children.hasClass('collapsed')) {
-            $children.removeClass('collapsed');
-            $children.slideDown(300, function () {
-                $(this).css('display', '');
-            });
-        } else {
-            $children.addClass('collapsed');
-            $children.slideUp(300);
-        }
-    });
-    $('.pct-node-header').off('click').on('click', function (e) {
-        if (!$(e.target).is('input') && !$(e.target).is('label') && !$(e.target).closest('label').length) {
-            const $toggleIcon = $(this).find('.pct-toggle-icon');
-            if ($toggleIcon.length) {
-                $toggleIcon.trigger('click');
-            }
-        }
-    });
-    $('.pct-checkbox').off('change').on('change', function () {
-        const $checkbox = $(this);
-        const isChecked = $checkbox.is(':checked');
-        const parentId = $checkbox.data('parent');
-        const currentId = $checkbox.val();
-        if (isChecked) {
-            checkParentsInTree(parentId);
-            checkChildrenInTree(currentId, true);
-        } else {
-            checkChildrenInTree(currentId, false);
-            updateParentStateInTree(parentId);
-        }
-        const selectedCount = $('.pct-checkbox:checked').length;
-        $('#selectedCount').text(selectedCount);
-    });
-    $('.pct-children').addClass('collapsed').hide();
-    $('.pct-toggle-icon').addClass('collapsed');
-}
-
-function checkParentsInTree(parentId) {
-    if (parentId && parentId !== 0) {
-        const $parentCheckbox = $(`#pct-cat-${parentId}`);
-        if ($parentCheckbox.length && !$parentCheckbox.is(':checked')) {
-            $parentCheckbox.prop('checked', true);
-            const grandParentId = $parentCheckbox.data('parent');
-            if (grandParentId && grandParentId !== 0) {
-                checkParentsInTree(grandParentId);
-            }
-        }
-    }
-}
-
-function checkChildrenInTree(categoryId, isChecked) {
-    const $parentNode = $(`#pct-cat-${categoryId}`).closest('.pct-node');
-    const $childCheckboxes = $parentNode.find('.pct-children .pct-checkbox');
-    $childCheckboxes.each(function () {
-        const $child = $(this);
-        if ($child.is(':checked') !== isChecked) {
-            $child.prop('checked', isChecked);
-            const childId = $child.val();
-            const $grandChildren = $child.closest('.pct-node').find('.pct-children .pct-checkbox');
-            if ($grandChildren.length > 0) {
-                checkChildrenInTree(childId, isChecked);
-            }
-        }
-    });
-}
-
-function updateParentStateInTree(parentId) {
-    if (parentId && parentId !== 0) {
-        const $parentCheckbox = $(`#pct-cat-${parentId}`);
-        const $parentNode = $parentCheckbox.closest('.pct-node');
-        const $siblingCheckboxes = $parentNode.find('.pct-children .pct-checkbox');
-        const totalSiblings = $siblingCheckboxes.length;
-        const checkedSiblings = $siblingCheckboxes.filter(':checked').length;
-        const allUnchecked = checkedSiblings === 0;
-        const allChecked = checkedSiblings === totalSiblings && totalSiblings > 0;
-        if (allUnchecked && $parentCheckbox.is(':checked')) {
-            $parentCheckbox.prop('checked', false);
-            const grandParentId = $parentCheckbox.data('parent');
-            if (grandParentId && grandParentId !== 0) {
-                updateParentStateInTree(grandParentId);
-            }
-        } else if (allChecked && !$parentCheckbox.is(':checked')) {
-            $parentCheckbox.prop('checked', true);
-            const grandParentId = $parentCheckbox.data('parent');
-            if (grandParentId && grandParentId !== 0) {
-                checkParentsInTree(grandParentId);
-            }
-        }
-    }
-}
 
 function CreateProductFeatuer() {
 

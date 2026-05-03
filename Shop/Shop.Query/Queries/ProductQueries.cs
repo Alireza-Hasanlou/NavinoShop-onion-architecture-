@@ -1,7 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Shared.Domain.Enums;
 using Shop.Application.Contract.Product.Query;
+using Shop.Domain.OrderAgg;
+using Shop.Domain.OrderItemAgg;
+using Shop.Domain.OrderSellerAgg;
 using Shop.Domain.ProductAgg;
 using Shop.Domain.ProductCategoryAgg;
+using Shop.Domain.ProductSellAgg;
 using Shop.Domain.Relations.ProductCategoryRel;
 using System;
 using System.Collections.Generic;
@@ -16,18 +21,24 @@ namespace Shop.Query.Queries
         private readonly IProductRepository _productRepository;
         private readonly IProductCategoryRepository _productCategoryRepository;
         private readonly IProduct_Category_Repository _product_Category_Repository;
+        private readonly IProductSellRepository _productSellRepository;
+        private readonly IOrderItemRepository _orderItemReposotory;
 
-        public ProductQueries(IProductRepository productRepository, IProductCategoryRepository productCategoryRepository, IProduct_Category_Repository product_Category_Repository)
+        public ProductQueries(IProductRepository productRepository, IProductCategoryRepository productCategoryRepository,
+            IProduct_Category_Repository product_Category_Repository, IProductSellRepository productSellRepository, IOrderItemRepository orderItemRepository)
         {
             _productRepository = productRepository;
             _productCategoryRepository = productCategoryRepository;
             _product_Category_Repository = product_Category_Repository;
+            _productSellRepository = productSellRepository;
+            _orderItemReposotory = orderItemRepository;
         }
 
         public async Task<ProductsForAdminPaging> GetAllProductsForAdmin(int pageId, int take, string filter, int categoryId)
         {
             var model = new ProductsForAdminPaging();
-            var products = _productRepository.GetAll();
+            var products = _productRepository.GetAll().Distinct();
+
 
             if (categoryId > 0)
             {
@@ -43,19 +54,19 @@ namespace Shop.Query.Queries
                 model.CategoryId = categoryId;
             }
 
-          
+
             if (!string.IsNullOrEmpty(filter))
             {
-                products = products.Where(p => p.Title.Contains(filter)
-                                            || p.Description.Contains(filter)
-                                            || p.Slug.Contains(filter));
+                products = products.Where(p =>
+
+                   p.Title.Contains(filter)
+                || p.Description.Contains(filter)
+                || p.Slug.Contains(filter));
             }
 
-       
-            model.GetData(products, pageId, take, 3);
+
+            model.GetData(products, pageId, take, 5);
             model.Filter = filter ?? "";
-            model.Take = take;
-            model.PageId = pageId;
 
             model.products = await products
                 .OrderByDescending(p => p.CreateDate)
@@ -70,12 +81,69 @@ namespace Shop.Query.Queries
                     CreateDate = p.CreateDate,
                     UpdateDate = p.UpdateDate,
                     Slug = p.Slug,
-                    Active = p.Active,  
+                    Active = p.Active,
                     Weight = p.Weight,
                 })
                 .ToListAsync();
 
             return model;
         }
+        
+        public Task<List<ProductsForAddtoShopQueryModel>> GetProductsForAddToShop(List<int> categoryIds)
+        {
+            return _productRepository.GetProductsForAddToShop(categoryIds);
+        }
+
+        public async Task<ProductsForSellerPaging> GetProductsForSellerAsync(int sellerId, int pageId, int take, string filter, int categoryId)
+        {
+            var model = new ProductsForSellerPaging();
+
+            var products = _productSellRepository.GetAllBy(x => x.SellerId == sellerId)
+                    .Include(x => x.Product)
+                    .Include(x=>x.OrderItems)
+                    .Where(x => x.Product.Active)
+                    .Distinct();
+
+
+            if (!string.IsNullOrEmpty(filter))
+            {
+                products = products.Where(p =>
+
+                   p.Product.Title.Contains(filter)
+                || p.Product.Description.Contains(filter)
+                || p.Product.Slug.Contains(filter));
+            }
+
+
+            model.GetData(products, pageId, take, 5);
+            model.Filter = filter ?? "";
+
+            model.products = await products
+                .OrderByDescending(p => p.CreateDate)
+                .Skip(model.Skip)
+                .Take(model.Take)
+                .Select(p => new ProductsForSellerQueryModel
+                {
+                    Id = p.Id,
+                    Title = p.Product.Title,
+                    ShortDescription = p.Product.ShortDescription,
+                    ImageName = p.Product.ImageName,
+                    CreateDate = p.CreateDate,
+                    UpdateDate = p.UpdateDate,
+                    Slug = p.Product.Title,
+                    Active = p.Active,
+                    Price=p.Price,
+                    Weight = p.Weight,
+                    SoldCount= p.OrderItems.Where(x=>x.OrderSeller.Status== OrderSellerStatus.پرداخت_شده
+                    || x.OrderSeller.Status== OrderSellerStatus.در_حال_آماده_سازی
+                    || x.OrderSeller.Status == OrderSellerStatus.ارسال_شده ).Sum(c=>c.Count)
+
+                })
+                .ToListAsync();
+
+
+            return model;
+        }
     }
 }
+

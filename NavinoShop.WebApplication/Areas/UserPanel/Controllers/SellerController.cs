@@ -2,11 +2,17 @@
 using Microsoft.AspNetCore.Mvc;
 using Query.Contract.UI.UserPanel.Seller;
 using Shared.Application.Auth;
+using Shop.Application.Contract.Product.Query;
+using Shop.Application.Contract.ProductCategory.Query;
+using Shop.Application.Contract.ProductSell.Command;
 using Shop.Application.Contract.Seller.Command;
 using Shop.Application.Contract.Seller.Query;
+using System.Security.Cryptography.Xml;
+using System.Threading.Tasks;
 
 namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
 {
+    [IgnoreAntiforgeryToken]
     [Area("UserPanel")]
     [Route("/[controller]/[action]/{Id?}")]
     [Authorize]
@@ -15,12 +21,22 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
         private readonly ISellerCommands _sellerCommands;
         private readonly IAuthService _authService;
         private readonly ISellerUserPanelQueries _sellerUserPanelQueries;
+        private readonly IProductSellCommands _productSellCommands;
+        private readonly IProductCategoryQueries _productCategoryQueries;
+        private readonly IProductQueries _productQueries;
+        private readonly ISellerQueries _sellerQueries;
 
-        public SellerController(ISellerCommands sellerCommands, IAuthService authService, ISellerUserPanelQueries sellerUserPanelQueries)
+        public SellerController(ISellerCommands sellerCommands, IAuthService authService,
+            ISellerUserPanelQueries sellerUserPanelQueries, IProductSellCommands productSellCommands,
+            IProductCategoryQueries productCategoryQueries, IProductQueries productQueries, ISellerQueries sellerQueries)
         {
             _sellerCommands = sellerCommands;
             _authService = authService;
             _sellerUserPanelQueries = sellerUserPanelQueries;
+            _productSellCommands = productSellCommands;
+            _productCategoryQueries = productCategoryQueries;
+            _productQueries = productQueries;
+            _sellerQueries = sellerQueries;
         }
 
         public async Task<IActionResult> MyShops(bool status)
@@ -53,7 +69,7 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
         public async Task<IActionResult> EditRequestForSales(int Id)
         {
             if (Id < 1)
-                return RedirectToAction("MyShops");
+                return NotFound();
 
             var Request = await _sellerCommands.GetForEditRequestForSales(Id);
             if (Request == null)
@@ -71,8 +87,74 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
             if (res.Success)
                 return RedirectToAction("MyShops", new { status = true });
 
-            TempData["error"]= res.Message;
+            TempData["error"] = res.Message;
             return View(command);
+        }
+
+        public async Task<IActionResult> AddProductToShop(int Id)
+        {
+
+            var categories = await _productCategoryQueries.GetCategoriesForAddProduct();
+            CreateProductSellCommandModel model = new()
+            {
+                categories = categories,
+                SellerId = Id,
+
+            };
+            return PartialView("_AddProductToShopPatial", model);
+        }
+        [HttpPost]
+        public async Task<JsonResult> AddProductToShop(CreateProductSellCommandModel model)
+        {
+            var res = await _productSellCommands.CreateAsync(model);
+            return new JsonResult(new { success = res.Success, message = res.Message });
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetProductsForAddToShop([FromBody] List<int> categoryIds)
+        {
+
+            var products = await _productQueries.GetProductsForAddToShop(categoryIds);
+
+            return Json(new
+            {
+                success = true,
+                data = products.Select(p => new { id = p.Id, title = p.Title })
+            });
+        }
+        public async Task<IActionResult> SellersProducts(int sellerId, int pageId = 1, int take = 5, int categoryId = 0, string filter = "")
+        {
+            var userId = _authService.GetLoginUserId();
+            bool ok = await _sellerQueries.IsSellerForUser(userId, sellerId);
+            if (!ok)
+                return NotFound();
+            var products = await _productQueries.GetProductsForSellerAsync(sellerId, pageId, take, filter, categoryId);
+            products.SellerId = sellerId;
+            return View(products);
+        }
+        public async Task<JsonResult> ChangeProductActivation(int sellerId, int Id)
+        {
+            if (Id < 1)
+                return new JsonResult(new { success = false, message = "شناسه نا معتبر!" });
+            var res = await _productSellCommands.ActivationChangeAsync(sellerId, Id);
+            return new JsonResult(new { success = res.Success, message = res.Message });
+        }
+        public async Task<IActionResult> EditProduct(int Id)
+        {
+            if (Id < 1)
+                return NotFound();
+            var productSell = await _productSellCommands.GetForEditAsync(Id);
+            if (productSell == null)
+                return NotFound();
+            return PartialView("_EditProductSellPartial", productSell);
+        }
+        [HttpPost]
+        public async Task<JsonResult> EditProduct(EditProductSellCommandModel model)
+        {
+            var res = await _productSellCommands.EditAsync(model);
+            if (res.Success)
+                return new JsonResult(new { success = true, message = "محصول مورد نظر با موفقیت ویرایش شد" });
+            return new JsonResult(new { success = false, message = res.Message });
+
         }
     }
 }

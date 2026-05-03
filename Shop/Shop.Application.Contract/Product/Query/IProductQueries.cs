@@ -8,6 +8,9 @@ namespace Shop.Application.Contract.Product.Query
 {
     public interface IProductQueries
     {
-        Task<ProductsForAdminPaging> GetAllProductsForAdmin(int pageId, int take, string filter ,int categoryId);
+        Task<ProductsForAdminPaging> GetAllProductsForAdmin(int pageId, int take, string filter, int categoryId);
+        Task<ProductsForSellerPaging> GetProductsForSellerAsync(int sellerId, int pageId, int take, string filter, int categoryId);
+        Task<List<ProductsForAddtoShopQueryModel>> GetProductsForAddToShop(List<int> categoryIds);
+    
     }
 }

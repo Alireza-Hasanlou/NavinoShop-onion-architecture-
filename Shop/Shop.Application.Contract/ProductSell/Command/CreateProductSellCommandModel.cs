@@ -1,4 +1,5 @@
 ﻿using Shared.Application.Validations;
+using Shop.Application.Contract.ProductCategory.Query;
 using System.ComponentModel.DataAnnotations;
 
 namespace Shop.Application.Contract.ProductSell.Command
@@ -16,6 +17,8 @@ namespace Shop.Application.Contract.ProductSell.Command
         public string Unit { get; set; }
         [Display(Name = "وزن (برای محاسبه هزینه پست)")]
         public int Weight { get; set; }
+
+        public List<CategoryTreeItem> categories { get; set; }
 
     }
 }
