@@ -8,14 +8,8 @@ namespace Query.Contract.UI.UserPanel.Stores
 {
     public interface IStoreUserPanelQueryService
     {
+        Task<List<StoresUserPanelQueryModel>> GetStores(int UserId);
+        Task<StoreDetailsPaging> GetStoreDetails(int storeId);
+        Task<List<ProductSellsForAddToStoreQueryModel>> GetProductSellsForAddToStore(int SellerId);
     }
-    public class StoreUserPanelPaging
-    {
-
-    }
-    public class StoresUserPanelQueryModel
-    {
-
-    }
-
 }

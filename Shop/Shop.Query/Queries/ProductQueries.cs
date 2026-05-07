@@ -130,7 +130,7 @@ namespace Shop.Query.Queries
                     ImageName = p.Product.ImageName,
                     CreateDate = p.CreateDate,
                     UpdateDate = p.UpdateDate,
-                    Slug = p.Product.Title,
+                    Count= p.Amount,
                     Active = p.Active,
                     Price=p.Price,
                     Weight = p.Weight,

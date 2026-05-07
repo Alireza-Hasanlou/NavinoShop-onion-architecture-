@@ -1,0 +1,22 @@
+﻿@using Store.Application.Contract.Store.Command
+@model EditStoreCommandModel
+<div class="modal-body">
+    <h4> ویرایش توضیحات انبار  </h4>
+    <form>
+       <input type="hidden"  asp-for="@Model.Id" id="storeId" />
+        <div class="col  col-12 ">
+
+            <div class="custom-form-group">
+                <label for="StoreDescription" class="required">توضیحات</label>
+                <textarea asp-for="Description" dir="rtl" class="product-form-control" type="text" id="StoreDescription"></textarea>
+                <div class="product-form-validation" data-for="StoreDescription">لطفا توضیحات را وارد کنید</div>
+            </div>
+        </div>
+
+        <span class="text-danger" id="Storevalidation"></span>
+    </form>
+</div>
+<div class="modal-footer p-4">
+    <button type="button" class="btn btn-default pull-left" onclick="close_Modal_Ajax()">خروج</button>
+    <button type="button" class="btn btn-primary" onclick="EitStoreDescription()">ذخیره</button>
+</div>

@@ -15,7 +15,7 @@ namespace Shop.Application.Commands
         }
 
         public async Task<OperationResult> ActivationChangeAsync(int sellerId, int id)
-         {
+        {
             var productSell = await _productSellRepository.GetByIdAsync(id);
             if (productSell == null)
                 return new OperationResult(false, "محصولی با شناسه ارسالی یافت نشد");
@@ -41,6 +41,18 @@ namespace Shop.Application.Commands
             return new(false, ValidationMessages.SystemErrorMessage, nameof(command.Unit));
 
         }
+
+        public async Task<OperationResult> DeleteAsync(int Id)
+        {
+            var productSell = await _productSellRepository.GetByIdAsync(Id);
+            if (productSell == null)
+                return new(false, "محصولی با شناسه ارسالی یافت نشد");
+            var res = await _productSellRepository.DeleteAsync(productSell);
+            if (res.Success)
+                return new(true);
+            return new(false, ValidationMessages.SystemErrorMessage);
+        }
+
         public async Task<OperationResult> EditAsync(EditProductSellCommandModel command)
         {
             var p = await _productSellRepository.GetByIdAsync(command.Id);
@@ -53,13 +65,14 @@ namespace Shop.Application.Commands
         }
 
 
-        public async Task<OperationResult> EditProductSellAmountAsync(List<EditProductSellAmountCommandModel> sels)
+        public async Task<OperationResult> EditProductSellAmountAsync(EditProductSellAmountCommandModel EditAmountModel)
         {
-            foreach (var item in sels)
-            {
-                var sell = await _productSellRepository.GetByIdAsync(item.SellId);
-                sell.ChangeAmount(item.count, item.Type);
-            }
+
+            var sell = await _productSellRepository.GetByIdAsync(EditAmountModel.SellId);
+            if (sell == null)
+                return new(false, "محصولی با شناسه ارسالی یافت نشد");
+            sell.ChangeAmount(EditAmountModel.count, EditAmountModel.Type);
+
             if (await _productSellRepository.SaveAsync())
                 return new(true);
             return new(false, ValidationMessages.SystemErrorMessage);

@@ -7666,6 +7666,14 @@
     <None Include="wwwroot\assets\Adminassets\bower_components\tinymce\themes\inlite\theme.min.js" />
     <None Include="wwwroot\assets\Adminassets\bower_components\tinymce\themes\modern\theme.min.js" />
     <None Include="wwwroot\assets\Adminassets\bower_components\tinymce\tinymce.min.js" />
+    <None Include="wwwroot\assets\js\select2-4.1.0-rc.0\.github\CONTRIBUTING.md" />
+    <None Include="wwwroot\assets\js\select2-4.1.0-rc.0\.github\FUNDING.yml" />
+    <None Include="wwwroot\assets\js\select2-4.1.0-rc.0\.github\ISSUE_TEMPLATE.md" />
+    <None Include="wwwroot\assets\js\select2-4.1.0-rc.0\.github\PULL_REQUEST_TEMPLATE.md" />
+    <None Include="wwwroot\assets\js\select2-4.1.0-rc.0\.github\stale.yml" />
+    <None Include="wwwroot\assets\js\select2-4.1.0-rc.0\.github\workflows\docs-deploy.yml" />
+    <None Include="wwwroot\assets\js\select2-4.1.0-rc.0\.github\workflows\main.yml" />
+    <None Include="wwwroot\assets\js\select2-4.1.0-rc.0\.github\workflows\package-deploy.yml" />
   </ItemGroup>
 
   <ItemGroup>

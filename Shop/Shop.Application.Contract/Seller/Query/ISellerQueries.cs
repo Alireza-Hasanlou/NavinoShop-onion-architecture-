@@ -10,5 +10,6 @@ namespace Shop.Application.Contract.Seller.Query
     {
         Task<int> GetSellerUserIdAsync(int sellerId);
         Task<bool> IsSellerForUser(int userId, int sellerId);
+        Task<List<UsersShopQueryModel>> GetUsersShopAsync(int userId);    
     }
 }

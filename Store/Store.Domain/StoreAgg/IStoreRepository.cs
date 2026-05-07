@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace Store.Domain.StoreAgg
 {
-    public interface IStoreRepository:IGenericRepository<Store,int>
+    public interface IStoreRepository : IGenericRepository<Store, int>
     {
+   
     }
 }

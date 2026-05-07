@@ -23,6 +23,7 @@ namespace Store.Domain.StoreProductAgg
         public StoreProductType StoreProductType { get; private set; }
         public int Count { get; private set; }
         public Store.Domain.StoreAgg.Store Store { get; private set; }
+
         
     }
 }

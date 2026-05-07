@@ -90,9 +90,16 @@
                     @if (Model.IsSeller)
                     {
                         <li>
-                            <a href="/Seller/MyShops" class=" @((currnetPath.Contains("/seller/myshops")) ? "active" : "") ">
+                            <a href="/profile/Seller/MyShops" class=" @((currnetPath.Contains("/profile/seller")) ? "active" : "") ">
                                 <div>
                                     <div class="icon d-inline-block"><img src="/images/icons/profile-menu/addresses.webp" class="pl-2"></div> فروشگاه های من
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/Profile/Stores/MyStores" class=" @((currnetPath.Contains("/profile/stores/mystores")) ? "active" : "") ">
+                                <div>
+                                    <div class="icon d-inline-block"><img src="/images/icons/profile-menu/addresses.webp" class="pl-2"></div> انبارداری
                                 </div>
                             </a>
                         </li>

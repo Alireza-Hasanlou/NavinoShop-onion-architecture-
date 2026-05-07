@@ -60,7 +60,7 @@
                             <tr role="row">
                                 <th>تصویر</th>
                                 <th>عنوان</th>
-                                <th>سربرگ</th>
+                                <th>موجودی</th>
                                 <th>قیمت</th>
                                 <th>توضیح کوتاه</th>
                                 <th> وزن</th>
@@ -82,7 +82,7 @@
                                         <img style="width:100px" src="@FileDirectories.ProductImageDirectory100@item.ImageName" />
                                     </td>
                                     <td>@item.Title</td>
-                                    <td>@item.Slug</td>
+                                    <td>@item.Count</td>
                                     <td>@item.Price</td>
                                     <td>@item.ShortDescription</td>
                                     <td>@item.Weight</td>
@@ -100,7 +100,7 @@
                                                                                                                                              'question',
                                                                                                                                              '@confirm',
                                                                                                                                               '@cancel',
-                                                                                                                                              '/Seller/ChangeProductActivation',
+                                                                                                                                              '/Profile/Seller/ChangeProductActivation',
                                                                                                                                               '@item.Id' )" class="switch">
                                             <input id="@item.Id" @(item.Active ? "checked" : "") type="checkbox">
                                             <div class="slider">
@@ -126,8 +126,8 @@
                                         <td>@item.SoldCount</td>
                                         <td>
                                         <div class="btn-group">
-                                            <a  class="btn btn-danger"><i class="fa fa-trash"></i></a>
-                                              <a onclick="open_Modal_Ajax('/Seller/EditProduct?Id=@item.Id','')" class="btn btn-warning"><i class="fa fa-edit"></i></a>
+                                            <a onclick="DeleteAjax('آیا از حذف این محصول مطئن هستید؟ ','در صورت نیاز میتوانید محصول را دوباره اضافه کنید', 'warning', 'بله', '/Profile/Seller/DeleteProductSell',@item.Id)" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                                              <a onclick="open_Modal_Ajax('/Profile/Seller/EditProduct?Id=@item.Id','')" class="btn btn-warning"><i class="fa fa-edit"></i></a>
                                         </div>
                                     </td>
 

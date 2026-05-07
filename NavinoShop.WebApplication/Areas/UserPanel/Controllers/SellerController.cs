@@ -14,7 +14,7 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
 {
     [IgnoreAntiforgeryToken]
     [Area("UserPanel")]
-    [Route("/[controller]/[action]/{Id?}")]
+    [Route("/Profile/[controller]/[action]/{Id?}")]
     [Authorize]
     public class SellerController : Controller
     {
@@ -155,6 +155,14 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
                 return new JsonResult(new { success = true, message = "محصول مورد نظر با موفقیت ویرایش شد" });
             return new JsonResult(new { success = false, message = res.Message });
 
+        }
+
+        public async Task<JsonResult> DeleteProductSell(int Id)
+        {
+            var res = await _productSellCommands.DeleteAsync(Id);
+            if (res.Success)
+                return new JsonResult(new { success = true, title = "محصول با موفقیت از فروشگاه شما حذف شد" });
+            return new JsonResult(new { success = false, title = res.Message });
         }
     }
 }

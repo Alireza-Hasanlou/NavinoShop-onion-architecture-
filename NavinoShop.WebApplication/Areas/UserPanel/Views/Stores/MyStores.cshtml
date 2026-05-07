@@ -1,0 +1,63 @@
+﻿@using Query.Contract.UI.UserPanel.Stores
+@using Shared.Application
+@model List<StoresUserPanelQueryModel>
+@{
+    Layout = "_PanelLayout";
+    ViewData["title"] = "انبار های من ";
+}
+<div class="col-12">
+    <div class="form-group m-1 pb-3">
+        <a onclick="open_Modal_Ajax('/Profile/Stores/Create','')"  class="btn btn-primary px-5">ایجاد انبار جدید</a>
+    </div>
+</div>
+<table class="DataTable table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
+    @if (Model.Count() > 0)
+    {
+        <thead>
+            <tr role="row">
+                <td>عنوان</td>
+                <td>تاریخ ایجاد</td>
+                <td></td>
+        </thead>
+        <tbody>  
+            @foreach (var store in Model)
+        {
+            <tr>
+                <td>@store.Title</td>
+                    <td>@store.CreateDate.ToPersainDate() </td>
+                <td>
+                     <div class="btn-group">
+                         <a href="/Profile/Stores/Details?storeId=@store.Id" title="جزییات انبار" class="btn btn-info">  <i class="fa fa-info"></i></a> 
+                         <a onclick="open_Modal_Ajax('/Profile/Stores/EditStoreDescription?storeId=@store.Id','')" title="ویرایش انبار" class="btn btn-warning">  <i class="fa fa-edit"></i></a>
+                     </div>
+              </td>
+            </tr>
+        }
+        </tbody>
+
+    }
+    else
+    {
+        <tr>
+            <td colspan="9" class="text-center text-warning"> موردی برای نمایش موجود نیست</td>
+        </tr>
+    }
+</table>
+
+@section Scripts {
+
+    <script>
+
+           $('.DataTable').DataTable({
+            paging:false,
+            autoWidth: true,
+            lengthChange: false,
+            searching: false,
+            ordering: true,
+            scroll: true,
+            info: false,
+
+        });
+
+    </script>
+}

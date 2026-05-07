@@ -18,5 +18,10 @@ namespace Shop.Infrastracture.Persistence.Repository
             var seller = await _shopContext.Sellers.SingleOrDefaultAsync(i => i.Id == sellerId);
             return seller != null ? seller.UserId : 0;
         }
+
+        public string GetTitleById(int sellerId)
+        {
+            return _shopContext.Sellers.Single(x => x.Id == sellerId).Title;
+        }
     }
 }

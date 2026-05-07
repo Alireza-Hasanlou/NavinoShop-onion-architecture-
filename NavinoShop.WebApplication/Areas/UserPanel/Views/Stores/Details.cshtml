@@ -1,0 +1,147 @@
+﻿@using Query.Contract.UI.UserPanel.Stores
+@using Shared.Application
+@using Shared.Domain.Enums
+@model StoreDetailsPaging
+@{
+    Layout = "_PanelLayout";
+    ViewData["title"] = "چزییات انبار ";
+
+}
+<div class="col-12 col-lg-12 pl-lg-0 pr-lg-2 mt-2 mt-lg-0">
+    <h3 style="text-align:center;">@Model.Title</h3>
+    <hr />
+    <h5>توضیحات </h5>
+    <p>@Model.Description</p>
+    </div>
+<div class="col-12 col-lg-12 pl-lg-0 pr-lg-2 mt-2 mt-lg-0">
+    <div class="custom-container mb-2" id="new-address">
+        <div class="row pt-2 px-3">
+            <div class="col-12"><h1>ویرایش انبار</h1></div>
+        </div>
+        <hr>
+        <div>
+            <div class="row">
+                <div class="col-12 pt-3">
+                    <form method="post">
+                        <input type="hidden" value="@Model.SellerId" id="SellerId" />
+                        <div class="row">
+                            <div class="col-12 col-md-4 pl-2">
+                                <div class="form-group m-1">
+                                    <label for="productsell">انتخاب محصول:</label>
+                                    <select id="productsell" class="form-control">
+                                    </select>
+                                </div>
+                                <span class="text-danger"></span>
+                            </div>
+                            <div class="col-12 col-md-4 pl-2">
+                                <div class="form-group m-1">
+                                    <label for="StoreType">نوع عملیات:</label>
+                                    <select id="StoreType" class="form-control">
+                                        <option value="">انتخاب کنید</option>
+                                        @foreach (var item in Html.GetEnumSelectList(typeof(StoreProductType)))
+                                        {
+                                            <option value="@item.Value">@item.Text</option>
+                                        }
+                                    </select>
+                                </div>
+                                <span class="text-danger"></span>
+                            </div>
+                            <div class="col-12 col-md-4 pl-2">
+                                <div class="form-group m-1">
+                                    <label for="count">تعداد:</label>
+                                    <input min="1" type="number" id="count" />
+                                </div>
+                                <span class="text-danger"></span>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group m-1 pb-3">
+                                    <button type="button" onclick="CreateStoreProduct()" class="btn btn-warning px-5">ذخیره</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="box">
+    <input type="hidden" id="storeId" value="@Model.StoreId"/>
+    <div class="box-body">
+        <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+            <br />
+            <div class="box-header">
+                <h3 class="box-title">تاریخچه انبار</h3>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    @if (Model.Details.Any())
+                    {
+                        <table class="DataTable table table-bordered table-striped dataTable" role="grid">
+                            <thead>
+                                <tr role="row">
+
+                                    <th>عنوان</th>
+                                    <th>تاریخ ایجاد</th>
+                                    <th>نوع</th>
+                                    <th>تعداد</th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody >
+
+                                @foreach (var item in Model.Details)
+                                {
+                                    <tr>
+                                        <td>@item.ProductSellTitle</td>
+                                        <td>@item.CrateDate.ToPersainDate()</td>
+                                        <td class="@((item.StoreProductType == StoreProductType.افزایش) ? "text-success" : "text-danger")">@item.StoreProductType</td>
+                                        <td>@item.Count</td>
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+                    }
+                    else
+                    {
+                        <p>موردی برای نمایش موجود نیست</p>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script>
+
+        $('.DataTable').DataTable({
+            paging: true,
+            autoWidth: true,
+            lengthChange: false,
+            searching: true,
+            ordering: true,
+            scroll: true,
+            info: false,
+            language: {
+                search: "جستجو:",
+                paginate: {
+                    next: "بعدی",
+                    previous: "قبلی"
+                }
+            }
+        });
+
+        $(document).ready(function () {
+        $('#productsell').select2();
+
+        loadProductSells();
+
+        });
+    </script>
+}
+

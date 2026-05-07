@@ -25,6 +25,8 @@ namespace Query.Service.Ui.UserPanel.Seller
             _cityRepository = cityRepository;
         }
 
+     
+
         public async Task<List<SellerUserPanelQueryModel>> GetSellersForUserPanel(int UserId)
         {
             var Sellers = await _sellerRepository.GetAllBy(i => i.UserId == UserId)

@@ -1,10 +1,4 @@
-﻿
-// ===============================
-// 🧮 Validation Helpers
-// ===============================
-
-// فقط عدد
-function isNumber(event) {
+﻿function isNumber(event) {
     const code = event.which ? event.which : event.keyCode;
     if (code > 31 && (code < 48 || code > 57)) {
         return false;
@@ -12,18 +6,12 @@ function isNumber(event) {
     return true;
 }
 
-// اعتبارسنجی ایمیل
 function validateEmail(email) {
     const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return pattern.test(email);
 }
 
-
-// ===============================
-// 👤 User Dropdown Menu
-// ===============================
 document.addEventListener("DOMContentLoaded", () => {
-
     const authBtn = document.getElementById("authBtn");
     const authMenu = document.getElementById("authMenu");
 
@@ -43,7 +31,6 @@ document.addEventListener("DOMContentLoaded", () => {
         authMenu.classList.toggle("show");
     });
 
-
     authMenu.addEventListener("click", (e) => {
         e.stopPropagation();
     });
@@ -52,24 +39,23 @@ document.addEventListener("DOMContentLoaded", () => {
         authMenu.classList.remove("show");
     });
 });
+
 function getLoggedInMenuHtml(data) {
-    debugger;
     var isAdmin = false;
     if (data.isuseradmin) {
         isAdmin = true;
     }
     return `
-        <!-- هدر پروفایل -->
         <div class="menu-header">
             <img src="${data.avatar}" class="menu-profile-img">
             <h3 class="menu-profile-name">${data.fullname}</h3>
             <p class="menu-profile-email">${data.mobile}</p>
         </div>
-           ${isAdmin ? `
+        ${isAdmin ? `
         <li>
             <a href="/Admin" class="auth-menu-item">
                 <i class="bx bxs-user-circle"></i>
-              پنل ادمین
+                پنل ادمین
             </a>
         </li>` : ''}
         <li>
@@ -78,14 +64,12 @@ function getLoggedInMenuHtml(data) {
                 پروفایل
             </a>
         </li>
-
         <li>
             <a href="/profile/edit" class="auth-menu-item">
                 <i class="bx bxs-user-circle"></i>
                 ویرایش پروفایل
             </a>
         </li>
-
         <li>
             <a href="/messages" class="auth-menu-item">
                 <i class="bx bxs-message-alt"></i>
@@ -93,88 +77,72 @@ function getLoggedInMenuHtml(data) {
                 <span class="badge">3</span>
             </a>
         </li>
-
         <li>
             <a href="/settings" class="auth-menu-item">
                 <i class="bx bxs-cog"></i>
                 تنظیمات
             </a>
         </li>
-
         <li>
             <a href="/Profile/orders" class="auth-menu-item">
                 <i class="bx bxs-package"></i>
                 سفارش‌های من
             </a>
         </li>
-
         <div class="auth-menu-footer">
-        <a href="/Account/Logout">
-        <button class="logout-btn" id="logoutBtn">
-                خروج از حساب
-            </button>
+            <a href="/Account/Logout">
+                <button class="logout-btn" id="logoutBtn">
+                    خروج از حساب
+                </button>
             </a>
-     
         </div>
     `;
 }
+
 function renderGuestMenu() {
     return `
-            
-            <div class="menu-header">
-                <i class='bx bx-user-circle guest-icon'></i>
-                <h3 class="guest-title">خوش آمدید!</h3>
-                <p class="guest-subtitle">برای استفاده از امکانات کامل وارد شوید</p>
+        <div class="menu-header">
+            <i class='bx bx-user-circle guest-icon'></i>
+            <h3 class="guest-title">خوش آمدید!</h3>
+            <p class="guest-subtitle">برای استفاده از امکانات کامل وارد شوید</p>
+        </div>
+        <div class="auth-form">
+            <div class="form-group">
+                <input type="email" class="form-input" placeholder="ایمیل یا شماره موبایل" id="loginEmail">
             </div>
-
-            <!-- فرم ورود -->
-
-            <div  class="auth-form">
-                <div class="form-group">
-                    <input type="email" class="form-input" placeholder="ایمیل یا شماره موبایل" id="loginEmail">
-                </div>
-                <div class="form-group">
-                    <input type="password" class="form-input" placeholder="رمز عبور" id="loginPassword">
-                </div>
-                
-                <div class="form-buttons">
-                    <button class="btn btn-primary" onclick="login()" id="loginBtn">
-                        ورود به حساب
-                    </button>
-                    <a href="/Account/Register">
+            <div class="form-group">
+                <input type="password" class="form-input" placeholder="رمز عبور" id="loginPassword">
+            </div>
+            <div class="form-buttons">
+                <button class="btn btn-primary" onclick="login()" id="loginBtn">
+                    ورود به حساب
+                </button>
+                <a href="/Account/Register">
                     <button class="btn btn-secondary" id="registerBtn">
                         ثبت‌نام جدید
                     </button>
-                    <a/>
-                </div>
-                
-                <div class="quick-links">
-                    <a href="/forgot-password" class="quick-link">فراموشی رمز عبور</a>
-                    <a href="/help" class="quick-link">راهنمای ورود</a>
-                </div>
+                </a>
             </div>
-
-            <!-- ورود سریع با شبکه‌های اجتماعی -->
-            <div style="padding: 0 20px 20px;">
-                <div style="text-align: center; color: #666; font-size: 13px; margin-bottom: 10px;">یا ورود سریع با</div>
-                <div style="display: flex; gap: 10px;">
-                    <button style="flex:1; padding: 10px; background: #3b5998; color: white; border: none; border-radius: 8px; cursor: pointer;">
-                        <i class='bx bxl-facebook'></i> فیسبوک
-                    </button>
-                    <button style="flex:1; padding: 10px; background: #db4437; color: white; border: none; border-radius: 8px; cursor: pointer;">
-                        <i class='bx bxl-google'></i> گوگل
-                    </button>
-                </div>
+            <div class="quick-links">
+                <a href="/forgot-password" class="quick-link">فراموشی رمز عبور</a>
+                <a href="/help" class="quick-link">راهنمای ورود</a>
             </div>
-        `;
+        </div>
+        <div style="padding: 0 20px 20px;">
+            <div style="text-align: center; color: #666; font-size: 13px; margin-bottom: 10px;">یا ورود سریع با</div>
+            <div style="display: flex; gap: 10px;">
+                <button style="flex:1; padding: 10px; background: #3b5998; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                    <i class='bx bxl-facebook'></i> فیسبوک
+                </button>
+                <button style="flex:1; padding: 10px; background: #db4437; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                    <i class='bx bxl-google'></i> گوگل
+                </button>
+            </div>
+        </div>
+    `;
 }
 
-// ===============================
-// 🖼 Login
-// ===============================
-
 function login() {
-
     Loding();
     $.ajax({
         url: "/Account/Login",
@@ -185,12 +153,10 @@ function login() {
         },
         success: function (res) {
             if (res.success) {
-
                 AlerSweetWithTimer("ورود با موفقیت انجام شد", "success", "center");
                 setTimeout(function () {
                     location.reload();
                 }, 3000);
-
             } else {
                 AlerSweetWithTimer(res.message, "error", "center");
                 $("#loginEmail").val(''),
@@ -199,29 +165,20 @@ function login() {
         },
         error: function () {
             AlerSweetWithTimer("خطا در ارتباط با سرور", "error", "center");
-
         }
     });
     EndLoading();
-};
+}
 
-// ===============================
-// 🖼 Image Upload Preview (jQuery Plugin)
-// ===============================
 (function ($) {
-
     $.fn.imageUploader = function (options) {
-
         const settings = $.extend({
             text: "لطفا یک عکس انتخاب کنید"
         }, options);
-
         return this.each(function () {
-
             const $container = $(this);
             const $input = $container.find("input[type='file']");
             const $preview = $container.find(".picture__image");
-
             function showImage(src) {
                 const img = $("<img/>", {
                     src: src,
@@ -229,25 +186,21 @@ function login() {
                 });
                 $preview.empty().append(img);
             }
-
             const dataUrl = $container.data("url");
             if (dataUrl) {
                 showImage(dataUrl);
             } else {
                 $preview.text(settings.text);
             }
-
             $container.on("click", function () {
                 $input.trigger("click");
             });
-
             $input.on("change", function () {
                 const file = this.files[0];
                 if (!file) {
                     $preview.text(settings.text);
                     return;
                 }
-
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     showImage(e.target.result);
@@ -256,16 +209,8 @@ function login() {
             });
         });
     };
+})(jQuery);
 
-})(jQuery)
-
-
-
-
-
-// ===============================
-// 💬 SweetAlert Helpers
-// ===============================
 function AlerSweet(title, message, icon) {
     Swal.fire(title, message, icon);
 }
@@ -280,10 +225,6 @@ function AlerSweetWithTimer(title, icon, position) {
     });
 }
 
-
-// ===============================
-// ⏳ Loader
-// ===============================
 function Loding() {
     const loader = $("loader");
     if (loader) loader.style.display = "flex";
@@ -294,33 +235,22 @@ function EndLoading() {
     if (loader) loader.style.display = "none";
 }
 
-
-// ===============================
-// 📧 Add User Email (AJAX)
-// ===============================
 function AddUsersEmail() {
-
     const emailInput = $("#InputUsersEmail");
     const messageBox = $("#InputUsersEmailValid");
-
     const email = emailInput.val().trim();
-
     messageBox.removeClass("text-danger text-success").text("");
-
     if (email === "") {
         messageBox.addClass("text-danger").text("لطفا ایمیل را وارد کنید");
         $("#InputUsersEmail").val('');
         return;
     }
-
     if (!validateEmail(email)) {
         messageBox.addClass("text-danger").text("لطفا یک ایمیل معتبر وارد کنید");
         $("#InputUsersEmail").val('');
         return;
     }
-
     Loding();
-
     $.ajax({
         url: "/Home/AddUserEmail",
         type: "POST",
@@ -328,42 +258,27 @@ function AddUsersEmail() {
         dataType: "json"
     })
         .done(function (res) {
-
             if (res && res.success === true) {
                 messageBox.addClass("text-success").text("ایمیل با موفقیت ثبت شد");
                 emailInput.val("");
             } else {
-                messageBox
-                    .addClass("text-danger")
-                    .text(res.message || "خطا در ثبت ایمیل");
+                messageBox.addClass("text-danger").text(res.message || "خطا در ثبت ایمیل");
             }
         })
         .fail(function () {
-            messageBox
-                .addClass("text-danger")
-                .text("خطا در ارتباط با سرور");
+            messageBox.addClass("text-danger").text("خطا در ارتباط با سرور");
         })
         .always(function () {
             $("#InputUsersEmail").val('');
             EndLoading();
         });
 }
-// ===============================
-// 📧 Copy  Url
-// ===============================
+
 function copyUrl(Url) {
-    // اطمینان از اینکه آدرس خالی نباشد
     if (!Url) {
-        alert("آدرس  معتبر نیست!");
+        alert("آدرس معتبر نیست!");
         return;
     }
-
-    // اگر آدرس نسبی است، آدرس کامل ساخته می‌شود
-    //const fullUrl = Url.startsWith("http")
-    //    ? Url
-    //    : window.location.origin + Url;
-
-    // کپی به کلیپ‌بورد
     navigator.clipboard.writeText(Url)
         .then(() => {
             alert("✅ آدرس با موفقیت کپی شد!");
@@ -371,17 +286,11 @@ function copyUrl(Url) {
         .catch(() => {
             alert("❌ خطا در کپی آدرس!");
         });
-
 }
 
-// ===============================
-// User Panel
-// ===============================
-//Get Cities
 function GetCitiesForState(stateId) {
     var cities = $("#cities");
     cities.empty();
-
     $.ajax({
         url: "/profile/GetCitiesForState?StateId=" + stateId,
         type: "GET",
@@ -392,16 +301,14 @@ function GetCitiesForState(stateId) {
             for (var i = 0; i < res.length; i++) {
                 cities.append(`
                 <option value="${res[i].cityCode}">${res[i].title}</option>
-
-                `);
+            `);
             }
-
-        }).fail(function (xhr) {
+        })
+        .fail(function (xhr) {
             console.error("Ajax Error:", xhr.status, xhr.responseText);
         });
-
 }
-//Profile Image Uploader
+
 function readImageForWidget(input, previewId) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
@@ -414,42 +321,33 @@ function readImageForWidget(input, previewId) {
     }
 }
 
-//Price Sepatator
-
 $("[data-format='money']").each(function () {
     var value = $(this).text();
     $(this).text(Number(value).toLocaleString('en-US'));
 });
+
 $(".money").on("input", function () {
     var value = $(this).val().replace(/,/g, '');
     $(this).val(Number(value).toLocaleString('en-US'));
 });
 
-//GetMoreTransations
 function LoadWalletTransactions(pageId) {
-
-
     var parent = $(".transactions-list");
     var loadparent = $("#LoadMore");
     loadparent.html("");
     if (pageId == 0) {
         parent.html("");
     }
-
     $.ajax({
         url: "/profile/LoadTransaction",
         type: "GET",
         data: { PageId: pageId }
     })
         .done(function (res) {
-
             for (let i = 0; i < res.transactions.length; i++) {
                 const transaction = res.transactions[i];
-
                 let amountClass = '';
                 let amountSign = '';
-
-
                 if (transaction.transactionType === 'واریز' || transaction.transactionType === 2) {
                     amountClass = 'amount-positive';
                     amountSign = '+';
@@ -457,48 +355,36 @@ function LoadWalletTransactions(pageId) {
                     amountClass = 'amount-negative';
                     amountSign = '-';
                 }
-
                 parent.append(`<div class="transaction-item">
-                            <div class="transaction-info">
-                                <div class="transaction-icon">⬇️</div>
-                                <div class="transaction-details">
-                                    <span class="transaction-name">${transaction.transactionSource}</span>
-                                    <span class="transaction-date"><span class="icon-placeholder">📅</span> ${transaction.transactionDate}</span>
-                                </div>
-                            </div>
-                            <div class="transaction-amount ${amountClass}">${amountSign}${transaction.price}</div>
-                        </div>`);
+                <div class="transaction-info">
+                    <div class="transaction-icon">⬇️</div>
+                    <div class="transaction-details">
+                        <span class="transaction-name">${transaction.transactionSource}</span>
+                        <span class="transaction-date"><span class="icon-placeholder">📅</span> ${transaction.transactionDate}</span>
+                    </div>
+                </div>
+                <div class="transaction-amount ${amountClass}">${amountSign}${transaction.price}</div>
+            </div>`);
             }
-
             if (res.pageId < res.pageCount) {
                 loadparent.append(` <a onclick="LoadWalletTransactions('${res.pageId}')" style="cursor:pointer; margin:auto;" class="view-all"> بیشتر</a>`);
             }
             else if (res.dataCount > 3) {
-
                 loadparent.append(` <a onclick="LoadWalletTransactions('0')" style="cursor:pointer; margin:auto;" class="view-all"> کمتر</a>`);
             }
-
-
         })
         .fail(function (xhr) {
             console.error("Ajax Error:", xhr.status, xhr.responseText);
         });
 }
 
-// Load State and Cities
 $(document).ready(function () {
-
-    /* =======================
-       Elements
-    ======================= */
     const $province = $("#province");
     const $city = $("#city");
     const $error = $("#errorMessage");
 
     console.log($province);
-    /* =======================
-       Load Provinces
-    ======================= */
+
     function loadProvinces() {
         $.get("/Api/Post/States")
             .done(res => {
@@ -514,110 +400,70 @@ $(document).ready(function () {
         });
     }
 
-    /* =======================
-       Load Cities
-    ======================= */
     function loadCities(provinceId, $targetSelect) {
         if (!provinceId) {
-            $targetSelect
-                .html('<option value="" disabled selected>ابتدا استان را انتخاب کنید</option>')
-                .prop("disabled", true);
+            $targetSelect.html('<option value="" disabled selected>ابتدا استان را انتخاب کنید</option>').prop("disabled", true);
             return;
         }
-
         $.get("/Api/Post/Cities", { stateId: provinceId })
             .done(res => {
                 $targetSelect.empty();
-
                 if (!res || res.length === 0) {
-                    $targetSelect
-                        .append(`<option value="" disabled>شهری یافت نشد</option>`)
-                        .prop("disabled", true);
+                    $targetSelect.append(`<option value="" disabled>شهری یافت نشد</option>`).prop("disabled", true);
                 } else {
                     $targetSelect.append('<option value="" disabled selected>انتخاب شهر</option>');
-
                     $.each(res, (_, city) => {
-                        $targetSelect.append(
-                            `<option value="${city.cityCode}">${city.title}</option>`
-                        );
+                        $targetSelect.append(`<option value="${city.cityCode}">${city.title}</option>`);
                     });
-
                     $targetSelect.prop("disabled", false);
                 }
             })
             .fail(() => showError("خطا در بارگذاری شهرها"));
     }
 
-
-
-    /* =======================
-       Utils
-    ======================= */
     function showError(msg) {
         $error.text(msg).show();
         setTimeout(() => $error.hide(), 4000);
     }
 
-    /* =======================
-       Events
-    ======================= */
     $province.on("change", function () {
-
         loadCities(this.value, $city);
     });
-
 
     loadProvinces();
 });
 
-//ChargeWallet
 $(document).ready(function () {
-    // تبدیل ریال به تومان و نمایش زیر اینپات
     $('#rialAmount').on('input', function () {
         let rialValue = $(this).val();
-
         if (rialValue !== '' && rialValue > 0) {
             let tomanValue = (parseInt(rialValue) / 10).toFixed(0);
             $('#tomanHint').text('معادل تومان: ' + tomanValue + ' تومان');
         } else {
             $('#tomanHint').text('');
         }
-
         $('#WalleterrorMsg').text('');
     });
 
-    // تابع شارژ
     $('#chargeBtn').on('click', function () {
         let rialAmount = $('#rialAmount').val();
         let selectedGateway = $('input[name="paymentGateway"]:checked').val();
-
-        // بررسی خالی بودن یا صفر یا منفی
         if (!rialAmount || rialAmount <= 0) {
             $('#WalleterrorMsg').text('لطفاً مبلغ معتبر به ریال وارد کنید.');
             return;
         }
-
-        // محاسبه تومان
         let toman = parseInt(rialAmount) / 10;
-
-        // بررسی کمتر از 1000 تومان
         if (toman < 1000) {
             $('#WalleterrorMsg').text('مبلغ شارژ نباید کمتر از ۱۰۰۰ تومان باشد.');
             return;
         }
-
-        // بررسی انتخاب درگاه پرداخت
         if (!selectedGateway) {
             $('#WalleterrorMsg').text('لطفاً درگاه پرداخت را انتخاب کنید.');
             return;
         }
-
         var chargeWalletDescription = $("#chargeWalletDescription").val();
         var portal = selectedGateway;
-
-        // نمایش لودینگ
         Loding();
-
         $.ajax({
             url: "/Profile/ChargeWallet",
             type: "POST",
@@ -652,12 +498,10 @@ $(document).ready(function () {
                 $('#WalleterrorMsg').text('خطا در ارتباط با سرور. لطفاً مجدداً تلاش کنید.');
             })
             .always(function () {
-                // این قسمت همیشه اجرا می‌شود (چه موفق چه خطا)
                 EndLoading();
             });
     });
 
-    // بستن مدال
     function closeModal() {
         $('#chargeModal').fadeOut();
         $('#rialAmount').val('');
@@ -674,7 +518,7 @@ $(document).ready(function () {
 });
 
 function open_Modal_Ajax(url, modalclass) {
-  
+    debugger;
     $('#modal-default').removeClass("product-modal");
     if (modalclass !== undefined && modalclass !== null && modalclass.trim() !== '') {
         $('#modal-default').addClass(modalclass);
@@ -694,6 +538,7 @@ function Get_ajax(url) {
 function close_Modal_Ajax() {
     $('#modal-default').modal('hide');
 }
+
 function initProductCategoryTree() {
     $('.pct-toggle-icon').off('click').on('click', function (e) {
         e.stopPropagation();
@@ -790,10 +635,9 @@ function updateParentStateInTree(parentId) {
         }
     }
 }
-$(document).ready(function () {
-    // تابع دریافت محصولات
-    window.getProductsByCategories = function () {
 
+$(document).ready(function () {
+    window.getProductsByCategories = function () {
         var selectedCategories = [];
         $('.pct-checkbox:checked').each(function () {
             var catId = parseInt($(this).val());
@@ -801,10 +645,7 @@ $(document).ready(function () {
                 selectedCategories.push(catId);
             }
         });
-
         console.log("دسته‌بندی‌های انتخاب شده:", selectedCategories);
-
-        // اگر چیزی انتخاب نشده
         if (selectedCategories.length === 0) {
             var productSelect = document.getElementById('productSelect');
             if (productSelect) {
@@ -812,12 +653,8 @@ $(document).ready(function () {
             }
             return;
         }
-
-        // نمایش لودینگ
         $('#loadingSpinner').show();
         $('#productSelect').prop('disabled', true);
-
-        // ارسال درخواست Ajax
         $.ajax({
             url: '/Seller/GetProductsForAddToShop',
             type: 'POST',
@@ -844,21 +681,14 @@ $(document).ready(function () {
         });
     };
 
-    // به‌روزرسانی select معمولی
     function updateSelect(products) {
         var select = document.getElementById('productSelect');
         if (!select) return;
-
-        // خالی کردن select
         select.innerHTML = '';
-
-        // اضافه کردن گزینه پیش‌فرض
         var defaultOption = document.createElement('option');
         defaultOption.value = '';
         defaultOption.textContent = 'انتخاب محصول...';
         select.appendChild(defaultOption);
-
-        // اضافه کردن محصولات
         if (products && products.length > 0) {
             for (var i = 0; i < products.length; i++) {
                 var option = document.createElement('option');
@@ -875,7 +705,6 @@ $(document).ready(function () {
         }
     }
 
-    // ریست کردن select
     function resetSelect() {
         var select = document.getElementById('productSelect');
         if (select) {
@@ -883,7 +712,6 @@ $(document).ready(function () {
         }
     }
 
-    // نمایش خطا
     function showError(message) {
         var errorDiv = document.getElementById('errorMessage');
         if (!errorDiv) {
@@ -902,7 +730,6 @@ $(document).ready(function () {
         }, 3000);
     }
 
-    // به‌روزرسانی تعداد انتخاب شده‌ها
     function updateSelectedCount() {
         var count = $('.pct-checkbox:checked').length;
         var countSpan = document.getElementById('selectedCount');
@@ -911,26 +738,22 @@ $(document).ready(function () {
         }
     }
 
-
     $(document).off('change', '.pct-checkbox').on('change', '.pct-checkbox', function () {
-
         updateSelectedCount();
-
         var $checkbox = $(this);
         var isChecked = $checkbox.is(':checked');
         var $node = $checkbox.closest('.pct-node');
-
         $node.find('.pct-checkbox').prop('checked', isChecked);
         updateParentCheckbox($node);
         getProductsByCategories();
     });
+
     function updateParentCheckbox($node) {
         var $parentNode = $node.closest('.pct-children').closest('.pct-node');
         if ($parentNode.length) {
             var $parentCheckbox = $parentNode.find('.pct-checkbox:first');
             var $childCheckboxes = $parentNode.find('.pct-children .pct-checkbox');
             var checkedCount = $childCheckboxes.filter(':checked').length;
-
             if (checkedCount === 0) {
                 $parentCheckbox.prop('checked', false).prop('indeterminate', false);
             } else if (checkedCount === $childCheckboxes.length) {
@@ -941,7 +764,6 @@ $(document).ready(function () {
         }
     }
 
-    // باز کردن/بستن زیرمجموعه‌ها
     $(document).off('click', '.pct-toggle-icon').on('click', '.pct-toggle-icon', function (e) {
         e.stopPropagation();
         var $children = $(this).closest('.pct-node').find('.pct-children');
@@ -954,61 +776,45 @@ $(document).ready(function () {
         }
     });
 
-    // مقداردهی اولیه
     updateSelectedCount();
-
-    // اگر از قبل دسته‌بندی انتخاب شده بود
     if ($('.pct-checkbox:checked').length > 0) {
         setTimeout(function () {
             getProductsByCategories();
         }, 100);
     }
 });
+
 function CreateProductSell() {
-    // 1. اعتبارسنجی اولیه
     var selectedProduct = $('#productSelect').val();
     var price = $('#Price').val();
     var weight = $('#Weight').val();
     var unit = $('#Unit').val();
     $('.product-form-control').removeClass('is-invalid');
     $('.product-form-validation').hide();
-
-
     if (!price || parseFloat(price) <= 0) {
-
         $('#Price').focus();
         $('.product-form-validation[data-for="Price"]').show();
         $('#Price').addClass('is-invalid');
         return;
     }
-
-
     if (!weight || parseFloat(weight) <= 0) {
-     
         $('#Weight').focus();
         $('.product-form-validation[data-for="Weight"]').show();
         $('#Weight').addClass('is-invalid');
         return;
     }
-
-    // 5. بررسی واحد فروش
     if (!unit || unit.trim() === '') {
-
         $('#Unit').focus();
         $('.product-form-validation[data-for="Unit"]').show();
         $('#Unit').addClass('is-invalid');
         return;
     }
-
-    // 6. جمع‌آوری اطلاعات فرم
     var formData = new FormData();
     formData.append("ProductId", selectedProduct);
     formData.append("Price", price);
     formData.append("Weight", weight);
     formData.append("Unit", unit);
     formData.append("SellerId", $('#SellerId').val());
-
-    // 7. ارسال به سرور
     $.ajax({
         url: '/Seller/AddProductToShop',
         type: 'POST',
@@ -1016,19 +822,14 @@ function CreateProductSell() {
         processData: false,
         contentType: false,
         beforeSend: function () {
-            // غیرفعال کردن دکمه و نمایش لودینگ
             $('.btn-primary').prop('disabled', true).text('در حال ثبت...');
             $('#loadingOverlay').fadeIn();
         },
         success: function (response) {
             if (response.success) {
-                // موفقیت
                 AlerSweetWithTimer("محصول با موفقیت اضافه شد", "success", "center");
-
-                // بستن مدال
                 setTimeout(function () {
                     close_Modal_Ajax();
-                    // رفرش صفحه یا به‌روزرسانی لیست
                     if (typeof refreshProductList === 'function') {
                         refreshProductList();
                     } else {
@@ -1036,7 +837,6 @@ function CreateProductSell() {
                     }
                 }, 1500);
             } else {
-                // خطا از سمت سرور
                 AlerSweetWithTimer(response.message, "error", "center");
             }
         },
@@ -1053,7 +853,6 @@ function CreateProductSell() {
             AlerSweetWithTimer(errorMsg, "error", "center");
         },
         complete: function () {
-            // فعال کردن مجدد دکمه
             $('.btn-primary').prop('disabled', false).text('ذخیره');
             $('#loadingOverlay').fadeOut();
         }
@@ -1066,31 +865,21 @@ function EditProductSell() {
     var price = $('#ProductSellPrice').val();
     var weight = $('#ProcutSellWight').val();
     var unit = $('#ProcutSellUnit').val();
-
     $('.product-form-control').removeClass('is-invalid');
     $('.product-form-validation').hide();
-
-
     if (!price || parseFloat(price) <= 0) {
-
         $('#ProductSellPrice').focus();
         $('.product-form-validation[data-for="Price"]').show();
         $('#ProductSellPrice').addClass('is-invalid');
         return;
     }
-
-
     if (!weight || parseFloat(weight) <= 0) {
-
         $('#ProcutSellWight').focus();
         $('.product-form-validation[data-for="Weight"]').show();
         $('#ProcutSellWight').addClass('is-invalid');
         return;
     }
-
-    // 5. بررسی واحد فروش
     if (!unit || unit.trim() === '') {
-
         $('#ProcutSellUnit').focus();
         $('.product-form-validation[data-for="Unit"]').show();
         $('#ProcutSellUnit').addClass('is-invalid');
@@ -1102,8 +891,6 @@ function EditProductSell() {
     formData.append("Weight", weight);
     formData.append("Unit", unit);
     formData.append("SellerId", sellerId);
-
-    // 7. ارسال به سرور
     $.ajax({
         url: '/Seller/EditProduct',
         type: 'POST',
@@ -1111,22 +898,17 @@ function EditProductSell() {
         processData: false,
         contentType: false,
         beforeSend: function () {
-            // غیرفعال کردن دکمه و نمایش لودینگ
             $('.btn-primary').prop('disabled', true).text('در حال ویرایش...');
             $('#loadingOverlay').fadeIn();
         },
         success: function (response) {
             if (response.success) {
-                // موفقیت
-                AlerSweetWithTimer("محصول با  ویرایش شد", "success", "center");
-
-                // بستن مدال
+                AlerSweetWithTimer("محصول با موفقیت ویرایش شد", "success", "center");
                 setTimeout(function () {
                     close_Modal_Ajax();
                     location.reload();
                 }, 1500);
             } else {
-                // خطا از سمت سرور
                 AlerSweetWithTimer(response.message, "error", "center");
             }
         },
@@ -1143,9 +925,236 @@ function EditProductSell() {
             AlerSweetWithTimer(errorMsg, "error", "center");
         },
         complete: function () {
-            // فعال کردن مجدد دکمه
             $('.btn-primary').prop('disabled', false).text('ذخیره');
             $('#loadingOverlay').fadeOut();
         }
+    });
+}
+
+function GetUsersShop() {
+    $('#loadingSpinner').show();
+    $('#ShopSelect').prop('disabled', true);
+    $.ajax({
+        url: '/Profile/Stores/GetUsersShop',
+        type: 'GET',
+        success: function (response) {
+            var select = $('#ShopSelect');
+            select.empty();
+            select.append('<option value="0">انتخاب فروشگاه...</option>');
+            if (response && response.length > 0) {
+                $.each(response, function (index, item) {
+                    select.append('<option value="' + item.id + '">' + item.title + '</option>');
+                });
+            } else {
+                select.append('<option value="0">فروشگاهی یافت نشد</option>');
+            }
+        },
+        error: function () {
+            $('#ShopSelect').html('<option value="0">خطا در بارگذاری</option>');
+        },
+        complete: function () {
+            $('#loadingSpinner').hide();
+            $('#ShopSelect').prop('disabled', false);
+        }
+    });
+}
+
+function CreateStore() {
+    var selectedShopId = $('#ShopSelect').val();
+    var storeDescription = $('#StoreDescription').val();
+    $('.product-form-control').removeClass('is-invalid');
+    $('.product-form-validation').hide();
+    if (!selectedShopId || selectedShopId == '0') {
+        $('.product-form-validation[data-for="ShopSelect"]').show();
+        $('#ShopSelect').addClass('is-invalid');
+        return;
+    }
+    if (!storeDescription || storeDescription.trim() === '') {
+        $('.product-form-validation[data-for="StoreDescription"]').show();
+        $('#StoreDescription').addClass('is-invalid');
+        return;
+    }
+    var formData = new FormData();
+    formData.append("SellerId", selectedShopId);
+    formData.append("Description", storeDescription);
+    $.ajax({
+        url: '/Profile/Stores/Create',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            if (response.success) {
+                AlerSweetWithTimer(response.message, "success", "center");
+                setTimeout(function () {
+                    close_Modal_Ajax();
+                    location.reload();
+                }, 3000);
+            } else {
+                AlerSweetWithTimer(response.message, "error", "center");
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', status, error);
+            let errorMessage = 'خطا در ارتباط با سرور';
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                errorMessage = xhr.responseJSON.message;
+            }
+            AlerSweetWithTimer(errorMessage, "error", "center");
+        },
+    });
+}
+
+
+function loadProductSells() {
+    debugger;
+    var sellerId = $('#SellerId').val();
+    $('#loadingSpinner').show();
+    $('#productsell').prop('disabled', true);
+
+    $.ajax({
+        url: '/Profile/Stores/GetProductSellsForAddToStore',
+        type: 'GET',
+        data: { sellerId: sellerId },
+        dataType: 'json',
+        success: function (response) {
+            var select = $('#productsell');
+            select.empty();
+            select.append('<option value="">انتخاب محصول...</option>');
+
+            if (response && response.length > 0) {
+                $.each(response, function (index, item) {
+                    var option = `<option value="${item.id}">${item.title}-موجودی (${item.count})</option>`
+                    select.append(option);
+                });
+            } else {
+                select.append('<option value="" disabled>محصولی یافت نشد</option>');
+            }
+
+            select.trigger('change');
+        },
+        error: function (xhr, status, error) {
+            console.error('Error loading products:', error);
+            $('#productsell').html('<option value="">خطا در بارگذاری محصولات</option>');
+        },
+        complete: function () {
+            $('#loadingSpinner').hide();
+            $('#productsell').prop('disabled', false);
+        }
+    });
+}
+
+function CreateStoreProduct() {
+    debugger;
+    var productId = $('#productsell').val();
+    var storeType = $('#StoreType').val();
+    var count = $('#count').val();
+    var storeId = $('#storeId').val();
+    $('.text-danger').text('');
+    $('.form-control').removeClass('is-invalid');
+
+    var hasError = false;
+
+    if (!productId || productId === '') {
+        $('#productsell').addClass('is-invalid');
+        $('#productsell').closest('.form-group').find('.text-danger').text('لطفاً محصول را انتخاب کنید');
+        hasError = true;
+    }
+
+    if (!storeType) {
+        $('#StoreType').addClass('is-invalid');
+        $('#StoreType').closest('.form-group').find('.text-danger').text('لطفاً نوع عملیات را انتخاب کنید');
+        hasError = true;
+    }
+
+    if (!count || parseInt(count) <= 0) {
+        $('#count').addClass('is-invalid');
+        $('#count').closest('.form-group').find('.text-danger').text('لطفاً تعداد معتبر وارد کنید');
+        hasError = true;
+    }
+
+    if (hasError) return;
+
+    var formData = new FormData();
+    formData.append("ProdcutSellId", productId);
+    formData.append("StoreProductType", storeType);
+    formData.append("Count", count);
+    formData.append("StoreId", storeId);
+    $.ajax({
+        url: '/Profile/Stores/AddStoreProduct',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        beforeSend: function () {
+            $('.btn-submit').prop('disabled', true).text('در حال ثبت...');
+            $('#loadingOverlay').fadeIn();
+        },
+        success: function (response) {
+            if (response.success) {
+                AlerSweetWithTimer(response.message || 'محصول با موفقیت ثبت شد', "success", "center");
+                setTimeout(function () {
+                    close_Modal_Ajax();
+                    location.reload();
+                }, 2000);
+            } else {
+                AlerSweetWithTimer(response.message || 'خطا در ثبت محصول', "error", "center");
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', xhr);
+            var errorMsg = 'خطا در ارتباط با سرور';
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                errorMsg = xhr.responseJSON.message;
+            }
+            AlerSweetWithTimer(errorMsg, "error", "center");
+        },
+        complete: function () {
+            $('.btn-submit').prop('disabled', false).text('ذخیره');
+            $('#loadingOverlay').fadeOut();
+        }
+    });
+};
+
+function EitStoreDescription() {
+    var storeDescription = $('#StoreDescription').val();
+    var storeId = $('#storeId').val()
+    $('.product-form-control').removeClass('is-invalid');
+    $('.product-form-validation').hide();
+
+
+    if (!storeDescription || storeDescription.trim() === '') {
+        $('.product-form-validation[data-for="StoreDescription"]').show();
+        $('#StoreDescription').addClass('is-invalid');
+        return;
+    }
+    var formData = new FormData();
+    formData.append("Id", storeId);
+    formData.append("Description", storeDescription);
+    $.ajax({
+        url: '/Profile/Stores/EditStoreDescription',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            if (response.success) {
+                AlerSweetWithTimer(response.message, "success", "center");
+                setTimeout(function () {
+                    close_Modal_Ajax();
+                    location.reload();
+                }, 3000);
+            } else {
+                AlerSweetWithTimer(response.message, "error", "center");
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', status, error);
+            let errorMessage = 'خطا در ارتباط با سرور';
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                errorMessage = xhr.responseJSON.message;
+            }
+            AlerSweetWithTimer(errorMessage, "error", "center");
+        },
     });
 }
