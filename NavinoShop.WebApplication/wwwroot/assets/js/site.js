@@ -656,7 +656,7 @@ $(document).ready(function () {
         $('#loadingSpinner').show();
         $('#productSelect').prop('disabled', true);
         $.ajax({
-            url: '/Seller/GetProductsForAddToShop',
+            url: '/Profile/Seller/GetProductsForAddToShop',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(selectedCategories),
@@ -892,7 +892,7 @@ function EditProductSell() {
     formData.append("Unit", unit);
     formData.append("SellerId", sellerId);
     $.ajax({
-        url: '/Seller/EditProduct',
+        url: '/Profile/Seller/EditProduct',
         type: 'POST',
         data: formData,
         processData: false,
@@ -1004,6 +1004,7 @@ function CreateStore() {
         },
     });
 }
+
 
 
 function loadProductSells() {
@@ -1158,3 +1159,414 @@ function EitStoreDescription() {
         },
     });
 }
+
+$(document).ready(function () {
+
+    // ===============================
+    // باز و بسته کردن زیرمجموعه‌ها با کلیک روی دکمه
+    // ===============================
+    $(document).on('click', '.filter-cat-toggle', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const $btn = $(this);
+        const categoryId = $btn.data('filter-cat-id');
+        const $children = $(`#FilterCatChildren_${categoryId}`);
+
+        $btn.toggleClass('collapsed');
+
+        if ($children.is(':visible')) {
+            $children.slideUp(300);
+        } else {
+            $children.slideDown(300);
+        }
+    });
+
+
+    // ===============================
+    // باز نگه داشتن زیرمجموعه‌های دارای انتخاب (در زمان لود صفحه)
+    // ===============================
+    function expandCheckedNodes() {
+        $('.filter-cat-checkbox:checked').each(function () {
+            // IMPORTANT: از data-filter-cat-id استفاده کن نه value
+            const $node = $(this).closest('.filter-cat-node');
+            const categoryId = $node.data('filter-cat-id');
+
+            if (!categoryId) return;
+
+            // باز کردن زیرمجموعه‌های گره انتخاب شده
+            const $childrenDiv = $(`#FilterCatChildren_${categoryId}`);
+            if ($childrenDiv.length) {
+                $childrenDiv.show();
+                const $toggle = $childrenDiv.siblings('.filter-cat-node-header').find('.filter-cat-toggle');
+                if ($toggle.length) {
+                    $toggle.removeClass('collapsed');
+                }
+            }
+        });
+    }
+
+    // ===============================
+    // دریافت اسلاگ‌های انتخاب شده (برای فیلتر محصولات)
+    // ===============================
+    window.getSelectedCategorySlugs = function () {
+        const slugs = [];
+        $('.filter-cat-checkbox:checked').each(function () {
+            const slug = $(this).val();
+            if (slug && slug !== '') {
+                slugs.push(slug);
+            }
+        });
+        return slugs;
+    };
+
+    // ===============================
+    // دریافت Idهای انتخاب شده
+    // ===============================
+    window.getSelectedCategoryIds = function () {
+        const ids = [];
+        $('.filter-cat-checkbox:checked').each(function () {
+            const $node = $(this).closest('.filter-cat-node');
+            const id = $node.data('filter-cat-id');
+            if (id) {
+                ids.push(id);
+            }
+        });
+        return ids;
+    };
+
+    // اجرا در زمان لود
+    expandCheckedNodes();
+});
+
+
+//********************************************* */
+// Products.js
+
+$(document).ready(function () {
+    // فقط در صفحه /shop/products اجرا شود (حساسیت به حروف کوچک/بزرگ ندارد)
+    if (!window.location.pathname.toLowerCase().includes('/shop/products')) {
+        return;
+    }
+
+    // ---------- تنظیمات جاری (State) ----------
+    var currentSettings = {
+        minPrice: 0,
+        maxPrice: 0,
+        sort: 0,
+        categorySlug: '',
+        pageId: 1,
+        search: ''
+    };
+
+    // ---------- تابع به‌روزرسانی URL (جدید) ----------
+    function updateUrl() {
+        // ساخت پارامترهای اضافی (جستجو، مرتب‌سازی، صفحه، قیمت)
+        var params = new URLSearchParams();
+
+        // اضافه کردن پارامتر جستجو (filter)
+        if (currentSettings.search && currentSettings.search !== '') {
+            params.set('search', currentSettings.search);
+            $("#ResultTitle").text("نتایج جستجو برای " + currentSettings.search);
+        }
+
+        // اضافه کردن پارامتر مرتب‌سازی
+        if (currentSettings.sort && currentSettings.sort != 0) {
+            params.set('sort', currentSettings.sort);
+        }
+
+        // اضافه کردن شماره صفحه (اگر بزرگتر از 1)
+        if (currentSettings.pageId && currentSettings.pageId > 1) {
+            params.set('page', currentSettings.pageId);
+        }
+
+        // اضافه کردن قیمت حداقل (اگر بزرگتر از 0)
+        if (currentSettings.minPrice && currentSettings.minPrice > 0) {
+            params.set('minPrice', currentSettings.minPrice);
+        }
+
+        // اضافه کردن قیمت حداکثر (اگر کوچکتر از حداکثر و بزرگتر از 0)
+        if (currentSettings.maxPrice && currentSettings.maxPrice > 0 && currentSettings.maxPrice < 100000000) {
+            params.set('maxPrice', currentSettings.maxPrice);
+        }
+
+        var baseUrl = '/shop/Products';
+        var newUrl = '';
+
+        // اگر دسته‌بندی انتخاب شده باشد، آن را به صورت مسیر اضافه کن
+        if (currentSettings.categorySlug && currentSettings.categorySlug !== '') {
+            newUrl = baseUrl + '/' + encodeURIComponent(currentSettings.categorySlug);
+
+            // تنظیم عنوان صفحه بر اساس دسته‌بندی
+            var categoryTitle = currentSettings.categorySlug.replace(/_/g, ' ');
+            $("#ResultTitle").text("محصولات در دسته بندی " + categoryTitle);
+
+            // اگر هم جستجو وجود داشت، عنوان را ترکیبی کن
+            if (currentSettings.search && currentSettings.search !== '') {
+                $("#ResultTitle").text("نتایج جستجو برای " + currentSettings.search + " در دسته " + categoryTitle);
+            }
+
+            // اضافه کردن پارامترهای دیگر به عنوان کوئری استرینگ
+            if (params.toString()) {
+                newUrl += '?' + params.toString();
+            }
+        } else {
+            // بدون دسته‌بندی: فقط کوئری استرینگ
+            newUrl = baseUrl + (params.toString() ? '?' + params.toString() : '');
+
+            // تنظیم عنوان در حالت بدون دسته‌بندی
+            if (currentSettings.search && currentSettings.search !== '') {
+                $("#ResultTitle").text("نتایج جستجو برای " + currentSettings.search);
+            } else {
+                $("#ResultTitle").text("همه محصولات");
+            }
+        }
+
+        // به‌روزرسانی URL بدون رفرش صفحه
+        window.history.pushState({ ...currentSettings }, '', newUrl);
+    }
+
+    // ---------- خواندن مقدار جستجو از URL (در ابتدا) ----------
+    var urlParams = new URLSearchParams(window.location.search);
+    var searchQuery = urlParams.get('search');
+    if (searchQuery) {
+        currentSettings.search = searchQuery;
+        // مقدار را در فیلد جستجو قرار می‌دهیم (اگر فیلد وجود داشته باشد)
+        $('#search-input').val(searchQuery);
+    }
+
+    // ---------- توابع اصلی (مرتب‌سازی، قیمت، بارگذاری، رندر) ----------
+
+    // تغییر مرتب‌سازی
+    window.changeSort = function (sortValue) {
+        currentSettings.sort = sortValue;
+        currentSettings.pageId = 1;
+        $('.order-filter').removeClass('active');
+        $(`.order-filter[data-sort="${sortValue}"]`).addClass('active');
+        loadProducts();
+    };
+
+    // اعمال محدوده قیمت (با فرض وجود window.priceSlider)
+    window.applyPriceRange = function () {
+        if (window.priceSlider) {
+            var values = window.priceSlider.get();
+            var minPrice = Math.round(values[0]);
+            var maxPrice = Math.round(values[1]);
+            currentSettings.minPrice = minPrice;
+            currentSettings.maxPrice = maxPrice;
+            currentSettings.pageId = 1;
+            loadProducts();
+        } else {
+            console.error("priceSlider not defined!");
+        }
+    };
+
+    // بارگذاری محصولات با AJAX
+    window.loadProducts = function (options) {
+        if (options) {
+            $.extend(currentSettings, options);
+        }
+        debugger;
+        var requestData = {
+            minPrice: currentSettings.minPrice,
+            maxPrice: currentSettings.maxPrice,   // اصلاح شد: maxprice -> maxPrice
+            sort: currentSettings.sort,
+            categorySlug: currentSettings.categorySlug,
+            pageId: currentSettings.pageId,
+            search: currentSettings.search
+        };
+
+        $('#Products').html('<div class="text-center p-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">در حال بارگذاری...</span></div></div>');
+
+        $.ajax({
+            url: '/Shop/Products',
+            type: 'POST',
+            data: requestData,
+            dataType: 'json',
+            success: function (response) {
+                if (response.products && response.products.length > 0) {
+                    var productsHtml = renderProducts(response.products);
+                    $('#Products').html(productsHtml);
+                    if (response.pagination) {
+                        renderPagination(response.pagination);
+                    }
+                } else if (typeof response === 'string') {
+                    $('#Products').html(response);
+                } else {
+                    $('#Products').html('<div class="text-center p-5 alert alert-info">محصولی یافت نشد</div>');
+                }
+                $('html, body').animate({ scrollTop: 0 }, 300);
+                // به‌روزرسانی URL پس از بارگذاری موفق
+                updateUrl();
+            },
+            error: function (xhr, status, error) {
+                console.error('خطا در بارگذاری محصولات:', error);
+                $('#Products').html('<div class="alert alert-danger">خطا در بارگذاری محصولات: ' + error + '</div>');
+            }
+        });
+    };
+
+    // رندر محصولات (بدون تغییر نسبت به کد اصلی)
+    window.renderProducts = function (products) {
+        if (!products || products.length === 0) {
+            return '<div class="text-center p-5 alert alert-info">محصولی یافت نشد</div>';
+        }
+        var html = '';
+        $.each(products, function (index, product) {
+            var categoryHtml = '';
+            if (product.category) {
+                categoryHtml = `<a href="javascript:void(0)" onclick="loadProducts({categorySlug: '${product.categorySlug || ''}', pageId: 1})">${escapeHtml(product.category)}</a>`;
+            }
+            if (product.subCategory) {
+                categoryHtml += `&nbsp;/&nbsp;<a href="javascript:void(0)" onclick="loadProducts({categorySlug: '${product.subCategorySlug || ''}', pageId: 1})">${escapeHtml(product.subCategory)}</a>`;
+            }
+            html += `
+                <div class="col" style="display: block;">
+                    <div class="encode4326654321vfb">
+                        <a href="/product/${product.slug || product.id}">
+                            <div class="image" style="background-image: url('/Images/Product/500/${product.imageName || 'default.jpg'}');"></div>
+                        </a>
+                        <div class="details p-3">
+                            <div class="category">
+                                ${categoryHtml || '<a href="#">دسته‌بندی نشده</a>'}
+                            </div>
+                            <a href="/product/${product.slug || product.id}">
+                                <h2>${escapeHtml(product.title || 'بدون عنوان')}</h2>
+                            </a>
+                            <div class="encode4365gbf265g43d">${formatPrice(product.price || 0)} تومان</div>
+                            <div class="rate">
+                                ${generateStarRating(product.rating || 0)}
+                                <span class="encode43bf265g43d">(${product.votesCount || 0} رای دهنده)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        return html;
+    };
+
+    // رندر صفحه‌بندی (بدون تغییر نسبت به کد اصلی)
+    window.renderPagination = function (pagination) {
+        if (!pagination || pagination.totalPages <= 1) return '';
+        var currentPage = pagination.currentPage || currentSettings.pageId || 1;
+        var totalPages = pagination.totalPages;
+        var paginationHtml = '<div class="pagination-wrapper text-center mt-4"><ul class="pagination justify-content-center" style="display: flex; list-style: none; gap: 5px; padding: 0;">';
+        if (currentPage > 1) {
+            paginationHtml += `<li class="page-item"><a class="page-link" href="javascript:void(0)" onclick="loadProducts({pageId: ${currentPage - 1}})" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; color: #000; background: #fff; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#fcb941'; this.style.borderColor='#fcb941';" onmouseout="this.style.backgroundColor='#fff'; this.style.borderColor='#ddd';">قبلی</a></li>`;
+        }
+        var startPage = Math.max(1, currentPage - 2);
+        var endPage = Math.min(totalPages, currentPage + 2);
+        if (startPage > 1) {
+            paginationHtml += `<li class="page-item"><a class="page-link" href="javascript:void(0)" onclick="loadProducts({pageId: 1})" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; color: #000; background: #fff; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#fcb941'; this.style.borderColor='#fcb941';" onmouseout="this.style.backgroundColor='#fff'; this.style.borderColor='#ddd';">1</a></li>`;
+            if (startPage > 2) paginationHtml += `<li class="page-item disabled"><span class="page-link" style="padding: 8px 12px; color: #000;">...</span></li>`;
+        }
+        for (var i = startPage; i <= endPage; i++) {
+            var isActive = (i === currentPage);
+            if (isActive) {
+                paginationHtml += `<li class="page-item active"><a class="page-link" href="javascript:void(0)" onclick="loadProducts({pageId: ${i}})" style="padding: 8px 12px; border: 1px solid #fcb941; border-radius: 4px; background: #fcb941; color: #000; text-decoration: none; font-weight: bold;">${i}</a></li>`;
+            } else {
+                paginationHtml += `<li class="page-item"><a class="page-link" href="javascript:void(0)" onclick="loadProducts({pageId: ${i}})" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; background: #fff; color: #000; text-decoration: none; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#fcb941'; this.style.borderColor='#fcb941';" onmouseout="this.style.backgroundColor='#fff'; this.style.borderColor='#ddd';">${i}</a></li>`;
+            }
+        }
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) paginationHtml += `<li class="page-item disabled"><span class="page-link" style="padding: 8px 12px; color: #000;">...</span></li>`;
+            paginationHtml += `<li class="page-item"><a class="page-link" href="javascript:void(0)" onclick="loadProducts({pageId: ${totalPages}})" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; color: #000; background: #fff; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#fcb941'; this.style.borderColor='#fcb941';" onmouseout="this.style.backgroundColor='#fff'; this.style.borderColor='#ddd';">${totalPages}</a></li>`;
+        }
+        if (currentPage < totalPages) {
+            paginationHtml += `<li class="page-item"><a class="page-link" href="javascript:void(0)" onclick="loadProducts({pageId: ${currentPage + 1}})" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; color: #000; background: #fff; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#fcb941'; this.style.borderColor='#fcb941';" onmouseout="this.style.backgroundColor='#fff'; this.style.borderColor='#ddd';">بعدی</a></li>`;
+        }
+        paginationHtml += '</ul></div>';
+        $('#Products').append(paginationHtml);
+        return paginationHtml;
+    };
+
+    // توابع کمکی (فرمت قیمت، escape، ستاره‌ها)
+    function formatPrice(price) {
+        if (!price && price !== 0) return '۰';
+        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+    function escapeHtml(text) {
+        if (!text) return '';
+        var map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        };
+        return text.replace(/[&<>"']/g, function (m) { return map[m]; });
+    }
+    function generateStarRating(rating) {
+        var fullStars = Math.floor(rating);
+        var hasHalfStar = (rating - fullStars) >= 0.5;
+        var starsHtml = '';
+        for (var i = 1; i <= 5; i++) {
+            if (i <= fullStars) {
+                starsHtml += `<svg class="svg-inline--fa fa-star fa-w-18" style="color: #ffc107; width: 18px; height: 18px; display: inline-block;" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="star" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"></path></svg>`;
+            } else if (i === fullStars + 1 && hasHalfStar) {
+                starsHtml += `<svg class="svg-inline--fa fa-star-half-alt fa-w-17" style="color: #ffc107; width: 18px; height: 18px; display: inline-block;" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="star-half-alt" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 536 512"><path fill="currentColor" d="M508.55 171.51L362.18 150.2 296.77 17.81C290.89 5.98 279.42 0 267.95 0c-11.4 0-22.79 5.9-28.69 17.81l-65.43 132.38-146.38 21.29c-26.25 3.8-36.77 36.09-17.74 54.59l105.89 103-25.06 145.48C86.98 495.33 103.57 512 122.15 512c4.93 0 10-1.17 14.87-3.75l130.95-68.68 130.94 68.7c4.86 2.55 9.92 3.71 14.83 3.71 18.6 0 35.22-16.61 31.66-37.4l-25.03-145.49 105.91-102.98c19.04-18.5 8.52-50.8-17.73-54.6zm-121.74 123.2l-18.12 17.62 4.28 24.88 19.52 113.45-102.13-53.59-22.38-11.74.03-317.19 51.03 103.29 11.18 22.63 25.01 3.64 114.23 16.63-82.65 80.38z"></path></svg>`;
+            } else {
+                starsHtml += `<svg class="svg-inline--fa fa-star fa-w-18" style="color: #ddd; width: 18px; height: 18px; display: inline-block;" aria-hidden="true" focusable="false" data-prefix="far" data-icon="star" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M528.1 171.5L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6zM388.6 312.3l23.7 138.4L288 385.4l-124.3 65.3 23.7-138.4-100.6-98 139-20.2 62.2-126 62.2 126 139 20.2-100.6 98z"></path></svg>`;
+            }
+        }
+        return starsHtml;
+    }
+
+    // ---------- جستجوی مجدد در همین صفحه با فشردن Enter (AJAX) ----------
+    $('#search-input').on('keypress', function (e) {
+        if (e.which === 13) {
+            e.preventDefault();
+            var newQuery = $(this).val().trim();
+            if (newQuery !== currentSettings.search) {
+                currentSettings.search = newQuery;
+                currentSettings.pageId = 1;
+                loadProducts();   // تابع updateUrl در success فراخوانی می‌شود
+            }
+        }
+    });
+
+    // ---------- مدیریت دکمه بازگشت مرورگر (با پشتیبانی از جستجو و قیمت) ----------
+    window.addEventListener('popstate', function (event) {
+        var state = event.state || {};
+        currentSettings.categorySlug = state.categorySlug || '';
+        currentSettings.pageId = state.pageId || 1;
+        currentSettings.sort = state.sort || 0;
+        currentSettings.search = state.filter || '';
+        currentSettings.minPrice = state.minPrice || 0;
+        currentSettings.maxPrice = state.maxPrice || 0;
+
+        $('#search-input').val(currentSettings.search);
+        $('.order-filter').removeClass('active');
+        $(`.order-filter[data-sort="${currentSettings.sort}"]`).addClass('active');
+
+        loadProducts();
+    });
+    // تابع پاک کردن همه فیلترها
+    window.resetAllFilters = function () {
+
+        currentSettings = {
+            minPrice: 0,
+            maxPrice: 0,
+            sort: 0,
+            categorySlug: '',
+            pageId: 1,
+            filter: ''
+        };
+
+        $('#search-input').val('');
+        $('.order-filter').removeClass('active');
+        $("#ResultTitle").text("");
+        $('input[name="categoryRadio"]').prop('checked', false);
+
+        if (window.priceSlider) {
+            window.priceSlider.set([0, 100000000]);
+            $('#encode4365gbf265g43d-range-from').text('0');
+            $('#encode4365gbf265g43d-range-to').text('100,000,000');
+        }
+        loadProducts();
+    };
+    // ---------- بارگذاری اولیه محصولات ----------
+    loadProducts();
+});
+

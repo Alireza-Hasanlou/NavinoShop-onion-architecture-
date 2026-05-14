@@ -5,6 +5,7 @@ namespace Shop.Application.Contract.ProductCategory.Query
     public class CategoryTreeItem
     {
         public int Id { get; set; }
+        public string Slug { get; set; }
         public string Title { get; set; }
         public int ParentId { get; set; }
         public int Level { get; set; }

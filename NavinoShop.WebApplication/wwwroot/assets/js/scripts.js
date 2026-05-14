@@ -1,23 +1,38 @@
-$(function() {
+﻿$(function() {
     /* encode4365gbf265g43d Range Slider */
-    if($('#steps-slider').length) {
-        var slider = document.getElementById('steps-slider');
+    // راه‌اندازی اسلایدر قیمت با ذخیره در window.priceSlider
+    if ($('#steps-slider').length) {
+        var sliderElement = document.getElementById('steps-slider');
 
-        noUiSlider.create(slider, {
-            direction: 'rtl',
-            start: [0, 5000000],
-            connect: true,
-            step: 50000,
+        // ایجاد نمونه noUiSlider و ذخیره در متغیر سراسری
+        window.priceSlider = noUiSlider.create(sliderElement, {
+            direction: 'rtl',             // جهت راست به چپ
+            start: [0, 1000000000],        // مقادیر اولیه (حداقل و حداکثر)
+            connect: true,                // نوار اتصال بین دو دسته
+            step: 50000,                  // گام هر حرکت
             range: {
                 'min': 0,
-                'max': 5000000
+                'max': 1000000000
+            },
+            format: {
+                to: function (value) {
+                    return Math.round(value);   // مقدار خروجی برای جاوااسکریپت (عدد)
+                },
+                from: function (value) {
+                    return Number(value);
+                }
             }
         });
 
-        slider.noUiSlider.on('update', function (values) {
-            $('#encode4365gbf265g43d-range-from').text(numFormat(Math.round(values[0])));
-            $('#encode4365gbf265g43d-range-to').text(numFormat(Math.round(values[1])));
+        // به‌روزرسانی نمایش اعداد هنگام حرکت اسلایدر
+        window.priceSlider.on('update', function (values) {
+            var minVal = Math.round(values[0]);
+            var maxVal = Math.round(values[1]);
+            $('#encode4365gbf265g43d-range-from').text(numFormat(minVal));
+            $('#encode4365gbf265g43d-range-to').text(numFormat(maxVal));
         });
+    } else {
+        console.warn('اسلایدر با آیدی steps-slider در صفحه یافت نشد');
     }
     /* encode4365gbf265g43d Range Slider */
 

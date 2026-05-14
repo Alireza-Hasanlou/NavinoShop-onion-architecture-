@@ -16,6 +16,7 @@ using Query.Contract.Site.Page;
 using Query.Contract.UI.Blogs;
 using Query.Contract.UI.Comments;
 using Query.Contract.UI.PostPackage;
+using Query.Contract.UI.Products;
 using Query.Contract.UI.UserPanel;
 using Query.Contract.UI.UserPanel.PostOrder;
 using Query.Contract.UI.UserPanel.Seller;
@@ -33,6 +34,7 @@ using Query.Service.Site.Page;
 using Query.Service.Ui.Blogs;
 using Query.Service.Ui.Comments;
 using Query.Service.Ui.PostPackages;
+using Query.Service.Ui.Products;
 using Query.Service.Ui.UserPanel;
 using Query.Service.Ui.UserPanel.PostOrder;
 using Query.Service.Ui.UserPanel.Seller;
@@ -88,7 +90,8 @@ namespace Query.Service
             Services.AddTransient<IWalletQueryService, WalletQueryService>();
             Services.AddTransient<ISellerUserPanelQueries,SellerUserPanelQueryService>();
             Services.AddTransient<IAdminSellerQueryService, AdminSellerQueryService>();
-            Services.AddTransient<IStoreUserPanelQueryService,StoreUserPanelQueryService>(); 
+            Services.AddTransient<IStoreUserPanelQueryService,StoreUserPanelQueryService>();
+            Services.AddTransient<IProductUiQueryService, ProductUiQueryService>();
 
             #endregion
         }

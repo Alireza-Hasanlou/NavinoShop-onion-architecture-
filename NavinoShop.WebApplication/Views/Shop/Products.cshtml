@@ -1,0 +1,97 @@
+﻿@using Query.Contract.UI.Products
+@using Shared.Ui.Enums
+@model ProductUiPaging
+@{
+    Layout = "_Layout";
+}
+
+<section class="inner-page" id="products-page">
+
+    <h5 id="ResultTitle" class="text-center mt-3"> </h5>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="content">
+                    <div class="row">
+                        <div class="col-12 col-lg-3 px-3 px-lg-0">
+                            <!-- Side Panel -->
+                            @await Component.InvokeAsync("Categories")
+
+                            <div class="accordion filters-container mt-3">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingTwo">
+                            
+                                    </h2>
+                                    <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <div class="row">
+                                                <div class="col-12 py-1 px-4 mt-3">
+                                                    <div id="steps-slider" dir="rtl"></div>
+                                                </div>
+                                                <div class="col-6 text-center encode4365gbf265g43d-range mt-3">
+                                                    <div>از</div>
+                                                    <div id="encode4365gbf265g43d-range-from">0</div>
+                                                    <div>تومان</div>
+                                                </div>
+                                                <div class="col-6 text-center encode4365gbf265g43d-range mt-3">
+                                                    <div>تا</div>  
+                                                    <div id="encode4365gbf265g43d-range-to">0</div>
+                                                    <div>تومان</div>
+                                                </div>
+                                                <div class="col-12 text-center py-2">
+                                                    <div class="btn btn-warning" onclick="applyPriceRange()">اعمال محدوده قیمت</div>
+                                            
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /Side Panel -->
+                        </div>
+                        <div class="col-12 col-lg-9 px-0 pl-lg-0 pr-lg-2 mt-2 mt-lg-0">
+                            <!-- Filters -->
+                            <div id="order-filters">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-10 my-1">
+                                            <div class="col-12 col-sm-10 my-1">
+                                                @foreach (var item in Enum.GetValues(typeof(ProductSort)).Cast<ProductSort>())
+                                                {
+                                                    <span class="order-filter d-block d-sm-inline-block @(ViewBag.CurrentSort == item ? "active" : "")"
+                                                          data-sort="@((int)item)"
+                                                          onclick="changeSort(@((int)item))">
+                                                        @item
+                                                    </span>
+                                                }
+                                            </div>
+
+                                        </div>
+                                        <div class="col-12 col-sm-2 pt-1 text-end">
+                                            <span>
+                                                <a href="products-list.html" class="products-view-type"><svg class="svg-inline--fa fa-th-list fa-w-16" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="th-list" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M149.333 216v80c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24v-80c0-13.255 10.745-24 24-24h101.333c13.255 0 24 10.745 24 24zM0 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H24c-13.255 0-24 10.745-24 24zM125.333 32H24C10.745 32 0 42.745 0 56v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24V56c0-13.255-10.745-24-24-24zm80 448H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zm-24-424v80c0 13.255 10.745 24 24 24H488c13.255 0 24-10.745 24-24V56c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24zm24 264H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24z"></path></svg><!-- <i class="fa fa-th-list"></i> Font Awesome fontawesome.com --></a>
+                                                <a href="products.html" class="products-view-type active"><svg class="svg-inline--fa fa-th fa-w-16" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="th" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M149.333 56v80c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V56c0-13.255 10.745-24 24-24h101.333c13.255 0 24 10.745 24 24zm181.334 240v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256 0 24.001-10.745 24.001-24zm32-240v80c0 13.255 10.745 24 24 24H488c13.255 0 24-10.745 24-24V56c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24zm-32 80V56c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256 0 24.001-10.745 24.001-24zm-205.334 56H24c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24zM0 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H24c-13.255 0-24 10.745-24 24zm386.667-56H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zm0 160H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zM181.333 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24z"></path></svg><!-- <i class="fa fa-th"></i> Font Awesome fontawesome.com --></a>
+                                            </span>
+                                            &nbsp;|&nbsp;
+                                            <span>122 کالا</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /Filters -->
+                            <div class="mt-2" id="pager">
+                                <div class="container">
+                                    <div id="Products" class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 gx-md-4">
+                                        <!-- Products -->
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

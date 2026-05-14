@@ -42,6 +42,7 @@ namespace Shop.Query.Queries
                     {
                         Id = c.Id,
                         Title = c.Title,
+                        Slug = c.Slug,
                         ParentId = c.ParentId,
                         Level = level,
                         HasChildren = lookup[c.Id].Any(),

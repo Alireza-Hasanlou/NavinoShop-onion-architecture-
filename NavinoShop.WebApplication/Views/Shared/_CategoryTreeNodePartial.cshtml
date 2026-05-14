@@ -1,0 +1,46 @@
+﻿@using Shop.Application.Contract.ProductCategory.Query
+@model CategoryTreeItem
+
+<div class="filter-cat-node" data-filter-cat-id="@Model.Id" data-filter-cat-level="@Model.Level">
+    <div class="filter-cat-node-header">
+        <div class="filter-cat-group d-flex align-items-center">
+            @if (Model.HasChildren)
+            {
+                <button type="button" class="filter-cat-toggle" data-filter-cat-id="@Model.Id">
+                    <i class="fas fa-chevron-down filter-cat-toggle-icon"></i>
+                </button>
+            }
+            else
+            {
+                <span class="filter-cat-toggle-placeholder"></span>
+            }
+
+            <input type="radio"
+                   name="categoryRadio"
+                   class="filter-cat-radio"
+                   id="FilterCat_@Model.Id"
+                   value="@Model.Slug"
+                   data-cat-id="@Model.Id"
+                   onclick="loadProducts({categorySlug: '@Model.Slug', pageId: 1})"
+                   @(Model.IsChecked ? "checked" : "") />
+
+            <label for="FilterCat_@Model.Id" class="filter-cat-label">
+                @Model.Title
+                @if (Model.HasChildren)
+                {
+                    <span class="filter-cat-badge">(@Model.Children.Count)</span>
+                }
+            </label>
+        </div>
+    </div>
+
+    @if (Model.HasChildren)
+    {
+        <div class="filter-cat-children" id="FilterCatChildren_@Model.Id" style="display: @(Model.IsChecked ? "block" : "none")">
+            @foreach (var child in Model.Children)
+            {
+                @await Html.PartialAsync("_CategoryTreeNodePartial", child)
+            }
+        </div>
+    }
+</div>
