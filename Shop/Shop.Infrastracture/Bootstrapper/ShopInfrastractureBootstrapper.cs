@@ -10,13 +10,10 @@ using Shop.Domain.ProductGalleryAgg;
 using Shop.Domain.ProductSellAgg;
 using Shop.Domain.Relations.ProductCategoryRel;
 using Shop.Domain.SellerAgg;
+using Shop.Domain.SellerChangeRequestsAgg;
 using Shop.Infrastracture.Persistence.Context;
 using Shop.Infrastracture.Persistence.Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Shop.Infrastracture.Bootstrapper
 {
@@ -39,6 +36,7 @@ namespace Shop.Infrastracture.Bootstrapper
             services.AddTransient<IProductSellRepository, ProductSellRepository>();
             services.AddTransient<IOrderSellerRepository, OrderSellerRepository>();
             services.AddTransient<IOrderItemRepository, OrderItemRepository>();
+            services.AddTransient<ISellerChangeRequestsRepository, SellerChangeRequestsRepository>();
         }
     }
 }

@@ -10,7 +10,7 @@
                             <ol class="breadcrumb">
                                 @foreach (var item in Model)
                                 {
-                                    <li><a href="@item.Url"> @item.Title </a></li>
+                                    <li>/<a class="breadcrumbLink" href="@item.Url"> @item.Title </a></li>
                                 }
                             </ol>
                         </nav>

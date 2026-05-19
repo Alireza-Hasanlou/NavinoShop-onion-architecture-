@@ -35,6 +35,7 @@ function DeleteAjax(Title, Text1, Icon, ConfirmButtonText, Url, DeletedId) {
     });
 }
 function AjaxSweetNotDelete(title1, text1, icon1, confirmButtonText1, cancelButtonText1, url1, id) {
+  
     Swal.fire({
         title: title1,
         text: text1,
@@ -73,7 +74,8 @@ function AjaxSweetNotDelete(title1, text1, icon1, confirmButtonText1, cancelButt
     });
 }
 function AjaxSweetInput(title1, confirmButtonText1, url1, deletedId) {
-    debugger;
+
+    close_Modal_Ajax();
     Swal.fire({
         title: title1,
         input: "text",
@@ -84,10 +86,12 @@ function AjaxSweetInput(title1, confirmButtonText1, url1, deletedId) {
         confirmButtonText: confirmButtonText1,
         cancelButtonText: 'انصراف',
         showLoaderOnConfirm: true,
+       
         allowOutsideClick: () => !Swal.isLoading()
     }).then((result) => {
         if (result.isConfirmed) {
-            Loding();
+            debugger;
+/*            Loding();*/
             $.ajax({
                 type: "Get",
                 url: url1 + result.value
@@ -104,7 +108,7 @@ function AjaxSweetInput(title1, confirmButtonText1, url1, deletedId) {
                         location.reload();
                     }, 3000);
                 }
-                EndLoading();
+         /*       EndLoading();*/
             });
         }
     });
@@ -147,6 +151,7 @@ function AjaxSweetInputWithRedirect(title1, confirmButtonText1, url1, RedirectUr
     });
 }
 function AjaxSweet(title1, text1, icon1, confirmButtonText1, cancelButtonText1, url1, deletedId) {
+    close_Modal_Ajax();
     Swal.fire({
         title: title1,
         text: text1,
@@ -158,14 +163,14 @@ function AjaxSweet(title1, text1, icon1, confirmButtonText1, cancelButtonText1, 
         cancelButtonText: cancelButtonText1
     }).then((result) => {
         if (result.isConfirmed) {
-            Loding();
+          /*  Loding();*/
             console.log("Start Load");
             $.ajax({
                 type: "GET",
                 url: url1
             })
                 .done(function (res) {
-                    EndLoading();
+                  /*  EndLoading();*/
 
                     if (res) {
                         AlerSweetWithTimer("عملیات موفق", "success", "Center");
@@ -181,7 +186,7 @@ function AjaxSweet(title1, text1, icon1, confirmButtonText1, cancelButtonText1, 
                 .fail(function () {
 
                     AlertSweetTimer("خطا در برقراری ارتباط با سرور", "error", "Center");
-                    EndLoading();
+                /*    EndLoading();*/
                 });
 
 

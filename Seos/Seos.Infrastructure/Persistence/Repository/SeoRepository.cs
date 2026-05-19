@@ -29,7 +29,7 @@ namespace Seos.Infrastructure.Persistence.Repository
 
         public CreateSeoCommandModel GetSeoForUbsert(int ownerId, WhereSeo where)
         {
-            var seo = _context.Seos.SingleOrDefault(s => s.OwnerId == ownerId && s.Where == where);
+            var seo = GetSeo(ownerId, where);
             if (seo == null)
                 return new()
                 {

@@ -951,3 +951,115 @@ function CreateGallery() {
             }
         });
 }
+
+    // باز کردن مودال و دریافت اطلاعات با AJAX
+    window.openSellerReviewModal = function(sellerId) {
+        // نمایش مودال
+        $('#sellerReviewModal').fadeIn(300);
+
+    // ذخیره sellerId
+    window.currentSellerId = sellerId;
+
+    // ارسال درخواست AJAX
+    $.ajax({
+        url: '/Admin/Sellers/SellerChangeRequestDetail',
+    type: 'GET',
+    data: {sellerId: sellerId },
+    dataType: 'json',
+    success: function(response) {
+                if (response.success) {
+        // پر کردن تصاویر
+        $('#sellerAvatarImage').attr('src', response.data.avatarImageName || '/images/default-avatar.jpg');
+    $('#sellerCoverImage').attr('src', response.data.coverImageName || '/images/default-cover.jpg');
+
+    // پر کردن اطلاعات
+    $('#sellerTitle').text(response.data.title || '-');
+    $('#sellerPhone1').text(response.data.phone1 || '-');
+    $('#sellerPhone2').text(response.data.phone2 || '-');
+    $('#sellerEmail').text(response.data.email || '-');
+    $('#sellerAddress').text(response.data.address || '-');
+
+    // پر کردن لینک نقشه
+    if (response.data.googleMapUrl) {
+        $('#sellerGoogleMapUrl').attr('href', response.data.googleMapUrl).show();
+                    } else {
+        $('#sellerGoogleMapUrl').hide().after('<span class="seller-info-value no-link">لینکی ثبت نشده</span>');
+                    }
+
+    // پر کردن لینک شبکه‌های اجتماعی
+    if (response.data.whatsApp) {
+        $('#sellerWhatsApp').attr('href', response.data.whatsApp).show();
+                    } else {
+        $('#sellerWhatsApp').hide().after('<span class="seller-info-value no-link">ثبت نشده</span>');
+                    }
+
+    if (response.data.telegram) {
+        $('#sellerTelegram').attr('href', response.data.telegram).show();
+                    } else {
+        $('#sellerTelegram').hide().after('<span class="seller-info-value no-link">ثبت نشده</span>');
+                    }
+
+    if (response.data.instagram) {
+        $('#sellerInstagram').attr('href', response.data.instagram).show();
+                    } else {
+        $('#sellerInstagram').hide().after('<span class="seller-info-value no-link">ثبت نشده</span>');
+                    }
+                } else {
+        alert('خطا: ' + response.message);
+                }
+            },
+    error: function() {
+        alert('خطا در دریافت اطلاعات');
+            }
+        });
+    };
+
+    // بستن مودال
+    window.closeSellerReviewModal = function() {
+        $('#sellerReviewModal').fadeOut(300);
+    };
+
+    // تایید درخواست
+    window.approveSellerRequest = function() {
+        if (confirm('آیا از تایید این درخواست اطمینان دارید؟')) {
+        $.ajax({
+            url: '/Admin/Sellers/ApproveRequest',
+            type: 'POST',
+            data: { sellerId: window.currentSellerId },
+            success: function (response) {
+                if (response.success) {
+                    alert('درخواست با موفقیت تایید شد');
+                    location.reload();
+                } else {
+                    alert('خطا: ' + response.message);
+                }
+            },
+            error: function () {
+                alert('خطا در ارتباط با سرور');
+            }
+        });
+        }
+    };
+
+    // رد درخواست
+    window.rejectSellerRequest = function() {
+        var reason = prompt('لطفاً دلیل رد درخواست را وارد کنید:');
+    if (reason) {
+        $.ajax({
+            url: '/Admin/Sellers/RejectRequest',
+            type: 'POST',
+            data: { sellerId: window.currentSellerId, reason: reason },
+            success: function (response) {
+                if (response.success) {
+                    alert('درخواست با موفقیت رد شد');
+                    location.reload();
+                } else {
+                    alert('خطا: ' + response.message);
+                }
+            },
+            error: function () {
+                alert('خطا در ارتباط با سرور');
+            }
+        });
+        }
+    };

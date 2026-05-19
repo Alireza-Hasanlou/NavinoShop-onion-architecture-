@@ -9,5 +9,6 @@ namespace Shop.Domain.ProductAgg
         Task<EditProductCommandModel> GetForEditAsync(int productId);
         Task<Product> GetForAddRelToCategory(int id);
         Task<List<ProductsForAddtoShopQueryModel>> GetProductsForAddToShop(List<int> categoryIds);
+        Task<Product> GetWithCategoryRel(int id);
     }
 }

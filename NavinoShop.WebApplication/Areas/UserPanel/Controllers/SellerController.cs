@@ -90,6 +90,32 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
             TempData["error"] = res.Message;
             return View(command);
         }
+        [HttpGet]
+        public async Task<IActionResult> EditSeller(int Id)
+        {
+            if (Id < 1)
+                return NotFound();
+            var seller = await _sellerCommands.GetForEditSellerAsync(Id);
+            if (seller == null)
+                return NotFound();
+            return View( seller);
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditSeller(EditSellerQueryModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+            var res = await _sellerCommands.SendSellerChangeRequests(model);
+            if (res.Success)
+            {
+                TempData["success"] = "درخواست شما ارسال شد و پس از تایید تغییرات اعمال خواهد شد";
+                return View(model);
+            }
+
+            TempData["Error"] = res.Message;
+            return View(model);
+           
+        }
 
         public async Task<IActionResult> AddProductToShop(int Id)
         {

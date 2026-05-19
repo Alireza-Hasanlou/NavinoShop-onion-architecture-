@@ -64,6 +64,7 @@ namespace Query.Service.Admin.Seller
         {
             var sellers = await _sellerRepository.GetAll()
                 .Where(s => s.Status == SellerStatus.درخواست_ارسال_شده)
+
                 .Select(s => new SellersRequrstAdminQueryModel
                 {
                     Id = s.Id,

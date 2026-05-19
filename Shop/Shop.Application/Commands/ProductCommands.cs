@@ -88,7 +88,7 @@ namespace Shop.Application.Commands
 
         public async Task<OperationResult> EditAsync(EditProductCommandModel command)
         {
-            var product = await _productRepository.GetByIdAsync(command.Id);
+            var product = await _productRepository.GetWithCategoryRel(command.Id);
             if (product == null)
                 return new OperationResult(false, "محصول مورد نظر یافت نشد");
 
@@ -99,7 +99,7 @@ namespace Shop.Application.Commands
             if (await _productRepository.ExistByAsync(s => s.Slug == command.Slug && s.Id != command.Id))
                 return new OperationResult(false, ValidationMessages.DuplicatedMessage);
 
-            if (command.SelectedCategory?.Count < 1)
+            if (command.SelectedCategory?.Count < 1 ||  command.SelectedCategory?.Count==null)
                 return new OperationResult(false, "لطفا حداقل یک دسته بندی برای محصول انتخاب کنید");
 
             if (command.Weight < 1)

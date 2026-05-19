@@ -1,0 +1,185 @@
+﻿@using Shared.Application
+@using Shop.Application.Contract.Seller.Command
+@model EditSellerQueryModel
+@{
+    Layout = "_PanelLayout";
+    var success = TempData["success"] as string;
+    var error = TempData["Error"] as string;
+}
+
+<div class="Formcontainer">
+
+    <form method="post" enctype="multipart/form-data">
+
+        <input type="hidden" asp-for="SellerId" />
+        <input type="hidden" asp-for="AvatarImageName" />
+        <input type="hidden" asp-for="CoverImageName" />
+        <div class="row">
+
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="WhatsApp">نام فروشگاه </label>
+                    <input asp-for="Title" type="text" id="title">
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="Instagram">لینک اینستاگرام </label>
+                    <input dir="ltr" asp-for="Instagram" type="text" id="Instagram">
+                    <span asp-validation-for="Instagram" class="text-danger"></span>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="Telegram">لینک تلگرام</label>
+                    <input dir="ltr" asp-for="Telegram" type="text" id="Telegram">
+                    <span asp-validation-for="Telegram" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="WhatsApp">  لینک واتس آپ </label>
+                    <input dir="ltr" asp-for="WhatsApp" type="tel" id="WhatsApp">
+                    <span asp-validation-for="WhatsApp" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="tel1">شماره تماس 1</label>
+                    <input dir="ltr" asp-for="Phone1" type="tel" id="tel1">
+                    <span asp-validation-for="Phone1" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="tel2">شماره تماس 2 </label>
+                    <input dir="ltr" asp-for="Phone2" type="tel" id="tel2">
+                    <span asp-validation-for="Phone2" class="text-danger"></span>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+
+            <div class="col col-md-6 col-sm-12 col-12">
+                <div class="image-uploader">
+                    <label>
+                        تصویر فروشگاه
+                        <div class="picture-uploader"
+                             data-url="@FileDirectories.SellerImageDirectory500@Model.AvatarImageName">
+
+                            <div class="picture__image">یک تصویر انتخاب کنید</div>
+
+                            <input asp-for="ImageFile"
+                                   type="file"
+                                   class="picture__input myinput"
+                                   accept="image/*" />
+                        </div>
+                    </label>
+                </div>
+
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
+            </div>
+            <div class="col col-md-6 col-sm-12 col-12">
+                <div class="image-uploader">
+                    <label>
+                        تصویر کاور
+                        <div class="picture-uploader"
+                             data-url="@FileDirectories.SellerImageDirectory@Model.CoverImageName">
+
+                            <div class="picture__image">یک تصویر انتخاب کنید</div>
+
+                            <input asp-for="CoverImage"
+                                   type="file"
+                                   class="picture__input"
+                                   accept="image/*" />
+                        </div>
+                    </label>
+                </div>
+
+                <span asp-validation-for="CoverImage" class="text-danger"></span>
+            </div>
+
+        </div>
+        <div class="row">
+
+
+
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="Description">توضیحات</label>
+                    <textarea dir="ltr" asp-for="Description" type="text" id="Description"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="Address">جزییات آدرس</label>
+                    <textarea asp-for="Address" id="Address"></textarea>
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="GoogleMapUrl">لینک نقشه مپ </label>
+                    <input dir="ltr" asp-for="GoogleMapUrl" type="text" id="GoogleMapUrl">
+                    <span asp-validation-for="GoogleMapUrl" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="custom-form-group">
+                    <label for="Email">ایمیل</label>
+                    <input dir="ltr" asp-for="Email" type="text" id="Email">
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+
+
+        </div>
+
+        <button type="submit" class="btn btn-success btn-block w-100">ثبت</button>
+
+    </form>
+</div>
+
+@section scripts {
+
+    @if (!string.IsNullOrEmpty(success))
+    {
+        <script>
+            AlerSweetWithTimer("@success ","success", "center");
+                setTimeout(function () {
+                     window.location.href="/Profile/Seller/MyShops";
+                }, 3000);
+        </script>
+    }
+    @if (!string.IsNullOrEmpty(error))
+    {
+        <script>
+            AlerSweetWithTimer("@error ","Error", "center");
+                setTimeout(function () {
+                     window.location.href="/Profile/Seller/MyShops";
+                }, 3000);
+        </script>
+    }
+    <script>
+
+        $(document).ready(function () {
+            $(".picture-uploader").imageUploader();
+        });
+
+    </script>
+}

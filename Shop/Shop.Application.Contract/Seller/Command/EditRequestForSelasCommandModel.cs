@@ -8,6 +8,7 @@ namespace Shop.Application.Contract.Seller.Command
     {
         public int Id { get; set; }
         public string ImageName { get; set; }
+        public string CoverImageName { get; set; }
         [Display(Name = "نام فروشگاه")]
         [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
         [MaxLength(355, ErrorMessage = ValidationMessages.MaxLengthMessage)]
@@ -21,14 +22,14 @@ namespace Shop.Application.Contract.Seller.Command
         public string Address { get; set; }
         [Display(Name = "لینک نقشه گوگل")]
         public string? GoogleMapUrl { get; set; }
-        [Display(Name = "تصویر مجوز فروشگاه")]
-        public IFormFile? LicenseImage { get; set; }
+        [Display(Name = "کاور فروشگاه")]
+        public IFormFile? CoverImage { get; set; }
         [Display(Name = "تصویر")]
         public IFormFile? ImageFile { get; set; }
-        [Display(Name = "Alt تصویر")]
-        [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
-        [MaxLength(355, ErrorMessage = ValidationMessages.MaxLengthMessage)]
+        [Display(Name ="alt تصویر")]
         public string ImageAlt { get; set; }
+        [Display(Name = "تصویر مچوز")]
+        public IFormFile? LicenseImage { get; set; }
         [Display(Name = "لینک چت وانس اپ")]
         [MaxLength(355, ErrorMessage = ValidationMessages.MaxLengthMessage)]
         public string? WhatsApp { get; set; }
@@ -51,7 +52,7 @@ namespace Shop.Application.Contract.Seller.Command
         [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
         [MaxLength(255, ErrorMessage = ValidationMessages.MaxLengthMessage)]
         public string? Email { get; set; }
-        public string? LicenseImageName { get; set; }
+        public string LicenseImageName { get; set; }
 
     }
 }

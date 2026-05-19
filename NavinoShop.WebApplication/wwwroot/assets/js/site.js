@@ -518,7 +518,7 @@ $(document).ready(function () {
 });
 
 function open_Modal_Ajax(url, modalclass) {
-    debugger;
+ 
     $('#modal-default').removeClass("product-modal");
     if (modalclass !== undefined && modalclass !== null && modalclass.trim() !== '') {
         $('#modal-default').addClass(modalclass);
@@ -538,7 +538,6 @@ function Get_ajax(url) {
 function close_Modal_Ajax() {
     $('#modal-default').modal('hide');
 }
-
 function initProductCategoryTree() {
     $('.pct-toggle-icon').off('click').on('click', function (e) {
         e.stopPropagation();
@@ -555,6 +554,7 @@ function initProductCategoryTree() {
             $children.slideUp(300);
         }
     });
+
     $('.pct-node-header').off('click').on('click', function (e) {
         if (!$(e.target).is('input') && !$(e.target).is('label') && !$(e.target).closest('label').length) {
             const $toggleIcon = $(this).find('.pct-toggle-icon');
@@ -563,77 +563,14 @@ function initProductCategoryTree() {
             }
         }
     });
+
     $('.pct-checkbox').off('change').on('change', function () {
-        const $checkbox = $(this);
-        const isChecked = $checkbox.is(':checked');
-        const parentId = $checkbox.data('parent');
-        const currentId = $checkbox.val();
-        if (isChecked) {
-            checkParentsInTree(parentId);
-            checkChildrenInTree(currentId, true);
-        } else {
-            checkChildrenInTree(currentId, false);
-            updateParentStateInTree(parentId);
-        }
         const selectedCount = $('.pct-checkbox:checked').length;
         $('#selectedCount').text(selectedCount);
     });
+
     $('.pct-children').addClass('collapsed').hide();
     $('.pct-toggle-icon').addClass('collapsed');
-}
-
-function checkParentsInTree(parentId) {
-    if (parentId && parentId !== 0) {
-        const $parentCheckbox = $(`#pct-cat-${parentId}`);
-        if ($parentCheckbox.length && !$parentCheckbox.is(':checked')) {
-            $parentCheckbox.prop('checked', true);
-            const grandParentId = $parentCheckbox.data('parent');
-            if (grandParentId && grandParentId !== 0) {
-                checkParentsInTree(grandParentId);
-            }
-        }
-    }
-}
-
-function checkChildrenInTree(categoryId, isChecked) {
-    const $parentNode = $(`#pct-cat-${categoryId}`).closest('.pct-node');
-    const $childCheckboxes = $parentNode.find('.pct-children .pct-checkbox');
-    $childCheckboxes.each(function () {
-        const $child = $(this);
-        if ($child.is(':checked') !== isChecked) {
-            $child.prop('checked', isChecked);
-            const childId = $child.val();
-            const $grandChildren = $child.closest('.pct-node').find('.pct-children .pct-checkbox');
-            if ($grandChildren.length > 0) {
-                checkChildrenInTree(childId, isChecked);
-            }
-        }
-    });
-}
-
-function updateParentStateInTree(parentId) {
-    if (parentId && parentId !== 0) {
-        const $parentCheckbox = $(`#pct-cat-${parentId}`);
-        const $parentNode = $parentCheckbox.closest('.pct-node');
-        const $siblingCheckboxes = $parentNode.find('.pct-children .pct-checkbox');
-        const totalSiblings = $siblingCheckboxes.length;
-        const checkedSiblings = $siblingCheckboxes.filter(':checked').length;
-        const allUnchecked = checkedSiblings === 0;
-        const allChecked = checkedSiblings === totalSiblings && totalSiblings > 0;
-        if (allUnchecked && $parentCheckbox.is(':checked')) {
-            $parentCheckbox.prop('checked', false);
-            const grandParentId = $parentCheckbox.data('parent');
-            if (grandParentId && grandParentId !== 0) {
-                updateParentStateInTree(grandParentId);
-            }
-        } else if (allChecked && !$parentCheckbox.is(':checked')) {
-            $parentCheckbox.prop('checked', true);
-            const grandParentId = $parentCheckbox.data('parent');
-            if (grandParentId && grandParentId !== 0) {
-                checkParentsInTree(grandParentId);
-            }
-        }
-    }
 }
 
 $(document).ready(function () {
@@ -645,7 +582,9 @@ $(document).ready(function () {
                 selectedCategories.push(catId);
             }
         });
+
         console.log("دسته‌بندی‌های انتخاب شده:", selectedCategories);
+
         if (selectedCategories.length === 0) {
             var productSelect = document.getElementById('productSelect');
             if (productSelect) {
@@ -653,8 +592,10 @@ $(document).ready(function () {
             }
             return;
         }
+
         $('#loadingSpinner').show();
         $('#productSelect').prop('disabled', true);
+
         $.ajax({
             url: '/Profile/Seller/GetProductsForAddToShop',
             type: 'POST',
@@ -684,11 +625,13 @@ $(document).ready(function () {
     function updateSelect(products) {
         var select = document.getElementById('productSelect');
         if (!select) return;
+
         select.innerHTML = '';
         var defaultOption = document.createElement('option');
         defaultOption.value = '';
         defaultOption.textContent = 'انتخاب محصول...';
         select.appendChild(defaultOption);
+
         if (products && products.length > 0) {
             for (var i = 0; i < products.length; i++) {
                 var option = document.createElement('option');
@@ -738,32 +681,13 @@ $(document).ready(function () {
         }
     }
 
+    // تغییرات چک‌باکس - فقط شمارش و بارگذاری محصولات، بدون ارتباط بین پرنت و فرزند
     $(document).off('change', '.pct-checkbox').on('change', '.pct-checkbox', function () {
         updateSelectedCount();
-        var $checkbox = $(this);
-        var isChecked = $checkbox.is(':checked');
-        var $node = $checkbox.closest('.pct-node');
-        $node.find('.pct-checkbox').prop('checked', isChecked);
-        updateParentCheckbox($node);
         getProductsByCategories();
     });
 
-    function updateParentCheckbox($node) {
-        var $parentNode = $node.closest('.pct-children').closest('.pct-node');
-        if ($parentNode.length) {
-            var $parentCheckbox = $parentNode.find('.pct-checkbox:first');
-            var $childCheckboxes = $parentNode.find('.pct-children .pct-checkbox');
-            var checkedCount = $childCheckboxes.filter(':checked').length;
-            if (checkedCount === 0) {
-                $parentCheckbox.prop('checked', false).prop('indeterminate', false);
-            } else if (checkedCount === $childCheckboxes.length) {
-                $parentCheckbox.prop('checked', true).prop('indeterminate', false);
-            } else {
-                $parentCheckbox.prop('checked', false).prop('indeterminate', true);
-            }
-        }
-    }
-
+    // باز و بسته کردن شاخه‌ها
     $(document).off('click', '.pct-toggle-icon').on('click', '.pct-toggle-icon', function (e) {
         e.stopPropagation();
         var $children = $(this).closest('.pct-node').find('.pct-children');
@@ -777,13 +701,13 @@ $(document).ready(function () {
     });
 
     updateSelectedCount();
+
     if ($('.pct-checkbox:checked').length > 0) {
         setTimeout(function () {
             getProductsByCategories();
         }, 100);
     }
 });
-
 function CreateProductSell() {
     var selectedProduct = $('#productSelect').val();
     var price = $('#Price').val();
@@ -1242,10 +1166,9 @@ $(document).ready(function () {
 
 //********************************************* */
 // Products.js
-
 $(document).ready(function () {
-    // فقط در صفحه /shop/products اجرا شود (حساسیت به حروف کوچک/بزرگ ندارد)
-    if (!window.location.pathname.toLowerCase().includes('/shop/products')) {
+    // فقط در صفحه /products اجرا شود
+    if (!window.location.pathname.toLowerCase().includes('/products')) {
         return;
     }
 
@@ -1259,62 +1182,85 @@ $(document).ready(function () {
         search: ''
     };
 
-    // ---------- تابع به‌روزرسانی URL (جدید) ----------
+    // ---------- خواندن مقادیر از URL (در ابتدا) ----------
+    var urlParams = new URLSearchParams(window.location.search);
+    var searchQuery = urlParams.get('search');
+    if (searchQuery) {
+        currentSettings.search = searchQuery;
+        $('#search-input').val(searchQuery);
+    }
+
+    // خواندن sort از URL
+    var sortParam = urlParams.get('sort');
+    if (sortParam && sortParam != 0) {
+        currentSettings.sort = parseInt(sortParam);
+    }
+
+    // خواندن page از URL
+    var pageParam = urlParams.get('page');
+    if (pageParam && pageParam > 1) {
+        currentSettings.pageId = parseInt(pageParam);
+    }
+
+    // خواندن minPrice و maxPrice از URL
+    var minPriceParam = urlParams.get('minPrice');
+    if (minPriceParam && minPriceParam > 0) {
+        currentSettings.minPrice = parseInt(minPriceParam);
+    }
+    var maxPriceParam = urlParams.get('maxPrice');
+    if (maxPriceParam && maxPriceParam > 0) {
+        currentSettings.maxPrice = parseInt(maxPriceParam);
+    }
+
+    // خواندن categorySlug از مسیر (مثل /Products/لپ‌تاپ)
+    var pathParts = window.location.pathname.split('/').filter(part => part !== '');
+    if (pathParts.length >= 2 && pathParts[0].toLowerCase() === 'products') {
+        var slug = pathParts[1];
+        if (slug && slug !== '') {
+            currentSettings.categorySlug = decodeURIComponent(slug);
+        }
+    }
+
+    // ---------- تابع به‌روزرسانی URL ----------
     function updateUrl() {
-        // ساخت پارامترهای اضافی (جستجو، مرتب‌سازی، صفحه، قیمت)
         var params = new URLSearchParams();
 
-        // اضافه کردن پارامتر جستجو (filter)
         if (currentSettings.search && currentSettings.search !== '') {
             params.set('search', currentSettings.search);
             $("#ResultTitle").text("نتایج جستجو برای " + currentSettings.search);
         }
 
-        // اضافه کردن پارامتر مرتب‌سازی
         if (currentSettings.sort && currentSettings.sort != 0) {
             params.set('sort', currentSettings.sort);
         }
 
-        // اضافه کردن شماره صفحه (اگر بزرگتر از 1)
         if (currentSettings.pageId && currentSettings.pageId > 1) {
             params.set('page', currentSettings.pageId);
         }
 
-        // اضافه کردن قیمت حداقل (اگر بزرگتر از 0)
         if (currentSettings.minPrice && currentSettings.minPrice > 0) {
             params.set('minPrice', currentSettings.minPrice);
         }
 
-        // اضافه کردن قیمت حداکثر (اگر کوچکتر از حداکثر و بزرگتر از 0)
         if (currentSettings.maxPrice && currentSettings.maxPrice > 0 && currentSettings.maxPrice < 100000000) {
             params.set('maxPrice', currentSettings.maxPrice);
         }
 
-        var baseUrl = '/shop/Products';
+        var baseUrl = '/Products';
         var newUrl = '';
 
-        // اگر دسته‌بندی انتخاب شده باشد، آن را به صورت مسیر اضافه کن
         if (currentSettings.categorySlug && currentSettings.categorySlug !== '') {
             newUrl = baseUrl + '/' + encodeURIComponent(currentSettings.categorySlug);
-
-            // تنظیم عنوان صفحه بر اساس دسته‌بندی
             var categoryTitle = currentSettings.categorySlug.replace(/_/g, ' ');
             $("#ResultTitle").text("محصولات در دسته بندی " + categoryTitle);
-
-            // اگر هم جستجو وجود داشت، عنوان را ترکیبی کن
             if (currentSettings.search && currentSettings.search !== '') {
                 $("#ResultTitle").text("نتایج جستجو برای " + currentSettings.search + " در دسته " + categoryTitle);
             }
-
-            // اضافه کردن پارامترهای دیگر به عنوان کوئری استرینگ
             if (params.toString()) {
                 newUrl += '?' + params.toString();
             }
         } else {
-            // بدون دسته‌بندی: فقط کوئری استرینگ
             newUrl = baseUrl + (params.toString() ? '?' + params.toString() : '');
-
-            // تنظیم عنوان در حالت بدون دسته‌بندی
             if (currentSettings.search && currentSettings.search !== '') {
                 $("#ResultTitle").text("نتایج جستجو برای " + currentSettings.search);
             } else {
@@ -1322,31 +1268,25 @@ $(document).ready(function () {
             }
         }
 
-        // به‌روزرسانی URL بدون رفرش صفحه
         window.history.pushState({ ...currentSettings }, '', newUrl);
     }
 
-    // ---------- خواندن مقدار جستجو از URL (در ابتدا) ----------
-    var urlParams = new URLSearchParams(window.location.search);
-    var searchQuery = urlParams.get('search');
-    if (searchQuery) {
-        currentSettings.search = searchQuery;
-        // مقدار را در فیلد جستجو قرار می‌دهیم (اگر فیلد وجود داشته باشد)
-        $('#search-input').val(searchQuery);
+    // ---------- تنظیم کلاس‌های active مرتب‌سازی ----------
+    function setActiveSortClass() {
+        $('.order-filter').removeClass('active');
+        $(`.order-filter[data-sort="${currentSettings.sort}"]`).addClass('active');
     }
 
-    // ---------- توابع اصلی (مرتب‌سازی، قیمت، بارگذاری، رندر) ----------
+    setActiveSortClass();
 
-    // تغییر مرتب‌سازی
+    // ---------- توابع اصلی ----------
     window.changeSort = function (sortValue) {
         currentSettings.sort = sortValue;
         currentSettings.pageId = 1;
-        $('.order-filter').removeClass('active');
-        $(`.order-filter[data-sort="${sortValue}"]`).addClass('active');
+        setActiveSortClass();
         loadProducts();
     };
 
-    // اعمال محدوده قیمت (با فرض وجود window.priceSlider)
     window.applyPriceRange = function () {
         if (window.priceSlider) {
             var values = window.priceSlider.get();
@@ -1366,37 +1306,44 @@ $(document).ready(function () {
         if (options) {
             $.extend(currentSettings, options);
         }
-        debugger;
+
         var requestData = {
             minPrice: currentSettings.minPrice,
-            maxPrice: currentSettings.maxPrice,   // اصلاح شد: maxprice -> maxPrice
+            maxPrice: currentSettings.maxPrice,
             sort: currentSettings.sort,
             categorySlug: currentSettings.categorySlug,
             pageId: currentSettings.pageId,
-            search: currentSettings.search
+            search: currentSettings.search,
+            isAjax: true
         };
 
-        $('#Products').html('<div class="text-center p-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">در حال بارگذاری...</span></div></div>');
+        $('#Products').html('<div class="text-center p-5"><div class="spinner-border text-primary" role="status"></div></div>');
 
         $.ajax({
-            url: '/Shop/Products',
-            type: 'POST',
+            url: '/Products',
+            type: 'GET',
             data: requestData,
             dataType: 'json',
             success: function (response) {
-                if (response.products && response.products.length > 0) {
+                if (response.success && response.products && response.products.length > 0) {
                     var productsHtml = renderProducts(response.products);
                     $('#Products').html(productsHtml);
                     if (response.pagination) {
                         renderPagination(response.pagination);
                     }
-                } else if (typeof response === 'string') {
-                    $('#Products').html(response);
-                } else {
+                } else if (response.success && (!response.products || response.products.length === 0)) {
                     $('#Products').html('<div class="text-center p-5 alert alert-info">محصولی یافت نشد</div>');
+                } else {
+                    $('#Products').html('<div class="alert alert-danger">' + (response.message || 'خطا در بارگذاری') + '</div>');
                 }
+
+                // رندر بردکرامپ
+                if (response.breadCrumbs && response.breadCrumbs.length > 0) {
+                    var breadCrumbsHtml = RenderBreadCrumbs(response.breadCrumbs);
+                    $('#BreadCrumbsOl').html(breadCrumbsHtml);
+                }
+
                 $('html, body').animate({ scrollTop: 0 }, 300);
-                // به‌روزرسانی URL پس از بارگذاری موفق
                 updateUrl();
             },
             error: function (xhr, status, error) {
@@ -1406,7 +1353,17 @@ $(document).ready(function () {
         });
     };
 
-    // رندر محصولات (بدون تغییر نسبت به کد اصلی)
+    // تابع رندر بردکرامپ
+    window.RenderBreadCrumbs = function (breadCrumbs) {
+        if (!breadCrumbs || breadCrumbs.length === 0) return '';
+        var html = ''; 
+        $.each(breadCrumbs, function (index, breadcrumb) {
+            html += `<li>/<a href="${breadcrumb.url}">${breadcrumb.title}</a></li>`;
+        });
+        return html;
+    };
+
+    // رندر محصولات
     window.renderProducts = function (products) {
         if (!products || products.length === 0) {
             return '<div class="text-center p-5 alert alert-info">محصولی یافت نشد</div>';
@@ -1414,26 +1371,26 @@ $(document).ready(function () {
         var html = '';
         $.each(products, function (index, product) {
             var categoryHtml = '';
-            if (product.category) {
+
+            if (product.categorySlug) {
                 categoryHtml = `<a href="javascript:void(0)" onclick="loadProducts({categorySlug: '${product.categorySlug || ''}', pageId: 1})">${escapeHtml(product.category)}</a>`;
             }
-            if (product.subCategory) {
-                categoryHtml += `&nbsp;/&nbsp;<a href="javascript:void(0)" onclick="loadProducts({categorySlug: '${product.subCategorySlug || ''}', pageId: 1})">${escapeHtml(product.subCategory)}</a>`;
-            }
+
             html += `
                 <div class="col" style="display: block;">
                     <div class="encode4326654321vfb">
-                        <a href="/product/${product.slug || product.id}">
+                        <a href="/Product/${product.slug}">
                             <div class="image" style="background-image: url('/Images/Product/500/${product.imageName || 'default.jpg'}');"></div>
                         </a>
                         <div class="details p-3">
                             <div class="category">
                                 ${categoryHtml || '<a href="#">دسته‌بندی نشده</a>'}
                             </div>
-                            <a href="/product/${product.slug || product.id}">
+                            <a href="/Product/${product.slug}">
                                 <h2>${escapeHtml(product.title || 'بدون عنوان')}</h2>
                             </a>
                             <div class="encode4365gbf265g43d">${formatPrice(product.price || 0)} تومان</div>
+                                <span><a>غرفه :@product.SellerTitle</a></span>
                             <div class="rate">
                                 ${generateStarRating(product.rating || 0)}
                                 <span class="encode43bf265g43d">(${product.votesCount || 0} رای دهنده)</span>
@@ -1446,46 +1403,94 @@ $(document).ready(function () {
         return html;
     };
 
-    // رندر صفحه‌بندی (بدون تغییر نسبت به کد اصلی)
+    // رندر صفحه‌بندی
     window.renderPagination = function (pagination) {
         if (!pagination || pagination.totalPages <= 1) return '';
+
         var currentPage = pagination.currentPage || currentSettings.pageId || 1;
         var totalPages = pagination.totalPages;
-        var paginationHtml = '<div class="pagination-wrapper text-center mt-4"><ul class="pagination justify-content-center" style="display: flex; list-style: none; gap: 5px; padding: 0;">';
-        if (currentPage > 1) {
-            paginationHtml += `<li class="page-item"><a class="page-link" href="javascript:void(0)" onclick="loadProducts({pageId: ${currentPage - 1}})" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; color: #000; background: #fff; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#fcb941'; this.style.borderColor='#fcb941';" onmouseout="this.style.backgroundColor='#fff'; this.style.borderColor='#ddd';">قبلی</a></li>`;
-        }
         var startPage = Math.max(1, currentPage - 2);
         var endPage = Math.min(totalPages, currentPage + 2);
-        if (startPage > 1) {
-            paginationHtml += `<li class="page-item"><a class="page-link" href="javascript:void(0)" onclick="loadProducts({pageId: 1})" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; color: #000; background: #fff; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#fcb941'; this.style.borderColor='#fcb941';" onmouseout="this.style.backgroundColor='#fff'; this.style.borderColor='#ddd';">1</a></li>`;
-            if (startPage > 2) paginationHtml += `<li class="page-item disabled"><span class="page-link" style="padding: 8px 12px; color: #000;">...</span></li>`;
+
+        var paginationHtml = '<div class="unique-pagination-wrapper text-center mt-4">';
+        paginationHtml += '<ul class="unique-pagination-list">';
+
+        // دکمه قبلی
+        if (currentPage > 1) {
+            paginationHtml += `<li class="unique-pagination-item">
+            <a class="unique-pagination-link unique-pagination-prev" href="javascript:void(0)" 
+               onclick="loadProducts({pageId: ${currentPage - 1}})">
+               قبلی
+            </a>
+        </li>`;
         }
-        for (var i = startPage; i <= endPage; i++) {
-            var isActive = (i === currentPage);
-            if (isActive) {
-                paginationHtml += `<li class="page-item active"><a class="page-link" href="javascript:void(0)" onclick="loadProducts({pageId: ${i}})" style="padding: 8px 12px; border: 1px solid #fcb941; border-radius: 4px; background: #fcb941; color: #000; text-decoration: none; font-weight: bold;">${i}</a></li>`;
-            } else {
-                paginationHtml += `<li class="page-item"><a class="page-link" href="javascript:void(0)" onclick="loadProducts({pageId: ${i}})" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; background: #fff; color: #000; text-decoration: none; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#fcb941'; this.style.borderColor='#fcb941';" onmouseout="this.style.backgroundColor='#fff'; this.style.borderColor='#ddd';">${i}</a></li>`;
+
+        // صفحه اول و ...
+        if (startPage > 1) {
+            paginationHtml += `<li class="unique-pagination-item">
+            <a class="unique-pagination-link" href="javascript:void(0)" 
+               onclick="loadProducts({pageId: 1})">
+               1
+            </a>
+        </li>`;
+            if (startPage > 2) {
+                paginationHtml += `<li class="unique-pagination-item">
+                <span class="unique-pagination-dots">...</span>
+            </li>`;
             }
         }
+
+        // حلقه صفحات اصلی
+        for (var i = startPage; i <= endPage; i++) {
+            if (i === currentPage) {
+                paginationHtml += `<li class="unique-pagination-item">
+                <span class="unique-pagination-active">${i}</span>
+            </li>`;
+            } else {
+                paginationHtml += `<li class="unique-pagination-item">
+                <a class="unique-pagination-link" href="javascript:void(0)" 
+                   onclick="loadProducts({pageId: ${i}})">
+                   ${i}
+                </a>
+            </li>`;
+            }
+        }
+
+        // صفحه آخر و ...
         if (endPage < totalPages) {
-            if (endPage < totalPages - 1) paginationHtml += `<li class="page-item disabled"><span class="page-link" style="padding: 8px 12px; color: #000;">...</span></li>`;
-            paginationHtml += `<li class="page-item"><a class="page-link" href="javascript:void(0)" onclick="loadProducts({pageId: ${totalPages}})" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; color: #000; background: #fff; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#fcb941'; this.style.borderColor='#fcb941';" onmouseout="this.style.backgroundColor='#fff'; this.style.borderColor='#ddd';">${totalPages}</a></li>`;
+            if (endPage < totalPages - 1) {
+                paginationHtml += `<li class="unique-pagination-item">
+                <span class="unique-pagination-dots">...</span>
+            </li>`;
+            }
+            paginationHtml += `<li class="unique-pagination-item">
+            <a class="unique-pagination-link" href="javascript:void(0)" 
+               onclick="loadProducts({pageId: ${totalPages}})">
+               ${totalPages}
+            </a>
+        </li>`;
         }
+
+        // دکمه بعدی
         if (currentPage < totalPages) {
-            paginationHtml += `<li class="page-item"><a class="page-link" href="javascript:void(0)" onclick="loadProducts({pageId: ${currentPage + 1}})" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; color: #000; background: #fff; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#fcb941'; this.style.borderColor='#fcb941';" onmouseout="this.style.backgroundColor='#fff'; this.style.borderColor='#ddd';">بعدی</a></li>`;
+            paginationHtml += `<li class="unique-pagination-item">
+            <a class="unique-pagination-link unique-pagination-next" href="javascript:void(0)" 
+               onclick="loadProducts({pageId: ${currentPage + 1}})">
+               بعدی
+            </a>
+        </li>`;
         }
+
         paginationHtml += '</ul></div>';
         $('#Products').append(paginationHtml);
         return paginationHtml;
     };
-
     // توابع کمکی (فرمت قیمت، escape، ستاره‌ها)
     function formatPrice(price) {
         if (!price && price !== 0) return '۰';
         return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
+
     function escapeHtml(text) {
         if (!text) return '';
         var map = {
@@ -1497,6 +1502,7 @@ $(document).ready(function () {
         };
         return text.replace(/[&<>"']/g, function (m) { return map[m]; });
     }
+
     function generateStarRating(rating) {
         var fullStars = Math.floor(rating);
         var hasHalfStar = (rating - fullStars) >= 0.5;
@@ -1513,7 +1519,7 @@ $(document).ready(function () {
         return starsHtml;
     }
 
-    // ---------- جستجوی مجدد در همین صفحه با فشردن Enter (AJAX) ----------
+    // ---------- جستجو با فشردن Enter ----------
     $('#search-input').on('keypress', function (e) {
         if (e.which === 13) {
             e.preventDefault();
@@ -1521,52 +1527,50 @@ $(document).ready(function () {
             if (newQuery !== currentSettings.search) {
                 currentSettings.search = newQuery;
                 currentSettings.pageId = 1;
-                loadProducts();   // تابع updateUrl در success فراخوانی می‌شود
+                loadProducts();
             }
         }
     });
 
-    // ---------- مدیریت دکمه بازگشت مرورگر (با پشتیبانی از جستجو و قیمت) ----------
+    // ---------- مدیریت دکمه بازگشت مرورگر ----------
     window.addEventListener('popstate', function (event) {
         var state = event.state || {};
         currentSettings.categorySlug = state.categorySlug || '';
         currentSettings.pageId = state.pageId || 1;
         currentSettings.sort = state.sort || 0;
-        currentSettings.search = state.filter || '';
+        currentSettings.search = state.search || '';
         currentSettings.minPrice = state.minPrice || 0;
         currentSettings.maxPrice = state.maxPrice || 0;
 
         $('#search-input').val(currentSettings.search);
-        $('.order-filter').removeClass('active');
-        $(`.order-filter[data-sort="${currentSettings.sort}"]`).addClass('active');
-
+        setActiveSortClass();
         loadProducts();
     });
-    // تابع پاک کردن همه فیلترها
-    window.resetAllFilters = function () {
 
+    // ---------- تابع پاک کردن همه فیلترها ----------
+    window.resetAllFilters = function () {
         currentSettings = {
             minPrice: 0,
             maxPrice: 0,
             sort: 0,
             categorySlug: '',
             pageId: 1,
-            filter: ''
+            search: ''
         };
 
         $('#search-input').val('');
         $('.order-filter').removeClass('active');
-        $("#ResultTitle").text("");
+        $('.order-filter[data-sort="0"]').addClass('active');
+        $("#ResultTitle").text("همه محصولات");
         $('input[name="categoryRadio"]').prop('checked', false);
 
         if (window.priceSlider) {
             window.priceSlider.set([0, 100000000]);
             $('#encode4365gbf265g43d-range-from').text('0');
-            $('#encode4365gbf265g43d-range-to').text('100,000,000');
+            $('#encode4365gbf265g43d-range-to').text(formatPrice(100000000) + ' تومان');
         }
         loadProducts();
     };
-    // ---------- بارگذاری اولیه محصولات ----------
-    loadProducts();
+
 });
 

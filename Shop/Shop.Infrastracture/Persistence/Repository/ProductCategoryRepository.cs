@@ -19,6 +19,11 @@ namespace Shop.Infrastracture.Persistence.Repository
             _shopContext = context;
         }
 
+        public Task<ProductCategory> GetBySlugAsync(string categorySlug)
+        {
+            return _shopContext.ProductCategories.SingleOrDefaultAsync(x => x.Slug.Trim().ToLower().Equals(categorySlug.ToLower().ToLower()));
+        }
+
         public async Task<EditProductCategoryCommandModel> GetForEditAsync(int productCategoryId)
         {
             return await _shopContext.ProductCategories.Where(i => i.Id == productCategoryId)

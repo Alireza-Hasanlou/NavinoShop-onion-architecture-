@@ -37,6 +37,7 @@ namespace Shop.Domain.SellerAgg
             Phone1 = phone1;
             Phone2 = phone2;
             Email = email;
+            CoverImage = "DefaultCover.jpg";
             Status = SellerStatus.درخواست_ارسال_شده;
         }
 
@@ -49,6 +50,7 @@ namespace Shop.Domain.SellerAgg
         public string ImageName { get; private set; }
         public string LicenseImage { get; private set; }
         public string ImageAlt { get; private set; }
+        public string CoverImage { get; set; }
         public string? WhyRejected { get; private set; }
         public string? Instagram { get; private set; }
         public string? Telegram { get; private set; }
@@ -62,7 +64,7 @@ namespace Shop.Domain.SellerAgg
         public void Edit(string title, int stateId, int cityId,
     string address, string mapUrl, string imageName, string licenseImage,
     string imageAlt, string? instagram, string? telegram, string? whatsup,
-    string phone1, string? phone2, string? email)
+    string phone1, string? phone2, string? email , string coverImage)
         {
             Title = title;
             StateId = stateId;
@@ -78,7 +80,7 @@ namespace Shop.Domain.SellerAgg
             Phone1 = phone1;
             Phone2 = phone2;
             Email = email;
-         
+            CoverImage = coverImage;
 
         }
         public void ChangeStatus(SellerStatus status, string? whyRejected)

@@ -1,0 +1,143 @@
+﻿@using Shared.Application
+@using Shop.Application.Contract.Seller.Query
+@model RequestDetailQueryModel
+
+<!-- مودال اختصاصی بررسی درخواست فروشنده -->
+    <div class="seller-modal-container">
+        <div class="seller-modal-header">
+            <h3 class="seller-modal-title">بررسی درخواست ویرایش فروشگاه</h3>
+            <button type="button" class="seller-modal-close" onclick="close_Modal_Ajax()">&times;</button>
+        </div>
+
+        <div class="seller-modal-body">
+            <!-- تصاویر فروشگاه -->
+            <div class="seller-images-section">
+                <div class="seller-image-group">
+                    <label class="seller-image-label">تصویر آواتار</label>
+                    <img class="seller-avatar-img" src="@(FileDirectories.SellerImageDirectory100 + Model.AvatarImageName)" alt="تصویر فروشگاه">
+                </div>
+                <div class="seller-image-group">
+                    <label class="seller-image-label">تصویر کاور</label>
+                    <img class="seller-cover-img" src="@(FileDirectories.SellerImageDirectory + Model.CoverImageName)" alt="کاور فروشگاه">
+                </div>
+            </div>
+
+            <!-- اطلاعات فروشگاه -->
+            <div class="seller-info-section">
+                <div class="seller-info-row">
+                    <div class="seller-info-group">
+                        <label class="seller-info-label">نام فروشگاه</label>
+                        <span class="seller-info-value">@Model.Title</span>
+                    </div>
+                    <div class="seller-info-group">
+                        <label class="seller-info-label">شماره موبایل</label>
+                        <span class="seller-info-value" dir="ltr">@Model.Phone1</span>
+                    </div>
+                </div>
+
+                <div class="seller-info-row">
+                    <div class="seller-info-group">
+                        <label class="seller-info-label">شماره تماس ۲</label>
+                        <span class="seller-info-value" dir="ltr">@(Model.Phone2 ?? "-")</span>
+                    </div>
+                    <div class="seller-info-group">
+                        <label class="seller-info-label">ایمیل</label>
+                        <span class="seller-info-value">@Model.Email</span>
+                    </div>
+                </div>
+
+                <div class="seller-info-row">
+                    <div class="seller-info-group">
+                        <label class="seller-info-label">آدرس</label>
+                        <span class="seller-info-value">@Model.Address</span>
+                    </div>
+                </div>
+                
+                <div class="seller-info-row">
+                    <div class="seller-info-group">
+                        <label class="seller-info-label">توضیحات</label>
+                        <span class="seller-info-value">@Model.Description</span>
+                    </div>
+                </div>
+                <div class="seller-info-row">
+                    <div class="seller-info-group">
+                        <label class="seller-info-label">لینک نقشه گوگل</label>
+                        @if (!string.IsNullOrEmpty(Model.GoogleMapUrl))
+                        {
+                            <a href="@Model.GoogleMapUrl" target="_blank" class="seller-info-link">مشاهده نقشه</a>
+                        }
+                        else
+                        {
+                            <span class="seller-info-value no-link">لینکی ثبت نشده</span>
+                        }
+                    </div>
+                </div>
+
+                <!-- لینک‌های شبکه‌های اجتماعی -->
+                <div class="seller-social-section">
+                    <label class="seller-info-label">شبکه‌های اجتماعی</label>
+                    <div class="seller-social-links">
+                        <div class="seller-social-item">
+                            <span class="seller-social-icon">واتساپ:</span>
+                            @if (!string.IsNullOrEmpty(Model.WhatsApp))
+                            {
+                                  <small class="seller-info-link">@Model.WhatsApp</small>
+                            }
+                            else
+                            {
+                                <span class="seller-info-value no-link">ثبت نشده</span>
+                            }
+                        </div>
+                        <div class="seller-social-item">
+                            <span class="seller-social-icon">تلگرام:</span>
+                            @if (!string.IsNullOrEmpty(Model.Telegram))
+                            {
+                            <small class="seller-info-link">@Model.Telegram</small>
+                            }
+                            else
+                            {
+                                <span class="seller-info-value no-link">ثبت نشده</span>
+                            }
+                        </div>
+                        <div class="seller-social-item">
+                            <span class="seller-social-icon">اینستاگرام:</span>
+                            @if (!string.IsNullOrEmpty(Model.Instagram))
+                            {
+                            <small class="seller-info-link">@Model.Instagram</small>
+                           
+                            }
+                            else
+                            {
+                                <span class="seller-info-value no-link">ثبت نشده</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if (Model.Status==Shared.Domain.Enums.SellerStatus.درخواست_ارسال_شده)
+    {
+              <!-- دکمه‌های تایید و رد -->
+        <div class="seller-modal-footer">
+            <a class="btn btn-success btn-sm" onclick="AjaxSweet(
+                                                         'تایید شود',
+                                                         'پس از تایید, تغییرات اعمال  میشود ',
+                                                         'question',
+                                                         'تایید شود',
+                                                          'انصراف',
+                                                           '/Admin/Sellers/AcceptRequestChange?Id=@Model.Id',
+                                                           'Deleted_@Model.Id')">
+                                                تایید ؟
+                                            </a>
+                                            <a class="btn btn-danger btn-sm" onclick="AjaxSweetWithRedirect(
+                                                         'دلیل رد کردن',
+                                                         'رد شود',
+                                                           '/Admin/Sellers/RejectRequestChange/@Model.Id/',
+                                                           '/Admin/Sellers/ChangeRequests')">
+                                                رد شود ؟
+                                            </a>
+        </div>
+    }
+  
+    </div>
+

@@ -22,7 +22,7 @@ namespace NavinoShop.WebApplication.Controllers
         private readonly IAuthService _authService;
         private readonly IEmailUseCommandService _emailUseCommandService;
         private readonly ISitePageUiQueryService _sitePageUiQueryService;
-  
+
 
 
         public HomeController(ILogger<HomeController> logger, IMessageUserCommandService messageUserCommandService,
@@ -38,7 +38,7 @@ namespace NavinoShop.WebApplication.Controllers
             _sitePageUiQueryService = pageUiQueryService;
 
         }
-
+        [Route("/")]
         public IActionResult Index()
         {
             return View();
@@ -92,7 +92,7 @@ namespace NavinoShop.WebApplication.Controllers
             if (page == null) return NotFound();
             return View(page);
         }
-      
+
         public IActionResult Privacy()
         {
             return View();

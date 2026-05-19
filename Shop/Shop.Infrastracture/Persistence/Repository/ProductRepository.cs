@@ -63,5 +63,12 @@ namespace Shop.Infrastracture.Persistence.Repository
                  .Distinct()
                  .ToListAsync();
         }
+
+        public Task<Product> GetWithCategoryRel(int id)
+        {
+            return _shopContext.Products.Where(i => i.Id == id)
+                .Include(x => x.Poduct_Category_Rels)
+                .SingleOrDefaultAsync();
+        }
     }
 }

@@ -61,7 +61,7 @@ internal class SiteSettingQuery : ISiteSettingQueryService
                new BreadCrumb
                 {
                     Number=1,
-                    Title=" خانه / ",
+                    Title=" خانه  ",
                     Url="/"
 
                 },

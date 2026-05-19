@@ -20,40 +20,35 @@ namespace NavinoShop.WebApplication.Controllers
         {
             _productUiQueryService = productUiQueryService;
         }
+
         [HttpGet]
-        public IActionResult Products(string search)
-        {
-          
-            return View();
-        }
-        [HttpPost]
+        [Route("/Products/{categorySlug?}")]
         public async Task<IActionResult> Products(int minPrice = 0, int maxprice = 0, ProductSort sort = ProductSort.جدیدترین,
-                                               string categorySlug = "", int pageId = 1, string search = "")
+                                                   string categorySlug = "", int sellerId = 0, int pageId = 1, string search = "", bool IsAjax = false)
         {
             try
             {
                 ViewBag.CurrentSort = sort;
-                // اجرای کوئری با پارامترهای دریافت شده
-                var result = await _productUiQueryService.GetProducts(minPrice, maxprice, sort, categorySlug, pageId, search);
+                var result = await _productUiQueryService.GetProducts(minPrice, maxprice, sort, categorySlug, sellerId, pageId, search);
+                if (!IsAjax)
+                    return View(result);
 
-
-                // بررسی وجود نتیجه
-                if (result == null)
+                if (result == null || result.Products == null)
                 {
                     return Json(new
                     {
                         success = false,
                         message = "محصولی یافت نشد",
                         products = new List<object>(),
+                        breadCrumbs = result?.BreadCrumbs,
                         pagination = new { totalPages = 0, currentPage = pageId }
                     });
                 }
-
-                // برگرداندن نتیجه با ساختار مناسب برای فرانت‌اند
                 return Json(new
                 {
                     success = true,
                     products = result.Products,
+                    breadCrumbs = result.BreadCrumbs,
                     pagination = new
                     {
                         totalPages = result.PageCount,
@@ -65,16 +60,19 @@ namespace NavinoShop.WebApplication.Controllers
             }
             catch (Exception ex)
             {
-                // لاگ خطا
-                // _logger.LogError(ex, "خطا در دریافت محصولات");
-
                 return Json(new
                 {
                     success = false,
                     message = "خطا در دریافت محصولات",
-                    error = ex.Message // فقط در محیط توسعه
+                    error = ex.Message
                 });
             }
+        }
+        [HttpGet]
+        [Route("/Product/{slug}")]
+        public async Task<IActionResult> ProductDetail(string slug)
+        {
+            return View();
         }
 
     }

@@ -1,0 +1,87 @@
+﻿@page
+@model NavinoShop.WebApplication.Areas.Admin.Pages.Sellers.ChangeRequestsModel
+@using Shared.Application
+@using Shop.Application.Contract.Seller.Query
+@{
+    Layout = "_AdminLayout";
+    ViewData["title"] = "درخواست‌های ویرایش";
+}
+
+<div class="box">
+    <div class="box-body">
+        <div id="changeRequestsWrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="DataTable table table-bordered table-striped dataTable" role="grid">
+                        <thead>
+                            <tr role="row">
+                                <th>#</th>
+                                <th>تصویر فروشگاه</th>
+                                <th>عنوان فروشگاه</th>
+                                <th>ایمیل</th>
+                                <th>شماره تماس</th>
+                                <th>آدرس</th>
+                                <th>تاریخ درخواست</th>
+                                <th>وضعیت</th>
+                                <th>دلیل رد</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Requests != null && Model.Requests.Any())
+                            {
+                                int rowNumber = 1;
+                                @foreach (var item in Model.Requests)
+                                {
+                                    <tr role="row" id="Deleted_@item.Id" class="@(rowNumber % 2 == 0 ? "even" : "odd")">
+                                        <td>@rowNumber</td>
+                                        <td>
+                                            <img width="50px" height="50px" style="object-fit: cover; border-radius: 8px;"
+                                                 src="@(FileDirectories.SellerImageDirectory100 + item.ImageName)"
+                                                 alt="تصویر فروشگاه @item.SellerTitle" />
+                                        </td>
+                                        <td class="sorting_1">@item.SellerTitle</td>
+                                        <td>@item.Email</td>
+                                        <td dir="ltr">@item.PhoneNumber</td>
+                                        <td>@item.Address</td>
+                                        <td>@item.RequestDate.ToPersainDate()</td>
+
+                                        @switch (item.Status)
+                                        {
+                                            case Shared.Domain.Enums.SellerStatus.درخواست_تایید_شده:
+                                                <td class="text-success fw-bold">@item.Status.ToString().Replace("_", " ")</td>
+                                                break;
+                                            case Shared.Domain.Enums.SellerStatus.درخواست_تایید_نشده:
+                                                <td class="text-danger fw-bold">@item.Status.ToString().Replace("_", " ")</td>
+                                                break;
+                                            default:
+                                                <td class="text-secondary fw-bold">@item.Status.ToString().Replace("_", " ")</td>
+                                                break;
+                                        }
+                                        <td>@item.WhyRejected</td>
+                                        <td class="text-center">
+                                            <a onclick="open_Modal_Ajax('/Admin/Sellers/SellerChangeRequestDetail?Id=@item.Id','')"
+                                               class="btn btn-sm btn-info">
+                                                <i class="fa fa-eye"></i> 
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    rowNumber++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="9" class="text-center text-muted py-4">
+                                        <i class="fa fa-inbox fa-2x mb-2 d-block"></i>
+                                        هیچ درخواستی یافت نشد
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

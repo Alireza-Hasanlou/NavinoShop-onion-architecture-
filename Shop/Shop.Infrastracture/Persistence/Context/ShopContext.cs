@@ -12,6 +12,7 @@ using Shop.Domain.ProductGalleryAgg;
 using Shop.Domain.ProductSellAgg;
 using Shop.Domain.Relations.ProductCategoryRel;
 using Shop.Domain.SellerAgg;
+using Shop.Domain.SellerChangeRequestsAgg;
 using Shop.Domain.ShopSettingAgg;
 using Shop.Infrastracture.Persistence.EFConfig;
 using System;
@@ -40,6 +41,7 @@ namespace Shop.Infrastracture.Persistence.Context
         public DbSet<Seller> Sellers { get; set; }
         public DbSet<ShopSetting> shopSettings { get; set; }
         public DbSet<Product_Category_Rel> product_Category_Rels { get; set; }
+        public DbSet<SellerChangeRequest> SellerChangeRequests { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -48,7 +50,7 @@ namespace Shop.Infrastracture.Persistence.Context
 
             base.OnModelCreating(modelBuilder);
         }
-        
+
     }
     public class ShopContextFactory
         : IDesignTimeDbContextFactory<ShopContext>
