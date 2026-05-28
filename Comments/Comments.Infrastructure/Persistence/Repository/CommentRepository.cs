@@ -12,8 +12,10 @@ namespace Comments.Infrastructure.Persistence.Repository
 {
     internal class CommentRepository : GenericRepository<Comment, long>, ICommentRepository
     {
+        private readonly CommentContext _context;
         public CommentRepository(CommentContext context) : base(context)
         {
+            _context = context;
         }
     }
 }

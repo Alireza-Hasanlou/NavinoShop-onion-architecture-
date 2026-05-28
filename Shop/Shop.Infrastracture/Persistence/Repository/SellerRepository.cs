@@ -13,6 +13,15 @@ namespace Shop.Infrastracture.Persistence.Repository
         {
             _shopContext = shopContext;
         }
+
+        public async Task<Seller> GetForProductsPageAync(string SellerSlug)
+        {
+            return await _shopContext.Sellers.Where(i => i.Slug == SellerSlug)
+                  .Include(x => x.ProductSells)
+                  .ThenInclude(x => x.OrderItems)
+                  .SingleAsync();
+        }
+
         public async Task<int> GetSellerUserIdAsync(int sellerId)
         {
             var seller = await _shopContext.Sellers.SingleOrDefaultAsync(i => i.Id == sellerId);

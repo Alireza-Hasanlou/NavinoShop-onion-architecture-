@@ -5,7 +5,7 @@
 
         public int Id { get; set; }
         public int ProductId { get; set; }
-        public int SellerId { get; set; }
+        public string SellerSlug { get; set; }
         public string Title { get; set; }
         public string Slug { get; set; }
         public string Category { get; set; }

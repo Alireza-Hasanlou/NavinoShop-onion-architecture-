@@ -1,50 +1,5 @@
 ﻿@using Shop.Application.Contract.ProductSell.Command
 @model CreateProductSellCommandModel
-<style>
-    #productSelect {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        font-size: 14px;
-        background-color: #fff;
-        cursor: pointer;
-    }
-
-        #productSelect:focus {
-            outline: none;
-            border-color: #4CAF50;
-            box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
-        }
-
-        #productSelect:disabled {
-            background-color: #f5f5f5;
-            cursor: not-allowed;
-        }
-
-    #loadingSpinner {
-        color: #4CAF50;
-        font-size: 14px;
-        margin-top: 10px;
-    }
-
-    .fa-spinner {
-        animation: spin 1s linear infinite;
-    }
-
-    @@keyframes spin {
-        0%
-
-    {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
-
-    }
-</style>
 
 <div class="product-form-wrapper">
 
@@ -65,13 +20,16 @@
                                 <div class="product-category-tree" id="productCategoryTree">
                                     @foreach (var item in Model.categories.Where(x => x.ParentId == 0))
                                     {
-                                        @await Html.PartialAsync("_CategoryTreeNodePartial", item)
+                                        <partial name="_CategoryTreeNodePartial" model="item" />
                                     }
+
+
+
                                 </div>
                             </div>
                         </div>
                     </div>
-                  
+
                 </div>
 
                 <div class="product-form-col">
@@ -84,11 +42,11 @@
                     <!-- اسپینر لودینگ -->
                     <div id="loadingSpinner" style="display: none; text-align: center;">
                         <i class="fa fa-spinner fa-spin"></i> در حال بارگذاری محصولات...
-                
+
                     </div>
                     <div class="product-form-group">
                         <label class="product-form-label">
-                           قیمت <span class="required-star">*</span>
+                            قیمت <span class="required-star">*</span>
                         </label>
                         <input type="number" class="product-form-control money" id="Price" name="Price"
                                placeholder="لطفا قیمت را به ریال وارد کنید" step="500" maxlength="11">
@@ -108,10 +66,10 @@
                     <!-- توضیحات کامل -->
                     <div class="product-form-group">
                         <label class="product-form-label">
-                          واحد فروش <span class="required-star">*</span>
+                            واحد فروش <span class="required-star">*</span>
                         </label>
                         <input class="product-form-control" id="Unit" name="Text"
-                                  placeholder="لطفا واحد فروش را وارد کنید"/>
+                               placeholder="لطفا واحد فروش را وارد کنید" />
                         <div class="product-form-validation" data-for="Unit">لطفا واحد فروش را وارد کنید</div>
                     </div>
 
@@ -127,13 +85,3 @@
     <button type="button" class="btn btn-primary" onclick="CreateProductSell()">ذخیره</button>
 </div>
 
-
-
-<script>
-    $(document).ready(function() {
-
-        initProductCategoryTree();
-
-    });
-
-</script>

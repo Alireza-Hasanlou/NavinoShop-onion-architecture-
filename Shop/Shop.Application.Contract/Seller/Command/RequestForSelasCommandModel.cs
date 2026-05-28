@@ -6,6 +6,7 @@ namespace Shop.Application.Contract.Seller.Command
 {
     public class RequestForSelasCommandModel
     {
+
         [Display(Name = "نام فروشگاه")]
         [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
         [MaxLength(355, ErrorMessage = ValidationMessages.MaxLengthMessage)]
@@ -19,6 +20,8 @@ namespace Shop.Application.Contract.Seller.Command
         public string Address { get; set; }
         [Display(Name = "لینک نقشه گوگل")]
         public string? GoogleMapUrl { get; set; }
+        [Display(Name = "کاور فروشگاه")]
+        public IFormFile? CoverImage { get; set; }
         [Display(Name = "تصویر مجوز فروشگاه")]
         [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
         public IFormFile LicenseImage { get; set; }
@@ -51,5 +54,9 @@ namespace Shop.Application.Contract.Seller.Command
         [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
         [MaxLength(255, ErrorMessage = ValidationMessages.MaxLengthMessage)]
         public string? Email { get; set; }
+        [Display(Name = "نام فروشگاه به انگلیسی")]
+        [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
+        [MaxLength(255, ErrorMessage = ValidationMessages.MaxLengthMessage)]
+        public string? Slug { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿@using Query.Contract.UI.Products
+@using Shared.Application
 @using Shared.Ui.Enums
 @model ProductUiPaging
 @{
@@ -8,421 +9,84 @@
     <partial name="_Seo" model="@Model.Seo" />
 }
 
-<style>
-    /* استایل‌های صفحه فروشگاه */
-    .shop-profile-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        background: #f5f5f5;
-        border-radius: 12px;
-        overflow: hidden;
-    }
 
-    /* هدر فروشگاه */
-    .shop-header {
-        background: white;
-        margin-bottom: 20px;
-    }
-
-    .shop-cover {
-        position: relative;
-        height: 250px;
-        overflow: hidden;
-    }
-
-    .shop-cover-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .shop-logo-wrapper {
-        position: absolute;
-        bottom: -40px;
-        right: 30px;
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        border: 4px solid white;
-        background: white;
-        overflow: hidden;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-
-    .shop-logo {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .shop-info {
-        padding: 60px 30px 30px;
-    }
-
-    .shop-name {
-        font-size: 28px;
-        font-weight: bold;
-        margin: 0 0 10px;
-        color: #333;
-    }
-
-    .shop-rating {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 15px;
-    }
-
-    .stars {
-        display: flex;
-        gap: 3px;
-    }
-
-    .star {
-        font-size: 18px;
-        color: #ffc107;
-    }
-
-        .star.empty {
-            color: #ddd;
-        }
-
-    .shop-meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-        margin-bottom: 15px;
-    }
-
-    .meta-item {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        color: #666;
-        font-size: 14px;
-    }
-
-    .shop-stats {
-        display: flex;
-        gap: 30px;
-        margin: 20px 0;
-        padding: 15px 0;
-        border-top: 1px solid #eee;
-        border-bottom: 1px solid #eee;
-    }
-
-    .stat {
-        text-align: center;
-    }
-
-    .stat-value {
-        display: block;
-        font-size: 20px;
-        font-weight: bold;
-        color: #333;
-    }
-
-    .stat-label {
-        font-size: 12px;
-        color: #999;
-    }
-
-    .follow-btn {
-        background: #4CAF50;
-        color: white;
-        border: none;
-        padding: 10px 30px;
-        border-radius: 25px;
-        cursor: pointer;
-        font-size: 14px;
-        transition: 0.3s;
-    }
-
-        .follow-btn.following {
-            background: #999;
-        }
-
-    /* تب‌ها */
-    .shop-tabs {
-        display: flex;
-        background: white;
-        padding: 0 20px;
-        border-bottom: 1px solid #ddd;
-    }
-
-    .tab-btn {
-        padding: 12px 20px;
-        background: none;
-        border: none;
-        cursor: pointer;
-        font-size: 14px;
-        color: #666;
-        position: relative;
-    }
-
-        .tab-btn.active {
-            color: #4CAF50;
-        }
-
-            .tab-btn.active::after {
-                content: '';
-                position: absolute;
-                bottom: -1px;
-                left: 0;
-                right: 0;
-                height: 2px;
-                background: #4CAF50;
-            }
-
-    /* فیلترها */
-    .shop-filters {
-        background: white;
-        padding: 15px 20px;
-        margin: 10px 0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 15px;
-    }
-
-    .search-box {
-        flex: 1;
-        position: relative;
-        max-width: 300px;
-    }
-
-    .search-input {
-        width: 100%;
-        padding: 10px 40px 10px 15px;
-        border: 1px solid #ddd;
-        border-radius: 25px;
-        font-size: 14px;
-    }
-
-    .icon-search {
-        position: absolute;
-        right: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #999;
-    }
-
-    .filter-buttons {
-        display: flex;
-        gap: 10px;
-    }
-
-    .filter-btn {
-        padding: 8px 16px;
-        background: #f0f0f0;
-        border: none;
-        border-radius: 20px;
-        cursor: pointer;
-        font-size: 13px;
-        transition: 0.3s;
-    }
-
-        .filter-btn.active,
-        .filter-btn:hover {
-            background: #4CAF50;
-            color: white;
-        }
-
-    /* لیست محصولات */
-    .products-list {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 20px;
-        padding: 20px;
-    }
-
-    /* لود بیشتر */
-    .load-more-container {
-        text-align: center;
-        padding: 20px;
-    }
-
-    .load-more-btn {
-        padding: 12px 30px;
-        background: white;
-        border: 1px solid #ddd;
-        border-radius: 25px;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-
-        .load-more-btn:hover {
-            background: #4CAF50;
-            color: white;
-            border-color: #4CAF50;
-        }
-
-    /* اسپینر */
-    .loading-spinner {
-        text-align: center;
-        padding: 40px;
-    }
-
-    .spinner {
-        width: 40px;
-        height: 40px;
-        border: 3px solid #f3f3f3;
-        border-top: 3px solid #4CAF50;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin: 0 auto;
-    }
-
-    @@keyframes spin {
-        0% {
-            transform: rotate(0deg);
-        }
-
-        100% {
-            transform: rotate(360deg);
-        }
-    }
-
-    /* توجیح */
-    .toast-message {
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: #333;
-        color: white;
-        padding: 12px 24px;
-        border-radius: 25px;
-        z-index: 9999;
-        animation: slideUp 0.3s ease;
-    }
-
-    @@keyframes slideUp {
-        from {
-            transform: translate(-50%, 100px);
-            opacity: 0;
-        }
-
-        to {
-            transform: translate(-50%, 0);
-            opacity: 1;
-        }
-    }
-
-    /* ریسپانسیو */
-    @@media (max-width: 768px) {
-        .shop-profile-container {
-            border-radius: 0;
-        }
-
-        .shop-cover {
-            height: 150px;
-        }
-
-        .shop-logo-wrapper {
-            width: 80px;
-            height: 80px;
-            bottom: -30px;
-            right: 15px;
-        }
-
-        .shop-info {
-            padding: 50px 15px 20px;
-        }
-
-        .shop-name {
-            font-size: 22px;
-        }
-
-        .products-list {
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 12px;
-            padding: 15px;
-        }
-
-        .filter-buttons {
-            width: 100%;
-            overflow-x: auto;
-        }
-    }
-</style>
 <section class="inner-page" id="products-page">
     <partial name="_BreadCrumb" model="@Model.BreadCrumbs" />
-    <div class="shop-profile-container mt-3" id="shopProfileContainer">
-        <!-- هدر فروشگاه -->
-        <div class="shop-header">
-            <div class="shop-cover">
-                <img src="~/Images/Baner/164cff3d-0273-41df-a8b9-7da2fa459cd7promo-image1.png" alt="پوشش فروشگاه" class="shop-cover-img">
-                <div class="shop-logo-wrapper">
-                    <img src="~/Images/Site/64f80624-08bc-47c2-b830-e666b01918e1logo.png" alt="لوگو فروشگاه" class="shop-logo">
+    @if (Model.Seller != null)
+    {
+        <div class="shop-profile-container mt-3" id="shopProfileContainer">
+            <!-- هدر فروشگاه -->
+            <input type="hidden" id="SellerSlug" value="@Model.Seller.Slug" />
+            <div class="shop-header">
+                <div class="shop-cover">
+                    <img src="@FileDirectories.SellerImageDirectory@Model.Seller.CoverImageName" alt="cover" class="shop-cover-img">
+                    <div class="shop-logo-wrapper">
+                        <img src="@FileDirectories.SellerImageDirectory100@Model.Seller.AvatarImageName" alt="@Model.Seller.ImageAlt" class="shop-logo">
+                    </div>
                 </div>
-            </div>
 
-            <div class="shop-info">
-                <h1 class="shop-name">ناوینوشاپ</h1>
-                <div class="shop-rating">
-                    <div class="stars">
-                        @for (int i = 1; i <= 5; i++)
-                        {
-                            if (i <= 5)
+                <div class="shop-info">
+                    <h1 class="shop-name">@Model.Seller.Title</h1>
+                    <div class="shop-rating">
+                        <div class="stars">
+                            @for (int i = 1; i <= 5; i++)
                             {
-                                <span class="star filled">★</span>
+                                if (i <= 5)
+                                {
+                                    <span class="star filled">★</span>
+                                }
+                                else
+                                {
+                                    <span class="star empty">☆</span>
+                                }
                             }
-                            else
-                            {
-                                <span class="star empty">☆</span>
-                            }
-                        }
+                        </div>
+                        <span class="rating-count">(6 نظر)</span>
                     </div>
-                    <span class="rating-count">(6 نظر)</span>
+
+                    <div class="shop-meta">
+                        <div class="meta-item">
+                            <i class="icon-location"></i>
+                            <span>@Model.Seller.State، @Model.Seller.City</span>
+                            <small>@Model.Seller.Address</small>
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="shop-stats">
+                        <div class="stat">
+                            <span class="stat-value">@Model.Seller.ProductCount</span>
+                            <span class="stat-label">محصول</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">@Model.Seller.SellCount</span>
+                            <span class="stat-label">فروش</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">@Model.Seller.InShop روز</span>
+                            <span class="stat-label">در ناوینوشاپ</span>
+                        </div>
+
+                    </div>
+
                 </div>
+            </div>
 
-                <div class="shop-meta">
-                    <div class="meta-item">
-                        <i class="icon-location"></i>
-                        <span>قزوین، بویین زهرا</span>
-                    </div>
-                    <div class="meta-item">
-                        <i class="icon-phone"></i>
-                        <span>64966</span>
-                    </div>
-                    <div class="meta-item">
-                        <i class="icon-clock"></i>
-                        <span>8</span>
-                    </div>
-                </div>
 
-                <div class="shop-description">
-                    <p>توضیحات</p>
-                </div>
-
-                <div class="shop-stats">
-                    <div class="stat">
-                        <span class="stat-value">9</span>
-                        <span class="stat-label">محصول</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-value">65</span>
-                        <span class="stat-label">فروش</span>
-                    </div>
-
+            <!-- بخش جستجو و فیلتر -->
+            <div class="shop-filters">
+                <div class="search-box">
+                    <input type="text" id="SearchproductSellInput" class="search-input" placeholder="جستجوی محصول در این فروشگاه...">
+                    <i class="icon-search"></i>
                 </div>
 
             </div>
-        </div>
-
-
-        <!-- بخش جستجو و فیلتر -->
-        <div class="shop-filters">
-            <div class="search-box">
-                <input type="text" id="productSearch" class="search-input" placeholder="جستجوی محصول در این فروشگاه...">
-                <i class="icon-search"></i>
-            </div>
 
         </div>
+    }
 
-    </div>
 
     @if (!string.IsNullOrEmpty(Model.Filter) && !string.IsNullOrEmpty(Model.categorySlug))
     {
@@ -499,9 +163,7 @@
                                             </div>
 
                                         </div>
-                                        <div class="col-12 col-sm-2 pt-1 text-end">
-                                            <span>@Model.DataCount کالا</span>
-                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -516,18 +178,18 @@
                                             {
                                                 <div class="col" style="display: block;">
                                                     <div class="encode4326654321vfb">
-                                                        <a href="/Product/@product.Slug">
+                                                        <a href="/@product.SellerSlug/Product/@product.Slug">
                                                             <div class="image" style="background-image: url('/Images/Product/500/@product.ImageName');"></div>
                                                         </a>
                                                         <div class="details p-3">
                                                             <div class="category">
                                                                 <a onclick="loadProducts({categorySlug: '@product.CategorySlug', pageId: 1})">@product.Category</a>
                                                             </div>
-                                                            <a href="/Product/@product.Slug">
+                                                            <a href="/@product.SellerSlug/Product/@product.Slug">
                                                                 <h2>@product.Title</h2>
                                                             </a>
                                                             <div class="encode4365gbf265g43d">127,000 تومان</div>
-                                                            <small class="text-secondary"><i class="fa fa-store"> </i><a href="/Products?sellerId=@product.SellerId">  @product.SellerTitle</a></small>
+                                                            <small class="text-secondary"><i class="fa fa-store"> </i><a href="/@product.SellerSlug">  @product.SellerTitle</a></small>
                                                             <div class="rate">
                                                                 <svg class="svg-inline--fa fa-star fa-w-18" style="color: #ddd; width: 18px; height: 18px; display: inline-block;" aria-hidden="true" focusable="false" data-prefix="far" data-icon="star" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M528.1 171.5L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6zM388.6 312.3l23.7 138.4L288 385.4l-124.3 65.3 23.7-138.4-100.6-98 139-20.2 62.2-126 62.2 126 139 20.2-100.6 98z"></path></svg><svg class="svg-inline--fa fa-star fa-w-18" style="color: #ddd; width: 18px; height: 18px; display: inline-block;" aria-hidden="true" focusable="false" data-prefix="far" data-icon="star" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M528.1 171.5L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6zM388.6 312.3l23.7 138.4L288 385.4l-124.3 65.3 23.7-138.4-100.6-98 139-20.2 62.2-126 62.2 126 139 20.2-100.6 98z"></path></svg><svg class="svg-inline--fa fa-star fa-w-18" style="color: #ddd; width: 18px; height: 18px; display: inline-block;" aria-hidden="true" focusable="false" data-prefix="far" data-icon="star" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M528.1 171.5L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6zM388.6 312.3l23.7 138.4L288 385.4l-124.3 65.3 23.7-138.4-100.6-98 139-20.2 62.2-126 62.2 126 139 20.2-100.6 98z"></path></svg><svg class="svg-inline--fa fa-star fa-w-18" style="color: #ddd; width: 18px; height: 18px; display: inline-block;" aria-hidden="true" focusable="false" data-prefix="far" data-icon="star" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M528.1 171.5L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6zM388.6 312.3l23.7 138.4L288 385.4l-124.3 65.3 23.7-138.4-100.6-98 139-20.2 62.2-126 62.2 126 139 20.2-100.6 98z"></path></svg><svg class="svg-inline--fa fa-star fa-w-18" style="color: #ddd; width: 18px; height: 18px; display: inline-block;" aria-hidden="true" focusable="false" data-prefix="far" data-icon="star" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M528.1 171.5L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6zM388.6 312.3l23.7 138.4L288 385.4l-124.3 65.3 23.7-138.4-100.6-98 139-20.2 62.2-126 62.2 126 139 20.2-100.6 98z"></path></svg>
                                                                 <span class="encode43bf265g43d">(0 رای دهنده)</span>
@@ -546,14 +208,14 @@
                                                         @if (Model.PageId > 1)
                                                         {
                                                             <li class="unique-pagination-item">
-                                                                <a href="?pageId=@(Model.PageId - 1)" class="unique-pagination-link unique-pagination-prev">قبلی</a>
+                                                                <a href="javascript:void(0)" onclick="loadProducts({pageId: @(Model.PageId - 1)})" class="unique-pagination-link unique-pagination-prev">قبلی</a>
                                                             </li>
                                                         }
 
                                                         @if (Model.StartPage > 1)
                                                         {
                                                             <li class="unique-pagination-item">
-                                                                <a href="?pageId=1" class="unique-pagination-link">1</a>
+                                                                <a href="javascript:void(0)" onclick="loadProducts({pageId: 1})" class="unique-pagination-link">1</a>
                                                             </li>
                                                             @if (Model.StartPage > 2)
                                                             {
@@ -574,7 +236,7 @@
                                                             else
                                                             {
                                                                 <li class="unique-pagination-item">
-                                                                    <a href="?pageId=@i" class="unique-pagination-link">@i</a>
+                                                                    <a href="javascript:void(0)" onclick="loadProducts({pageId: @i})" class="unique-pagination-link">@i</a>
                                                                 </li>
                                                             }
                                                         }
@@ -588,14 +250,14 @@
                                                                 </li>
                                                             }
                                                             <li class="unique-pagination-item">
-                                                                <a href="?pageId=@Model.PageCount" class="unique-pagination-link">@Model.PageCount</a>
+                                                                <a href="javascript:void(0)" onclick="loadProducts({pageId: @Model.PageCount})" class="unique-pagination-link">@Model.PageCount</a>
                                                             </li>
                                                         }
 
                                                         @if (Model.PageId < Model.PageCount)
                                                         {
                                                             <li class="unique-pagination-item">
-                                                                <a href="?pageId=@(Model.PageId + 1)" class="unique-pagination-link unique-pagination-next">بعدی</a>
+                                                                <a href="javascript:void(0)" onclick="loadProducts({pageId: @(Model.PageId + 1)})" class="unique-pagination-link unique-pagination-next">بعدی</a>
                                                             </li>
                                                         }
                                                     </ul>
@@ -615,3 +277,12 @@
         </div>
     </div>
 </section>
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+
+           Products();
+        });
+        </script>
+}

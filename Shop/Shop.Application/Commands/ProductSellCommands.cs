@@ -31,7 +31,7 @@ namespace Shop.Application.Commands
         {
             if (command.ProductId == 0)
                 return new(false, "لطفا محصول مورد نظر را انتخاب کنید", nameof(command.ProductId));
-            if (await _productSellRepository.ExistByAsync(x => x.ProductId == command.ProductId))
+            if (await _productSellRepository.ExistByAsync(x => x.ProductId == command.ProductId && x.SellerId ==command.SellerId) )
                 return new OperationResult(false, "محصول در حال حاضر در فروشگاه شما موجود است", nameof(command.ProductId));
             var ProductSell = new ProductSell(command.ProductId, command.Price, command.Unit, command.SellerId, command.Weight);
             var res = await _productSellRepository.CreateAsync(ProductSell);

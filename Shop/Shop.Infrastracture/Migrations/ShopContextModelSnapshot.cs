@@ -447,6 +447,10 @@ namespace Shop.Infrastracture.Migrations
                     b.Property<string>("Phone2")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("StateId")
                         .HasColumnType("int");
 
@@ -522,6 +526,10 @@ namespace Shop.Infrastracture.Migrations
 
                     b.Property<int>("SellerId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Telegram")
                         .HasColumnType("nvarchar(max)");

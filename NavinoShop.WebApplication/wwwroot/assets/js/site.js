@@ -1,4 +1,22 @@
-﻿function isNumber(event) {
+﻿$('.qty-btn.minus').click(function () {
+    var input = $(this).siblings('input.quantity-value');
+    var val = parseInt(input.val());
+    var min = parseInt(input.attr('min')) || 1;
+    if (val > min) {
+        input.val(val - 1);
+    }
+});
+
+$('.qty-btn.plus').click(function () {
+    var input = $(this).siblings('input.quantity-value');
+    var val = parseInt(input.val());
+    var max = parseInt(input.attr('max')) || 10;
+    if (val < max) {
+        input.val(val + 1);
+    }
+});
+
+function isNumber(event) {
     const code = event.which ? event.which : event.keyCode;
     if (code > 31 && (code < 48 || code > 57)) {
         return false;
@@ -225,16 +243,6 @@ function AlerSweetWithTimer(title, icon, position) {
     });
 }
 
-function Loding() {
-    const loader = $("loader");
-    if (loader) loader.style.display = "flex";
-}
-
-function EndLoading() {
-    const loader = $("#loader");
-    if (loader) loader.style.display = "none";
-}
-
 function AddUsersEmail() {
     const emailInput = $("#InputUsersEmail");
     const messageBox = $("#InputUsersEmailValid");
@@ -281,10 +289,10 @@ function copyUrl(Url) {
     }
     navigator.clipboard.writeText(Url)
         .then(() => {
-            alert("✅ آدرس با موفقیت کپی شد!");
+            alert("آدرس با موفقیت کپی شد!");
         })
         .catch(() => {
-            alert("❌ خطا در کپی آدرس!");
+            alert("خطا در کپی آدرس!");
         });
 }
 
@@ -518,7 +526,6 @@ $(document).ready(function () {
 });
 
 function open_Modal_Ajax(url, modalclass) {
- 
     $('#modal-default').removeClass("product-modal");
     if (modalclass !== undefined && modalclass !== null && modalclass.trim() !== '') {
         $('#modal-default').addClass(modalclass);
@@ -538,6 +545,7 @@ function Get_ajax(url) {
 function close_Modal_Ajax() {
     $('#modal-default').modal('hide');
 }
+
 function initProductCategoryTree() {
     $('.pct-toggle-icon').off('click').on('click', function (e) {
         e.stopPropagation();
@@ -681,13 +689,11 @@ $(document).ready(function () {
         }
     }
 
-    // تغییرات چک‌باکس - فقط شمارش و بارگذاری محصولات، بدون ارتباط بین پرنت و فرزند
     $(document).off('change', '.pct-checkbox').on('change', '.pct-checkbox', function () {
         updateSelectedCount();
         getProductsByCategories();
     });
 
-    // باز و بسته کردن شاخه‌ها
     $(document).off('click', '.pct-toggle-icon').on('click', '.pct-toggle-icon', function (e) {
         e.stopPropagation();
         var $children = $(this).closest('.pct-node').find('.pct-children');
@@ -708,6 +714,7 @@ $(document).ready(function () {
         }, 100);
     }
 });
+
 function CreateProductSell() {
     var selectedProduct = $('#productSelect').val();
     var price = $('#Price').val();
@@ -740,7 +747,7 @@ function CreateProductSell() {
     formData.append("Unit", unit);
     formData.append("SellerId", $('#SellerId').val());
     $.ajax({
-        url: '/Seller/AddProductToShop',
+        url: '/Profile/Seller/AddProductToShop',
         type: 'POST',
         data: formData,
         processData: false,
@@ -754,11 +761,9 @@ function CreateProductSell() {
                 AlerSweetWithTimer("محصول با موفقیت اضافه شد", "success", "center");
                 setTimeout(function () {
                     close_Modal_Ajax();
-                    if (typeof refreshProductList === 'function') {
-                        refreshProductList();
-                    } else {
-                        location.reload();
-                    }
+
+                    location.reload();
+
                 }, 1500);
             } else {
                 AlerSweetWithTimer(response.message, "error", "center");
@@ -929,8 +934,6 @@ function CreateStore() {
     });
 }
 
-
-
 function loadProductSells() {
     debugger;
     var sellerId = $('#SellerId').val();
@@ -1085,10 +1088,6 @@ function EitStoreDescription() {
 }
 
 $(document).ready(function () {
-
-    // ===============================
-    // باز و بسته کردن زیرمجموعه‌ها با کلیک روی دکمه
-    // ===============================
     $(document).on('click', '.filter-cat-toggle', function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -1106,19 +1105,13 @@ $(document).ready(function () {
         }
     });
 
-
-    // ===============================
-    // باز نگه داشتن زیرمجموعه‌های دارای انتخاب (در زمان لود صفحه)
-    // ===============================
     function expandCheckedNodes() {
         $('.filter-cat-checkbox:checked').each(function () {
-            // IMPORTANT: از data-filter-cat-id استفاده کن نه value
             const $node = $(this).closest('.filter-cat-node');
             const categoryId = $node.data('filter-cat-id');
 
             if (!categoryId) return;
 
-            // باز کردن زیرمجموعه‌های گره انتخاب شده
             const $childrenDiv = $(`#FilterCatChildren_${categoryId}`);
             if ($childrenDiv.length) {
                 $childrenDiv.show();
@@ -1130,9 +1123,6 @@ $(document).ready(function () {
         });
     }
 
-    // ===============================
-    // دریافت اسلاگ‌های انتخاب شده (برای فیلتر محصولات)
-    // ===============================
     window.getSelectedCategorySlugs = function () {
         const slugs = [];
         $('.filter-cat-checkbox:checked').each(function () {
@@ -1144,9 +1134,6 @@ $(document).ready(function () {
         return slugs;
     };
 
-    // ===============================
-    // دریافت Idهای انتخاب شده
-    // ===============================
     window.getSelectedCategoryIds = function () {
         const ids = [];
         $('.filter-cat-checkbox:checked').each(function () {
@@ -1159,30 +1146,20 @@ $(document).ready(function () {
         return ids;
     };
 
-    // اجرا در زمان لود
     expandCheckedNodes();
 });
 
-
-//********************************************* */
-// Products.js
-$(document).ready(function () {
-    // فقط در صفحه /products اجرا شود
-    if (!window.location.pathname.toLowerCase().includes('/products')) {
-        return;
-    }
-
-    // ---------- تنظیمات جاری (State) ----------
+function Products() {
     var currentSettings = {
         minPrice: 0,
         maxPrice: 0,
         sort: 0,
         categorySlug: '',
         pageId: 1,
-        search: ''
+        search: '',
+        sellerSlug: ''
     };
 
-    // ---------- خواندن مقادیر از URL (در ابتدا) ----------
     var urlParams = new URLSearchParams(window.location.search);
     var searchQuery = urlParams.get('search');
     if (searchQuery) {
@@ -1190,44 +1167,59 @@ $(document).ready(function () {
         $('#search-input').val(searchQuery);
     }
 
-    // خواندن sort از URL
     var sortParam = urlParams.get('sort');
     if (sortParam && sortParam != 0) {
         currentSettings.sort = parseInt(sortParam);
     }
 
-    // خواندن page از URL
     var pageParam = urlParams.get('page');
     if (pageParam && pageParam > 1) {
         currentSettings.pageId = parseInt(pageParam);
     }
 
-    // خواندن minPrice و maxPrice از URL
     var minPriceParam = urlParams.get('minPrice');
     if (minPriceParam && minPriceParam > 0) {
         currentSettings.minPrice = parseInt(minPriceParam);
     }
+
     var maxPriceParam = urlParams.get('maxPrice');
     if (maxPriceParam && maxPriceParam > 0) {
         currentSettings.maxPrice = parseInt(maxPriceParam);
     }
 
-    // خواندن categorySlug از مسیر (مثل /Products/لپ‌تاپ)
-    var pathParts = window.location.pathname.split('/').filter(part => part !== '');
-    if (pathParts.length >= 2 && pathParts[0].toLowerCase() === 'products') {
-        var slug = pathParts[1];
-        if (slug && slug !== '') {
-            currentSettings.categorySlug = decodeURIComponent(slug);
+    var pathParts2 = window.location.pathname.split('/').filter(part => part !== '');
+
+    if (pathParts2.length >= 1) {
+        var firstPart = pathParts2[0];
+        var secondPart = pathParts2.length > 1 ? pathParts2[1] : null;
+
+        if (firstPart.toLowerCase() === 'products') {
+            if (secondPart && secondPart !== '') {
+                currentSettings.categorySlug = decodeURIComponent(secondPart);
+            }
+        } else {
+            currentSettings.sellerSlug = decodeURIComponent(firstPart);
+            if (secondPart && secondPart !== '') {
+                currentSettings.categorySlug = decodeURIComponent(secondPart);
+            }
         }
     }
 
-    // ---------- تابع به‌روزرسانی URL ----------
+    var sellerParam = urlParams.get('seller');
+    if (sellerParam && sellerParam !== '') {
+        currentSettings.sellerSlug = sellerParam;
+    }
+
+    var categoryParam = urlParams.get('category');
+    if (categoryParam && categoryParam !== '') {
+        currentSettings.categorySlug = categoryParam;
+    }
+
     function updateUrl() {
         var params = new URLSearchParams();
 
         if (currentSettings.search && currentSettings.search !== '') {
             params.set('search', currentSettings.search);
-            $("#ResultTitle").text("نتایج جستجو برای " + currentSettings.search);
         }
 
         if (currentSettings.sort && currentSettings.sort != 0) {
@@ -1246,21 +1238,37 @@ $(document).ready(function () {
             params.set('maxPrice', currentSettings.maxPrice);
         }
 
-        var baseUrl = '/Products';
         var newUrl = '';
+        var baseUrl = '';
 
-        if (currentSettings.categorySlug && currentSettings.categorySlug !== '') {
-            newUrl = baseUrl + '/' + encodeURIComponent(currentSettings.categorySlug);
+        if (currentSettings.sellerSlug && currentSettings.sellerSlug !== '') {
+            baseUrl = '/' + encodeURIComponent(currentSettings.sellerSlug);
+
+            if (currentSettings.categorySlug && currentSettings.categorySlug !== '') {
+                baseUrl += '/Product/' + encodeURIComponent(currentSettings.categorySlug);
+            }
+
+            if (currentSettings.search && currentSettings.search !== '') {
+                $("#ResultTitle").text("نتایج جستجو برای " + currentSettings.search);
+            } else if (currentSettings.categorySlug && currentSettings.categorySlug !== '') {
+                var categoryTitle = currentSettings.categorySlug.replace(/_/g, ' ');
+                $("#ResultTitle").text("محصولات دسته " + categoryTitle + " در فروشگاه");
+            } else {
+                $("#ResultTitle").text("محصولات فروشگاه");
+            }
+        } else if (currentSettings.categorySlug && currentSettings.categorySlug !== '') {
+            baseUrl = '/Products/' + encodeURIComponent(currentSettings.categorySlug);
+
             var categoryTitle = currentSettings.categorySlug.replace(/_/g, ' ');
-            $("#ResultTitle").text("محصولات در دسته بندی " + categoryTitle);
+
             if (currentSettings.search && currentSettings.search !== '') {
                 $("#ResultTitle").text("نتایج جستجو برای " + currentSettings.search + " در دسته " + categoryTitle);
-            }
-            if (params.toString()) {
-                newUrl += '?' + params.toString();
+            } else {
+                $("#ResultTitle").text("محصولات دسته " + categoryTitle);
             }
         } else {
-            newUrl = baseUrl + (params.toString() ? '?' + params.toString() : '');
+            baseUrl = '/Products';
+
             if (currentSettings.search && currentSettings.search !== '') {
                 $("#ResultTitle").text("نتایج جستجو برای " + currentSettings.search);
             } else {
@@ -1268,10 +1276,10 @@ $(document).ready(function () {
             }
         }
 
+        newUrl = baseUrl + (params.toString() ? '?' + params.toString() : '');
         window.history.pushState({ ...currentSettings }, '', newUrl);
     }
 
-    // ---------- تنظیم کلاس‌های active مرتب‌سازی ----------
     function setActiveSortClass() {
         $('.order-filter').removeClass('active');
         $(`.order-filter[data-sort="${currentSettings.sort}"]`).addClass('active');
@@ -1279,7 +1287,6 @@ $(document).ready(function () {
 
     setActiveSortClass();
 
-    // ---------- توابع اصلی ----------
     window.changeSort = function (sortValue) {
         currentSettings.sort = sortValue;
         currentSettings.pageId = 1;
@@ -1301,7 +1308,6 @@ $(document).ready(function () {
         }
     };
 
-    // بارگذاری محصولات با AJAX
     window.loadProducts = function (options) {
         if (options) {
             $.extend(currentSettings, options);
@@ -1314,6 +1320,7 @@ $(document).ready(function () {
             categorySlug: currentSettings.categorySlug,
             pageId: currentSettings.pageId,
             search: currentSettings.search,
+            sellerSlug: currentSettings.sellerSlug,
             isAjax: true
         };
 
@@ -1337,10 +1344,17 @@ $(document).ready(function () {
                     $('#Products').html('<div class="alert alert-danger">' + (response.message || 'خطا در بارگذاری') + '</div>');
                 }
 
-                // رندر بردکرامپ
                 if (response.breadCrumbs && response.breadCrumbs.length > 0) {
                     var breadCrumbsHtml = RenderBreadCrumbs(response.breadCrumbs);
                     $('#BreadCrumbsOl').html(breadCrumbsHtml);
+                }
+
+                if (response.sellerInfo && response.sellerInfo.sellerSlug && response.sellerInfo.sellerSlug !== '') {
+                    var sellerHtml = renderSellerInfo(response.sellerInfo);
+                    $('#shopProfileContainer').html(sellerHtml);
+                    $('#SellerSlug').val(response.sellerInfo.sellerSlug);
+                } else if (currentSettings.sellerSlug === '') {
+                    $('#shopProfileContainer').html('');
                 }
 
                 $('html, body').animate({ scrollTop: 0 }, 300);
@@ -1353,44 +1367,59 @@ $(document).ready(function () {
         });
     };
 
-    // تابع رندر بردکرامپ
+    window.renderSellerInfo = function (sellerInfo) {
+        if (!sellerInfo) return '';
+        return `
+            <div class="seller-profile-box">
+                <div class="seller-header">
+                    <img src="${sellerInfo.avatarImageName || '/images/default-avatar.jpg'}" alt="فروشگاه" class="seller-avatar">
+                    <h3 class="seller-title">${escapeHtml(sellerInfo.title)}</h3>
+                </div>
+                <div class="seller-details">
+                    <p><i class="fa fa-phone"></i> ${escapeHtml(sellerInfo.phone1) || '-'}</p>
+                    <p><i class="fa fa-envelope"></i> ${escapeHtml(sellerInfo.email) || '-'}</p>
+                    <p><i class="fa fa-map-marker"></i> ${escapeHtml(sellerInfo.address) || '-'}</p>
+                </div>
+            </div>
+        `;
+    };
+
     window.RenderBreadCrumbs = function (breadCrumbs) {
         if (!breadCrumbs || breadCrumbs.length === 0) return '';
-        var html = ''; 
+        var html = '';
         $.each(breadCrumbs, function (index, breadcrumb) {
-            html += `<li>/<a href="${breadcrumb.url}">${breadcrumb.title}</a></li>`;
+            html += `<li><a href="${breadcrumb.url}">${breadcrumb.title}</a></li>`;
         });
         return html;
     };
 
-    // رندر محصولات
     window.renderProducts = function (products) {
         if (!products || products.length === 0) {
             return '<div class="text-center p-5 alert alert-info">محصولی یافت نشد</div>';
         }
         var html = '';
         $.each(products, function (index, product) {
-            var categoryHtml = '';
-
-            if (product.categorySlug) {
-                categoryHtml = `<a href="javascript:void(0)" onclick="loadProducts({categorySlug: '${product.categorySlug || ''}', pageId: 1})">${escapeHtml(product.category)}</a>`;
-            }
+            var categoryUrl = product.categorySlug ? '/Products/' + product.categorySlug : '#';
+            var sellerUrl = product.sellerSlug ? '/' + product.sellerSlug : '#';
 
             html += `
                 <div class="col" style="display: block;">
                     <div class="encode4326654321vfb">
-                        <a href="/Product/${product.slug}">
+                        <a href="/${product.sellerSlug}/Product/${product.slug}">
                             <div class="image" style="background-image: url('/Images/Product/500/${product.imageName || 'default.jpg'}');"></div>
                         </a>
                         <div class="details p-3">
                             <div class="category">
-                                ${categoryHtml || '<a href="#">دسته‌بندی نشده</a>'}
+                                <a href="${categoryUrl}">${escapeHtml(product.category) || 'دسته‌بندی نشده'}</a>
                             </div>
-                            <a href="/Product/${product.slug}">
+                            <a href="/${product.sellerSlug}/Product/${product.slug}">
                                 <h2>${escapeHtml(product.title || 'بدون عنوان')}</h2>
                             </a>
                             <div class="encode4365gbf265g43d">${formatPrice(product.price || 0)} تومان</div>
-                                <span><a>غرفه :@product.SellerTitle</a></span>
+                            <div class="seller-info">
+                                <i class="fa fa-store"></i>
+                                <a href="${sellerUrl}">${escapeHtml(product.sellerTitle || 'نامشخص')}</a>
+                            </div>
                             <div class="rate">
                                 ${generateStarRating(product.rating || 0)}
                                 <span class="encode43bf265g43d">(${product.votesCount || 0} رای دهنده)</span>
@@ -1403,7 +1432,6 @@ $(document).ready(function () {
         return html;
     };
 
-    // رندر صفحه‌بندی
     window.renderPagination = function (pagination) {
         if (!pagination || pagination.totalPages <= 1) return '';
 
@@ -1415,139 +1443,116 @@ $(document).ready(function () {
         var paginationHtml = '<div class="unique-pagination-wrapper text-center mt-4">';
         paginationHtml += '<ul class="unique-pagination-list">';
 
-        // دکمه قبلی
         if (currentPage > 1) {
             paginationHtml += `<li class="unique-pagination-item">
-            <a class="unique-pagination-link unique-pagination-prev" href="javascript:void(0)" 
-               onclick="loadProducts({pageId: ${currentPage - 1}})">
-               قبلی
-            </a>
-        </li>`;
-        }
-
-        // صفحه اول و ...
-        if (startPage > 1) {
-            paginationHtml += `<li class="unique-pagination-item">
-            <a class="unique-pagination-link" href="javascript:void(0)" 
-               onclick="loadProducts({pageId: 1})">
-               1
-            </a>
-        </li>`;
-            if (startPage > 2) {
-                paginationHtml += `<li class="unique-pagination-item">
-                <span class="unique-pagination-dots">...</span>
-            </li>`;
-            }
-        }
-
-        // حلقه صفحات اصلی
-        for (var i = startPage; i <= endPage; i++) {
-            if (i === currentPage) {
-                paginationHtml += `<li class="unique-pagination-item">
-                <span class="unique-pagination-active">${i}</span>
-            </li>`;
-            } else {
-                paginationHtml += `<li class="unique-pagination-item">
-                <a class="unique-pagination-link" href="javascript:void(0)" 
-                   onclick="loadProducts({pageId: ${i}})">
-                   ${i}
+                <a class="unique-pagination-link unique-pagination-prev" href="javascript:void(0)" onclick="loadProducts({pageId: ${currentPage - 1}})">
+                    قبلی
                 </a>
             </li>`;
+        }
+
+        if (startPage > 1) {
+            paginationHtml += `<li class="unique-pagination-item">
+                <a class="unique-pagination-link" href="javascript:void(0)" onclick="loadProducts({pageId: 1})">1</a>
+            </li>`;
+            if (startPage > 2) {
+                paginationHtml += `<li class="unique-pagination-item"><span class="unique-pagination-dots">...</span></li>`;
             }
         }
 
-        // صفحه آخر و ...
+        for (var i = startPage; i <= endPage; i++) {
+            if (i === currentPage) {
+                paginationHtml += `<li class="unique-pagination-item"><span class="unique-pagination-active">${i}</span></li>`;
+            } else {
+                paginationHtml += `<li class="unique-pagination-item">
+                    <a class="unique-pagination-link" href="javascript:void(0)" onclick="loadProducts({pageId: ${i}})">${i}</a>
+                </li>`;
+            }
+        }
+
         if (endPage < totalPages) {
             if (endPage < totalPages - 1) {
-                paginationHtml += `<li class="unique-pagination-item">
-                <span class="unique-pagination-dots">...</span>
-            </li>`;
+                paginationHtml += `<li class="unique-pagination-item"><span class="unique-pagination-dots">...</span></li>`;
             }
             paginationHtml += `<li class="unique-pagination-item">
-            <a class="unique-pagination-link" href="javascript:void(0)" 
-               onclick="loadProducts({pageId: ${totalPages}})">
-               ${totalPages}
-            </a>
-        </li>`;
+                <a class="unique-pagination-link" href="javascript:void(0)" onclick="loadProducts({pageId: ${totalPages}})">${totalPages}</a>
+            </li>`;
         }
 
-        // دکمه بعدی
         if (currentPage < totalPages) {
             paginationHtml += `<li class="unique-pagination-item">
-            <a class="unique-pagination-link unique-pagination-next" href="javascript:void(0)" 
-               onclick="loadProducts({pageId: ${currentPage + 1}})">
-               بعدی
-            </a>
-        </li>`;
+                <a class="unique-pagination-link unique-pagination-next" href="javascript:void(0)" onclick="loadProducts({pageId: ${currentPage + 1}})">
+                    بعدی
+                </a>
+            </li>`;
         }
 
         paginationHtml += '</ul></div>';
         $('#Products').append(paginationHtml);
         return paginationHtml;
     };
-    // توابع کمکی (فرمت قیمت، escape، ستاره‌ها)
-    function formatPrice(price) {
-        if (!price && price !== 0) return '۰';
-        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
 
-    function escapeHtml(text) {
-        if (!text) return '';
-        var map = {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#39;'
-        };
-        return text.replace(/[&<>"']/g, function (m) { return map[m]; });
-    }
-
-    function generateStarRating(rating) {
-        var fullStars = Math.floor(rating);
-        var hasHalfStar = (rating - fullStars) >= 0.5;
-        var starsHtml = '';
-        for (var i = 1; i <= 5; i++) {
-            if (i <= fullStars) {
-                starsHtml += `<svg class="svg-inline--fa fa-star fa-w-18" style="color: #ffc107; width: 18px; height: 18px; display: inline-block;" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="star" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"></path></svg>`;
-            } else if (i === fullStars + 1 && hasHalfStar) {
-                starsHtml += `<svg class="svg-inline--fa fa-star-half-alt fa-w-17" style="color: #ffc107; width: 18px; height: 18px; display: inline-block;" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="star-half-alt" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 536 512"><path fill="currentColor" d="M508.55 171.51L362.18 150.2 296.77 17.81C290.89 5.98 279.42 0 267.95 0c-11.4 0-22.79 5.9-28.69 17.81l-65.43 132.38-146.38 21.29c-26.25 3.8-36.77 36.09-17.74 54.59l105.89 103-25.06 145.48C86.98 495.33 103.57 512 122.15 512c4.93 0 10-1.17 14.87-3.75l130.95-68.68 130.94 68.7c4.86 2.55 9.92 3.71 14.83 3.71 18.6 0 35.22-16.61 31.66-37.4l-25.03-145.49 105.91-102.98c19.04-18.5 8.52-50.8-17.73-54.6zm-121.74 123.2l-18.12 17.62 4.28 24.88 19.52 113.45-102.13-53.59-22.38-11.74.03-317.19 51.03 103.29 11.18 22.63 25.01 3.64 114.23 16.63-82.65 80.38z"></path></svg>`;
-            } else {
-                starsHtml += `<svg class="svg-inline--fa fa-star fa-w-18" style="color: #ddd; width: 18px; height: 18px; display: inline-block;" aria-hidden="true" focusable="false" data-prefix="far" data-icon="star" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M528.1 171.5L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6zM388.6 312.3l23.7 138.4L288 385.4l-124.3 65.3 23.7-138.4-100.6-98 139-20.2 62.2-126 62.2 126 139 20.2-100.6 98z"></path></svg>`;
-            }
-        }
-        return starsHtml;
-    }
-
-    // ---------- جستجو با فشردن Enter ----------
     $('#search-input').on('keypress', function (e) {
         if (e.which === 13) {
             e.preventDefault();
             var newQuery = $(this).val().trim();
-            if (newQuery !== currentSettings.search) {
-                currentSettings.search = newQuery;
-                currentSettings.pageId = 1;
-                loadProducts();
-            }
+
+            currentSettings.search = newQuery;
+            currentSettings.pageId = 1;
+
+            $('#shopProfileContainer').html('');
+            loadProducts();
         }
     });
 
-    // ---------- مدیریت دکمه بازگشت مرورگر ----------
+    $('#SearchproductSellInput').on('keypress', function (e) {
+        if (e.which === 13) {
+            e.preventDefault();
+            var newQuery = $(this).val().trim();
+
+            currentSettings.search = newQuery;
+            currentSettings.pageId = 1;
+
+            var sellerSlug = $("#SellerSlug").val();
+            if (sellerSlug) {
+                currentSettings.sellerSlug = sellerSlug;
+            }
+
+            loadProducts();
+        }
+    });
+
     window.addEventListener('popstate', function (event) {
         var state = event.state || {};
+
         currentSettings.categorySlug = state.categorySlug || '';
         currentSettings.pageId = state.pageId || 1;
         currentSettings.sort = state.sort || 0;
         currentSettings.search = state.search || '';
         currentSettings.minPrice = state.minPrice || 0;
         currentSettings.maxPrice = state.maxPrice || 0;
+        currentSettings.sellerSlug = state.sellerSlug || '';
+
+        if (!state.categorySlug && !state.sellerSlug) {
+            var pathParts = window.location.pathname.split('/').filter(part => part !== '');
+            if (pathParts.length >= 1) {
+                var firstPart = pathParts[0];
+                var secondPart = pathParts.length > 1 ? pathParts[1] : null;
+
+                if (firstPart.toLowerCase() === 'products') {
+                    if (secondPart) currentSettings.categorySlug = secondPart;
+                } else {
+                    currentSettings.sellerSlug = firstPart;
+                    if (secondPart) currentSettings.categorySlug = secondPart;
+                }
+            }
+        }
 
         $('#search-input').val(currentSettings.search);
         setActiveSortClass();
         loadProducts();
     });
 
-    // ---------- تابع پاک کردن همه فیلترها ----------
     window.resetAllFilters = function () {
         currentSettings = {
             minPrice: 0,
@@ -1555,14 +1560,17 @@ $(document).ready(function () {
             sort: 0,
             categorySlug: '',
             pageId: 1,
-            search: ''
+            search: '',
+            sellerSlug: ''
         };
 
         $('#search-input').val('');
+        $('#SearchproductSellInput').val('');
         $('.order-filter').removeClass('active');
         $('.order-filter[data-sort="0"]').addClass('active');
         $("#ResultTitle").text("همه محصولات");
         $('input[name="categoryRadio"]').prop('checked', false);
+        $('#shopProfileContainer').html('');
 
         if (window.priceSlider) {
             window.priceSlider.set([0, 100000000]);
@@ -1572,5 +1580,485 @@ $(document).ready(function () {
         loadProducts();
     };
 
+}
+
+function formatPrice(price) {
+    if (!price && price !== 0) return '۰';
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+function escapeHtml(text) {
+    if (!text) return '';
+    var map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    };
+    return text.replace(/[&<>"']/g, function (m) { return map[m]; });
+}
+
+function generateStarRating(rating) {
+    var fullStars = Math.floor(rating);
+    var hasHalfStar = (rating - fullStars) >= 0.5;
+    var starsHtml = '';
+    for (var i = 1; i <= 5; i++) {
+        if (i <= fullStars) {
+            starsHtml += `<svg class="svg-inline--fa fa-star fa-w-18" style="color: #ffc107; width: 18px; height: 18px; display: inline-block;" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="star" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"></path></svg>`;
+        } else if (i === fullStars + 1 && hasHalfStar) {
+            starsHtml += `<svg class="svg-inline--fa fa-star-half-alt fa-w-17" style="color: #ffc107; width: 18px; height: 18px; display: inline-block;" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="star-half-alt" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 536 512"><path fill="currentColor" d="M508.55 171.51L362.18 150.2 296.77 17.81C290.89 5.98 279.42 0 267.95 0c-11.4 0-22.79 5.9-28.69 17.81l-65.43 132.38-146.38 21.29c-26.25 3.8-36.77 36.09-17.74 54.59l105.89 103-25.06 145.48C86.98 495.33 103.57 512 122.15 512c4.93 0 10-1.17 14.87-3.75l130.95-68.68 130.94 68.7c4.86 2.55 9.92 3.71 14.83 3.71 18.6 0 35.22-16.61 31.66-37.4l-25.03-145.49 105.91-102.98c19.04-18.5 8.52-50.8-17.73-54.6zm-121.74 123.2l-18.12 17.62 4.28 24.88 19.52 113.45-102.13-53.59-22.38-11.74.03-317.19 51.03 103.29 11.18 22.63 25.01 3.64 114.23 16.63-82.65 80.38z"></path></svg>`;
+        } else {
+            starsHtml += `<svg class="svg-inline--fa fa-star fa-w-18" style="color: #ddd; width: 18px; height: 18px; display: inline-block;" aria-hidden="true" focusable="false" data-prefix="far" data-icon="star" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M528.1 171.5L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6zM388.6 312.3l23.7 138.4L288 385.4l-124.3 65.3 23.7-138.4-100.6-98 139-20.2 62.2-126 62.2 126 139 20.2-100.6 98z"></path></svg>`;
+        }
+    }
+    return starsHtml;
+}
+
+function loadOtherSellers(productSlug) {
+    $.ajax({
+        url: '/Product/GetOtherSellers',
+        type: 'GET',
+        data: { productSlug: productSlug },
+        dataType: 'json',
+        beforeSend: function () {
+            $('#other-sellers-section').show();
+            $('.other-sellers-carousel').html('<div class="text-center p-5"><div class="spinner-border text-primary"></div></div>');
+        },
+        success: function (response) {
+            if (response.success && response.data && response.data.length > 0) {
+                var html = '';
+                $.each(response.data, function (index, seller) {
+                    html += `
+                        <div class="encode4326654321vfb item">
+                            <a href="/Product/${seller.slug}">
+                                <div class="image" style="background-image: url('/Images/Product/500/${seller.imageName}')"></div>
+                            </a>
+                            <div class="details p-3">
+                                <div class="category">
+                                    <a href="/Products/${seller.categorySlug}">${escapeHtml(seller.category)}</a>
+                                </div>
+                                <a href="/${seller.sellerSlug}/Product/${seller.slug}">
+                                    <h2>${escapeHtml(seller.title)}</h2>
+                                </a>
+                                <div class="encode4365gbf265g43d">${formatPrice(seller.price)} تومان</div>
+                                <div class="seller-name">
+                                    <i class="fa fa-store"></i>
+                                    <a href="/Products?sellerId=${seller.sellerSlug}">${escapeHtml(seller.sellerTitle)}</a>
+                                </div>
+                                <div class="rate">
+                                    ${generateStarRating(seller.rating)}
+                                    <span class="encode43bf265g43d">(${seller.votesCount} رای دهنده)</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                $('.other-sellers-carousel').html(html);
+
+                if ($('.other-sellers-carousel').length > 0) {
+                    $('.other-sellers-carousel').trigger('destroy.owl.carousel');
+                    $('.other-sellers-carousel').owlCarousel({
+                        rtl: true,
+                        autoplay: true,
+                        autoplayHoverPause: true,
+                        autoplayTimeout: 2500,
+                        autoplaySpeed: 200,
+                        autoplayDirection: 'backward',
+                        margin: 25,
+                        nav: true,
+                        dots: false,
+                        loop: true,
+                        navText: [
+                            '<i class="fa fa-chevron-left"></i>',
+                            '<i class="fa fa-chevron-right"></i>'
+                        ],
+                        responsive: {
+                            0: { items: 1 },
+                            768: { items: 3 },
+                            1000: { items: 4 }
+                        }
+                    });
+                }
+            }
+        }
+    });
+}
+
+$(document).ready(function () {
+    if (window.location.pathname.toLowerCase().includes('/products') ||
+        (window.location.pathname.split('/').length === 2 &&
+            !window.location.pathname.toLowerCase().includes('products') &&
+            window.location.pathname !== '/')) {
+        Products();
+    }
+
+    if ($('#ProductId').length > 0) {
+        if (typeof loadComments === 'function') {
+            loadComments(1);
+        }
+    }
+
+    if ($('#product-slug').length > 0) {
+        var productSlug = $('#product-slug').val();
+        if (productSlug && typeof loadOtherSellers === 'function') {
+            loadOtherSellers(productSlug);
+        }
+    }
 });
+
+var commentSettings = { currentPageId: 1 };
+
+function loadComments(pageId = 1) {
+    var ProductId = $("#ProductId").val();
+
+    if (!ProductId) {
+        $('#comments-list').html('<div class="alert alert-danger">شناسه محصول یافت نشد</div>');
+        return;
+    }
+
+    $('#comments-list').html(`
+        <div class="text-center py-5">
+            <div class="spinner-border text-success" role="status">
+                <span class="visually-hidden">در حال بارگذاری...</span>
+            </div>
+        </div>
+    `);
+
+    $.ajax({
+        url: '/Comment/GetComments',
+        type: 'GET',
+        data: {
+            ProductId: ProductId,
+            pageId: pageId
+        },
+        success: function (response) {
+            if (response && response.comments && response.comments.length > 0) {
+                displayComments(response);
+                displayPagination(response);
+            } else {
+                $('#comments-list').html('<div class="text-center">هیچ نظری برای این محصول ثبت نشده است</div>');
+                $('#pagination-container').empty();
+            }
+        },
+        error: function (xhr, status, error) {
+            $('#comments-list').html('<div class="alert alert-danger text-center">خطا در بارگذاری نظرات</div>');
+            $('#pagination-container').empty();
+        }
+    });
+}
+
+function displayComments(pagingData) {
+    var comments = pagingData.comments;
+
+    if (!comments || comments.length === 0) {
+        $('#comments-list').html('<div class="alert alert-info">هیچ نظری برای این محصول ثبت نشده است</div>');
+        return;
+    }
+
+    var html = `<span>${pagingData.commentCount} نظر</span>`;
+
+    comments.forEach(function (comment) {
+        var userImage = comment.imageName;
+        var replyFormId = 'reply-form-' + comment.id;
+        var repliesContainerId = 'replies-' + comment.id;
+
+        html += `
+            <div class="comment p-3 my-2" data-comment-id="${comment.id}">
+                <div class="sender-details">
+                    <div class="row">
+                       <div class="col-2 col-sm-2 col-md-1 pl-md-0 pl-lg-2 pl-xl-3">
+                       <img src="${userImage}" alt="${escapeHtml(comment.fullName)}" class="rounded-circle w-100">
+                        </div>
+                        <div class="col-9 col-sm-10 col-md-11 pr-0 pr-md-2 pr-xl-0 pt-0 pt-lg-1">
+                            <div class="name font-weight-bold">${escapeHtml(comment.fullName)}</div>
+                            <div class="date text-muted small">${comment.createDate || ''}</div>
+                        </div>
+                        <div class="col-12 mt-2">
+                            <p class="text-justify">${escapeHtml(comment.text)}</p>
+                            <span class="reply-btn text-success" style="cursor: pointer;" onclick="showReplyForm(${comment.id})">
+                                <i class="fas fa-reply"></i> پاسخ
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="${replyFormId}" class="reply-form-container mt-3" style="display: none;">
+                    <div class="row justify-content-end">
+                        <div class="col-11">
+                            <div class="bg-light p-3 rounded">
+                                <div class="form-group">
+
+                                    <textarea id="reply-text-${comment.id}" class="form-control mb-2" rows="3" placeholder="متن پاسخ شما *"></textarea>
+                                    <button class="btn btn-success btn-sm" onclick="submitReply(${comment.id})">ارسال پاسخ</button>
+                                    <button class="btn btn-secondary btn-sm" onclick="hideReplyForm(${comment.id})">انصراف</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="${repliesContainerId}" class="replies-container">
+        `;
+        debugger;
+        if (comment.replys && comment.replys.length > 0) {
+            comment.replys.forEach(function (reply) {
+                var replyUserImage = reply.imageName;
+
+                html += `
+                    <div class="row justify-content-end mt-3">
+                        <div class="col-11 pt-2 pr-0">
+                            <div class="comment p-3 bg-light">
+                                <div class="sender-details">
+                                    <div class="row">
+                                       <div class="col-2 col-sm-2 col-md-1 pl-md-0 pl-lg-2 pl-xl-3">
+                       <img src="${replyUserImage}" alt="${escapeHtml(reply.fullName)}" class="rounded-circle w-100">
+                        </div>
+                                        <div class="col-9 col-sm-10 col-md-11 pr-0 pr-md-2 pr-xl-0 pt-0 pt-lg-1">
+                                            <div class="name font-weight-bold">${reply.fullName}</div>
+                                            <div class="date  text-muted small">${reply.createDate}</div>
+                                        </div>
+                                        <div class="col-12 mt-2">
+                                            <p class="text-justify">${escapeHtml(reply.text)}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        html += `
+                </div>
+            </div>
+        `;
+    });
+
+    $('#comments-list').html(html);
+}
+
+function displayPagination(pagingData) {
+    var currentPage = pagingData.pageId;
+    var totalPages = pagingData.pageCount;
+
+    if (totalPages <= 1) {
+        $('#pagination-container').empty();
+        return;
+    }
+
+    var paginationHtml = '<ul class="pagination">';
+
+    if (currentPage > 1) {
+        paginationHtml += `<li class="page-item"><a class="page-link" href="javascript:void(0)" onclick="loadComments(${currentPage - 1})">قبلی</a></li>`;
+    } else {
+        paginationHtml += `<li class="page-item disabled"><a class="page-link" href="#">قبلی</a></li>`;
+    }
+
+    for (var i = pagingData.startPage; i <= pagingData.endPage; i++) {
+        if (i === currentPage) {
+            paginationHtml += `<li class="page-item active"><a class="page-link" href="#">${i}</a></li>`;
+        } else {
+            paginationHtml += `<li class="page-item"><a class="page-link" href="javascript:void(0)" onclick="loadComments(${i})">${i}</a></li>`;
+        }
+    }
+
+    if (currentPage < totalPages) {
+        paginationHtml += `<li class="page-item"><a class="page-link" href="javascript:void(0)" onclick="loadComments(${currentPage + 1})">بعدی</a></li>`;
+    } else {
+        paginationHtml += `<li class="page-item disabled"><a class="page-link" href="#">بعدی</a></li>`;
+    }
+
+    paginationHtml += '</ul>';
+    $('#pagination-container').html(paginationHtml);
+}
+
+function showReplyForm(commentId) {
+    $(`#reply-form-${commentId}`).slideDown();
+}
+
+function hideReplyForm(commentId) {
+    $(`#reply-form-${commentId}`).slideUp();
+    $(`#reply-name-${commentId}`).val('');
+    $(`#reply-email-${commentId}`).val('');
+    $(`#reply-text-${commentId}`).val('');
+}
+
+function submitReply(commentId) {
+    var text = $(`#reply-text-${commentId}`).val().trim();
+    var productId = $('#ProductId').val();
+
+    if (!text) {
+        AlerSweetWithTimer('لطفاً متن پاسخ را وارد کنید', "error", "center");
+        return;
+    }
+    var data = {
+        ownerId: productId,
+        Text: text,
+        ParentId: commentId,
+    };
+    $.ajax({
+        url: '/Comment/AddReply',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        success: function (response) {
+            if (response.success) {
+                AlerSweetWithTimer(response.message, "success", "center");
+                hideReplyForm(commentId);
+                loadComments(commentSettings.currentPageId);
+            } else {
+                AlerSweetWithTimer(response.message, "error", "center");
+            }
+        },
+        error: function () {
+            AlerSweetWithTimer("خطا در ارسال پاسخ", "error", "center");
+        }
+    });
+}
+
+function submitNewComment() {
+    var text = $('#comment-text').val().trim();
+    var productId = $('#ProductId').val();
+
+    if (!text) {
+        AlerSweetWithTimer("لطفا متن نظر خود را وارد کنید ", "error", "center");
+    }
+
+    var data = {
+        OwnerId: parseInt(productId),
+        Text: text
+    };
+
+    $.ajax({
+        url: '/Comment/AddComment',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        success: function (response) {
+            if (response.success) {
+                AlerSweetWithTimer(response.message, "success", "center");
+                $('#comment-name').val('');
+                $('#comment-email').val('');
+                $('#comment-text').val('');
+                loadComments(1);
+            } else {
+                AlerSweetWithTimer(response.message, "error", "center");
+            }
+        },
+        error: function (xhr) {
+            AlerSweetWithTimer("خطا در ارسال نظر", "error", "center");
+        }
+    });
+}
+function escapeHtml(text) {
+    if (!text) return '';
+    var map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    };
+    return text.replace(/[&<>"']/g, function (m) { return map[m]; });
+}
+
+function loadOtherSellers(sellerId ,productSlug) {
+    if (!productSlug || productSlug.trim() === '') {
+        return;
+    }
+
+    $.ajax({
+        url: '/Shop/GetProdcutOtherSellers',
+        type: 'GET',
+        data: { productSlug: productSlug, SellerId:sellerId },
+        dataType: 'json',
+        beforeSend: function () {
+            $('#other-sellers-section').show();
+            $('#other-sellers-tbody').html('<tr><td colspan="7" class="text-center p-5"><div class="spinner-border text-primary"></div><p class="mt-2">در حال بارگذاری...</p></td></tr>');
+        },
+        success: function (response) {
+            console.log('Server response:', response);
+
+            var products = null;
+
+            if (Array.isArray(response)) {
+                products = response;
+            } else if (response && response.data && Array.isArray(response.data)) {
+                products = response.data;
+            } else if (response && response.success && response.data && Array.isArray(response.data)) {
+                products = response.data;
+            } else if (response && response.products && Array.isArray(response.products)) {
+                products = response.products;
+            }
+
+            if (products && products.length > 0) {
+                var html = '';
+
+                for (var i = 0; i < products.length; i++) {
+                    var seller = products[i];
+
+                    var categoryUrl = (seller.categorySlug && seller.categorySlug !== '') ? '/Products/' + seller.categorySlug : '#';
+                    var sellerUrl = (seller.sellerSlug && seller.sellerSlug !== '') ? '/' + seller.sellerSlug : '#';
+                    var productUrl = (seller.sellerSlug && seller.slug && seller.sellerSlug !== '' && seller.slug !== '') ? '/' + seller.sellerSlug + '/Product/' + seller.slug : '#';
+                    var imageUrl = (seller.imageName && seller.imageName !== '') ? '/Images/Product/500/' + seller.imageName : '/Images/Product/500/default.jpg';
+
+                    var title = seller.title || 'بدون عنوان';
+                    var category = seller.category || 'بدون دسته';
+                    var sellerTitle = seller.sellerTitle || 'نامشخص';
+                    var price = formatPrice(seller.price || 0);
+                    var rating = seller.rating || 0;
+                    var votesCount = seller.votesCount || 0;
+
+                    html += '<tr>';
+                    html += '<td data-label="تصویر محصول" class="product-image-cell">';
+                    html += '<a>';
+                    html += '<img src="' + imageUrl + '" alt="' + escapeHtml(title) + '" class="other-sellers-product-img">';
+                    html += '</a>';
+                    html += '</td>';
+
+                    html += '<td data-label="عنوان محصول">';
+                    html += '<a>' + escapeHtml(title) + '</a>';
+                    html += '</td>';
+
+                    html += '<td data-label="دسته بندی" class="other-sellers-category">';
+                    html += '<a href="' + categoryUrl + '">' + escapeHtml(category) + '</a>';
+                    html += '</td>';
+
+                    html += '<td data-label="فروشنده" class="other-sellers-seller">';
+                    html += '<a href="' + sellerUrl + '">' + escapeHtml(sellerTitle) + '</a>';
+                    html += '</td>';
+
+                    html += '<td data-label="قیمت" class="other-sellers-price">';
+                    html += price + ' تومان';
+                    html += '</td>';
+
+                    html += '<td data-label="امتیاز" class="other-sellers-rating">';
+                    html += generateStarRating(rating);
+                    html += '<span>(' + votesCount + ')</span>';
+                    html += '</td>';
+
+                    html += '<td>';
+                    html += '<a href="' + productUrl + '" class="other-sellers-btn">';
+                    html += 'مشاهده <i class="fa fa-arrow-left"></i>';
+                    html += '</a>';
+                    html += '</td>';
+
+                    html += '</tr>';
+                }
+
+                $('#other-sellers-tbody').html(html);
+            } else {
+                console.log('No products found');
+                $('#other-sellers-section').hide();
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error loading other sellers:', error);
+            $('#other-sellers-section').hide();
+        }
+    });
+}
 

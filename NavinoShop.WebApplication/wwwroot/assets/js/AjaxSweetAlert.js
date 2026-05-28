@@ -194,6 +194,7 @@ function AjaxSweet(title1, text1, icon1, confirmButtonText1, cancelButtonText1, 
     });
 }
 function AjaxSweetWithRedirect(title1, text1, icon1, confirmButtonText1, cancelButtonText1, url1, RedirectUrl) {
+    debugger;
     Swal.fire({
         title: title1,
         text: text1,
@@ -204,15 +205,16 @@ function AjaxSweetWithRedirect(title1, text1, icon1, confirmButtonText1, cancelB
         confirmButtonText: confirmButtonText1,
         cancelButtonText: cancelButtonText1
     }).then((result) => {
+
         if (result.isConfirmed) {
-            Loding();
+  /*          Loding();*/
             console.log("Start Load");
             $.ajax({
                 type: "GET",
                 url: url1
             })
                 .done(function (res) {
-                    EndLoading();
+                 /*   EndLoading();*/
 
                     if (res) {
                         AlerSweetWithTimer("عملیات موفق", "success", "Center");
@@ -228,7 +230,7 @@ function AjaxSweetWithRedirect(title1, text1, icon1, confirmButtonText1, cancelB
                 .fail(function () {
 
                     AlertSweetTimer("خطا در برقراری ارتباط با سرور", "error", "Center");
-                    EndLoading();
+              /*      EndLoading();*/
                 });
 
 

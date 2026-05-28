@@ -9,5 +9,7 @@ namespace Shop.Application.Contract.ProductFeature.Query
     public interface IProductFeatureQueries
     {
         Task<ProductFeatureAdminPage>GetProdutFeaturesForAdmin(int productId);  
+        
+
     }
 }

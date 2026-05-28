@@ -70,6 +70,7 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
         {
             if (Id < 1)
                 return NotFound();
+           
 
             var Request = await _sellerCommands.GetForEditRequestForSales(Id);
             if (Request == null)

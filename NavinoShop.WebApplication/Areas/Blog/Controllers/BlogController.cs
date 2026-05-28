@@ -84,7 +84,6 @@ namespace NavinoShop.WebApplication.Areas.Blog.Controllers
         {
             var res = await _commentCommandService.Create(new CreateCommentCommandModel
             {
-                Email = _authService.GetLoginUserEmail(),
                 FullName = _authService.GetLoginUserFullName(),
                 Text = comment,
                 OwnerId = ownerId,

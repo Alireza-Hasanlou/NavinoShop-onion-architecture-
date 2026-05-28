@@ -34,7 +34,7 @@ namespace Comments.Application.Services
         public async Task<OperationResult> Create(CreateCommentCommandModel command)
         {
             Comment comment = new(command.UserId, command.OwnerId, command.For,
-                command.FullName, command.Email, command.Text, command.ParentId);
+                command.FullName, command.Text, command.ParentId);
             var result = await _commentRepository.CreateAsync(comment);
             if (result.Success) return new(true);
             return new(false, ValidationMessages.SystemErrorMessage);

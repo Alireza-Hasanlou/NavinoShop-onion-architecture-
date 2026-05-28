@@ -18,13 +18,13 @@ namespace Shop.Query.Queries
 
         public async Task<ProductFeatureAdminPage> GetProdutFeaturesForAdmin(int productId)
         {
-            var model= new ProductFeatureAdminPage();
+            var model = new ProductFeatureAdminPage();
             if (productId < 1)
-                return model;  
-            
-            var product= await _productRepository.GetByIdAsync(productId);
-            model.Title=$"ویژگی های محصول {product.Title}"; 
-            model.ProductId=productId;
+                return model;
+
+            var product = await _productRepository.GetByIdAsync(productId);
+            model.Title = $"ویژگی های محصول {product.Title}";
+            model.ProductId = productId;
             model.ProductFeatures = await _productFeatureRepository.GetAllBy(p => p.ProductId == productId)
                 .OrderByDescending(i => i.Id)
                 .Select(f => new ProductFeatureQueryModel

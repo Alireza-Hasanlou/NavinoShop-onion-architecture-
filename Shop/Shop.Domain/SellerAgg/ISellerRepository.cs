@@ -9,6 +9,7 @@ namespace Shop.Domain.SellerAgg
 {
     public interface ISellerRepository : IGenericRepository<Seller, int>
     {
+        Task <Seller>GetForProductsPageAync(string SellerSlug);
         Task<int> GetSellerUserIdAsync(int sellerId);
         string GetTitleById(int sellerId);
     }

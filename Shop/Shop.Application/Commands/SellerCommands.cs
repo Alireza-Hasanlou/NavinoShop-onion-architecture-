@@ -82,7 +82,7 @@ namespace Shop.Application.Commands
 
             seller.Edit(command.Title, command.StateId, command.CityId, command.Address
                 , command.GoogleMapUrl, imageName, licenseImage, command.ImageAlt, command.Instagram,
-                command.Telegram, command.WhatsApp, command.Phone1, command.Phone2, command.Email, CoverimageName);
+                command.Telegram, command.WhatsApp, command.Phone1, command.Phone2, command.Email, CoverimageName,command.Slug);
             seller.ChangeStatus(SellerStatus.درخواست_ارسال_شده, "");
             if (await _sellerRepository.SaveAsync())
             {
@@ -153,7 +153,7 @@ namespace Shop.Application.Commands
             }
 
             var SellerChangeRequests = new SellerChangeRequest(seller.Id, imageName, CoverimageName, command.Title, command.Address
-                , command.GoogleMapUrl, command.WhatsApp, command.Telegram, command.Instagram, command.Phone1, command.Phone2, command.Email,command.Description);
+                , command.GoogleMapUrl, command.WhatsApp, command.Telegram, command.Instagram, command.Phone1, command.Phone2, command.Email,command.Description ,command.Slug);
             var res = await _SellerchangeRequestsRepository.CreateAsync(SellerChangeRequests);
             if (res.Success)
                 return new(true);
@@ -169,6 +169,7 @@ namespace Shop.Application.Commands
             return new EditRequestForSelasCommandModel
             {
                 Id = request.Id,
+                Slug = request.Slug,
                 Address = request.Address,
                 CityId = request.CityId,
                 Email = request.Email,
@@ -204,6 +205,7 @@ namespace Shop.Application.Commands
                 Telegram = request.Telegram,
                 Title = request.Title,
                 WhatsApp = request.Whatsup,
+                Slug=request.Slug,
                 CoverImageName = request.CoverImage,
             };
         }
@@ -218,24 +220,30 @@ namespace Shop.Application.Commands
 
             var imageName = await _fileService.UploadImage(command.ImageFile, FileDirectories.SellerImageFolder);
             if (string.IsNullOrEmpty(imageName))
-                return new OperationResult(false, "خطا در بازگذاری تصویر", nameof(command.ImageFile));
+                return new OperationResult(false, " خطا در بازگذاری تصویر پروفایل", nameof(command.ImageFile));
 
             _fileService.ResizeImage(imageName, FileDirectories.SellerImageFolder, 100);
             _fileService.ResizeImage(imageName, FileDirectories.SellerImageFolder, 500);
+
+            if (command.CoverImage == null || !command.CoverImage.IsImage())
+                return new OperationResult(false, ValidationMessages.ImageErrorMessage, nameof(command.ImageFile));
+            var CoverimageName = await _fileService.UploadImage(command.CoverImage, FileDirectories.SellerImageFolder);
+            if (string.IsNullOrEmpty(CoverimageName))
+                return new OperationResult(false, "خطا در بازگذاری تصویر کاور", nameof(command.ImageFile));
 
             if (command.LicenseImage == null || !command.LicenseImage.IsImage())
                 return new OperationResult(false, ValidationMessages.ImageErrorMessage, nameof(command.LicenseImage));
 
             var licenseImage = await _fileService.UploadImage(command.LicenseImage, FileDirectories.SellerImageFolder);
             if (string.IsNullOrEmpty(licenseImage))
-                return new OperationResult(false, "خطا در بارگذاری تصویر", nameof(command.ImageFile));
+                return new OperationResult(false, "خطا در بارگذاری تصویر مجوز", nameof(command.ImageFile));
 
             _fileService.ResizeImage(licenseImage, FileDirectories.SellerImageFolder, 100);
             _fileService.ResizeImage(licenseImage, FileDirectories.SellerImageFolder, 500);
 
             var seller = new Seller(UserId, command.Title, command.StateId, command.CityId, command.Address
                 , command.GoogleMapUrl, imageName, licenseImage, command.ImageAlt, command.Instagram,
-                command.Telegram, command.WhatsApp, command.Phone1, command.Phone2, command.Email);
+                command.Telegram, command.WhatsApp, command.Phone1, command.Phone2, command.Email,command.Slug ,CoverimageName);
             var res = await _sellerRepository.CreateAsync(seller);
             if (res.Success)
                 return new OperationResult(true);
@@ -248,7 +256,10 @@ namespace Shop.Application.Commands
             {
                 DeleteSellerImage(licenseImage);
             }
-
+            if (command.CoverImage != null)
+            {
+                _fileService.DeleteImage($"{FileDirectories.SellerImageDirectory500}{CoverimageName}");
+            }
             return new OperationResult(false, ValidationMessages.SystemErrorMessage);
         }
         private void DeleteSellerImage(string imageName)
@@ -270,7 +281,7 @@ namespace Shop.Application.Commands
                 request.Address, request.GoogleMapUrl, request.Avatar,
                 seller.LicenseImage, seller.ImageAlt, request.Instagram,
                 request.Telegram, request.WhatsApp, request.Phone1,
-                request.Phone2, request.Email, request.CoverImage);
+                request.Phone2, request.Email, request.CoverImage,request.Slug);
 
             if (await _sellerRepository.SaveAsync())
             {

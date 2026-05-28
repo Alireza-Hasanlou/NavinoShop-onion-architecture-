@@ -11,4 +11,8 @@
     <ProjectReference Include="..\Comments.Application\Comments.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

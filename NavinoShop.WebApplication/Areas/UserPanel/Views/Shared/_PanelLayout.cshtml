@@ -58,7 +58,7 @@
         </div>
     </section>
 
-    <div class="modal fade " id="modal-default" tabindex="-1">
+    <div class="modal fade " id="modal-default" tabindex="1000">
         <div class="modal-dialog">
             <div class="modal-content" id="modal-content">
             </div>
@@ -71,7 +71,6 @@
     <partial name="_Scripts" />
 
     <partial name="_Loader" />
-
+    @RenderSection("Scripts", false);
 </body>
 </html>
-@RenderSection("Scripts", false)

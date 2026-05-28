@@ -20,7 +20,7 @@ namespace Shop.Domain.SellerAgg
         public Seller(int userId, string title, int stateId, int cityId,
             string address, string mapUrl, string imageName, string licenseImage,
             string imageAlt, string? instagram, string? telegram, string? whatsup,
-            string phone1, string? phone2, string? email)
+            string phone1, string? phone2, string? email ,string slug ,string coverImage)
         {
             UserId = userId;
             Title = title;
@@ -37,12 +37,14 @@ namespace Shop.Domain.SellerAgg
             Phone1 = phone1;
             Phone2 = phone2;
             Email = email;
-            CoverImage = "DefaultCover.jpg";
+            Slug = slug;
+            CoverImage =coverImage;
             Status = SellerStatus.درخواست_ارسال_شده;
         }
 
         public int UserId { get; private set; }
         public string Title { get; private set; }
+        public string Slug { get; private set; }
         public int StateId { get; private set; }
         public int CityId { get; private set; }
         public string Address { get; private set; }
@@ -50,7 +52,7 @@ namespace Shop.Domain.SellerAgg
         public string ImageName { get; private set; }
         public string LicenseImage { get; private set; }
         public string ImageAlt { get; private set; }
-        public string CoverImage { get; set; }
+        public string CoverImage { get;private set; }
         public string? WhyRejected { get; private set; }
         public string? Instagram { get; private set; }
         public string? Telegram { get; private set; }
@@ -64,7 +66,7 @@ namespace Shop.Domain.SellerAgg
         public void Edit(string title, int stateId, int cityId,
     string address, string mapUrl, string imageName, string licenseImage,
     string imageAlt, string? instagram, string? telegram, string? whatsup,
-    string phone1, string? phone2, string? email , string coverImage)
+    string phone1, string? phone2, string? email , string coverImage , string slug)
         {
             Title = title;
             StateId = stateId;
@@ -81,6 +83,7 @@ namespace Shop.Domain.SellerAgg
             Phone2 = phone2;
             Email = email;
             CoverImage = coverImage;
+            Slug = slug;
 
         }
         public void ChangeStatus(SellerStatus status, string? whyRejected)

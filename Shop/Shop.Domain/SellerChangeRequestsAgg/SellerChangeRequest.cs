@@ -8,7 +8,7 @@ namespace Shop.Domain.SellerChangeRequestsAgg
         public SellerChangeRequest(int sellerId, string avatar, string coverImage, string title,
             string address, string? googleMapUrl, string? whatsApp,
             string? telegram, string? instagram, string phone1,
-            string? phone2, string? email, string description)
+            string? phone2, string? email, string description,string slug)
         {
             SellerId = sellerId;
             Avatar = avatar;
@@ -25,6 +25,7 @@ namespace Shop.Domain.SellerChangeRequestsAgg
             Description = description;
             status = SellerStatus.درخواست_ارسال_شده;
             RequestDate = DateTime.Now;
+            Slug = slug;
         }
 
         public int Id { get; private set; }
@@ -32,6 +33,7 @@ namespace Shop.Domain.SellerChangeRequestsAgg
         public string Avatar { get; private set; }
         public string CoverImage { get; private set; }
         public string Title { get; private set; }
+        public string Slug { get; set; }
         public string Address { get; private set; }
         public string? GoogleMapUrl { get; private set; }
         public string? WhatsApp { get; private set; }

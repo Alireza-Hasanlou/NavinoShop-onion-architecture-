@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Comments.Infrastructure.Migrations
 {
     [DbContext(typeof(CommentContext))]
-    [Migration("20251006182655_AddCommentsTable")]
-    partial class AddCommentsTable
+    [Migration("20260524090709_CommentTable")]
+    partial class CommentTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,10 +38,6 @@ namespace Comments.Infrastructure.Migrations
 
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("FullName")
                         .HasMaxLength(250)
@@ -69,7 +65,15 @@ namespace Comments.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CommentFor");
+
+                    b.HasIndex("OwnerId");
+
                     b.HasIndex("ParentId");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Comments", (string)null);
                 });
@@ -78,7 +82,8 @@ namespace Comments.Infrastructure.Migrations
                 {
                     b.HasOne("Comments.Domain.CommentAgg.Comment", "Parent")
                         .WithMany("Childs")
-                        .HasForeignKey("ParentId");
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Parent");
                 });

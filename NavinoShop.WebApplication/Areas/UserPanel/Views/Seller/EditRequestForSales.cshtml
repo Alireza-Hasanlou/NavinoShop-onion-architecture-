@@ -13,8 +13,16 @@
         <input type="hidden" asp-for="Id" />
         <input type="hidden" asp-for="ImageName" />
         <input type="hidden" asp-for="LicenseImageName" />
+        <input type="hidden" asp-for="CoverImageName" />
         <input type="hidden" asp-for="StateId" />
         <input type="hidden" asp-for="CityId" />
+        <div class="col">
+            <div class="custom-form-group">
+                <label for="Slug">نام فروشگاه به لاتین </label>
+                <input asp-for="Slug" type="text" id="Slug">
+                <span asp-validation-for="Slug" class="text-danger"></span>
+            </div>
+        </div>
         <div class="row">
 
             <div class="col">
@@ -151,15 +159,27 @@
             </div>
         </div>
         <div class="row">
-            <div class="col">
-                <div class="custom-form-group">
-                    <label for="GoogleMapUrl">لینک نقشه مپ </label>
-                    <input dir="ltr" asp-for="GoogleMapUrl" type="text" id="GoogleMapUrl">
-                    <span asp-validation-for="GoogleMapUrl" class="text-danger"></span>
+      
+
+            <div class="col col-md-6 col-sm-12 col-12">
+                <div class="image-uploader">
+                    <label>
+                        تصویر کاور
+                        <div class="picture-uploader"
+                             data-url="@FileDirectories.SellerImageDirectory500@Model.CoverImageName">
+
+                            <div class="picture__image">یک تصویر انتخاب کنید</div>
+
+                            <input asp-for="CoverImage"
+                                   type="file"
+                                   class="picture__input"
+                                   accept="image/*" />
+                        </div>
+                    </label>
                 </div>
+
+                <span asp-validation-for="LicenseImage" class="text-danger"></span>
             </div>
-
-
             <div class="col">
                 <div class="custom-form-group">
                     <label for="Address">جزییات آدرس</label>
@@ -169,7 +189,13 @@
             </div>
 
         </div>
-
+        <div class="col">
+            <div class="custom-form-group">
+                <label for="GoogleMapUrl">لینک نقشه مپ </label>
+                <input dir="ltr" asp-for="GoogleMapUrl" type="text" id="GoogleMapUrl">
+                <span asp-validation-for="GoogleMapUrl" class="text-danger"></span>
+            </div>
+        </div>
         <button type="submit" class="btn btn-success btn-block w-100">ثبت</button>
 
     </form>

@@ -11,7 +11,6 @@ namespace Query.Contract.Admin.Comment
         public CommentFor For { get; set; }
         public CommentStatus CommentStatus { get; set; }
         public string? FullName { get; set; }
-        public string? Email { get; set; }
         public string? WhyRejected { get; set; }
         public string? Text { get; set; }
         public bool HaveChild { get; set; }

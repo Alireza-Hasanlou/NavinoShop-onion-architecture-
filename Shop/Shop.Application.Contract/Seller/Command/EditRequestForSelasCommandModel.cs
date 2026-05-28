@@ -7,8 +7,8 @@ namespace Shop.Application.Contract.Seller.Command
     public class EditRequestForSelasCommandModel
     {
         public int Id { get; set; }
-        public string ImageName { get; set; }
-        public string CoverImageName { get; set; }
+        public string? ImageName { get; set; }
+        public string? CoverImageName { get; set; }
         [Display(Name = "نام فروشگاه")]
         [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
         [MaxLength(355, ErrorMessage = ValidationMessages.MaxLengthMessage)]
@@ -21,12 +21,14 @@ namespace Shop.Application.Contract.Seller.Command
         [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
         public string Address { get; set; }
         [Display(Name = "لینک نقشه گوگل")]
+        [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
         public string? GoogleMapUrl { get; set; }
         [Display(Name = "کاور فروشگاه")]
         public IFormFile? CoverImage { get; set; }
         [Display(Name = "تصویر")]
         public IFormFile? ImageFile { get; set; }
         [Display(Name ="alt تصویر")]
+        [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
         public string ImageAlt { get; set; }
         [Display(Name = "تصویر مچوز")]
         public IFormFile? LicenseImage { get; set; }
@@ -52,7 +54,11 @@ namespace Shop.Application.Contract.Seller.Command
         [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
         [MaxLength(255, ErrorMessage = ValidationMessages.MaxLengthMessage)]
         public string? Email { get; set; }
-        public string LicenseImageName { get; set; }
+        public string? LicenseImageName { get; set; }
+        [Display(Name = "نام فروشگاه به انگلیسی")]
+        [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
+        [MaxLength(255, ErrorMessage = ValidationMessages.MaxLengthMessage)]
+        public string Slug { get; set; }
 
     }
 }

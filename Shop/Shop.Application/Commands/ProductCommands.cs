@@ -121,7 +121,7 @@ namespace Shop.Application.Commands
 
 
             }
-            product.Edit(command.Title, NewImageName, command.ImageAlt.Trim().ToLower(), command.ShortDescription, command.ShortDescription, command.Weight, command.Slug);
+            product.Edit(command.Title, NewImageName, command.ImageAlt.Trim().ToLower(), command.ShortDescription, command.Text, command.Weight, command.Slug);
             var rels = new List<Product_Category_Rel>();
             foreach (var item in command.SelectedCategory)
             {

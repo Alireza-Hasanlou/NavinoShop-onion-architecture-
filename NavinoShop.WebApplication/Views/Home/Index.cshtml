@@ -74,23 +74,3 @@
 
     </div>
 </div>
-@section scripts {
-    <script>
-         function goToProductsPage() {
-            var query = $('#search-input').val().trim();
-            var url = '/Products';
-            if (query !== '') {
-                url += '?search=' + encodeURIComponent(query);
-            }
-            window.location.href = url;  // هدایت کامل صفحه
-        }
-
-        // اعمال جستجو با فشردن کلید Enter
-        document.getElementById('search-input').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                goToProductsPage();
-            }
-        });
-    </script>
-}

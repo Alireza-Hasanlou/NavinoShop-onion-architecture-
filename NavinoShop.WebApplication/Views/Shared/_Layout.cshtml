@@ -3,31 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-   @await Component.InvokeAsync("Fav")
+    @await Component.InvokeAsync("Fav")
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     @RenderSection("Seo", false)
     <title>@ViewData["Title"]</title>
 
     <partial name="_Css" />
-
 </head>
 
 <body>
     <partial name="_Header" />
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-
     <partial name="_Footer" />
+    <partial name="_Loader" />
 
-
+    
     <partial name="_Scripts" />
 
-    <partial name="_Loader" />
-</body>
+    <script src="~/assets/js/global.js" asp-append-version="true"></script>
 
+    @RenderSection("scripts", required: false)
+</body>
 </html>
-@RenderSection("scripts",false)

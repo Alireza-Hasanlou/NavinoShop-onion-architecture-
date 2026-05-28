@@ -48,6 +48,10 @@ namespace Shop.Application.Contract.Seller.Command
         [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
         [MaxLength(255, ErrorMessage = ValidationMessages.MaxLengthMessage)]
         public string Email { get; set; }
+        [Display(Name = "نام فروشگاه به انگلیسی")]
+        [Required(ErrorMessage = ValidationMessages.RequiredMessage)]
+        [MaxLength(255, ErrorMessage = ValidationMessages.MaxLengthMessage)]
+        public string Slug { get; set; }
 
     }
 }

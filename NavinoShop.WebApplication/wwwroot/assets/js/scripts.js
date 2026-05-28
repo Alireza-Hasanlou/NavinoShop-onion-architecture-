@@ -1,4 +1,4 @@
-﻿$(function() {
+﻿$(function () {
     /* encode4365gbf265g43d Range Slider */
     // راه‌اندازی اسلایدر قیمت با ذخیره در window.priceSlider
     if ($('#steps-slider').length) {
@@ -31,32 +31,30 @@
             $('#encode4365gbf265g43d-range-from').text(numFormat(minVal));
             $('#encode4365gbf265g43d-range-to').text(numFormat(maxVal));
         });
-    } else {
-        console.warn('اسلایدر با آیدی steps-slider در صفحه یافت نشد');
-    }
+    } 
     /* encode4365gbf265g43d Range Slider */
 
     /* On Sale Counter */
-    function countDown(){
+    function countDown() {
         var today = new Date();
         var eventDate = new Date("November 30,2022 00:00:00"); /* Change This Date To Update Counter */
         var currentTime = today.getTime();
         var eventTime = eventDate.getTime();
         var remTime = eventTime - currentTime;
 
-        var sec = Math.floor(remTime/1000);
-        var min = Math.floor(sec/60);
-        var hrs = Math.floor(min/60);
-        var days = Math.floor(hrs/24);
+        var sec = Math.floor(remTime / 1000);
+        var min = Math.floor(sec / 60);
+        var hrs = Math.floor(min / 60);
+        var days = Math.floor(hrs / 24);
 
         hrs %= 24;
         min %= 60;
         sec %= 60;
 
-        days = (days<10) ? "0"+days : days;
-        hrs = (hrs<10) ? "0"+hrs : hrs;
-        min = (min<10) ? "0"+min : min;
-        sec = (sec<10) ? "0"+sec : sec;
+        days = (days < 10) ? "0" + days : days;
+        hrs = (hrs < 10) ? "0" + hrs : hrs;
+        min = (min < 10) ? "0" + min : min;
+        sec = (sec < 10) ? "0" + sec : sec;
 
         var elTimeCounter = $('.time-counter');
         var elDays = $('.days', elTimeCounter);
@@ -76,13 +74,13 @@
 
     /* Initialize menu */
     $('.droopmenu-navbar').droopmenu({
-        dmArrow:true,
-        dmArrowDirection:'dmarrowdown'
+        dmArrow: true,
+        dmArrowDirection: 'dmarrowdown'
     });
     /* /Initialize menu */
 
     /* Featured Products Filter */
-    if($('.featured-categories').length) {
+    if ($('.featured-categories').length) {
         $('.featured-categories').click(function () {
             var category = $(this).data('val');
             $('.featured-product').each(function () {
@@ -104,7 +102,7 @@
     /* /Featured Products Filter */
 
     /* Most Sold Products Filter */
-    if($('.most-sales-categories').length) {
+    if ($('.most-sales-categories').length) {
         $('.most-sales-categories').click(function () {
             var category = $(this).data('val');
             $('.most-sales-product').each(function () {
@@ -126,7 +124,7 @@
     /* /Most Sold Products Filter */
 
     /* Collapse In Mobile */
-    if($('.collapse').length) {
+    if ($('.collapse').length) {
         if (($(window).width()) < 992) {
             $('.collapse').removeClass('show');
         }
@@ -139,7 +137,7 @@
         number = number + '';
         number = number.split(',').join('');
 
-        while(regex.test(number)){
+        while (regex.test(number)) {
             number = number.replace(regex, '$1,$2');
         }
         return number;
@@ -147,7 +145,7 @@
 
     function numFormat(number) {
         var pointReg = /([\d,\.]*)\.(\d*)$/, f;
-        if(pointReg.test(number)){
+        if (pointReg.test(number)) {
             f = RegExp.$2;
             return intFormat(RegExp.$1) + '.' + f;
         }
@@ -156,33 +154,34 @@
     /* /Num Format Functions */
 
     /* Products Carousel */
-    if($('.products-carousel').length > 0) {
+    if ($('.products-carousel').length > 0) {
         var owl = $('.products-carousel');
         owl.owlCarousel({
             rtl: true,
             autoplay: true,
             autoplayHoverPause: true,
+            autoplayTimeout: 2500,      // سرعت اتوپلی (میلی‌ثانیه) - پیش‌فرض 3000
+            autoplaySpeed: 200,         // سرعت انیمیشن حرکت (میلی‌ثانیه) - پیش‌فرض 200
+            autoplayDirection: 'forward', // جهت حرکت: 'forward' (چپ به راست) یا 'backward' (راست به چپ)
             margin: 25,
-            nav: false,
+            nav: true,
             dots: false,
             loop: true,
+            navText: [
+                '<i class="fa fa-chevron-left"></i>',
+                '<i class="fa fa-chevron-right"></i>'
+            ],
             responsive: {
-                0: {
-                    items: 1
-                },
-                768: {
-                    items: 3
-                },
-                1000: {
-                    items: 4
-                }
+                0: { items: 1 },
+                768: { items: 3 },
+                1000: { items: 4 }
             }
-        })
+        });
     }
     /* /Products Carousel */
 
     /* Product Order Number */
-    if($('.btn-plus').length > 0) {
+    if ($('.btn-plus').length > 0) {
         $('.btn-plus').click(function () {
             var index = $(this).index('.btn-plus');
             var orderNumber = Number($('input.order-number').eq(index).val());

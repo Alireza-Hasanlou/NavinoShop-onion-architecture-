@@ -14,6 +14,13 @@
         <input type="hidden" asp-for="SellerId" />
         <input type="hidden" asp-for="AvatarImageName" />
         <input type="hidden" asp-for="CoverImageName" />
+        <div class="col">
+            <div class="custom-form-group">
+                <label for="Slug">نام فروشگاه به لاتین </label>
+                <input asp-for="Slug" type="text" id="Slug">
+                <span asp-validation-for="Slug" class="text-danger"></span>
+            </div>
+        </div>
         <div class="row">
 
             <div class="col">

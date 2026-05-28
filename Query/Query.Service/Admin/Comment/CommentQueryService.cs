@@ -34,7 +34,6 @@ namespace Query.Service.Admin.Comment
             {
                 CommentStatus = c.Status,
                 ParentId = c.ParentId,
-                Email = c.Email,
                 FullName = c.FullName,
                 For = c.CommentFor,
                 Text = c.Text,
@@ -91,7 +90,7 @@ namespace Query.Service.Admin.Comment
                 commentQuery = commentQuery.Where(p => p.ParentId == parentId);
             }
             if (!string.IsNullOrEmpty(filter))
-                commentQuery.Where(f => f.FullName.Contains(filter) || f.Text.Contains(filter) || f.Email.Contains(filter));
+                commentQuery.Where(f => f.FullName.Contains(filter) );
 
             CommentForAdminPaging model = new CommentForAdminPaging();
             model.GetData(commentQuery, pageId, take, 5);
@@ -107,7 +106,6 @@ namespace Query.Service.Admin.Comment
                 {
                     CommentStatus = c.Status,
                     ParentId = c.ParentId,
-                    Email = c.Email,
                     FullName = c.FullName,
                     For = c.CommentFor,
                     Text = c.Text,

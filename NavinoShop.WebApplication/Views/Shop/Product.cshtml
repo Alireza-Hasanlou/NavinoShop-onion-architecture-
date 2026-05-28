@@ -1,0 +1,601 @@
+﻿@using Query.Contract.UI.Products
+@using Shared.Application
+@model ProductSinglePageQueryModel
+@{
+    Layout = "_Layout";
+}
+
+@section Seo {
+    <partial name="_Seo" model="@Model.Seo" />
+}
+
+
+<style>
+    /* استایل جدول سایر فروشندگان */
+    .other-sellers-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+        .other-sellers-table thead tr {
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .other-sellers-table th {
+            padding: 15px 12px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #495057;
+            letter-spacing: 0.5px;
+        }
+
+        .other-sellers-table td {
+            padding: 15px 12px;
+            text-align: center;
+            vertical-align: middle;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .other-sellers-table tbody tr:hover {
+            background-color: #fef9e8;
+            transition: all 0.2s ease;
+        }
+
+        /* ستون تصویر */
+        .other-sellers-table .product-image-cell {
+            width: 70px;
+        }
+
+    .other-sellers-product-img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #e9ecef;
+    }
+
+    /* عنوان محصول */
+    .other-sellers-product-title {
+        font-weight: 600;
+        color: #1a1a1a;
+        text-decoration: none;
+    }
+
+        .other-sellers-product-title:hover {
+            color: #fcb941;
+        }
+
+    /* دسته بندی */
+    .other-sellers-category a {
+        color: #6c757d;
+        text-decoration: none;
+        font-size: 13px;
+    }
+
+        .other-sellers-category a:hover {
+            color: #fcb941;
+        }
+
+    /* فروشنده */
+    .other-sellers-seller a {
+        color: #28a745;
+        text-decoration: none;
+        font-size: 13px;
+    }
+
+        .other-sellers-seller a:hover {
+            text-decoration: underline;
+        }
+
+    /* قیمت */
+    .other-sellers-price {
+        font-weight: 700;
+        color: #28a745;
+        font-size: 16px;
+    }
+
+    /* امتیاز */
+    .other-sellers-rating {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        font-size: 12px;
+    }
+
+        .other-sellers-rating svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .other-sellers-rating span {
+            color: #6c757d;
+            font-size: 12px;
+        }
+
+    /* دکمه عملیات */
+    .other-sellers-btn {
+        display: inline-block;
+        padding: 6px 16px;
+        background: #fcb941;
+        color: #000;
+        border: none;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+        .other-sellers-btn:hover {
+            background: #e5a81e;
+            transform: translateY(-1px);
+        }
+
+    /* ریسپانسیو برای موبایل */
+    @@media (max-width: 768px) {
+        .other-sellers-table thead
+
+    {
+        display: none;
+    }
+
+    .other-sellers-table tbody tr {
+        display: block;
+        margin-bottom: 15px;
+        border: 1px solid #e9ecef;
+        border-radius: 12px;
+        padding: 10px;
+    }
+
+    .other-sellers-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: right;
+        border-bottom: 1px solid #eee;
+    }
+
+        .other-sellers-table td:last-child {
+            border-bottom: none;
+        }
+
+        .other-sellers-table td::before {
+            content: attr(data-label);
+            font-weight: 700;
+            margin-left: 15px;
+            color: #666;
+        }
+
+    }
+</style>
+<section class="inner-page" id="product-page">
+    <partial name="_BreadCrumb" model="@Model.BreadCrumbs" />
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="content">
+                    <div class="row">
+                        <!-- گالری تصاویر - سمت راست -->
+                        <div class="col-12 col-lg-5 px-lg-0">
+                            <div class="swiper-container gallery-top">
+                                <div class="swiper-wrapper">
+                                    @foreach (var item in Model.Gallery)
+                                    {
+                                        <div class="swiper-slide">
+                                            <a href="@FileDirectories.ProductGalleryImageDirectory500@item.ImageName"
+                                               itemprop="contentUrl"
+                                               data-size="900x710">
+                                                <img src="@FileDirectories.ProductGalleryImageDirectory500@item.ImageName"
+                                                     itemprop="thumbnail"
+                                                     alt="@Model.ProductName" />
+                                            </a>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="swiper-button-prev swiper-button-black"></div>
+                                <div class="swiper-button-next swiper-button-black"></div>
+                            </div>
+
+                            <div class="swiper-container gallery-thumbs mt-3">
+                                <div class="swiper-wrapper">
+                                    @foreach (var item in Model.Gallery)
+                                    {
+                                        <div class="swiper-slide">
+                                            <img src="@FileDirectories.ProductGalleryImageDirectory100@item.ImageName"
+                                                 alt="@Model.ProductName" />
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <!-- PhotoSwipe -->
+                            <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="pswp__bg"></div>
+                                <div class="pswp__scroll-wrap">
+                                    <div class="pswp__container">
+                                        <div class="pswp__item"></div>
+                                        <div class="pswp__item"></div>
+                                        <div class="pswp__item"></div>
+                                    </div>
+                                    <div class="pswp__ui pswp__ui--hidden">
+                                        <div class="pswp__top-bar">
+                                            <div class="pswp__counter"></div>
+                                            <button class="pswp__button pswp__button--close" title="بستن (Esc)"></button>
+                                            <button class="pswp__button pswp__button--fs" title="تمام صفحه"></button>
+                                            <button class="pswp__button pswp__button--zoom" title="بزرگنمایی"></button>
+                                            <div class="pswp__preloader">
+                                                <div class="pswp__preloader__icn">
+                                                    <div class="pswp__preloader__cut">
+                                                        <div class="pswp__preloader__donut"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button class="pswp__button pswp__button--arrow--left" title="قبلی"></button>
+                                        <button class="pswp__button pswp__button--arrow--right" title="بعدی"></button>
+                                        <div class="pswp__caption">
+                                            <div class="pswp__caption__center"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- اطلاعات محصول - سمت چپ -->
+                        <div class="col-12 col-lg-7 mt-5 mt-lg-0 pl-lg-0" id="product-intro">
+                            <div class="product-header">
+                                <h1 class="product-title">@Model.ProductName</h1>
+                                <div class="product-rating">
+                                    <div class="stars-container">
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <a href="#tabs-panel"><span>(نقد و بررسی)</span></a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- قیمت -->
+                            <div class="product-price-section">
+                                <div class="price-wrapper">
+                                    <span class="price-label">قیمت:</span>
+                                    <div class="price-container">
+                                        @if (Model.priceAfterOff > 0 && Model.priceAfterOff < Model.Price)
+                                        {
+                                            var discountPercent = (int)((Model.Price - Model.priceAfterOff) * 100 / Model.Price);
+                                            <span class="old-price">@Model.Price.ToString("N0") تومان</span>
+                                            <span class="discount-badge">@discountPercent%</span>
+                                            <span class="final-price">@Model.priceAfterOff.ToString("N0") تومان</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="final-price">@Model.Price.ToString("N0") تومان</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- توضیحات کوتاه -->
+                            <div class="product-short-description">
+                                <a href="#tabs-panel"><p>@(Model.Description?.Length > 200 ? Model.Description.Substring(0, 200) + "...ادامه" : Model.Description)</p></a>
+                            </div>
+
+                            <hr />
+
+                            <div class="row">
+                                <div class="col-12 col-lg-7">
+                                    <div class="product-options">
+                                        <div class="variables">
+                                            <div class="title">گزینه های موجود:</div>
+                                            <div class="row">
+                                                <div class="col-12 col-sm-4">
+                                                    <div class="variable">
+                                                        <div class="sub-title pt-2 pb-3">رنگ</div>
+                                                        <div class="color-options">
+                                                            <span class="color-variable"><a href="#" class="red"></a></span>
+                                                            <span class="color-variable"><a href="#" class="yellow"></a></span>
+                                                            <span class="color-variable"><a href="#" class="blue"></a></span>
+                                                            <span class="color-variable"><a href="#" class="black"></a></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-4">
+                                                    <div class="variable">
+                                                        <div class="sub-title pt-2 pb-2">گارانتی</div>
+                                                        <select name="" class="form-select">
+                                                            <option value="">بدون گارانتی</option>
+                                                            <option value="">گارانتی 6 ماهه</option>
+                                                            <option value="">گارانتی 12 ماهه</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-4">
+                                                    <div class="variable">
+                                                        <div class="sub-title pt-2 pb-2">تعداد</div>
+                                                        <div class="quantity-input">
+                                                            <button type="button" class="qty-btn minus">-</button>
+                                                            <input type="number" min="1" max="10" class="form-control text-center quantity-value" value="1">
+                                                            <button type="button" class="qty-btn plus">+</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="cta-container pt-3 pt-md-4">
+                                            <div class="row g-2">
+                                                <div class="col-12 col-md-7">
+                                                    <button class="btn btn-success w-100 btn-add-to-basket"
+                                                            data-product-id="@Model.ProductId"
+                                                            data-seller-id="@Model.SellerId">
+                                                        <i class="fa fa-shopping-cart"></i> افزودن به سبد خرید
+                                                    </button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-lg-5">
+                                    <!-- کارت فروشنده -->
+                                    <div class="product-seller-card">
+                                        <div class="product-seller-card-header">
+                                            <div class="product-seller-avatar">
+                                                <img src="@(string.IsNullOrEmpty(Model.SellerImageName) ? "/Images/default-avatar.png" : FileDirectories.SellerImageDirectory + Model.SellerImageName)"
+                                                     alt="@Model.SelleTitle"
+                                                     class="product-seller-avatar-img">
+                                                <div class="product-seller-verified-icon">
+                                                    <i class="fas fa-check-circle"></i>
+                                                </div>
+                                            </div>
+                                            <div class="product-seller-info-text">
+                                                <h4 class="product-seller-name">@Model.SelleTitle</h4>
+                                                <div class="product-seller-location">
+                                                    <i class="fas fa-map-marker-alt"></i>
+                                                    <span>@Model.State، @Model.City</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="product-seller-badges">
+
+                                            <span class="product-seller-badge product-seller-badge-fast">
+                                                <i class="fas fa-truck-fast"></i> ارسال سریع
+                                            </span>
+                                            <span class="product-seller-badge product-seller-badge-guarantee">
+                                                <i class="fas fa-shield-alt"></i> ضمانت اصالت
+                                            </span>
+                                        </div>
+
+                                        <a href="/@Model.SellerSlug" class="product-seller-visit-btn">
+                                            <span>مشاهده فروشگاه</span>
+                                            <i class="fas fa-chevron-left"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- اشتراک گذاری -->
+                            <div class="product-share-section">
+                                <span class="product-share-label">اشتراک گذاری:</span>
+                                @{
+                                    var currentUrl = $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}";
+                                    var encodedUrl = Uri.EscapeDataString(currentUrl);
+                                    var encodedTitle = Uri.EscapeDataString(Model.ProductName);
+                                }
+                                <div class="product-share-links">
+                                    <a href="https://twitter.com/intent/tweet?url=@encodedUrl&text=@encodedTitle" target="_blank" class="product-share-link product-share-link-twitter">
+                                        <i class="fab fa-twitter"></i>
+                                    </a>
+                                    <a href="https://www.linkedin.com/sharing/share-offsite/?url=@encodedUrl" target="_blank" class="product-share-link product-share-link-linkedin">
+                                        <i class="fab fa-linkedin-in"></i>
+                                    </a>
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u=@encodedUrl" target="_blank" class="product-share-link product-share-link-facebook">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                    <a href="#" onclick="copyUrl('@currentUrl')" class="product-share-link product-share-link-copy">
+                                        <i class="fas fa-link"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- تب‌ها -->
+                        <div class="col-12">
+                            <div id="product-nav-tabs">
+                                <div class="row pt-3 px-md-3">
+                                    <div class="col-12">
+                                        <div id="tabs-panel">
+                                            <button class="tab-item tablink px-3 selected" onclick="openTab(event,'html-tab')">نقد و بررسی</button>
+                                            <button class="tab-item tablink px-3" onclick="openTab(event,'details-tab')">جدول مشخصات</button>
+                                            <button class="tab-item tablink px-3" onclick="openTab(event,'comments-tab')">دیدگاه کاربران</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-12 pt-2 px-0 px-lg-0">
+                                            <!-- تب توضیحات -->
+                                            <div id="html-tab" class="tabs-container text-justify p-0 p-md-3">
+                                                @Html.Raw(Model.Description)
+                                            </div>
+
+                                            <!-- تب مشخصات -->
+                                            <div id="details-tab" class="tabs-container px-0 px-md-3 pb-0 pb-md-3" style="display:none">
+                                                @if (Model.Features != null && Model.Features.Any())
+                                                {
+                                                    foreach (var feature in Model.Features)
+                                                    {
+                                                        <div class="row mb-2">
+                                                            <div class="col-12 col-md-3 font-weight-bold">
+                                                                <div class="bg-light p-2">@feature.Title</div>
+                                                            </div>
+                                                            <div class="col-12 col-md-9 pr-md-0">
+                                                                <div class="bg-light p-2">@feature.Value</div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <div class="text-center p-4 text-muted">مشخصاتی برای این محصول ثبت نشده است</div>
+                                                }
+                                            </div>
+
+                                            <!-- تب دیدگاه‌ها -->
+                                            <div id="comments-tab" class="tabs-container px-0 px-md-3 pb-0 pb-md-2" style="display:none">
+                                                <div class="row">
+                                                    <div class="col-12 text-justify" id="comments">
+                                                        <div class="comments-container">
+                                                            <div class="container px-0">
+                                                                <div class="row">
+                                                                    <div class="col-12 pt-2">
+                                                                        <input type="hidden" id="ProductId" value="@Model.ProductId" />
+                                                                        <div id="comments-list">
+                                                                            <div class="text-center py-5" id="comments-loading">
+                                                                                <div class="spinner-border text-success" role="status">
+                                                                                    <span class="visually-hidden">در حال بارگذاری...</span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div id="pagination-container" class="d-flex justify-content-center mt-4"></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="comments-container">
+                                                            <div class="row pt-4">
+                                                                <div class="col-12"><h2>دیدگاه خود را ارسال کنید</h2></div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-12 py-3">
+                                                                    <form id="comment-form">
+                                                                        <input type="hidden" id="comment-product-id" value="@Model.ProductId" />
+                                                                        <div id="send-comment-form">
+                                                                            <div class="row">
+                                                                                <div class="col-12">
+                                                                                    <div class="form-group my-1">
+                                                                                        <textarea id="comment-text" class="form-control" rows="4" placeholder="متن دیدگاه خود را وارد کنید..." required></textarea>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-12">
+                                                                                    <div class="form-group my-1">
+                                                                                        <button type="button" onclick="submitNewComment()" class="btn btn-success px-5">ارسال دیدگاه</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 pt-5" id="other-sellers-section" style="display: none;">
+        <div class="title py-3 text-center">سایر فروشندگان این محصول</div>
+        <div class="table-responsive">
+            <table class="other-sellers-table">
+                <thead>
+                    <tr>
+                        <th>تصویر محصول</th>
+                        <th>عنوان محصول</th>
+                        <th>دسته بندی</th>
+                        <th>فروشنده</th>
+                        <th>قیمت</th>
+                        <th>امتیاز</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody id="other-sellers-tbody">
+                    <!-- داده ها توسط AJAX درج می‌شود -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @if (Model.RelatedProducts.Any())
+    {
+        <div class="col-12 pt-5" id="suggested-products">
+            <div class="title py-3 text-center">محصولات مرتبط</div>
+            <div class="owl-carousel products-carousel">
+                @foreach (var product in Model.RelatedProducts)
+                {
+                    <div class="encode4326654321vfb item">
+                        <a href="product.html"><div class="image" style="background-image: url('@FileDirectories.ProductImageDirectory@product.ImageName')"></div></a>
+                        <div class="details p-3">
+                            <div class="category">
+                                <a href="/Products/@product.CategorySlug">@product.Category</a>
+
+                            </div>
+                            <a href="@product.SellerSlug/Product/@product.Slug"><h2>@product.Title</h2></a>
+                            <div class="encode4365gbf265g43d">@product.Price تومان</div>
+                            <div class="rate">
+                                <i class="fa fa-star-half-alt"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <span class="encode43bf265g43d">(14 رای دهنده)</span>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
+            </div>
+        </div>
+    }
+
+</section>
+
+
+
+@section scripts {
+    <script>
+        // افزایش/کاهش تعداد
+        $(document).ready(function() {
+
+            // ProductGallery
+            if (typeof ProductGallery === 'function') {
+                ProductGallery();
+            }
+
+            // لود کامنت‌ها
+            if (typeof loadComments === 'function') {
+                loadComments(1);
+            }
+            loadOtherSellers('@Model.SellerId','@Model.ProductSlug');
+        });
+
+    </script>
+}

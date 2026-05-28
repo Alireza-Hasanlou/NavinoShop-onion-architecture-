@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Comments.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AddCommentsTable : Migration
+    public partial class CommentTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -23,7 +23,6 @@ namespace Comments.Infrastructure.Migrations
                     Status = table.Column<int>(type: "int", nullable: false),
                     WhyRejected = table.Column<string>(type: "nvarchar(350)", maxLength: 350, nullable: true),
                     FullName = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ParentId = table.Column<long>(type: "bigint", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -39,9 +38,29 @@ namespace Comments.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Comments_CommentFor",
+                table: "Comments",
+                column: "CommentFor");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_OwnerId",
+                table: "Comments",
+                column: "OwnerId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Comments_ParentId",
                 table: "Comments",
                 column: "ParentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_Status",
+                table: "Comments",
+                column: "Status");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_UserId",
+                table: "Comments",
+                column: "UserId");
         }
 
         /// <inheritdoc />

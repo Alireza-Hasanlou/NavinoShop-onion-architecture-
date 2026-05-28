@@ -6,6 +6,7 @@ namespace Query.Contract.UI.Comments
     public class CommentsUiPaging:BasePaging
     {
         public int OwnerId { get; set; }
+        public int CommentCount { get; set; }
         public CommentFor CommentFor{ get; set; }
         public List<CommentUiQueryModel> Comments { get; set; }
     }

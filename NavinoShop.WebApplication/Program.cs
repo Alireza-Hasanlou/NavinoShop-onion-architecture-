@@ -23,6 +23,10 @@ Services.AddRazorPages();
 Services.AddSingleton(HtmlEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Arabic));
 Services.Configure<SiteData>(Configuration.GetSection("SiteData"));
 
+builder.Services.Configure<RouteOptions>(options =>
+{
+    options.ConstraintMap.Add("seller", typeof(SellerSlugConstraint));
+});
 #region Bootstrappers
 DependencyBootstrapper.Congig(Services, ConnectionString);
 #endregion

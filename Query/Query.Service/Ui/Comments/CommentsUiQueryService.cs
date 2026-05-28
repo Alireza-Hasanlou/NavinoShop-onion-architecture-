@@ -23,13 +23,13 @@ namespace Query.Service.Ui.Comments
         {
             var result = new CommentsUiPaging();
             var comments = _commentRepository.GetAllBy(c => c.OwnerId == ownerId
-            && c.CommentFor == CommentFor.مقاله
+            && c.ParentId == 0 || c.ParentId == null
+            && c.CommentFor == commentFor
             && c.Status == CommentStatus.تایید_شده)
                 .Select(c => new
                 {
                     c.OwnerId,
                     c.FullName,
-                    c.Email,
                     c.CreateDate,
                     c.Text,
                     c.Childs,
@@ -39,16 +39,17 @@ namespace Query.Service.Ui.Comments
 
 
                 });
-       //TODO 
+            //TODO 
 
             if (comments.Count() > 0)
             {
 
 
-                result.GetData(comments, pageId, 2, 2);
-                result.CommentFor = CommentFor.مقاله;
+                result.GetData(comments, pageId, 4, 2);
+                result.CommentFor = commentFor;
                 result.OwnerId = ownerId;
-                result.Comments = comments.Where(p => p.ParentId == null)
+                result.CommentCount = await _commentRepository.GetAll().CountAsync();
+                result.Comments = await comments
                     .Skip(result.Skip)
                     .Take(result.Take)
                     .OrderByDescending(c => c.CreateDate)
@@ -57,16 +58,16 @@ namespace Query.Service.Ui.Comments
 
                         Id = comment.Id,
                         FullName = comment.FullName,
-                        CreateDaate = comment.CreateDate.ToPersainDate(),
+                        CreateDate = comment.CreateDate.ToPersainDate(),
                         Text = comment.Text,
                         ImageName = "",
                         UserId = comment.UserId,
                         Replys = new()
-                    }).ToList();
+                    }).ToListAsync();
                 foreach (var item in result.Comments)
                 {
                     item.Replys = _commentRepository.GetAllBy(c => c.OwnerId == ownerId
-                        && c.CommentFor == CommentFor.مقاله
+                        && c.CommentFor == commentFor
                         && c.ParentId == item.Id
                          && c.Status == CommentStatus.تایید_شده)
 
@@ -74,8 +75,8 @@ namespace Query.Service.Ui.Comments
                      {
 
                          Id = r.Id,
-                         FullName = r.FullName,
-                         CreateDaate = r.CreateDate.ToPersainDate(),
+                         FullName = "",
+                         CreateDate = r.CreateDate.ToPersainDate(),
                          Text = r.Text,
                          UserId = r.UserId,
                          ImageName = "",
@@ -98,6 +99,7 @@ namespace Query.Service.Ui.Comments
                                 {
                                     var childUser = await _userRepository.GetByIdAsync(reply.UserId);
                                     reply.ImageName = FileDirectories.UserImageDirectory100 + childUser.Avatar;
+                                    reply.FullName = childUser.FullName ?? "کاربر سایت";
                                 }
 
                             }
