@@ -1,8 +1,8 @@
 ﻿using Shared;
 
-namespace Shop.Application.Contract.Product.Query
+namespace Query.Contract.UI.UserPanel.Seller
 {
-    public class ProductsForSellerPaging : BasePaging
+    public class ProductsForSellerPaging:BasePaging
     {
         public int SellerId { get; set; }
         public string Title { get; set; }

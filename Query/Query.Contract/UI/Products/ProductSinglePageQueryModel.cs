@@ -5,6 +5,7 @@ namespace Query.Contract.UI.Products
 {
     public class ProductSinglePageQueryModel
     {
+        public int ProductSellId { get; set; }
         public int ProductId { get; set; }
         public string ProductName { get; set; }
         public string ProductSlug { get; set; }
@@ -20,7 +21,8 @@ namespace Query.Contract.UI.Products
         public string City { get; set; }
         public string Description { get; set; }
         public int Price { get; set; }
-        public int priceAfterOff { get; set; }
+        public decimal priceAfterOff { get; set; }
+        public int discountPercent { get; set; }
         public List<ProductUiQueryModel> RelatedProducts { get; set; }
         public List<ProductGalleryQueryModel> Gallery { get; set; }
         public List<ProductFeatureQueryModel> Features { get; set; }

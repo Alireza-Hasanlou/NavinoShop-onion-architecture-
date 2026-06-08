@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Discount.Application.Commands;
+using Discount.Application.Contract.OrderDiscounts.Command;
+using Discount.Application.Contract.ProductDiscount.Command;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +14,8 @@ namespace Discount.Application.Boostrapper
     {
         public  static void Config(IServiceCollection services)
         {
-
+            services. AddTransient<IProductDiscountCommands,ProductDiscountCommands>();
+            services.AddTransient<IOrderDiscountsCommands, OrderDiscountsCommands>();
         }
     }
 }

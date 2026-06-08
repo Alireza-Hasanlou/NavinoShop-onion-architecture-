@@ -4,102 +4,98 @@
     Layout = "_PanelLayout";
     ViewData["title"] = "فروشگاه های من ";
     var successStatus = (bool)TempData["success"];
-
 }
+
 <div class="col-12">
     <div class="form-group m-1 pb-3">
-        <a href="/Profile/Seller/RequestForSales" class="btn btn-warning px-5">ثبت فروشگاه جدید</a>
+        <a href="/Profile/Seller/RequestForSales" class="custom-btn custom-btn-warning px-5">ثبت فروشگاه جدید</a>
     </div>
 </div>
-<table class="DataTable table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
-    @if (Model.Count() > 0)
-    {
-        <thead>
-            <tr role="row">
-                <td>تصویر</td>
-                <td>عنوان</td>
-                <td>آدرس</td>
-                <td>شماره تماس </td>
-                <td>وضعیت</td>
-                <td>تاریخ ایجاد</td>
-                <td>دلیل رد </td>
-                <td style="width:100px"></td>
-        </thead>
-        <tbody>  
-            @foreach (var shop in Model)
+
+<div class="custom-responsive-table">
+    <table class="custom-data-table" id="sellerShopTable" role="grid">
+        @if (Model.Count() > 0)
         {
-            <tr>
-                <td style="width:100px"><img src="@shop.ImageName" /></td>
-                <td>@shop.Title</td>
-                <td>@shop.CityName</td>
-                <td>@shop.Phone</td>
-            @if (shop.SellerStatus==Shared.Domain.Enums.SellerStatus.درخواست_تایید_شده)
-                                        {
-                                             <td class="text-success">@shop.SellerStatus.ToString().Replace("_", " ")</td> 
-                                        }
-                                        else if (shop.SellerStatus == Shared.Domain.Enums.SellerStatus.درخواست_تایید_نشده)
-                                        {
-                                            <td class="text-danger">@shop.SellerStatus.ToString().Replace("_", " ")</td>
-                                        }
-                                        else
-                                        {
-                                            <td class="text-secondary">@shop.SellerStatus.ToString().Replace("_", " ")</td>
-                                        }
-                <td>@shop.CreateDate</td>
-                 <td>@shop.whyRejected</td>
-                    @if(shop.SellerStatus != Shared.Domain.Enums.SellerStatus.درخواست_تایید_شده)
-                    {
-                           <td>   <a asp-action="EditRequestForSales" asp-route-Id="@shop.Id" class="btn btn-warning">  <i class="fa fa-edit"></i></a></td>
-                    }
-                        @if(shop.SellerStatus == Shared.Domain.Enums.SellerStatus.درخواست_تایید_شده)
-                    {
-                           <td> 
-                               <div class="form-group">
-                                    <a asp-action="EditSeller" asp-route-Id="@shop.Id" class="btn btn-warning">  <i class="fa fa-edit"></i></a>
-                                  <a href="/Profile/Seller/SellersProducts?sellerId=@shop.Id" title="محصولات"  class="btn btn-info"><i class=" fa  fa-store"></i></a>
-                               </div>
-                               
-                               
-                           </td>
-                    }
+            <thead>
+                <tr role="row">
+                    <th>تصویر</th>
+                    <th>عنوان</th>
+                    <th>آدرس</th>
+                    <th>شماره تماس</th>
+                    <th>وضعیت</th>
+                    <th>تاریخ ایجاد</th>
+                    <th>دلیل رد</th>
+                    <th style="width:100px">عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var shop in Model)
+                {
+                    <tr id="shopRow_@shop.Id" class="custom-table-row">
+                        <td data-label="تصویر">
+                            <img class="custom-table-image" src="@shop.ImageName" style="width:60px" />
+                        </td>
+                        <td data-label="عنوان">@shop.Title</td>
+                        <td data-label="آدرس">@shop.CityName</td>
+                        <td data-label="شماره تماس">@shop.Phone</td>
 
-                 
-            </tr>
+                        @if (shop.SellerStatus == Shared.Domain.Enums.SellerStatus.درخواست_تایید_شده)
+                        {
+                            <td data-label="وضعیت" class="custom-status-success">@shop.SellerStatus.ToString().Replace("_", " ")</td>
+                        }
+                        else if (shop.SellerStatus == Shared.Domain.Enums.SellerStatus.درخواست_تایید_نشده)
+                        {
+                            <td data-label="وضعیت" class="custom-status-danger">@shop.SellerStatus.ToString().Replace("_", " ")</td>
+                        }
+                        else
+                        {
+                            <td data-label="وضعیت" class="custom-status-warning">@shop.SellerStatus.ToString().Replace("_", " ")</td>
+                        }
+
+                        <td data-label="تاریخ ایجاد">@shop.CreateDate</td>
+                        <td data-label="دلیل رد">@shop.whyRejected</td>
+
+                        <td data-label="عملیات">
+                            <div class="custom-btn-group">
+                                @if (shop.SellerStatus != Shared.Domain.Enums.SellerStatus.درخواست_تایید_شده)
+                                {
+                                    <a asp-action="EditRequestForSales" asp-route-Id="@shop.Id" class="custom-btn custom-btn-warning">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                }
+
+                                @if (shop.SellerStatus == Shared.Domain.Enums.SellerStatus.درخواست_تایید_شده)
+                                {
+                                    <a asp-action="EditSeller" asp-route-Id="@shop.Id" class="custom-btn custom-btn-warning">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a href="/Profile/Seller/SellersProducts?sellerId=@shop.Id" title="محصولات" class="custom-btn custom-btn-info">
+                                        <i class="fa fa-store"></i>
+                                    </a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
         }
-        </tbody>
-
-    }
-    else
-    {
-        <tr>
-            <td colspan="9" class="text-center text-warning"> موردی برای نمایش موجود نیست</td>
-        </tr>
-    }
-</table>
+        else
+        {
+            <tbody>
+                <tr>
+                    <td colspan="8" class="custom-empty-message">موردی برای نمایش موجود نیست</td>
+                </tr>
+            </tbody>
+        }
+    </table>
+</div>
 
 @section Scripts {
-
- @if ( successStatus==true)
+    @if (successStatus == true)
     {
-
-        
         <script>
-            AlerSweetWithTimer("عملیات با  موفقیت انجام شد ","info", "center");
+            AlerSweetWithTimer("عملیات با موفقیت انجام شد", "info", "center");
         </script>
-
     }
-    <script>
 
-           $('.DataTable').DataTable({
-            paging:false,
-            autoWidth: true,
-            lengthChange: false,
-            searching: false,
-            ordering: true,
-            scroll: true,
-            info: false,
-
-        });
-
-    </script>
 }

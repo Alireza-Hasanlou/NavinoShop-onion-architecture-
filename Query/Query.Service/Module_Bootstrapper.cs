@@ -9,6 +9,7 @@ using Query.Contract.Admin.Comment;
 using Query.Contract.Admin.Email.EmailUser;
 using Query.Contract.Admin.Email.MessageUser;
 using Query.Contract.Admin.Financial.Transaction;
+using Query.Contract.Admin.Products;
 using Query.Contract.Admin.Seller;
 using Query.Contract.Admin.Seo;
 using Query.Contract.Admin.User;
@@ -27,6 +28,7 @@ using Query.Service.Admin.Comment;
 using Query.Service.Admin.Email.EmailUser;
 using Query.Service.Admin.Email.MessageUser;
 using Query.Service.Admin.Financial.Transaction;
+using Query.Service.Admin.Products;
 using Query.Service.Admin.Seller;
 using Query.Service.Admin.Seo;
 using Query.Service.Admin.User;
@@ -66,7 +68,7 @@ namespace Query.Service
             Comment_Bootstrapper.Config(Services, ConnectionString);
             Financial_Bootstrapper.Config(Services, ConnectionString);
             ShopBootstrapper.Config(Services, ConnectionString);
-            //DiscountBootstrapper.Config(Services,ConnectionString);
+            DiscountBootstrapper.Config(Services,ConnectionString);
             StoreBootstrapper.Config(Services, ConnectionString);
             #endregion
             #region Admin
@@ -92,8 +94,10 @@ namespace Query.Service
             Services.AddTransient<IAdminSellerQueryService, AdminSellerQueryService>();
             Services.AddTransient<IStoreUserPanelQueryService,StoreUserPanelQueryService>();
             Services.AddTransient<IProductUiQueryService, ProductUiQueryService>();
+            Services.AddTransient<IAdminProductsQueryService, AdminProductsQueryService>();
 
             #endregion
+          
         }
     }
 

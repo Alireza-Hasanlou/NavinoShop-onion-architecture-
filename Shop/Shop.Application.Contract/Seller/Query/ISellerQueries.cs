@@ -13,5 +13,6 @@ namespace Shop.Application.Contract.Seller.Query
         Task<RequestDetailQueryModel> GetSellerChangeRequestDeatail(int Id);
         Task<List<SellersChangeRequestQueryModel> >GetChangeRequests();
         Task<List<UsersShopQueryModel>> GetUsersShopAsync(int userId);
+         string GetSellerTitle(int sellerId);
     }
 }

@@ -71,7 +71,23 @@
                     </li>
                 </ul>
             </li>
+            <li class="@(currentPath.Contains("/admin/discounts") ? "active" : "") treeview">
 
+                <a href="#">
+                    <i class="fa fa-tag"></i> <span>مدیریت تخفیفات</span>
+                    <span class="pull-left-container">
+                        <i class="fa fa-angle-right pull-left"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class=@(currentPath.Contains("/admin/discounts/index") ? "active" : "")>
+                        <a href="/Admin/Discounts/Index"><i class="fa fa-tag"></i> همه تخفیفات </a>
+                    </li>
+                    <li class=@(currentPath.Contains("/admin/discounts/expireddiscounts") ? "active" : "")>
+                        <a href="/Admin/Discounts/Expireddiscounts"><i class="fa fa-tag"></i> تخفیفات منقضی شده</a>
+                    </li>
+                </ul>
+            </li>
             <li class="@(currentPath.Contains("/admin/blogs")|| currentPath.Contains("/admin/blogcategories")
                                                                               ? "active" : "") treeview">
                 <a href="#">

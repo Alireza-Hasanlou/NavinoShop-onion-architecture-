@@ -1,8 +1,8 @@
 ﻿using Shared;
 
-namespace Shop.Application.Contract.Product.Query
+namespace Query.Contract.Admin.Products
 {
-    public class ProductsForAdminPaging : BasePaging
+    public class ProductsForAdminPaging:BasePaging
     {
         public string Title { get; set; }
         public int CategoryId { get; set; }

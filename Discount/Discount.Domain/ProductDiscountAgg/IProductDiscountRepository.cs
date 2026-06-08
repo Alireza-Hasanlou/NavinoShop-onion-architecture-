@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 
 namespace Discount.Domain.ProductDiscountAgg
 {
-    public interface IProductDiscountRepository:IGenericRepository<ProductDiscount, int>    
+    public interface IProductDiscountRepository : IGenericRepository<ProductDiscount, int>
     {
+        Task<ProductDiscount> GetByProductSellIdAsync(int productId, int productSellId);
+        Task<List<ProductDiscount>> GetProductsDiscountAsync();
+
     }
 }

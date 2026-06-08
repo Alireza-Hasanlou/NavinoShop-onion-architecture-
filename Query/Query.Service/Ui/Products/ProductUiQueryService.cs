@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Discount.Domain.ProductDiscountAgg;
+using Discount.Infrastructure.Persistence.Context;
+using Microsoft.EntityFrameworkCore;
 using PostModule.Domain.Services;
 using Query.Contract.UI.Products;
 using Query.Contract.UI.Seo;
@@ -26,10 +28,11 @@ namespace Query.Service.Ui.Products
         private readonly IStateRepository _stateRepository;
         private readonly ICityRepository _cityRepository;
         private readonly ShopContext _shopContext;
+        private readonly DiscountContext _discountContext;
 
         public ProductUiQueryService(IProductSellRepository productSellRepository, ISeoRepository seoRepository,
             IProductCategoryRepository categoryRepository, ISellerRepository sellerRepository,
-            IStateRepository stateRepository, ICityRepository cityRepository, ShopContext shopContext)
+            IStateRepository stateRepository, ICityRepository cityRepository, ShopContext shopContext, DiscountContext discountContext)
         {
             _productSellRepository = productSellRepository;
             _seoRepository = seoRepository;
@@ -38,6 +41,7 @@ namespace Query.Service.Ui.Products
             _stateRepository = stateRepository;
             _cityRepository = cityRepository;
             _shopContext = shopContext;
+            _discountContext = discountContext;
         }
 
         public async Task<ProductSinglePageQueryModel> GetProductAsync(string sellerSlug, string productSlug)
@@ -48,9 +52,10 @@ namespace Query.Service.Ui.Products
 
 
             var product = await _shopContext.productSells
-                .Where(x => x.Seller.Slug == sellerSlug && x.Product.Slug == productSlug)
+                .Where(x => x.Seller.Slug == sellerSlug && x.Product.Slug == productSlug && x.Amount > 0)
                 .Select(x => new ProductSinglePageQueryModel
                 {
+                    ProductSellId = x.Id,
                     ProductId = x.ProductId,
                     SellerId = x.SellerId,
                     StateId = x.Seller.StateId,
@@ -126,7 +131,19 @@ namespace Query.Service.Ui.Products
 
 
 
+            var discount = await _discountContext.ProductDiscounts
+                .Where(x => x.ProductId == product.ProductId
+                 && x.ProductSellId == product.ProductSellId
+                 && x.StartDate <= DateTime.Now
+                 && x.EndDate.Date >= DateTime.Now.Date)
+                .OrderByDescending(x => x.Percent)
+                .FirstOrDefaultAsync();
 
+            if (discount != null)
+            {
+                product.priceAfterOff = product.Price * ((decimal)discount.Percent / 100);
+                product.discountPercent = discount.Percent;
+            }
             var seoTitle = $"[{product.ProductName}] | [بهترین قیمت] | [{product.SelleTitle}] + [ناوینو شاپ]";
             var seo = await _seoRepository.GetSeoForUi(product.ProductId, WhereSeo.Product, seoTitle);
             product.Seo = new SeoUiQueryModel
@@ -160,15 +177,9 @@ namespace Query.Service.Ui.Products
 
 
             IQueryable<Product> products = _shopContext.Products
-                .Distinct()
-                .Where(x => x.ProductSells.Any())
-                .Where(x => x.Active);
+                .Where(x => x.ProductSells.Any(x => x.Amount > 0) && x.Active)
+                .Include(x => x.ProductSells);
 
-
-
-            // فیلتر اولیه
-
-            // مدیریت فروشنده
             if (!string.IsNullOrEmpty(sellerSlug))
             {
                 var seller = await _shopContext.Sellers
@@ -199,14 +210,10 @@ namespace Query.Service.Ui.Products
                 model.Seller = seller;
                 products = products.Where(x => x.ProductSells.Any(x => x.SellerId == seller.Id));
             }
-
-            // فیلتر قیمت
             if (maxprice > minPrice)
             {
                 products = products.Where(p => p.ProductSells.Any(ps => ps.Price >= minPrice && ps.Price <= maxprice));
             }
-
-            // فیلتر دسته بندی
             if (!string.IsNullOrEmpty(categorySlug))
             {
                 products = products.Where(x => x.Poduct_Category_Rels
@@ -219,18 +226,10 @@ namespace Query.Service.Ui.Products
                     SeoTitle = $"خرید انواع {category.Title} | فروشگاه ناوینوشاپ";
                 }
             }
-
-            // فیلتر جستجو
             if (!string.IsNullOrEmpty(filter))
             {
                 products = products.Where(x => x.Title.Contains(filter));
             }
-
-
-
-
-
-            // مرتب سازی
             products = sort switch
             {
                 ProductSort.جدیدترین => products.OrderByDescending(x => x.CreateDate),
@@ -238,7 +237,6 @@ namespace Query.Service.Ui.Products
                 ProductSort.ارزانترین => products.OrderBy(x => x.ProductSells.Min(ps => ps.Price)),
                 _ => products.OrderByDescending(x => x.CreateDate)
             };
-            // دریافت تعداد کل قبل از صفحه بندی
             var totalCount = await products.CountAsync();
 
             // تنظیم صفحه بندی
@@ -260,17 +258,17 @@ namespace Query.Service.Ui.Products
 
             // دریافت محصولات با Select بهینه
             model.Products = await products
+
                 .Skip(model.Skip)
                 .Take(model.Take)
                 .Select(p => new ProductUiQueryModel
                 {
-                    Id = p.Id,
                     ProductId = p.Id,
                     Title = p.Title ?? string.Empty,
                     ImageAlt = p.ImageAlt ?? string.Empty,
                     ImageName = p.ImageName ?? string.Empty,
-                    SellerTitle = p.ProductSells.First().Seller.Title ?? string.Empty,
-                    SellerSlug = p.ProductSells.First().Seller.Slug ?? string.Empty,
+                    SellerTitle = string.Empty,
+                    SellerSlug = string.Empty,
                     Slug = p.Slug ?? string.Empty,
                     PriceAfterOff = 0,
                     CategorySlug = p.Poduct_Category_Rels
@@ -281,18 +279,130 @@ namespace Query.Service.Ui.Products
                         .OrderByDescending(x => x.ProductCategory.Id)
                         .Select(pcr => pcr.ProductCategory.Title)
                         .FirstOrDefault() ?? "بدون دسته",
-                    Price = p.ProductSells.First().Price,
+                    Price = 0,
+                    productSells = p.ProductSells.Where(x => x.Amount > 0)
+                    .Select(x => new productSellQuery
+                    {
+                        Id = x.Id,
+                        ProductId = x.ProductId,
+                        Price = x.Price,
+                        SellerTitle = x.Seller.Title,
+                        SellerSlug = x.Seller.Slug,
+
+                    }).ToList()
                 })
                 .AsNoTracking()
                 .ToListAsync();
 
-            // دریافت سئو
+            var Discounts = await _discountContext.ProductDiscounts
+                .Where(x => x.StartDate.Date <= DateTime.Now.Date
+                 && x.EndDate.Date >= DateTime.Now.Date)
+                .OrderByDescending(x => x.Percent)
+                .ToListAsync();
+
+
+            if (Discounts.Any())
+            {
+
+                foreach (var product in model.Products)
+                {
+                    var discount = Discounts.FirstOrDefault(x => x.ProductId == product.ProductId);
+                    if (discount != null)
+                    {
+                        if (discount.ProductSellId > 0)
+                        {
+                            var productSell = product.productSells.SingleOrDefault(x => x.ProductId == product.ProductId
+                            && x.Id == discount.ProductSellId);
+                            if (productSell != null)
+                            {
+                                product.Price = productSell.Price;
+                                product.SellerTitle = productSell.SellerTitle;
+                                product.SellerSlug = productSell.SellerSlug;
+                                product.PriceAfterOff = productSell.Price * ((decimal)discount.Percent / 100);
+                                product.discountPercent = discount.Percent;
+                            }
+
+
+                        }
+                        else if (discount.ProductSellId == 0)
+                        {
+                            var productSell = product.productSells.OrderBy(x => x.Price).FirstOrDefault();
+                            if (productSell != null)
+                            {
+                                product.Price = productSell.Price;
+                                product.SellerTitle = productSell.SellerTitle;
+                                product.SellerSlug = productSell.SellerSlug;
+                                
+                                product.PriceAfterOff = productSell.Price * ((decimal)discount.Percent/100);
+                                product.discountPercent = discount.Percent;
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        var productSell = product.productSells.OrderBy(x => x.Price).FirstOrDefault();
+                        if (productSell != null)
+                        {
+                            product.Price = productSell.Price;
+                            product.SellerTitle = productSell.SellerTitle;
+                            product.SellerSlug = productSell.SellerSlug;
+                        }
+
+                    }
+
+                }
+            }
+
             model.Seo = await GetSeoAsync(SeoOwnerId, SeoTitle);
 
             return model;
         }
 
-        // متد کمکی برای دریافت سئو
+
+
+
+        public async Task<List<ProductUiQueryModel>> GetProductOtherSellers(int SellerId, string productSlug)
+        {
+
+            var productId = await _shopContext.Products
+                .Where(x => x.Slug == productSlug
+                && x.Active
+                && x.ProductSells.Any())
+                .Select(x => x.Id)
+                .FirstOrDefaultAsync();
+
+            if (productId == 0)
+                return new List<ProductUiQueryModel>();
+
+            return await _shopContext.productSells
+                .Where(x => x.Product.Slug == productSlug && x.SellerId != SellerId)
+                .OrderBy(x => x.Price)
+                .Select(x => new ProductUiQueryModel
+                {
+                    Id = x.Id,
+                    ProductId = x.ProductId,
+                    Title = x.Product.Title,
+                    ImageName = x.Product.ImageName,
+                    Category = x.Product.Poduct_Category_Rels
+                        .OrderByDescending(pcr => pcr.ProductCategory.Id)
+                        .Select(pcr => pcr.ProductCategory.Title)
+                        .FirstOrDefault() ?? "بدون دسته",
+                    CategorySlug = x.Product.Poduct_Category_Rels
+                        .OrderByDescending(pcr => pcr.ProductCategory.Id)
+                        .Select(pcr => pcr.ProductCategory.Slug)
+                        .FirstOrDefault() ?? "",
+                    Price = x.Price,
+                    SellerSlug = x.Seller.Slug,
+                    SellerTitle = x.Seller.Title,
+                    Slug = x.Product.Slug,
+                })
+                .Take(8)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        #region PrivateMthods
         private async Task<SeoUiQueryModel> GetSeoAsync(int ownerId, string defaultTitle)
         {
             var seo = await _seoRepository.GetSeoForUi(ownerId, WhereSeo.ProductCategory, defaultTitle);
@@ -349,46 +459,7 @@ namespace Query.Service.Ui.Products
 
             }
         }
-
-        public async Task<List<ProductUiQueryModel>> GetProductOtherSellers(int SellerId, string productSlug)
-        {
-
-            var productId = await _shopContext.Products
-                .Where(x => x.Slug == productSlug
-                && x.Active
-                && x.ProductSells.Any())
-                .Select(x => x.Id)
-                .FirstOrDefaultAsync();
-
-            if (productId == 0)
-                return new List<ProductUiQueryModel>();
-
-            return await _shopContext.productSells
-                .Where(x => x.Product.Slug == productSlug && x.SellerId != SellerId)
-                .OrderBy(x => x.Price)
-                .Select(x => new ProductUiQueryModel
-                {
-                    Id = x.Id,
-                    ProductId = x.ProductId,
-                    Title = x.Product.Title,
-                    ImageName = x.Product.ImageName,
-                    Category = x.Product.Poduct_Category_Rels
-                        .OrderByDescending(pcr => pcr.ProductCategory.Id)
-                        .Select(pcr => pcr.ProductCategory.Title)
-                        .FirstOrDefault() ?? "بدون دسته",
-                    CategorySlug = x.Product.Poduct_Category_Rels
-                        .OrderByDescending(pcr => pcr.ProductCategory.Id)
-                        .Select(pcr => pcr.ProductCategory.Slug)
-                        .FirstOrDefault() ?? "",
-                    Price = x.Price,
-                    SellerSlug = x.Seller.Slug,
-                    SellerTitle = x.Seller.Title,
-                    Slug = x.Product.Slug,
-                })
-                .Take(8)
-                .AsNoTracking()
-                .ToListAsync();
-        }
+        #endregion
     }
 }
 

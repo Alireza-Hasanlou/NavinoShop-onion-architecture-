@@ -1,23 +1,24 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Shop.Application.Contract.Product.Query;
-using System.Threading.Tasks;
+using Query.Contract.Admin.Products;
+
 
 namespace NavinoShop.WebApplication.Areas.Admin.Pages.Products
 {
     public class IndexModel : PageModel
     {
-        private readonly IProductQueries _productQueries;
+        private readonly IAdminProductsQueryService _adminProductsQueryService;
 
-        public IndexModel(IProductQueries productQueries)
+        public IndexModel(IAdminProductsQueryService adminProductsQueryService)
         {
-            _productQueries = productQueries;
+            _adminProductsQueryService = adminProductsQueryService;
         }
+
         public ProductsForAdminPaging Products { get; set; }
         public async Task<IActionResult> OnGet(int pageId = 1, int take = 10, string filter = "",int categoryId=0)
         {
 
-            Products = await _productQueries.GetAllProductsForAdmin(pageId, take, filter,categoryId);
+            Products = await _adminProductsQueryService.GetAllProductsForAdmin(pageId, take, filter,categoryId);
             return Page();
         }
 

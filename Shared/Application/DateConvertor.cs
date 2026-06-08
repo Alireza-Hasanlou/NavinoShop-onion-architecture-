@@ -43,6 +43,7 @@ namespace Shared.Application
 
         public static string ToEnglishNumber(this string strNum)
         {
+            if (string.IsNullOrEmpty(strNum)) return strNum;
             var cash = strNum;
             for (var i = 0; i < 10; i++)
                 cash = cash.Replace(Pn[i], En[i]);
@@ -57,16 +58,38 @@ namespace Shared.Application
             return chash;
         }
 
-
         public static DateTime ToEnglishDateTime(this string persianDate)
         {
+            if (string.IsNullOrEmpty(persianDate))
+                throw new ArgumentNullException(nameof(persianDate));
+
+            // تبدیل اعداد فارسی به انگلیسی
             persianDate = persianDate.ToEnglishNumber();
-            var year = Convert.ToInt32(persianDate.Substring(0, 4));
-            var month = Convert.ToInt32(persianDate.Substring(5, 2));
-            var day = Convert.ToInt32(persianDate.Substring(8, 2));
+
+            // حذف فاصله‌ها
+            persianDate = persianDate.Trim();
+
+            // استفاده از Split به جای Substring
+            var parts = persianDate.Split('/');
+
+            if (parts.Length != 3)
+                throw new FormatException($"فرمت تاریخ نامعتبر: {persianDate}");
+
+            var year = Convert.ToInt32(parts[0]);
+            var month = Convert.ToInt32(parts[1]);
+            var day = Convert.ToInt32(parts[2]);
+
+            // اعتبارسنجی ساده
+            if (year < 1300 || year > 1500)
+                throw new ArgumentOutOfRangeException($"سال {year} نامعتبر است");
+
+            if (month < 1 || month > 12)
+                throw new ArgumentOutOfRangeException($"ماه {month} نامعتبر است");
+
+            if (day < 1 || day > 31)
+                throw new ArgumentOutOfRangeException($"روز {day} نامعتبر است");
+
             return new DateTime(year, month, day, new PersianCalendar());
         }
-
-
     }
 }

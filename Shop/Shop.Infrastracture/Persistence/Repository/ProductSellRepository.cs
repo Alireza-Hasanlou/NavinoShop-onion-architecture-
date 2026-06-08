@@ -17,5 +17,10 @@ namespace Shop.Infrastracture.Persistence.Repository
         {
             _shopContext = context;
         }
+
+        public async Task<bool> ProductSellHaveAmount(int id)
+        {
+            return await _shopContext.productSells.AnyAsync(x => x.Id == id && x.Amount > 0);
+        }
     }
 }

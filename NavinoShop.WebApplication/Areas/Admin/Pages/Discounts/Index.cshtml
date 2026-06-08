@@ -1,0 +1,101 @@
+﻿@page
+@model NavinoShop.WebApplication.Areas.Admin.Pages.Discounts.IndexModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["title"] = "کدهای تخفیف";
+    var successMessage = TempData["success"] as string;
+}
+
+<div class="box">
+    <div class="box-header">
+        <h3 class="box-title">کدهای تخفیف</h3>
+    </div>
+
+    <div class="box-body">
+        <div class="dataTables_wrapper form-inline dt-bootstrap">
+
+            <a onclick="open_Modal_Ajax('/Admin/Discounts/Create','')"
+               class="btn btn-success"
+               title="افزودن">
+                <i class="fa fa-plus"></i>
+            </a>
+
+            <div class="row">
+                <div class="col-sm-12">
+
+                    <table class="DataTable table table-bordered table-striped dataTable">
+                        <thead>
+                            <tr>
+                                <th>عنوان</th>
+                                <th>کد تخفیف</th>
+                                <th>درصد تخفیف</th>
+                                <th>تعداد مجاز</th>
+                                <th>تعداد استفاده</th>
+                                <th>تاریخ شروع</th>
+                                <th>تاریخ پایان</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @if (Model.Discounts.Any())
+                            {
+                                @foreach (var item in Model.Discounts)
+                                {
+                                    <tr id="@item.Id">
+                                        <td>@item.Title</td>
+                                        <td>@item.Code</td>
+                                        <td>@item.Percent %</td>
+                                        <td>@item.Count</td>
+                                        <td>@item.Use</td>
+                                        <td>@item.StartDate</td>
+                                        <td>@item.EndDate</td>
+
+                                        <td>
+                                            <div class="btn-group">
+
+                                                <a onclick="open_Modal_Ajax('/Admin/Discounts/Edit?DiscountId=@item.Id','')"
+                                                   class="btn btn-warning"
+                                                   title="ویرایش">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+
+                                                <a onclick="DeleteAjax(
+                                                    'آیا از حذف کد تخفیف @item.Title مطمئن هستید؟',
+                                                    'این عملیات غیر قابل بازگشت خواهد بود',
+                                                    'warning',
+                                                    'بله',
+                                                    '/Admin/Discounts/Delete',
+                                                    @item.Id)"
+                                                   class="btn btn-danger"
+                                                   title="حذف">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    @if (!string.IsNullOrEmpty(successMessage))
+    {
+        TempData["success"] = "";
+
+        <script>
+            AlerSweetWithTimer("@successMessage", "success", "center");
+        </script>
+    }
+}

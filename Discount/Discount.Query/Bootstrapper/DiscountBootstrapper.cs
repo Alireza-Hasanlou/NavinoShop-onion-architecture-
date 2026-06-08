@@ -1,4 +1,6 @@
-﻿using Discount.Infrastructure.Bootsrapper;
+﻿using Discount.Application.Contract.OrderDiscounts.Query;
+using Discount.Infrastructure.Bootsrapper;
+using Discount.Query.Queries;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -13,6 +15,10 @@ namespace Discount.Query.Bootstrapper
         public static void Config(IServiceCollection services, string ConnectionString)
         {
             DiscountInfrastructureBootstrapper.Config(services, ConnectionString);
+            services.AddTransient<IOrderDiscountsQueries, OrderDiscountsQueries>();
+
+
         }
+
     }
 }

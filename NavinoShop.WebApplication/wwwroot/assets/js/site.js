@@ -442,6 +442,8 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
+  
+
     $('#rialAmount').on('input', function () {
         let rialValue = $(this).val();
         if (rialValue !== '' && rialValue > 0) {
@@ -526,6 +528,7 @@ $(document).ready(function () {
 });
 
 function open_Modal_Ajax(url, modalclass) {
+
     $('#modal-default').removeClass("product-modal");
     if (modalclass !== undefined && modalclass !== null && modalclass.trim() !== '') {
         $('#modal-default').addClass(modalclass);
@@ -535,6 +538,7 @@ function open_Modal_Ajax(url, modalclass) {
 }
 
 function Get_ajax(url) {
+
     var modalContent = $("#modal-content");
     modalContent.html("");
     $.get(url, function (res) {
@@ -1397,41 +1401,67 @@ function Products() {
         if (!products || products.length === 0) {
             return '<div class="text-center p-5 alert alert-info">محصولی یافت نشد</div>';
         }
+
         var html = '';
         $.each(products, function (index, product) {
             var categoryUrl = product.categorySlug ? '/Products/' + product.categorySlug : '#';
             var sellerUrl = product.sellerSlug ? '/' + product.sellerSlug : '#';
+            var productUrl = '/' + (product.sellerSlug || '#') + '/Product/' + (product.slug || '#');
+
+            // بررسی وجود تخفیف
+            var hasDiscount = (product.priceAfterOff && product.priceAfterOff > 0 && product.priceAfterOff < product.price);
 
             html += `
-                <div class="col" style="display: block;">
-                    <div class="encode4326654321vfb">
-                        <a href="/${product.sellerSlug}/Product/${product.slug}">
-                            <div class="image" style="background-image: url('/Images/Product/500/${product.imageName || 'default.jpg'}');"></div>
+            <div class="col" style="display: block;">
+                <div class="encode4326654321vfb">
+                    <a href="${productUrl}">
+                        <div class="image" style="background-image: url('/Images/Product/500/${product.imageName || 'default.jpg'}');"></div>
+                    </a>
+                    <div class="details p-3">
+                        <div class="category">
+                            <a onclick="loadProducts({categorySlug: '${product.categorySlug}', pageId: 1})">${escapeHtml(product.category) || 'دسته‌بندی نشده'}</a>
+                        </div>
+                        <a href="${productUrl}">
+                            <h2>${escapeHtml(product.title || 'بدون عنوان')}</h2>
                         </a>
-                        <div class="details p-3">
-                            <div class="category">
-                                <a href="${categoryUrl}">${escapeHtml(product.category) || 'دسته‌بندی نشده'}</a>
+        `;
+
+            // نمایش قیمت با تخفیف یا بدون تخفیف
+            if (hasDiscount) {
+                html += `
+                        <div class="discount-section">
+                            <div class="products_old-price">
+                                <del>${formatPrice(product.price)} تومان</del>
+                                <span class="products_discount-percent">${product.discountPercent || 0}%</span>
                             </div>
-                            <a href="/${product.sellerSlug}/Product/${product.slug}">
-                                <h2>${escapeHtml(product.title || 'بدون عنوان')}</h2>
-                            </a>
-                            <div class="encode4365gbf265g43d">${formatPrice(product.price || 0)} تومان</div>
-                            <div class="seller-info">
-                                <i class="fa fa-store"></i>
-                                <a href="${sellerUrl}">${escapeHtml(product.sellerTitle || 'نامشخص')}</a>
+                            <div class="products_new-price">
+                                ${formatPrice(product.priceAfterOff)} تومان
                             </div>
-                            <div class="rate">
-                                ${generateStarRating(product.rating || 0)}
-                                <span class="encode43bf265g43d">(${product.votesCount || 0} رای دهنده)</span>
-                            </div>
+                        </div>
+            `;
+            } else {
+                html += `
+                        <div class="encode4365gbf265g43d">${formatPrice(product.price || 0)} تومان</div>
+            `;
+            }
+
+            html += `
+                        <small class="text-secondary">
+                            <i class="fa fa-store"></i>
+                            <a href="${sellerUrl}">${escapeHtml(product.sellerTitle || 'نامشخص')}</a>
+                        </small>
+                        <div class="rate">
+                            ${generateStarRating(product.rating || 0, product.halfStar || false)}
+                            <span class="encode43bf265g43d">(${product.votesCount || 0} رای دهنده)</span>
                         </div>
                     </div>
                 </div>
-            `;
+            </div>
+        `;
         });
+
         return html;
     };
-
     window.renderPagination = function (pagination) {
         if (!pagination || pagination.totalPages <= 1) return '';
 
@@ -1965,7 +1995,7 @@ function escapeHtml(text) {
     return text.replace(/[&<>"']/g, function (m) { return map[m]; });
 }
 
-function loadOtherSellers(sellerId ,productSlug) {
+function loadOtherSellers(sellerId, productSlug) {
     if (!productSlug || productSlug.trim() === '') {
         return;
     }
@@ -1973,7 +2003,7 @@ function loadOtherSellers(sellerId ,productSlug) {
     $.ajax({
         url: '/Shop/GetProdcutOtherSellers',
         type: 'GET',
-        data: { productSlug: productSlug, SellerId:sellerId },
+        data: { productSlug: productSlug, SellerId: sellerId },
         dataType: 'json',
         beforeSend: function () {
             $('#other-sellers-section').show();
@@ -2062,3 +2092,296 @@ function loadOtherSellers(sellerId ,productSlug) {
     });
 }
 
+
+function addDiscount(btn) {
+    debugger;
+    // دریافت مقادیر
+    var productId = $('#ProductId').val();
+    var productSellId = $('#ProductSellId').val();
+    var discountPercent = $('#DiscountPercent').val();
+    var startDate = $('#StartDate').val();
+    var endDate = $('#EndDate').val();
+
+    // اعتبارسنجی
+    if (!startDate || !endDate) {
+        AlerSweetWithTimer('لطفا تاریخ شروع و پایان را انتخاب کنید', 'error', 'top-end');
+        return false;
+    }
+
+    if (!discountPercent) {
+        AlerSweetWithTimer('لطفا درصد تخفیف را وارد کنید', 'error', 'top-end');
+        return false;
+    }
+
+    if (discountPercent < 0 || discountPercent > 100) {
+        AlerSweetWithTimer('درصد تخفیف باید بین 0 تا 100 باشد', 'error', 'top-end');
+        return false;
+    }
+
+    var formData = new FormData();
+    formData.append('ProductId', productId);
+    formData.append('ProductSellId', productSellId);
+    formData.append('DiscountPercent', discountPercent);
+    formData.append('StartDate', startDate);
+    formData.append('EndDate', endDate);
+
+    var $submitBtn = $(btn);
+    var originalText = $submitBtn.text();
+
+    $submitBtn.prop('disabled', true);
+    $submitBtn.text('در حال ثبت...');
+
+    $.ajax({
+        url: '/Profile/Discount/AddDiscount',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+
+        success: function (response) {
+
+            console.log(response);
+
+            if (response.success) {
+
+                $('#modal-default').modal('hide');
+                $('#modal-content').empty();
+
+                AlerSweetWithTimer(
+                    'تخفیف با موفقیت ثبت شد',
+                    'success',
+                    'top-end'
+                );
+
+                setTimeout(function () {
+                    location.reload();
+                }, 1500);
+
+            } else {
+
+                AlerSweetWithTimer(
+                    response.message || 'خطا در ثبت تخفیف',
+                    'error',
+                    'top-end'
+                );
+            }
+        },
+
+        error: function (xhr) {
+
+            console.log(xhr.responseText);
+
+            AlerSweetWithTimer(
+                'خطا در ارتباط با سرور',
+                'error',
+                'top-end'
+            );
+        },
+
+        complete: function () {
+
+            $submitBtn.prop('disabled', false);
+            $submitBtn.text(originalText);
+        }
+    });
+
+    return false;
+}
+function CreateOrderSellerDiscount(button) {
+    // دریافت مقادیر
+    var shopId = $('#ShopId').val();
+    var title = $('#DiscountTitle').val();
+    var percent = $('#DiscountPercent').val();
+    var code = $('#DiscountCode').val();
+    var count = $('#DiscountCount').val();
+    var startDate = $('#StartDate').val();
+    var endDate = $('#EndDate').val();
+
+    // اعتبارسنجی
+
+    if (!title) {
+        AlerSweetWithTimer('لطفا عنوان تخفیف را وارد کنید', 'error', 'Top-End');
+        return;
+    }
+
+    if (!percent || percent < 0 || percent > 100) {
+        AlerSweetWithTimer('درصد تخفیف باید بین 0 تا 100 باشد', 'error', 'Center');
+        return;
+    }
+
+    if (!code) {
+        AlerSweetWithTimer('لطفا کد تخفیف را وارد کنید', 'error', 'Center');
+        return;
+    }
+
+    if (!count || count <= 0) {
+        AlerSweetWithTimer('تعداد تخفیف باید بیشتر از صفر باشد', 'error', 'Center');
+        return;
+    }
+
+    if (!startDate) {
+        AlerSweetWithTimer('لطفا تاریخ شروع را انتخاب کنید', 'error', 'Center');
+        return;
+    }
+
+    if (!endDate) {
+        AlerSweetWithTimer('لطفا تاریخ پایان را انتخاب کنید', 'error', 'Center');
+        return;
+    }
+
+    // ساخت FormData
+    var formData = new FormData();
+    formData.append('ShopId', shopId);
+    formData.append('Title', title);
+    formData.append('Percent', percent);
+    formData.append('Code', code);
+    formData.append('Count', count);
+    formData.append('StartDate', startDate);
+    formData.append('EndDate', endDate);
+
+    // غیرفعال کردن دکمه
+    var $btn = $(button);
+    var originalText = $btn.text();
+    $btn.prop('disabled', true).text('در حال ویرایش...');
+
+    // ارسال درخواست
+    $.ajax({
+        url: '/Profile/OrderDiscounts/Create',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            if (response.success) {
+                close_Modal_Ajax();
+                $('#modal-content').empty();
+                AlerSweetWithTimer(response.message || 'تخفیف با موفقیت ویرایش شد', 'success', 'Center');
+                setTimeout(function () {
+                    location.reload();
+                }, 1500);
+            } else {
+                if (response.errors) {
+                    var errorMessages = '';
+                    $.each(response.errors, function (key, value) {
+                        errorMessages += value + '\n';
+                    });
+                    AlerSweetWithTimer(errorMessages || response.message || 'خطا در ویرایش تخفیف', 'error', 'Center');
+                } else {
+                    AlerSweetWithTimer(response.message || 'خطا در ویرایش تخفیف', 'error', 'Center');
+                }
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('خطا:', xhr.responseText);
+            if (xhr.status === 400) {
+                AlerSweetWithTimer('داده‌های ارسالی معتبر نیست', 'error', 'Center');
+            } else if (xhr.status === 500) {
+                AlerSweetWithTimer('خطای داخلی سرور', 'error', 'Center');
+            } else {
+                AlerSweetWithTimer('خطا در ارتباط با سرور', 'error', 'Center');
+            }
+        },
+        complete: function () {
+            $btn.prop('disabled', false).text(originalText);
+        }
+    });
+}
+function EditOrderSellerDiscount(button) {
+    // دریافت مقادیر
+    var discountId = $('#DiscountId').val();
+    var title = $('#DiscountTitle').val();
+    var percent = $('#DiscountPercent').val();
+    var code = $('#DiscountCode').val();
+    var count = $('#DiscountCount').val();
+    var startDate = $('#StartDate').val();
+    var endDate = $('#EndDate').val();
+
+    // اعتبارسنجی
+
+    if (!title) {
+        AlerSweetWithTimer('لطفا عنوان تخفیف را وارد کنید', 'error', 'Top-End');
+        return;
+    }
+
+    if (!percent || percent < 0 || percent > 100) {
+        AlerSweetWithTimer('درصد تخفیف باید بین 0 تا 100 باشد', 'error', 'Center');
+        return;
+    }
+
+    if (!code) {
+        AlerSweetWithTimer('لطفا کد تخفیف را وارد کنید', 'error', 'Center');
+        return;
+    }
+
+    if (!count || count <= 0) {
+        AlerSweetWithTimer('تعداد تخفیف باید بیشتر از صفر باشد', 'error', 'Center');
+        return;
+    }
+
+    if (!startDate) {
+        AlerSweetWithTimer('لطفا تاریخ شروع را انتخاب کنید', 'error', 'Center');
+        return;
+    }
+
+    if (!endDate) {
+        AlerSweetWithTimer('لطفا تاریخ پایان را انتخاب کنید', 'error', 'Center');
+        return;
+    }
+
+    // ساخت FormData
+    var formData = new FormData();
+    formData.append('Id', discountId);
+    formData.append('Title', title);
+    formData.append('Percent', percent);
+    formData.append('Code', code);
+    formData.append('Count', count);
+    formData.append('StartDate', startDate);
+    formData.append('EndDate', endDate);
+
+    // غیرفعال کردن دکمه
+    var $btn = $(button);
+    var originalText = $btn.text();
+    $btn.prop('disabled', true).text('در حال ویرایش...');
+
+    // ارسال درخواست
+    $.ajax({
+        url: '/Profile/OrderDiscounts/Edit?DiscountId=' + discountId,
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            if (response.success) {
+                close_Modal_Ajax();
+                $('#modal-content').empty();
+                AlerSweetWithTimer(response.message || 'تخفیف با موفقیت ویرایش شد', 'success', 'Center');
+                setTimeout(function () {
+                    location.reload();
+                }, 1500);
+            } else {
+                if (response.errors) {
+                    var errorMessages = '';
+                    $.each(response.errors, function (key, value) {
+                        errorMessages += value + '\n';
+                    });
+                    AlerSweetWithTimer(errorMessages || response.message || 'خطا در ویرایش تخفیف', 'error', 'Center');
+                } else {
+                    AlerSweetWithTimer(response.message || 'خطا در ویرایش تخفیف', 'error', 'Center');
+                }
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('خطا:', xhr.responseText);
+            if (xhr.status === 400) {
+                AlerSweetWithTimer('داده‌های ارسالی معتبر نیست', 'error', 'Center');
+            } else if (xhr.status === 500) {
+                AlerSweetWithTimer('خطای داخلی سرور', 'error', 'Center');
+            } else {
+                AlerSweetWithTimer('خطا در ارتباط با سرور', 'error', 'Center');
+            }
+        },
+        complete: function () {
+            $btn.prop('disabled', false).text(originalText);
+        }
+    });
+}

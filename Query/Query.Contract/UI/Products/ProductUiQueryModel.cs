@@ -1,4 +1,6 @@
-﻿namespace Query.Contract.UI.Products
+﻿using Query.Contract.UI.UserPanel.Stores;
+
+namespace Query.Contract.UI.Products
 {
     public class ProductUiQueryModel
     {
@@ -12,9 +14,20 @@
         public string CategorySlug { get; set; }
         public string SellerTitle { get; set; }
         public int Price { get; set; }
-        public int PriceAfterOff { get; set; }
+        public int discountPercent { get; set; }
+        public decimal PriceAfterOff { get; set; }
         public string ImageName { get; set; }
         public string ImageAlt { get; set; }
+        public List<productSellQuery> productSells { get; set; }
     }
 
+    public class productSellQuery
+    {
+        public int Id { get; set; }
+        public int ProductId { get; set; }
+        public string SellerSlug { get; set; }
+        public int  Price { get; set; }
+        public string SellerTitle { get; set; }
+
+    }
 }

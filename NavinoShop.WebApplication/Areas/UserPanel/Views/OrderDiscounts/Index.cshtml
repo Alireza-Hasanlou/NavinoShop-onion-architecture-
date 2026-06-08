@@ -1,0 +1,88 @@
+﻿@using Discount.Application.Contract.OrderDiscounts.Query
+@model List<OrderDiscountsQueryModel>
+@{
+    Layout = "_PanelLayout";
+    string sellerTitle = ViewData["SellerTitle"] as string;
+    ViewData["Title"] = $"کدهای تخفیف فروشگاه ";
+    int sellerId = ViewData["SellerId"] is int id ? id : 0;
+}
+<div class="col-12">
+    <div class="form-group m-1 pb-3">
+        <a onclick="open_Modal_Ajax('/Profile/OrderDiscounts/Create/@sellerId','')" class="custom-btn btn-success px-5"><i class="fa fa-plus"></i></a>
+        <a href="/Profile/OrderDiscounts/ExpiredDiscounts/@sellerId" class="custom-btn custom-btn-warning px-5">کد های منقضی شده</i></a>
+    </div>
+</div>
+<div class="box">
+    <div class="box-header">
+        <h4 class="box-title">کدهای تخفیف فروشگاه @sellerTitle </h4>
+    </div>
+
+    <div class="box-body">
+
+        <table id="discountTable" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>عنوان</th>
+                    <th>کد تخفیف</th>
+                    <th>درصد</th>
+                    <th>تعداد</th>
+                    <th>استفاده شده</th>
+                    <th>شروع</th>
+                    <th>پایان</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr id="@item.Id">
+                        <td>@item.Title</td>
+                        <td>@item.Code</td>
+                        <td>@item.Percent %</td>
+                        <td>@item.Count</td>
+                        <td>@item.Use</td>
+                        <td>@item.StartDate</td>
+                        <td>@item.EndDate</td>
+
+                        <td>
+                            <div class="btn-group">
+
+                                <button class="btn btn-warning"
+                                        onclick="open_Modal_Ajax('/Profile/OrderDiscounts/Edit?DiscountId=@item.Id','')">
+                                    <i class="fa fa-edit"></i>
+                                </button>
+
+                                <button class="btn btn-danger"
+                                        onclick="DeleteAjax(
+                                                                    'آیا از حذف کد تخفیف @item.Title مطمئن هستید؟',
+                                                                    'این عملیات غیر قابل بازگشت خواهد بود',
+                                                                    'warning',
+                                                                    'بله',
+                                                                   '/Profile/OrderDiscounts/Delete',
+                                                                    @item.Id)">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+
+    </div>
+</div>
+@section scripts {
+    <script>
+                $('#discountTable').DataTable({
+            language: {
+                search: "جستجو:",
+                lengthMenu: "نمایش _MENU_ رکورد",
+                info: "نمایش _START_ تا _END_ از _TOTAL_ رکورد",
+               
+            }
+        });
+    </script>
+}

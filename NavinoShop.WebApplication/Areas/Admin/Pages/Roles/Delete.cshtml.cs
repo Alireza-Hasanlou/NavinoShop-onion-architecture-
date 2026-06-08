@@ -14,7 +14,7 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Roles
             _roleCommandService = roleCommandService;
         }
 
-        public int RoleId { get; set; }
+
         public async Task<JsonResult> OnGet(int id)
         {
 

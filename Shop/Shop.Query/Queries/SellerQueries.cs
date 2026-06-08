@@ -50,6 +50,11 @@ namespace Shop.Query.Queries
             };
         }
 
+        public  string GetSellerTitle(int sellerId)
+        {
+            return  _sellerRepository.GetTitleById(sellerId);
+        }
+
         public async Task<int> GetSellerUserIdAsync(int sellerId)
         {
             return await _sellerRepository.GetSellerUserIdAsync(sellerId);

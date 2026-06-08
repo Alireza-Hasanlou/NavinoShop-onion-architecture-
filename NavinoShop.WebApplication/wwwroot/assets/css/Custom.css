@@ -4490,3 +4490,302 @@ span.custom-checkbox-shine:after {
 
 
 
+
+.custom-data-table,
+.custom-data-table * {
+    font-family: 'IRANSans', 'Vazir', 'Tahoma', 'Arial', sans-serif;
+}
+.custom-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+.custom-responsive-table {
+    width: 100%;
+    overflow-x:auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.custom-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    font-family: 'IRANSans', Tahoma, sans-serif;
+}
+
+    .custom-data-table thead {
+        background-color: #f5f5f5;
+        border-bottom: 2px solid #ddd;
+    }
+
+    .custom-data-table th {
+        padding: 12px 15px;
+        text-align: right;
+        font-weight: 600;
+        color: #333;
+        border-left: 1px solid #ddd;
+        font-size: 14px;
+    }
+
+    .custom-data-table td {
+        padding: 10px 15px;
+        text-align: right;
+        border-bottom: 1px solid #ddd;
+        border-left: 1px solid #ddd;
+        vertical-align: middle;
+        font-size: 13px;
+    }
+
+    .custom-data-table tbody tr:hover {
+        background-color: #f9f9f9;
+        transition: all 0.3s ease;
+    }
+
+.custom-table-row {
+    transition: background-color 0.2s ease;
+}
+
+.custom-table-image {
+    border-radius: 5px;
+    max-width: 100px;
+    height: auto;
+}
+
+/* استایل دکمه‌های عملیات */
+.custom-btn-group {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.custom-btn {
+    display: inline-block;
+    padding: 6px 12px;
+    margin: 0 2px;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.custom-btn-danger {
+    color: #fff;
+    background-color: #dc3545;
+    border: 1px solid #dc3545;
+}
+
+    .custom-btn-danger:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+.custom-btn-warning {
+    color: #fff;
+    background-color: #ffc107;
+    border: 1px solid #ffc107;
+}
+
+    .custom-btn-warning:hover {
+        background-color: #e0a800;
+        border-color: #d39e00;
+    }
+
+.custom-btn-discount {
+    color: #fff;
+    background-color: #6c757d;
+    border: 1px solid #6c757d;
+}
+
+    .custom-btn-discount:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+
+/* استایل سوئیچ سفارشی */
+.custom-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+    .custom-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+.custom-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 24px;
+}
+
+    .custom-slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+    }
+
+input:checked + .custom-slider {
+    background-color: #28a745;
+}
+
+    input:checked + .custom-slider:before {
+        transform: translateX(26px);
+    }
+
+.custom-circle {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-cross, .custom-checkmark {
+    width: 10px;
+    height: 10px;
+    color: white;
+}
+
+/* استایل پیجینیشن سفارشی */
+.custom-pagination-container {
+    margin-top: 20px;
+    direction: ltr;
+}
+
+.custom-pagination {
+    display: flex;
+    justify-content: center;
+    padding-left: 0;
+    list-style: none;
+    border-radius: 4px;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.custom-page-item {
+    margin: 0 2px;
+}
+
+.custom-page-link {
+    position: relative;
+    display: block;
+    padding: 8px 12px;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: #007bff;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+    .custom-page-link:hover {
+        background-color: #e9ecef;
+        border-color: #dee2e6;
+    }
+
+.custom-page-item.custom-active .custom-page-link {
+    z-index: 1;
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.custom-page-item.custom-dots .custom-page-link {
+    border: none;
+    cursor: default;
+}
+
+.custom-empty-message {
+    text-align: center;
+    padding: 50px;
+    color: #999;
+    font-size: 16px;
+}
+
+/* استایل ریسپانسیو برای موبایل */
+@media (max-width: 768px) {
+    .custom-data-table thead {
+        display: none;
+    }
+
+    .custom-data-table tbody tr {
+        display: block;
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+
+    .custom-data-table tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: left;
+        border-left: none;
+        border-bottom: 1px solid #eee;
+    }
+
+        .custom-data-table tbody td:before {
+            content: attr(data-label);
+            font-weight: bold;
+            margin-left: 10px;
+            text-align: right;
+            width: 40%;
+        }
+
+        .custom-data-table tbody td:last-child {
+            border-bottom: none;
+        }
+
+    .custom-table-image {
+        width: 60px;
+    }
+}
+.custom-status-success {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.custom-status-danger {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.custom-status-warning {
+    color: #ffc107;
+    font-weight: bold;
+}
+
+.custom-btn-info {
+    color: #fff;
+    background-color: #17a2b8;
+    border: 1px solid #17a2b8;
+}
+
+    .custom-btn-info:hover {
+        background-color: #138496;
+        border-color: #117a8b;
+    }

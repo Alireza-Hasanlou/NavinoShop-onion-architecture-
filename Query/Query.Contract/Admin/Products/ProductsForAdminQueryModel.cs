@@ -1,6 +1,6 @@
-﻿namespace Shop.Application.Contract.Product.Query
+﻿namespace Query.Contract.Admin.Products
 {
-    public class ProductsForSellerQueryModel
+    public class ProductsForAdminQueryModel
     {
         public int Id { get; set; }
         public string Title { get; set; }
@@ -9,9 +9,8 @@
         public DateTime UpdateDate { get; set; }
         public string ShortDescription { get; set; }
         public int Weight { get; set; }
-        public int Count { get; set; }
+        public string Slug { get; set; }
+        public int DiscountPercent { get; set; }
         public bool Active { get; set; }
-        public int Price { get; set; }
-        public int SoldCount { get; set; }
     }
 }

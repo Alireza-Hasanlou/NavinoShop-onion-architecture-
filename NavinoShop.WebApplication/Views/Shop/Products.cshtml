@@ -9,7 +9,42 @@
     <partial name="_Seo" model="@Model.Seo" />
 }
 
+<style>
+    .products_old-price {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 5px;
+    }
 
+        .products_old-price del {
+            color: #999;
+            font-size: 14px;
+            text-decoration: line-through;
+        }
+
+    .products_discount-percent {
+        background-color: #ff4444;
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 2px 6px;
+        border-radius: 4px;
+     
+    }
+
+    .products_new-price {
+        color: #28a745;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .encode4365gbf265g43d {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+    }
+</style>
 <section class="inner-page" id="products-page">
     <partial name="_BreadCrumb" model="@Model.BreadCrumbs" />
     @if (Model.Seller != null)
@@ -188,7 +223,26 @@
                                                             <a href="/@product.SellerSlug/Product/@product.Slug">
                                                                 <h2>@product.Title</h2>
                                                             </a>
-                                                            <div class="encode4365gbf265g43d">127,000 تومان</div>
+
+                                                            @if (product.PriceAfterOff > 0 && product.PriceAfterOff < product.Price)
+                                                            {
+                                                             
+                                                                <div class="discount-section">
+                                                                    <div class="products_old-price">
+                                                                        <del>@product.Price.ToString("N0") تومان</del>
+                                                                        <span class="products_discount-percent">@product.discountPercent%</span>
+                                                                    </div>
+                                                                    <div class="products_new-price">
+                                                                        @product.PriceAfterOff.ToString("N0") تومان
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                
+                                                                <div class="encode4365gbf265g43d">@product.Price.ToString("N0") تومان</div>
+                                                            }
+
                                                             <small class="text-secondary"><i class="fa fa-store"> </i><a href="/@product.SellerSlug">  @product.SellerTitle</a></small>
                                                             <div class="rate">
                                                                 <svg class="svg-inline--fa fa-star fa-w-18" style="color: #ddd; width: 18px; height: 18px; display: inline-block;" aria-hidden="true" focusable="false" data-prefix="far" data-icon="star" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M528.1 171.5L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6zM388.6 312.3l23.7 138.4L288 385.4l-124.3 65.3 23.7-138.4-100.6-98 139-20.2 62.2-126 62.2 126 139 20.2-100.6 98z"></path></svg><svg class="svg-inline--fa fa-star fa-w-18" style="color: #ddd; width: 18px; height: 18px; display: inline-block;" aria-hidden="true" focusable="false" data-prefix="far" data-icon="star" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M528.1 171.5L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6zM388.6 312.3l23.7 138.4L288 385.4l-124.3 65.3 23.7-138.4-100.6-98 139-20.2 62.2-126 62.2 126 139 20.2-100.6 98z"></path></svg><svg class="svg-inline--fa fa-star fa-w-18" style="color: #ddd; width: 18px; height: 18px; display: inline-block;" aria-hidden="true" focusable="false" data-prefix="far" data-icon="star" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M528.1 171.5L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6zM388.6 312.3l23.7 138.4L288 385.4l-124.3 65.3 23.7-138.4-100.6-98 139-20.2 62.2-126 62.2 126 139 20.2-100.6 98z"></path></svg><svg class="svg-inline--fa fa-star fa-w-18" style="color: #ddd; width: 18px; height: 18px; display: inline-block;" aria-hidden="true" focusable="false" data-prefix="far" data-icon="star" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M528.1 171.5L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6zM388.6 312.3l23.7 138.4L288 385.4l-124.3 65.3 23.7-138.4-100.6-98 139-20.2 62.2-126 62.2 126 139 20.2-100.6 98z"></path></svg><svg class="svg-inline--fa fa-star fa-w-18" style="color: #ddd; width: 18px; height: 18px; display: inline-block;" aria-hidden="true" focusable="false" data-prefix="far" data-icon="star" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M528.1 171.5L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6zM388.6 312.3l23.7 138.4L288 385.4l-124.3 65.3 23.7-138.4-100.6-98 139-20.2 62.2-126 62.2 126 139 20.2-100.6 98z"></path></svg>

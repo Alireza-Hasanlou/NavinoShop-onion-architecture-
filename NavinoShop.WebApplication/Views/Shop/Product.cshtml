@@ -273,9 +273,8 @@
                                     <div class="price-container">
                                         @if (Model.priceAfterOff > 0 && Model.priceAfterOff < Model.Price)
                                         {
-                                            var discountPercent = (int)((Model.Price - Model.priceAfterOff) * 100 / Model.Price);
                                             <span class="old-price">@Model.Price.ToString("N0") تومان</span>
-                                            <span class="discount-badge">@discountPercent%</span>
+                                            <span class="discount-badge">@Model.discountPercent%</span>
                                             <span class="final-price">@Model.priceAfterOff.ToString("N0") تومان</span>
                                         }
                                         else

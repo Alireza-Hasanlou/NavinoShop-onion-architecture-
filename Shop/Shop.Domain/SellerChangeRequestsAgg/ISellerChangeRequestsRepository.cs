@@ -11,5 +11,6 @@ namespace Shop.Domain.SellerChangeRequestsAgg
     public interface ISellerChangeRequestsRepository : IGenericRepository<SellerChangeRequest, int>
     {
         Task <List<SellersChangeRequestQueryModel>> GetChangeRequests();
+       
     }
 }

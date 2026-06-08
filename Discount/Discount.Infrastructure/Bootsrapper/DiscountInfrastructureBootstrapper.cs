@@ -1,12 +1,11 @@
 ﻿using Discount.Application.Boostrapper;
+using Discount.Domain.OrderDiscountAgg;
+using Discount.Domain.ProductDiscountAgg;
 using Discount.Infrastructure.Persistence.Context;
+using Discount.Infrastructure.Persistence.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Discount.Infrastructure.Bootsrapper
 {
@@ -19,6 +18,9 @@ namespace Discount.Infrastructure.Bootsrapper
             {
                 option.UseSqlServer(ConnectionStrisng);
             });
+
+            services.AddTransient<IProductDiscountRepository, ProductDiscountRepository>();
+            services.AddTransient<IOrderDiscountRepository, OrderDiscountsRepository>();
 
         }
     }

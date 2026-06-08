@@ -117,7 +117,6 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
             return View(model);
            
         }
-
         public async Task<IActionResult> AddProductToShop(int Id)
         {
 
@@ -148,13 +147,14 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
                 data = products.Select(p => new { id = p.Id, title = p.Title })
             });
         }
-        public async Task<IActionResult> SellersProducts(int sellerId, int pageId = 1, int take = 5, int categoryId = 0, string filter = "")
+        public async Task<IActionResult> SellersProducts(int sellerId, int pageId = 1, 
+            int take = 5, int categoryId = 0, string filter = "")
         {
             var userId = _authService.GetLoginUserId();
             bool ok = await _sellerQueries.IsSellerForUser(userId, sellerId);
             if (!ok)
                 return NotFound();
-            var products = await _productQueries.GetProductsForSellerAsync(sellerId, pageId, take, filter, categoryId);
+            var products = await _sellerUserPanelQueries.GetProductsForSellerAsync(sellerId, pageId, take, filter, categoryId);
             products.SellerId = sellerId;
             return View(products);
         }

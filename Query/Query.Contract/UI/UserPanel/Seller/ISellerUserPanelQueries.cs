@@ -9,6 +9,7 @@ namespace Query.Contract.UI.UserPanel.Seller
     public interface ISellerUserPanelQueries
     {
         Task<List<SellerUserPanelQueryModel>> GetSellersForUserPanel(int UserId);
+        Task<ProductsForSellerPaging> GetProductsForSellerAsync(int sellerId, int pageId, int take, string filter, int categoryId);
 
     }
 
