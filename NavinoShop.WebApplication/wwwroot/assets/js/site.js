@@ -2007,7 +2007,7 @@ function loadOtherSellers(sellerId, productSlug) {
         dataType: 'json',
         beforeSend: function () {
             $('#other-sellers-section').show();
-            $('#other-sellers-tbody').html('<tr><td colspan="7" class="text-center p-5"><div class="spinner-border text-primary"></div><p class="mt-2">در حال بارگذاری...</p></td></tr>');
+            $('#other-sellers-tbody').html('<td><td colspan="7" class="text-center p-5"><div class="spinner-border text-primary"></div><p class="mt-2">در حال بارگذاری...</p></td></td>');
         },
         success: function (response) {
             console.log('Server response:', response);
@@ -2038,11 +2038,17 @@ function loadOtherSellers(sellerId, productSlug) {
                     var title = seller.title || 'بدون عنوان';
                     var category = seller.category || 'بدون دسته';
                     var sellerTitle = seller.sellerTitle || 'نامشخص';
-                    var price = formatPrice(seller.price || 0);
+
+                    // بررسی وجود تخفیف
+                    var hasDiscount = (seller.priceAfterOff && seller.priceAfterOff > 0 && seller.priceAfterOff < seller.price);
+                    var displayPrice = hasDiscount ? formatPrice(seller.priceAfterOff) : formatPrice(seller.price || 0);
+                    var originalPrice = hasDiscount ? formatPrice(seller.price) : null;
+                    var discountPercent = seller.discountPercent || 0;
+
                     var rating = seller.rating || 0;
                     var votesCount = seller.votesCount || 0;
 
-                    html += '<tr>';
+                    html += '<table>';
                     html += '<td data-label="تصویر محصول" class="product-image-cell">';
                     html += '<a>';
                     html += '<img src="' + imageUrl + '" alt="' + escapeHtml(title) + '" class="other-sellers-product-img">';
@@ -2062,7 +2068,17 @@ function loadOtherSellers(sellerId, productSlug) {
                     html += '</td>';
 
                     html += '<td data-label="قیمت" class="other-sellers-price">';
-                    html += price + ' تومان';
+
+                    // نمایش قیمت با تخفیف یا بدون تخفیف
+                    if (hasDiscount) {
+                        html += '<div class="price-with-discount">';
+                        html += '<div class="old-price"><del>' + originalPrice + ' تومان</del></div>';
+                        html += '<div class="new-price text-danger fw-bold">' + displayPrice + ' تومان</div>';
+                        html += '</div>';
+                    } else {
+                        html += displayPrice + ' تومان';
+                    }
+
                     html += '</td>';
 
                     html += '<td data-label="امتیاز" class="other-sellers-rating">';

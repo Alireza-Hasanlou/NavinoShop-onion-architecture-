@@ -13,8 +13,6 @@ using Shop.Domain.ProductCategoryAgg;
 using Shop.Domain.ProductSellAgg;
 using Shop.Domain.SellerAgg;
 using Shop.Infrastracture.Persistence.Context;
-using System.Collections.Immutable;
-using System.Runtime.Serialization.Json;
 
 
 namespace Query.Service.Ui.Products
@@ -97,52 +95,101 @@ namespace Query.Service.Ui.Products
 
             if (product == null)
                 return null;
+
             product.State = await _stateRepository.GetStateTitle(product.StateId);
             product.City = await _cityRepository.GetCityTitle(product.CityId);
-            var ids = _shopContext.product_Category_Rels.Where(x => x.ProductId == product.ProductId).Select(c => c.CategoryId).ToList();
-            product.RelatedProducts = await _shopContext.productSells
-                .Where(x => x.Product.Poduct_Category_Rels.Any(pcr => pcr.ProductCategory.Slug == product.CategorySlug)
-                            && x.ProductId != product.ProductId
-                            && x.Product.Active)
-                .Select(x => new ProductUiQueryModel
+
+            var ids = _shopContext.product_Category_Rels
+                .Where(x => x.ProductId == product.ProductId)
+                .Select(c => c.CategoryId).ToList();
+
+            product.RelatedProducts = await _shopContext.Products
+                .Where(x => x.Poduct_Category_Rels.Any(pcr => pcr.ProductCategory.Slug == product.CategorySlug)
+                            && x.Id != product.ProductId
+                            && x.ProductSells.Any()
+                            && x.Active)
+                .Select(p => new ProductUiQueryModel
                 {
-                    Id = x.Id,
-                    ProductId = x.ProductId,
-                    Title = x.Product.Title,
-                    ImageName = x.Product.ImageName,
-                    Category = x.Product.Poduct_Category_Rels
-                        .OrderByDescending(pcr => pcr.ProductCategory.Id)
+                    ProductId = p.Id,
+                    Title = p.Title ?? string.Empty,
+                    ImageAlt = p.ImageAlt ?? string.Empty,
+                    ImageName = p.ImageName ?? string.Empty,
+                    SellerTitle = string.Empty,
+                    SellerSlug = string.Empty,
+                    Slug = p.Slug ?? string.Empty,
+                    PriceAfterOff = 0,
+                    CategorySlug = p.Poduct_Category_Rels
+                        .OrderByDescending(x => x.ProductCategory.Id)
+                        .Select(pcr => pcr.ProductCategory.Slug)
+                        .FirstOrDefault() ?? "بدون دسته",
+                    Category = p.Poduct_Category_Rels
+                        .OrderByDescending(x => x.ProductCategory.Id)
                         .Select(pcr => pcr.ProductCategory.Title)
                         .FirstOrDefault() ?? "بدون دسته",
-                    CategorySlug = x.Product.Poduct_Category_Rels
-                        .OrderByDescending(pcr => pcr.ProductCategory.Id)
-                        .Select(pcr => pcr.ProductCategory.Slug)
-                        .FirstOrDefault() ?? "",
-                    Price = x.Price,
-                    SellerSlug = x.Seller.Slug,
-                    Slug = x.Product.Slug,
+                    Price = 0,
+                    productSells = p.ProductSells.Where(x => x.Amount > 0)
+                    .Select(x => new productSellQuery
+                    {
+                        Id = x.Id,
+                        ProductId = x.ProductId,
+                        Price = x.Price,
+                        SellerTitle = x.Seller.Title,
+                        SellerSlug = x.Seller.Slug,
 
+                    }).ToList()
                 })
                 .Take(8)
                 .AsNoTracking()
                 .ToListAsync();
 
-
-
-
-
-            var discount = await _discountContext.ProductDiscounts
-                .Where(x => x.ProductId == product.ProductId
-                 && x.ProductSellId == product.ProductSellId
-                 && x.StartDate <= DateTime.Now
+            var discounts = await _discountContext.ProductDiscounts
+                .Where(x =>
+                  x.StartDate <= DateTime.Now
                  && x.EndDate.Date >= DateTime.Now.Date)
                 .OrderByDescending(x => x.Percent)
-                .FirstOrDefaultAsync();
-
-            if (discount != null)
+                .ToListAsync();
+            foreach (var item in product.RelatedProducts)
             {
-                product.priceAfterOff = product.Price * ((decimal)discount.Percent / 100);
-                product.discountPercent = discount.Percent;
+
+                var relatedProductDiscount = discounts.FirstOrDefault(x => x.ProductId == item.ProductId);
+                if (relatedProductDiscount != null)
+                {
+                    if (relatedProductDiscount.ProductSellId > 0)
+                    {
+                        var productSell = item.productSells.Single(x => x.Id == relatedProductDiscount.ProductSellId);
+                        item.Price = productSell.Price;
+                        item.PriceAfterOff = item.Price * ((decimal)item.Price / 100);
+                        item.discountPercent = relatedProductDiscount.Percent;
+                    }
+                    else
+                    {
+                        var productSell = item.productSells.OrderBy(x => x.Price).First();
+                        item.Price = productSell.Price;
+                        item.PriceAfterOff = item.Price * ((decimal)item.Price / 100);
+                        item.discountPercent = relatedProductDiscount.Percent;
+                    }
+                }
+                else
+                {
+                    var productSell = item.productSells.OrderBy(x => x.Price).FirstOrDefault();
+                    if (productSell != null)
+                    {
+                        item.Price = productSell.Price;
+                        item.PriceAfterOff = 0;
+                    }
+
+
+                }
+            }
+
+
+
+            var productDiscount = discounts.FirstOrDefault(x => x.ProductSellId == product.ProductSellId && x.ProductId == product.ProductId);
+            if (productDiscount != null)
+            {
+
+                product.priceAfterOff = product.Price * ((decimal)productDiscount.Percent / 100);
+                product.discountPercent = productDiscount.Percent;
             }
             var seoTitle = $"[{product.ProductName}] | [بهترین قیمت] | [{product.SelleTitle}] + [ناوینو شاپ]";
             var seo = await _seoRepository.GetSeoForUi(product.ProductId, WhereSeo.Product, seoTitle);
@@ -179,28 +226,28 @@ namespace Query.Service.Ui.Products
             IQueryable<Product> products = _shopContext.Products
                 .Where(x => x.ProductSells.Any(x => x.Amount > 0) && x.Active)
                 .Include(x => x.ProductSells);
-
+            var seller = new SellerInfoQueryModel();
             if (!string.IsNullOrEmpty(sellerSlug))
             {
-                var seller = await _shopContext.Sellers
-                   .Where(x => x.Slug == sellerSlug)
-                     .Select(s => new SellerInfoQueryModel
-                     {
-                         Id = s.Id,
-                         Title = s.Title,
-                         AvatarImageName = s.ImageName,
-                         CoverImageName = s.CoverImage,
-                         ImageAlt = s.ImageAlt ?? s.Title,
-                         Slug = s.Slug,
-                         StateId = s.StateId,
-                         CityId = s.CityId,
-                         Address = s.Address,
-                         InShop = EF.Functions.DateDiffDay(s.CreateDate, DateTime.Now),
-                         ProductCount = s.ProductSells.Count(p => p.Active),
-                         SellCount = s.ProductSells.Sum(p => p.OrderItems.Sum(oi => oi.Count))
-                     })
-                       .AsNoTracking()
-                       .FirstOrDefaultAsync();
+                seller = await _shopContext.Sellers
+                  .Where(x => x.Slug == sellerSlug)
+                    .Select(s => new SellerInfoQueryModel
+                    {
+                        Id = s.Id,
+                        Title = s.Title,
+                        AvatarImageName = s.ImageName,
+                        CoverImageName = s.CoverImage,
+                        ImageAlt = s.ImageAlt ?? s.Title,
+                        Slug = s.Slug,
+                        StateId = s.StateId,
+                        CityId = s.CityId,
+                        Address = s.Address,
+                        InShop = EF.Functions.DateDiffDay(s.CreateDate, DateTime.Now),
+                        ProductCount = s.ProductSells.Count(p => p.Active),
+                        SellCount = s.ProductSells.Sum(p => p.OrderItems.Sum(oi => oi.Count))
+                    })
+                      .AsNoTracking()
+                      .FirstOrDefaultAsync();
 
                 if (seller == null)
                     return null;
@@ -300,62 +347,35 @@ namespace Query.Service.Ui.Products
                 .OrderByDescending(x => x.Percent)
                 .ToListAsync();
 
+            var productSell = new productSellQuery();
 
-            if (Discounts.Any())
+            foreach (var product in model.Products)
             {
+                var discount = Discounts.FirstOrDefault(x => x.ProductId == product.ProductId);
+                var hasDiscount = discount != null;
 
-                foreach (var product in model.Products)
+                productSell = hasDiscount && discount.ProductSellId > 0
+                    ? (!string.IsNullOrEmpty(seller.Slug)
+                        ? product.productSells.FirstOrDefault(x => x.SellerSlug == seller.Slug)
+                        : product.productSells.FirstOrDefault(x => x.Id == discount.ProductSellId))
+                    : (!string.IsNullOrEmpty(seller.Slug)
+                        ? product.productSells.FirstOrDefault(x => x.SellerSlug == seller.Slug)
+                        : product.productSells.OrderBy(x => x.Price).FirstOrDefault());
+
+                if (productSell != null)
                 {
-                    var discount = Discounts.FirstOrDefault(x => x.ProductId == product.ProductId);
-                    if (discount != null)
+                    product.Price = productSell.Price;
+                    product.SellerTitle = productSell.SellerTitle;
+                    product.SellerSlug = productSell.SellerSlug;
+
+                    if (hasDiscount)
                     {
-                        if (discount.ProductSellId > 0)
-                        {
-                            var productSell = product.productSells.SingleOrDefault(x => x.ProductId == product.ProductId
-                            && x.Id == discount.ProductSellId);
-                            if (productSell != null)
-                            {
-                                product.Price = productSell.Price;
-                                product.SellerTitle = productSell.SellerTitle;
-                                product.SellerSlug = productSell.SellerSlug;
-                                product.PriceAfterOff = productSell.Price * ((decimal)discount.Percent / 100);
-                                product.discountPercent = discount.Percent;
-                            }
-
-
-                        }
-                        else if (discount.ProductSellId == 0)
-                        {
-                            var productSell = product.productSells.OrderBy(x => x.Price).FirstOrDefault();
-                            if (productSell != null)
-                            {
-                                product.Price = productSell.Price;
-                                product.SellerTitle = productSell.SellerTitle;
-                                product.SellerSlug = productSell.SellerSlug;
-                                
-                                product.PriceAfterOff = productSell.Price * ((decimal)discount.Percent/100);
-                                product.discountPercent = discount.Percent;
-                            }
-
-                        }
+                        product.PriceAfterOff = productSell.Price * ((decimal)discount.Percent / 100);
+                        product.discountPercent = discount.Percent;
                     }
-                    else
-                    {
-                        var productSell = product.productSells.OrderBy(x => x.Price).FirstOrDefault();
-                        if (productSell != null)
-                        {
-                            product.Price = productSell.Price;
-                            product.SellerTitle = productSell.SellerTitle;
-                            product.SellerSlug = productSell.SellerSlug;
-                        }
-
-                    }
-
                 }
             }
-
             model.Seo = await GetSeoAsync(SeoOwnerId, SeoTitle);
-
             return model;
         }
 
@@ -366,17 +386,17 @@ namespace Query.Service.Ui.Products
         {
 
             var productId = await _shopContext.Products
-                .Where(x => x.Slug == productSlug
-                && x.Active
-                && x.ProductSells.Any())
-                .Select(x => x.Id)
-                .FirstOrDefaultAsync();
+           .Where(x => x.Slug == productSlug
+           && x.Active
+           && x.ProductSells.Any())
+           .Select(x => x.Id)
+           .FirstOrDefaultAsync();
 
             if (productId == 0)
                 return new List<ProductUiQueryModel>();
 
-            return await _shopContext.productSells
-                .Where(x => x.Product.Slug == productSlug && x.SellerId != SellerId)
+            var OtherSellers = await _shopContext.productSells
+                .Where(x => x.ProductId == productId && x.SellerId != SellerId)
                 .OrderBy(x => x.Price)
                 .Select(x => new ProductUiQueryModel
                 {
@@ -393,6 +413,7 @@ namespace Query.Service.Ui.Products
                         .Select(pcr => pcr.ProductCategory.Slug)
                         .FirstOrDefault() ?? "",
                     Price = x.Price,
+                    PriceAfterOff = 0,
                     SellerSlug = x.Seller.Slug,
                     SellerTitle = x.Seller.Title,
                     Slug = x.Product.Slug,
@@ -400,6 +421,25 @@ namespace Query.Service.Ui.Products
                 .Take(8)
                 .AsNoTracking()
                 .ToListAsync();
+
+            var discounts = await _discountContext.ProductDiscounts
+                .Where(x => x.ProductId == productId
+                 && x.StartDate <= DateTime.Now
+                 && x.EndDate.Date >= DateTime.Now.Date)
+                .OrderByDescending(x => x.Percent)
+                .ToListAsync();
+            foreach (var item in OtherSellers)
+            {
+                var sellerDiscount = discounts.FirstOrDefault(x => x.ProductSellId == item.Id);
+                if (sellerDiscount != null)
+                {
+                    item.PriceAfterOff = item.Price * ((decimal)sellerDiscount.Percent / 100);
+                    item.discountPercent = sellerDiscount.Percent;
+                }
+
+            }
+            return OtherSellers;
+
         }
 
         #region PrivateMthods
