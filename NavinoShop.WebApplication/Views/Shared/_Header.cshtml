@@ -24,10 +24,25 @@
                     <div class="row">
 
                         <div class="col-12 col-md-5 col-lg-6">
-                            <a href="cart.html">
-                                <div class="btn btn-warning w-100"><i class="fa fa-shopping-cart"></i>&nbsp;<span class="d-md-none d-lg-inline-block">سبد خرید</span> (2)</div>
-                            </a>
-                            <a></a>
+                            <div class="cart-dropdown-container">
+                                <div class="btn btn-warning w-100 cart-toggle-btn">
+                                    <i class="fa fa-shopping-cart"></i>&nbsp;
+                                    <span class="d-md-none d-lg-inline-block">سبد خرید</span>
+                                    <span class="cart-badge" id="cart-count">0</span>
+                                </div>
+                                <div class="cart-dropdown-menu" id="cart-dropdown">
+                                    <div class="cart-dropdown-header">
+                                        <h5>سبد خرید</h5>
+                                        <button class="close-dropdown" id="close-dropdown">&times;</button>
+                                    </div>
+                                    <div class="cart-dropdown-items" id="cart-items-dropdown">
+                                        <!-- آیتم‌های سبد خرید اینجا نمایش داده می‌شوند -->
+                                    </div>
+                                    <div class="cart-dropdown-footer" id="cart-footer">
+                                        <!-- مجموع قیمت و دکمه‌ها اینجا نمایش داده می‌شوند -->
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-12 col-md-5 col-lg-6">
                             <span>

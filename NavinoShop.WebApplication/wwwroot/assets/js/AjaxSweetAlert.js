@@ -150,7 +150,7 @@ function AjaxSweetInputWithRedirect(title1, confirmButtonText1, url1, RedirectUr
         }
     });
 }
-function AjaxSweet(title1, text1, icon1, confirmButtonText1, cancelButtonText1, url1, deletedId) {
+function AjaxSweet(title1, text1, icon1, confirmButtonText1, cancelButtonText1, url1, deletedId, successCallback, errorCallback) {
     close_Modal_Ajax();
     Swal.fire({
         title: title1,
@@ -163,38 +163,50 @@ function AjaxSweet(title1, text1, icon1, confirmButtonText1, cancelButtonText1, 
         cancelButtonText: cancelButtonText1
     }).then((result) => {
         if (result.isConfirmed) {
-          /*  Loding();*/
-            console.log("Start Load");
             $.ajax({
-                type: "GET",
-                url: url1
-            })
-                .done(function (res) {
-                  /*  EndLoading();*/
+                type: "POST",
+                url: url1,
+                data: { productId: deletedId },
+                success: function (res) {
+                    if (res.success) {
+                        if (typeof AlerSweetWithTimer === 'function') {
+                            AlerSweetWithTimer("عملیات موفق", "success", "Center");
+                        }
 
-                    if (res) {
-                        AlerSweetWithTimer("عملیات موفق", "success", "Center");
+                        if (typeof successCallback === 'function') {
+                            successCallback(res);
+                        }
 
-
-                        setTimeout(() => {
-                            $(`#${deletedId}`).fadeOut('slow');
-                        }, 1000);
+                        if (deletedId) {
+                            setTimeout(() => {
+                                $(`#${deletedId}`).fadeOut('slow');
+                            }, 1000);
+                        }
                     } else {
-                        AlerSweetWithTimer("عملیات ناموفق", "error", "Center");
+                        if (typeof AlerSweetWithTimer === 'function') {
+                            AlerSweetWithTimer(res.message || "عملیات ناموفق", "error", "Center");
+                        }
+
+                        if (typeof errorCallback === 'function') {
+                            errorCallback(res);
+                        }
                     }
-                })
-                .fail(function () {
+                },
+                error: function (xhr, status, error) {
+                    if (typeof AlerSweetWithTimer === 'function') {
+                        AlerSweetWithTimer("خطا در برقراری ارتباط با سرور", "error", "Center");
+                    }
 
-                    AlertSweetTimer("خطا در برقراری ارتباط با سرور", "error", "Center");
-                /*    EndLoading();*/
-                });
-
-
+                    if (typeof errorCallback === 'function') {
+                        errorCallback(null);
+                    }
+                }
+            });
         }
     });
 }
 function AjaxSweetWithRedirect(title1, text1, icon1, confirmButtonText1, cancelButtonText1, url1, RedirectUrl) {
-    debugger;
+   
     Swal.fire({
         title: title1,
         text: text1,

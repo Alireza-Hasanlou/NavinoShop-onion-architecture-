@@ -939,7 +939,7 @@ function CreateStore() {
 }
 
 function loadProductSells() {
-    debugger;
+     
     var sellerId = $('#SellerId').val();
     $('#loadingSpinner').show();
     $('#productsell').prop('disabled', true);
@@ -977,7 +977,7 @@ function loadProductSells() {
 }
 
 function CreateStoreProduct() {
-    debugger;
+     
     var productId = $('#productsell').val();
     var storeType = $('#StoreType').val();
     var count = $('#count').val();
@@ -1831,7 +1831,7 @@ function displayComments(pagingData) {
                 
                 <div id="${repliesContainerId}" class="replies-container">
         `;
-        debugger;
+         
         if (comment.replys && comment.replys.length > 0) {
             comment.replys.forEach(function (reply) {
                 var replyUserImage = reply.imageName;
@@ -2110,7 +2110,7 @@ function loadOtherSellers(sellerId, productSlug) {
 
 
 function addDiscount(btn) {
-    debugger;
+     
     // دریافت مقادیر
     var productId = $('#ProductId').val();
     var productSellId = $('#ProductSellId').val();

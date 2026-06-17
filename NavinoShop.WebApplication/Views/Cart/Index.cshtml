@@ -1,0 +1,532 @@
+﻿@using NavinoShop.WebApplication.Utility.ViewModels
+@model CartViewModel
+@{
+    Layout = "_Layout";
+    ViewData["title"] = "سبد خرید";
+}
+
+<section class="inner-page" id="cart-page">
+    <div class="container-fluid" id="page-hero">
+        <div class="row">
+            <div class="col-12">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 px-0">
+                            <h1>سبد خرید</h1>
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li><a href="/">صفحه نخست</a> / </li>
+                                    <li class=" active"><a href="/Cart"></a>سبد خرید </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="content">
+                    <div class="row">
+                        <div class="col-12 col-lg-9">
+                            <div id="cart-products">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-12 py-3">
+                                            <div class="pb-3" id="return-to-shop">
+                                                می‌خواهید محصولات دیگری اضافه کنید؟
+                                                <a href="/products">بازگشت به فروشگاه</a>
+                                            </div>
+
+                                            @if (Model.Items.Any())
+                                            {
+                                                <div class="d-none d-md-block">
+                                                    <div class="row my-2" id="heading">
+                                                        <div class="col-4">
+                                                            <div>کالا</div>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <div>قیمت واحد</div>
+                                                        </div>
+                                                        <div class="col-2 pl-4">
+                                                            <div>تعداد</div>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <div>تخفیف</div>
+                                                        </div>
+                                                        <div class="col-2 pr-0">
+                                                            <div class="pr-3">قیمت نهایی</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                @foreach (var item in Model.Items)
+                                                {
+                                                    var hasDiscount = item.PriceAfterOff.HasValue && item.PriceAfterOff > 0 && item.PriceAfterOff < item.Price;
+                                                    var finalPrice = hasDiscount ? item.PriceAfterOff.Value : item.Price;
+                                                    var isOutOfStock = item.Amount == 0;
+                                                    var showStockWarning = item.Amount > 0 && item.Amount <= 5;
+                                                    var totalPrice = finalPrice * item.Quantity;
+
+                                                    <div class="row product cart-item" data-id="@item.Id">
+                                                        <div class="col-12 col-md-4">
+                                                            <div class="row">
+                                                                <div class="col-2 col-md-4 pl-0">
+                                                                    <img src="@( item.ImageName)" alt="@item.Title">
+                                                                </div>
+                                                                <div class="col-10 col-md-8">
+                                                                    <a href="/product/@item.Id" target="_blank">
+                                                                        <div class="title pt-2">@item.Title</div>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6 col-md-2">
+                                                            <div class="d-md-none font-weight-bold">قیمت</div>
+                                                            <div class="pt-1">
+                                                                <span class="product-price">@formatPrice(item.Price)</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6 col-md-2 pl-4 pr-0 pr-md-3">
+                                                            <div class="d-md-none font-weight-bold">تعداد</div>
+                                                            <div class="input-group mb-3 order-number">
+                                                                <div class="input-group-prepend">
+                                                                    <button class="btn btn-outline-secondary btn-plus update-quantity" type="button" data-id="@item.Id" data-change="1" @(isOutOfStock || item.Quantity >= item.Amount ? "disabled" : "")>+</button>
+                                                                </div>
+                                                                <input type="text" name="order-number[]" value="@item.Quantity" class="form-control text-center order-number quantity-input" readonly data-id="@item.Id">
+                                                                <div class="input-group-prepend">
+                                                                    <button class="btn btn-outline-secondary btn-minus update-quantity" type="button" data-id="@item.Id" data-change="-1" @(item.Quantity <= 1 ? "disabled" : "")>_</button>
+                                                                </div>
+                                                            </div>
+                                                            @if (isOutOfStock)
+                                                            {
+                                                                <span class="text-danger">ناموجود</span>
+                                                            }
+                                                            else if (showStockWarning)
+                                                            {
+                                                                <span class="text-danger" style="font-size: 11px;">فقط @item.Amount عدد باقی مانده</span>
+                                                            }
+                                                        </div>
+                                                        <div class="col-6 col-md-2">
+                                                            <div class="d-md-none font-weight-bold">تخفیف</div>
+                                                            <div class="pt-1">
+                                                                @if (hasDiscount)
+                                                                {
+                                                                    var discountAmount = item.Price - item.PriceAfterOff.Value;
+                                                                    <span class="product-discount">@formatPrice(discountAmount)</span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span>-</span>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6 col-md-2 pr-0">
+                                                            <div class="d-md-none font-weight-bold">قیمت نهایی</div>
+                                                            <div class="pt-1 pr-2 bg-light">
+                                                                <span class="product-total">@formatPrice(totalPrice)</span>
+                                                            </div>
+                                                            <a href="#" class="product-remove remove-item" data-id="@item.Id">
+                                                                <div class="small pl-2">
+                                                                    <i class="fa fa-times"></i> حذف
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <hr>
+                                                }
+
+                                                <div class="row product">
+                                                    <div class="col-12">
+                                                        <a href="#" class="product-remove" id="clear-cart-btn">
+                                                            <div class="float-end small pl-2 font-weight-bold">
+                                                                <i class="fa fa-trash"></i> خالی کردن سبد
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="text-center py-5">
+                                                    <i class="fa fa-shopping-cart" style="font-size: 64px; color: #ddd;"></i>
+                                                    <h4 class="mt-3">سبد خرید شما خالی است</h4>
+                                                    <a href="/products" class="btn btn-primary mt-3">مشاهده محصولات</a>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-3 mt-2 mt-lg-0 pr-3 pr-lg-0">
+                            <div id="factor">
+                                <div class="container">
+                                    <div class="row py-2">
+                                        <div class="col-6">
+                                            <div>جمع کل فاکتور:</div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div><span id="factor-total-encode4365gbf265g43d">@formatPrice(Model.TotalAmount)</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="row py-2 bg-light">
+                                        <div class="col-6">
+                                            <div>جمع تخفیف:</div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div><span id="factor-total-discount">@formatPrice(Model.Items.Sum(x => (x.PriceAfterOff.HasValue && x.PriceAfterOff > 0 && x.PriceAfterOff < x.Price) ? (x.Price - x.PriceAfterOff.Value) * x.Quantity : 0))</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="row py-2" id="total">
+                                        <div class="col-6">
+                                            <div>مبلغ قابل پرداخت:</div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div><span id="factor-total">@formatPrice(Model.TotalAmount)</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="row py-2">
+                                        <div class="col-12">
+                                            <a href="/checkout" class="btn btn-success w-100 @(Model.Items.Any() ? "" : "disabled")">
+                                                ادامه ثبت سفارش
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 pt-5" id="suggested-products">
+                            <div class="title py-3 text-center">سایر محصولات پیشنهادی</div>
+                            <div class="owl-carousel products-carousel owl-rtl owl-loaded owl-drag">
+                                <!-- Products will be loaded via AJAX or rendered from ViewBag -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@functions {
+    public string formatPrice(decimal price)
+    {
+        return string.Format("{0:N0} تومان", price);
+    }
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            function updateCartUI() {
+                $.ajax({
+                    url: '/Cart/GetCartData',
+                    type: 'GET',
+                    success: function(response) {
+                        if (response.success) {
+                            updateCartDisplay(response);
+                            updateCartBadge(response.totalItems);
+                            updateFactor(response);
+                            updateHeaderCart(response.totalItems);
+
+                            if (response.items && response.items.length > 0) {
+                                $('#clear-cart-btn').show();
+                                $('.checkout-btn, .btn-success').removeClass('disabled');
+                            } else {
+                                $('#clear-cart-btn').hide();
+                                $('.checkout-btn, .btn-success').addClass('disabled');
+                            }
+                        }
+                    },
+                    error: function() {
+                        console.error('Error updating cart UI');
+                    }
+                });
+            }
+
+            function updateHeaderCart(totalItems) {
+                // Update cart count in header
+                var cartCount = $('#cart-count');
+                if (cartCount.length) {
+                    cartCount.text(totalItems);
+                    if (totalItems > 0) {
+                        cartCount.show();
+                    } else {
+                        cartCount.hide();
+                    }
+                }
+
+                // Update any other cart badges
+                $('.cart-badge, .cart-count-header, .cart-item-count').each(function() {
+                    if (totalItems > 0) {
+                        $(this).text(totalItems).show();
+                    } else {
+                        $(this).text('0').hide();
+                    }
+                });
+            }
+
+            function updateCartDisplay(response) {
+                var cartContainer = $('#cart-products .col-12.py-3');
+                var itemsHtml = '';
+
+                itemsHtml += `
+                    <div class="pb-3" id="return-to-shop">
+                        می‌خواهید محصولات دیگری اضافه کنید؟
+                        <a href="/products">بازگشت به فروشگاه</a>
+                    </div>
+                `;
+
+                if (response.items && response.items.length > 0) {
+                    itemsHtml += `
+                        <div class="d-none d-md-block">
+                            <div class="row my-2" id="heading">
+                                <div class="col-4"><div>کالا</div></div>
+                                <div class="col-2"><div>قیمت واحد</div></div>
+                                <div class="col-2 pl-4"><div>تعداد</div></div>
+                                <div class="col-2"><div>تخفیف</div></div>
+                                <div class="col-2 pr-0"><div class="pr-3">قیمت نهایی</div></div>
+                            </div>
+                        </div>
+                    `;
+
+                    $.each(response.items, function(index, item) {
+                        var hasDiscount = item.hasDiscount;
+                        var finalPrice = hasDiscount ? item.priceAfterOff : item.price;
+                        var totalPrice = finalPrice * item.quantity;
+                        var isOutOfStock = !item.hasStock || item.amount == 0;
+                        var showStockWarning = item.amount > 0 && item.amount <= 5 && item.hasStock;
+                        var discountAmount = hasDiscount ? item.price - item.priceAfterOff : 0;
+
+                        itemsHtml += `
+                            <div class="row product cart-item" data-id="${item.id}">
+                                <div class="col-12 col-md-4">
+                                    <div class="row">
+                                        <div class="col-2 col-md-4 pl-0">
+                                            <img src="${item.imageName}" alt="${item.title}">
+                                        </div>
+                                        <div class="col-10 col-md-8">
+                                            <a href="/product/${item.id}" target="_blank">
+                                                <div class="title pt-2">${item.title}</div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-2">
+                                    <div class="d-md-none font-weight-bold">قیمت</div>
+                                    <div class="pt-1">
+                                        <span class="product-price">${formatPrice(item.price)}</span>
+                                        ${hasDiscount ? `<br><small class="text-success">${formatPrice(item.priceAfterOff)}</small>` : ''}
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-2 pl-4 pr-0 pr-md-3">
+                                    <div class="d-md-none font-weight-bold">تعداد</div>
+                                    <div class="input-group mb-3 order-number">
+                                        <div class="input-group-prepend">
+                                            <button class="btn btn-outline-secondary btn-plus update-quantity" type="button" data-id="${item.id}" data-change="1" ${isOutOfStock || item.quantity >= item.amount ? 'disabled' : ''}>+</button>
+                                        </div>
+                                        <input type="text" name="order-number[]" value="${item.quantity}" class="form-control text-center order-number quantity-input" readonly data-id="${item.id}" data-current="${item.quantity}">
+                                        <div class="input-group-prepend">
+                                            <button class="btn btn-outline-secondary btn-minus update-quantity" type="button" data-id="${item.id}" data-change="-1" ${item.quantity <= 1 ? 'disabled' : ''}>_</button>
+                                        </div>
+                                    </div>
+                                    ${isOutOfStock ? '<span class="text-danger">ناموجود</span>' : ''}
+                                    ${showStockWarning ? `<span class="text-danger" style="font-size: 11px;">فقط ${item.amount} عدد باقی مانده</span>` : ''}
+                                </div>
+                                <div class="col-6 col-md-2">
+                                    <div class="d-md-none font-weight-bold">تخفیف</div>
+                                    <div class="pt-1">
+                                        ${hasDiscount ? `<span class="product-discount text-success">${formatPrice(discountAmount)}</span>` : '<span>-</span>'}
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-2 pr-0">
+                                    <div class="d-md-none font-weight-bold">قیمت نهایی</div>
+                                    <div class="pt-1 pr-2 bg-light">
+                                        <span class="product-total">${formatPrice(totalPrice)}</span>
+                                    </div>
+                                    <a href="#" class="product-remove remove-item" data-id="${item.id}">
+                                        <div class="small pl-2 text-danger">
+                                            <i class="fa fa-times"></i> حذف
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <hr>
+                        `;
+                    });
+
+                    itemsHtml += `
+                        <div class="row product">
+                            <div class="col-12">
+                                <a href="#" class="product-remove" id="clear-cart-btn">
+                                    <div class="float-end small pl-2 font-weight-bold text-danger">
+                                        <i class="fa fa-trash"></i> خالی کردن سبد
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    itemsHtml += `
+                        <div class="text-center py-5">
+                            <i class="fa fa-shopping-cart" style="font-size: 64px; color: #ddd;"></i>
+                            <h4 class="mt-3">سبد خرید شما خالی است</h4>
+                            <a href="/products" class="btn btn-primary mt-3">مشاهده محصولات</a>
+                        </div>
+                    `;
+                }
+
+                cartContainer.html(itemsHtml);
+                attachEvents();
+            }
+
+            function updateCartBadge(totalItems) {
+                var badge = $('.cart-badge, #cart-count');
+                if (badge.length) {
+                    if (totalItems > 0) {
+                        badge.text(totalItems).show();
+                    } else {
+                        badge.text('0').hide();
+                    }
+                }
+                $('.cart-count-header').text(totalItems);
+            }
+
+            function updateFactor(response) {
+                $('#factor-total-encode4365gbf265g43d').text(formatPrice(response.totalAmount));
+                var totalDiscount = 0;
+                if (response.items) {
+                    $.each(response.items, function(index, item) {
+                        if (item.hasDiscount) {
+                            totalDiscount += (item.price - item.priceAfterOff) * item.quantity;
+                        }
+                    });
+                }
+                $('#factor-total-discount').text(formatPrice(totalDiscount));
+                $('#factor-total').text(formatPrice(response.totalAmount));
+            }
+
+            function formatPrice(price) {
+                if (!price) return '0 تومان';
+                return Math.round(price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' تومان';
+            }
+
+            function attachEvents() {
+                $('.update-quantity').off('click').on('click', function(e) {
+                    e.preventDefault();
+                    var productId = $(this).data('id');
+                    var change = parseInt($(this).data('change'));
+
+                    $.ajax({
+                        url: '/Cart/UpdateQuantity',
+                        type: 'POST',
+                        data: { productId: productId, change: change },
+                        success: function(response) {
+                            if (response.success) {
+                                // Update cart data in localStorage and cookie
+                                if (response.cart) {
+                                    var jsonData = JSON.stringify(response.cart);
+                                    Cookies.set('NavinoshoppingCart', jsonData, { expires: 7, path: '/' });
+                                    localStorage.setItem('NavinoshoppingCart', jsonData);
+                                }
+                                updateCartUI();
+                            } else {
+                                if (typeof AlerSweetWithTimer === 'function') {
+                                    AlerSweetWithTimer(response.message || 'خطا در به‌روزرسانی تعداد محصول', "error", "Center");
+                                } else {
+                                    alert(response.message || 'خطا در به‌روزرسانی تعداد محصول');
+                                }
+                            }
+                        },
+                        error: function() {
+                            alert('خطا در ارتباط با سرور');
+                        }
+                    });
+                });
+        $('.remove-item').off('click').on('click', function(e) {
+            e.preventDefault();
+            var productId = $(this).data('id');
+            var $item = $(this).closest('.cart-item');
+            var itemId = 'cart-item-' + productId;
+
+            // Add id to the cart item row
+            $item.attr('id', itemId);
+
+            AjaxSweet(
+                'حذف محصول از سبد خرید',
+                'آیا از حذف این محصول از سبد خرید مطمئن هستید؟',
+                'warning',
+                'بله، حذف کن',
+                'انصراف',
+                '/Cart/RemoveFromCart',
+                productId,
+                function(response) {
+                    if (response && response.cart) {
+                        var jsonData = JSON.stringify(response.cart);
+                        Cookies.set('NavinoshoppingCart', jsonData, { expires: 7, path: '/' });
+                        localStorage.setItem('NavinoshoppingCart', jsonData);
+                    }
+                    setTimeout(function() {
+                        updateCartUI();
+                    }, 500);
+                },
+                function() {
+                    if (typeof AlerSweetWithTimer === 'function') {
+                        AlerSweetWithTimer('خطا در حذف محصول', "error", "Center");
+                    }
+                }
+            );
+        });
+
+        $('#clear-cart-btn').off('click').on('click', function(e) {
+            e.preventDefault();
+
+            AjaxSweet(
+                'خالی کردن سبد خرید',
+                'آیا از خالی کردن کامل سبد خرید مطمئن هستید؟',
+                'warning',
+                'بله، خالی کن',
+                'انصراف',
+                '/Cart/ClearCart',
+                null,
+                function(response) {
+                    Cookies.remove('NavinoshoppingCart', { path: '/' });
+                    localStorage.removeItem('NavinoshoppingCart');
+                    setTimeout(function() {
+                        updateCartUI();
+                    }, 500);
+                    if (typeof AlerSweetWithTimer === 'function') {
+                        AlerSweetWithTimer('سبد خرید خالی شد!', "success", "Center");
+                    }
+                },
+                function() {
+                    if (typeof AlerSweetWithTimer === 'function') {
+                        AlerSweetWithTimer('خطا در خالی کردن سبد خرید', "error", "Center");
+                    }
+                }
+            );
+        });
+            }
+
+            // Initial load
+            updateCartUI();
+
+            // Listen for storage changes (for multi-tab support)
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'NavinoshoppingCart') {
+                    updateCartUI();
+                }
+            });
+
+            // Listen for cart updated events from other tabs
+            $(document).on('cartUpdated', function() {
+                updateCartUI();
+            });
+        });
+    </script>
+}

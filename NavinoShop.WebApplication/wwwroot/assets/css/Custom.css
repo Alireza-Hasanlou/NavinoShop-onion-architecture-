@@ -4789,3 +4789,585 @@ input:checked + .custom-slider {
         background-color: #138496;
         border-color: #117a8b;
     }
+
+    /*‌DropDownBasket*/
+/* استایل دراپ‌داون سبد خرید */
+.cart-dropdown-container {
+    position: relative;
+}
+
+.cart-toggle-btn {
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.cart-badge {
+    background-color: #dc3545;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    min-width: 20px;
+    text-align: center;
+    position: absolute;
+    top: -8px;
+    right: 10px;
+}
+
+.cart-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    z-index: 1000;
+    display: none;
+    min-width: 320px;
+    max-width: 400px;
+    margin-top: 10px;
+    animation: slideDown 0.3s ease-out;
+}
+
+    .cart-dropdown-menu.show {
+        display: block;
+    }
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.cart-dropdown-header {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .cart-dropdown-header h5 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+.close-dropdown {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.3s;
+}
+
+    .close-dropdown:hover {
+        color: #333;
+    }
+
+.cart-dropdown-items {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+/* استایل آیتم سبد خرید در دراپ‌داون */
+.dropdown-cart-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-bottom: 1px solid #f0f0f0;
+    animation: fadeIn 0.3s ease-out;
+    gap: 10px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.dropdown-cart-item:hover {
+    background-color: #f8f9fa;
+}
+
+.dropdown-cart-item-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+    .dropdown-cart-item-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.dropdown-cart-item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.dropdown-cart-item-title {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dropdown-cart-item-seller {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.dropdown-cart-item-price {
+    font-size: 12px;
+    color: #28a745;
+    font-weight: 500;
+}
+
+.dropdown-cart-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.dropdown-quantity-btn {
+    width: 24px;
+    height: 24px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+    .dropdown-quantity-btn:hover {
+        background-color: #007bff;
+        color: white;
+        border-color: #007bff;
+    }
+
+.dropdown-item-quantity {
+    font-size: 13px;
+    min-width: 20px;
+    text-align: center;
+}
+
+.dropdown-remove-btn {
+    background: none;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px;
+    transition: color 0.2s;
+}
+
+    .dropdown-remove-btn:hover {
+        color: #c82333;
+    }
+
+.empty-cart-dropdown {
+    text-align: center;
+    padding: 40px 20px;
+    color: #999;
+}
+
+.cart-dropdown-footer {
+    padding: 15px;
+    border-top: 1px solid #eee;
+}
+
+.dropdown-total {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.dropdown-actions {
+    display: flex;
+    gap: 10px;
+}
+
+    .dropdown-actions .btn {
+        flex: 1;
+        padding: 8px;
+        font-size: 14px;
+        text-align: center;
+        border-radius: 6px;
+        text-decoration: none;
+    }
+
+.btn-view-cart {
+    background-color: #6c757d;
+    color: white;
+}
+
+    .btn-view-cart:hover {
+        background-color: #5a6268;
+        color: white;
+    }
+
+.btn-clear-cart {
+    background-color: #dc3545;
+    color: white;
+}
+
+    .btn-clear-cart:hover {
+        background-color: #c82333;
+        color: white;
+    }
+
+/* ریسپانسیو برای موبایل */
+@media (max-width: 768px) {
+    .cart-dropdown-menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        max-width: none;
+        margin: 0;
+        border-radius: 0;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            transform: translateY(100%);
+        }
+
+        to {
+            transform: translateY(0);
+        }
+    }
+
+    .cart-dropdown-items {
+        max-height: calc(100vh - 180px);
+    }
+}
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.cart-dropdown-container {
+    position: relative;
+}
+
+.cart-toggle-btn {
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.cart-badge {
+    background-color: #dc3545;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    min-width: 20px;
+    text-align: center;
+    position: absolute;
+    top: -8px;
+    right: 10px;
+}
+
+.cart-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    z-index: 1000;
+    display: none;
+    min-width: 320px;
+    max-width: 400px;
+    margin-top: 10px;
+    animation: slideDown 0.3s ease-out;
+}
+
+    .cart-dropdown-menu.show {
+        display: block;
+    }
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.cart-dropdown-header {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .cart-dropdown-header h5 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+.close-dropdown {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.3s;
+}
+
+    .close-dropdown:hover {
+        color: #333;
+    }
+
+.cart-dropdown-items {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.dropdown-cart-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-bottom: 1px solid #f0f0f0;
+    animation: fadeIn 0.3s ease-out;
+    gap: 10px;
+}
+
+    .dropdown-cart-item:hover {
+        background-color: #f8f9fa;
+    }
+
+.dropdown-cart-item-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+    .dropdown-cart-item-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.dropdown-cart-item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.dropdown-cart-item-title {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dropdown-cart-item-seller {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.dropdown-cart-item-price {
+    font-size: 12px;
+    color: #28a745;
+    font-weight: 500;
+}
+
+.dropdown-cart-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.dropdown-quantity-btn {
+    width: 24px;
+    height: 24px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+    .dropdown-quantity-btn:hover {
+        background-color: #007bff;
+        color: white;
+        border-color: #007bff;
+    }
+
+.dropdown-item-quantity {
+    font-size: 13px;
+    min-width: 20px;
+    text-align: center;
+}
+
+.dropdown-remove-btn {
+    background: none;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px;
+    transition: color 0.2s;
+}
+
+    .dropdown-remove-btn:hover {
+        color: #c82333;
+    }
+
+.empty-cart-dropdown {
+    text-align: center;
+    padding: 40px 20px;
+    color: #999;
+}
+
+.cart-dropdown-footer {
+    padding: 15px;
+    border-top: 1px solid #eee;
+}
+
+.dropdown-total {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.dropdown-actions {
+    display: flex;
+    gap: 10px;
+}
+
+    .dropdown-actions .btn {
+        flex: 1;
+        padding: 8px;
+        font-size: 14px;
+        text-align: center;
+        border-radius: 6px;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+.btn-view-cart {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+    .btn-view-cart:hover {
+        background-color: #5a6268;
+        color: white;
+    }
+
+.btn-clear-cart {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+    .btn-clear-cart:hover {
+        background-color: #c82333;
+        color: white;
+    }
+
+@media (max-width: 768px) {
+    .cart-dropdown-menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        max-width: none;
+        margin: 0;
+        border-radius: 0;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            transform: translateY(100%);
+        }
+
+        to {
+            transform: translateY(0);
+        }
+    }
+
+    .cart-dropdown-items {
+        max-height: calc(100vh - 180px);
+    }
+}

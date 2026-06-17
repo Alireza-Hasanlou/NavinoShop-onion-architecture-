@@ -328,8 +328,9 @@
                                             <div class="row g-2">
                                                 <div class="col-12 col-md-7">
                                                     <button class="btn btn-success w-100 btn-add-to-basket"
-                                                            data-product-id="@Model.ProductId"
-                                                            data-seller-id="@Model.SellerId">
+                                                            onclick="addToCart('@Model.ProductSellId', '@Model.ProductName.Replace("'", "\\'")',
+                                                            '@FileDirectories.ProductImageDirectory@Model.ProductImageName', '@Model.Price',
+                                                            '@Model.priceAfterOff', '@Model.SelleTitle', '@Model.Amount')">
                                                         <i class="fa fa-shopping-cart"></i> افزودن به سبد خرید
                                                     </button>
                                                 </div>

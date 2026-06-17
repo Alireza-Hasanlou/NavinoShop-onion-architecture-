@@ -4,7 +4,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using NavinoShop.WebApplication.Utility.ViewModels;
+using Newtonsoft.Json;
 using Query.Contract.UI.Comments;
 using Query.Contract.UI.Products;
 using Shared.Application.Auth;
@@ -25,14 +28,13 @@ namespace NavinoShop.WebApplication.Controllers
             _productUiQueryService = productUiQueryService;
         }
 
- 
         [HttpGet]
         [Route("/Products")]
         [Route("/Products/{categorySlug}")]
-        [Route("{Seller:seller}")]                                   
-        [Route("{Seller:seller}/Products/{categorySlug}")]          
+        [Route("{seller}/Products")]
+        [Route("{seller}/Products/{categorySlug}")]
         public async Task<IActionResult> Products(int minPrice = 0, int maxprice = 0, ProductSort sort = ProductSort.جدیدترین,
-                                                   string categorySlug = "", string Seller = "", int pageId = 1, string search = "", bool IsAjax = false)
+                                                    string categorySlug = "", string Seller = "", int pageId = 1, string search = "", bool IsAjax = false)
         {
             try
             {
@@ -96,7 +98,7 @@ namespace NavinoShop.WebApplication.Controllers
             if (string.IsNullOrEmpty(productSlug))
                 return Json(new { success = false, message = "productSlug is required", data = new List<object>() });
 
-            var products = await _productUiQueryService.GetProductOtherSellers(SellerId,productSlug);
+            var products = await _productUiQueryService.GetProductOtherSellers(SellerId, productSlug);
 
             if (products == null || !products.Any())
             {
@@ -105,5 +107,7 @@ namespace NavinoShop.WebApplication.Controllers
 
             return Json(new { success = true, data = products });
         }
+
+
     }
 }

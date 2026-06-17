@@ -9,12 +9,14 @@ namespace Query.Contract.UI.Products
         public int ProductId { get; set; }
         public string ProductName { get; set; }
         public string ProductSlug { get; set; }
+        public string ProductImageName { get; set; }
+        public int Amount { get; set; }
         public string Category { get; set; }
         public string CategorySlug { get; set; }
         public int SellerId { get; set; }
         public string SellerSlug { get; set; }
         public string SelleTitle { get; set; }
-        public string SellerImageName  { get; set; }
+        public string SellerImageName { get; set; }
         public int StateId { get; set; }
         public string State { get; set; }
         public int CityId { get; set; }

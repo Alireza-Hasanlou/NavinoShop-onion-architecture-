@@ -59,6 +59,8 @@ namespace Query.Service.Ui.Products
                     StateId = x.Seller.StateId,
                     CityId = x.Seller.CityId,
                     ProductSlug = x.Product.Slug,
+                    ProductImageName=x.Product.ImageName,
+                    Amount=x.Amount,
                     SellerSlug = x.Seller.Slug,
                     SellerImageName = x.Seller.ImageName,
                     Category = x.Product.Poduct_Category_Rels
@@ -126,7 +128,7 @@ namespace Query.Service.Ui.Products
                         .OrderByDescending(x => x.ProductCategory.Id)
                         .Select(pcr => pcr.ProductCategory.Title)
                         .FirstOrDefault() ?? "بدون دسته",
-                    Price = 0,
+                    Price =0,
                     productSells = p.ProductSells.Where(x => x.Amount > 0)
                     .Select(x => new productSellQuery
                     {
@@ -182,15 +184,14 @@ namespace Query.Service.Ui.Products
                 }
             }
 
-
-
-            var productDiscount = discounts.FirstOrDefault(x => x.ProductSellId == product.ProductSellId && x.ProductId == product.ProductId);
+            var productDiscount = discounts.FirstOrDefault(x => x.ProductSellId == product.ProductSellId);
             if (productDiscount != null)
             {
 
                 product.priceAfterOff = product.Price * ((decimal)productDiscount.Percent / 100);
                 product.discountPercent = productDiscount.Percent;
             }
+       
             var seoTitle = $"[{product.ProductName}] | [بهترین قیمت] | [{product.SelleTitle}] + [ناوینو شاپ]";
             var seo = await _seoRepository.GetSeoForUi(product.ProductId, WhereSeo.Product, seoTitle);
             product.Seo = new SeoUiQueryModel
@@ -474,7 +475,7 @@ namespace Query.Service.Ui.Products
             async Task GetCategory(string? categorySlug, int id, int num)
             {
 
-                ProductCategory category;
+                ProductCategory? category;
                 if (id != 0)
                 {
                     category = await _categoryRepository.GetByIdAsync(id);
