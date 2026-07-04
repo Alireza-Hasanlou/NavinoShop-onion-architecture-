@@ -288,10 +288,10 @@ function updateCartDisplay() {
         itemCount += cart[id].quantity;
     }
 
-    if (cartCountSpan.length) {
-        cartCountSpan.text(itemCount);
-        if (itemCount > 0) {
-            cartCountSpan.show();
+function updateCartDisplayFromServer(cartCount) {
+    $('#cart-count').text(cartCount);
+    if (cartCount > 0) {
+        $('#cart-count').show();
         } else {
             cartCountSpan.hide();
         }
