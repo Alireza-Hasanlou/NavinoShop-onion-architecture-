@@ -94,11 +94,16 @@
                                                             <div class="d-md-none font-weight-bold">تعداد</div>
                                                             <div class="input-group mb-3 order-number">
                                                                 <div class="input-group-prepend">
-                                                                    <button class="btn btn-outline-secondary btn-plus update-quantity" type="button" data-id="@item.Id" data-change="1" @(isOutOfStock || item.Quantity >= item.Amount ? "disabled" : "")>+</button>
+                                                                    <button class="btn btn-outline-secondary btn-plus update-quantity"
+                                                                    type="button" data-id="@item.Id" 
+                                                                    data-change="1" @(isOutOfStock || item.Quantity >= item.Amount ? "disabled" : "")>+</button>
                                                                 </div>
-                                                                <input type="text" name="order-number[]" value="@item.Quantity" class="form-control text-center order-number quantity-input" readonly data-id="@item.Id">
+                                                                <input type="text" name="order-number[]" value="@item.Quantity" 
+                                                                class="form-control text-center order-number quantity-input" readonly data-id="@item.Id">
                                                                 <div class="input-group-prepend">
-                                                                    <button class="btn btn-outline-secondary btn-minus update-quantity" type="button" data-id="@item.Id" data-change="-1" @(item.Quantity <= 1 ? "disabled" : "")>_</button>
+                                                                    <button class="btn btn-outline-secondary btn-minus update-quantity"
+                                                                    type="button" data-id="@item.Id" data-change="-1" 
+                                                                    @(item.Quantity <= 1 ? "disabled" : "")>_</button>
                                                                 </div>
                                                             </div>
                                                             @if (isOutOfStock)
@@ -110,20 +115,7 @@
                                                                 <span class="text-danger" style="font-size: 11px;">فقط @item.Amount عدد باقی مانده</span>
                                                             }
                                                         </div>
-                                                        <div class="col-6 col-md-2">
-                                                            <div class="d-md-none font-weight-bold">تخفیف</div>
-                                                            <div class="pt-1">
-                                                                @if (hasDiscount)
-                                                                {
-                                                                    var discountAmount = item.Price - item.PriceAfterOff.Value;
-                                                                    <span class="product-discount">@formatPrice(discountAmount)</span>
-                                                                }
-                                                                else
-                                                                {
-                                                                    <span>-</span>
-                                                                }
-                                                            </div>
-                                                        </div>
+                                                       
                                                         <div class="col-6 col-md-2 pr-0">
                                                             <div class="d-md-none font-weight-bold">قیمت نهایی</div>
                                                             <div class="pt-1 pr-2 bg-light">

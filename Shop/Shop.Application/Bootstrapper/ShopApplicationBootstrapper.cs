@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Shop.Application.Commands;
+using Shop.Application.Contract.Cart;
+using Shop.Application.Contract.Order.Command;
 using Shop.Application.Contract.Product.Command;
 using Shop.Application.Contract.ProductCategory.Commands;
 using Shop.Application.Contract.ProductFeature.Command;
@@ -20,6 +22,8 @@ namespace Shop.Application.Bootstrapper
             services.AddTransient<IProductGalleryCommands, ProductGalleryCommands>();
             services.AddTransient<ISellerCommands, SellerCommands>();
             services.AddTransient<IProductSellCommands, ProductSellCommands>();
+            services.AddTransient<ICartCommands,CartCommands>();
+            services.AddTransient<IOrderCommands, OrderCommands>();
     
 
         }

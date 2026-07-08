@@ -161,7 +161,7 @@ function renderGuestMenu() {
 }
 
 function login() {
-    Loding();
+ 
     $.ajax({
         url: "/Account/Login",
         type: "POST",
@@ -172,7 +172,9 @@ function login() {
         success: function (res) {
             if (res.success) {
                 AlerSweetWithTimer("ورود با موفقیت انجام شد", "success", "center");
+                syncCartFromCookie();
                 setTimeout(function () {
+                
                     location.reload();
                 }, 3000);
             } else {
@@ -185,7 +187,7 @@ function login() {
             AlerSweetWithTimer("خطا در ارتباط با سرور", "error", "center");
         }
     });
-    EndLoading();
+   
 }
 
 (function ($) {
@@ -278,7 +280,7 @@ function AddUsersEmail() {
         })
         .always(function () {
             $("#InputUsersEmail").val('');
-            EndLoading();
+            End
         });
 }
 
@@ -390,8 +392,6 @@ $(document).ready(function () {
     const $province = $("#province");
     const $city = $("#city");
     const $error = $("#errorMessage");
-
-    console.log($province);
 
     function loadProvinces() {
         $.get("/Api/Post/States")
@@ -508,7 +508,7 @@ $(document).ready(function () {
                 $('#WalleterrorMsg').text('خطا در ارتباط با سرور. لطفاً مجدداً تلاش کنید.');
             })
             .always(function () {
-                EndLoading();
+                End
             });
     });
 
@@ -1202,9 +1202,13 @@ function Products() {
                 currentSettings.categorySlug = decodeURIComponent(secondPart);
             }
         } else {
-            currentSettings.sellerSlug = decodeURIComponent(firstPart);
-            if (secondPart && secondPart !== '') {
-                currentSettings.categorySlug = decodeURIComponent(secondPart);
+            if (secondPart && secondPart.toLowerCase() === 'products') {
+                currentSettings.sellerSlug = decodeURIComponent(firstPart);
+                if (pathParts2.length > 2 && pathParts2[2] && pathParts2[2] !== '') {
+                    currentSettings.categorySlug = decodeURIComponent(pathParts2[2]);
+                }
+            } else {
+                currentSettings.sellerSlug = decodeURIComponent(firstPart);
             }
         }
     }
@@ -1249,7 +1253,7 @@ function Products() {
             baseUrl = '/' + encodeURIComponent(currentSettings.sellerSlug);
 
             if (currentSettings.categorySlug && currentSettings.categorySlug !== '') {
-                baseUrl += '/Product/' + encodeURIComponent(currentSettings.categorySlug);
+                baseUrl += '/Products/' + encodeURIComponent(currentSettings.categorySlug);
             }
 
             if (currentSettings.search && currentSettings.search !== '') {
@@ -1406,9 +1410,8 @@ function Products() {
         $.each(products, function (index, product) {
             var categoryUrl = product.categorySlug ? '/Products/' + product.categorySlug : '#';
             var sellerUrl = product.sellerSlug ? '/' + product.sellerSlug : '#';
-            var productUrl = '/' + (product.sellerSlug || '#') + '/Product/' + (product.slug || '#');
+            var productUrl = product.sellerSlug ? '/' + product.sellerSlug + '/Products/' + (product.slug || '#') : '/Products/' + (product.slug || '#');
 
-            // بررسی وجود تخفیف
             var hasDiscount = (product.priceAfterOff && product.priceAfterOff > 0 && product.priceAfterOff < product.price);
 
             html += `
@@ -1426,7 +1429,6 @@ function Products() {
                         </a>
         `;
 
-            // نمایش قیمت با تخفیف یا بدون تخفیف
             if (hasDiscount) {
                 html += `
                         <div class="discount-section">
@@ -1462,6 +1464,7 @@ function Products() {
 
         return html;
     };
+
     window.renderPagination = function (pagination) {
         if (!pagination || pagination.totalPages <= 1) return '';
 
@@ -1572,8 +1575,14 @@ function Products() {
                 if (firstPart.toLowerCase() === 'products') {
                     if (secondPart) currentSettings.categorySlug = secondPart;
                 } else {
-                    currentSettings.sellerSlug = firstPart;
-                    if (secondPart) currentSettings.categorySlug = secondPart;
+                    if (secondPart && secondPart.toLowerCase() === 'products') {
+                        currentSettings.sellerSlug = firstPart;
+                        if (pathParts.length > 2 && pathParts[2] && pathParts[2] !== '') {
+                            currentSettings.categorySlug = pathParts[2];
+                        }
+                    } else {
+                        currentSettings.sellerSlug = firstPart;
+                    }
                 }
             }
         }
@@ -1661,7 +1670,7 @@ function loadOtherSellers(productSlug) {
                 $.each(response.data, function (index, seller) {
                     html += `
                         <div class="encode4326654321vfb item">
-                            <a href="/Product/${seller.slug}">
+                            <a href="/${seller.sellerSlug}/Product/${seller.slug}">
                                 <div class="image" style="background-image: url('/Images/Product/500/${seller.imageName}')"></div>
                             </a>
                             <div class="details p-3">
@@ -1674,7 +1683,7 @@ function loadOtherSellers(productSlug) {
                                 <div class="encode4365gbf265g43d">${formatPrice(seller.price)} تومان</div>
                                 <div class="seller-name">
                                     <i class="fa fa-store"></i>
-                                    <a href="/Products?sellerId=${seller.sellerSlug}">${escapeHtml(seller.sellerTitle)}</a>
+                                    <a href="/${seller.sellerSlug}/Products">${escapeHtml(seller.sellerTitle)}</a>
                                 </div>
                                 <div class="rate">
                                     ${generateStarRating(seller.rating)}

@@ -52,5 +52,22 @@ namespace Shop.Domain.OrderItemAgg
                 return Count * PriceAfterOff;
             }
         }
+
+        public void ChangeCount(int count)
+        {
+            if (count > 0)
+                Count = count;
+        }
+
+        public void ChangePrice(int price, int priceAfterOff)
+        {
+            if (price > 0 && priceAfterOff > 0)
+            {
+                Price = price;
+                PriceAfterOff = priceAfterOff;
+            }
+
+        }
+
     }
 }

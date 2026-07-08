@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace Shop.Domain.OrderAgg
 {
-    public interface IOrderRepository:IGenericRepository<Order,int>
+    public interface IOrderRepository : IGenericRepository<Order, int>
     {
+        Task<Order> GetOpenOrderForUserAsync(int userId);
     }
 }

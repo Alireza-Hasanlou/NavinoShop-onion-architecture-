@@ -316,7 +316,7 @@
                                                         <div class="sub-title pt-2 pb-2">تعداد</div>
                                                         <div class="quantity-input">
                                                             <button type="button" class="qty-btn minus">-</button>
-                                                            <input type="number" min="1" max="10" class="form-control text-center quantity-value" value="1">
+                                                            <input type="number" min="1" id="ProductCount" class="form-control text-center quantity-value" value="1">
                                                             <button type="button" class="qty-btn plus">+</button>
                                                         </div>
                                                     </div>
@@ -328,9 +328,8 @@
                                             <div class="row g-2">
                                                 <div class="col-12 col-md-7">
                                                     <button class="btn btn-success w-100 btn-add-to-basket"
-                                                            onclick="addToCart('@Model.ProductSellId', '@Model.ProductName.Replace("'", "\\'")',
-                                                            '@FileDirectories.ProductImageDirectory@Model.ProductImageName', '@Model.Price',
-                                                            '@Model.priceAfterOff', '@Model.SelleTitle', '@Model.Amount')">
+                                                            onclick="addToCart('@Model.ProductSellId',
+                                                             '@Model.Amount')">
                                                         <i class="fa fa-shopping-cart"></i> افزودن به سبد خرید
                                                     </button>
                                                 </div>
@@ -345,7 +344,7 @@
                                     <div class="product-seller-card">
                                         <div class="product-seller-card-header">
                                             <div class="product-seller-avatar">
-                                                <img src="@(string.IsNullOrEmpty(Model.SellerImageName) ? "/Images/default-avatar.png" : FileDirectories.SellerImageDirectory + Model.SellerImageName)"
+                                                <img src="@FileDirectories.SellerImageDirectory@Model.SellerImageName"
                                                      alt="@Model.SelleTitle"
                                                      class="product-seller-avatar-img">
                                                 <div class="product-seller-verified-icon">

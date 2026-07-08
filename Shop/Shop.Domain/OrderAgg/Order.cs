@@ -16,10 +16,10 @@ namespace Shop.Domain.OrderAgg
         public int UserId { get; private set; }
         public OrderStatus OrderStatus { get; private set; }
         public OrderPayment OrderPayment { get; private set; }
-        public int OrderAddressId { get; private set; }
+        public int? OrderAddressId { get; private set; }
         public int DiscountId { get; private set; }
         public int DiscountPercent { get; private set; }
-        public string DiscountTitle { get; private set; }
+        public string? DiscountTitle { get; private set; }
         public ICollection<OrderSeller> OrderSellers { get; private set; }
         public OrderAddress OrderAddress { get; private set; }
         public int Price
@@ -54,7 +54,7 @@ namespace Shop.Domain.OrderAgg
         {
             get
             {
-                var discountPrice = DiscountPercent * PaymentPriceSeller / 100;
+                var discountPrice = DiscountPercent * (PaymentPriceSeller / 100);
 
 
                 return PaymentPriceSeller - discountPrice + PostPrice;
@@ -63,14 +63,15 @@ namespace Shop.Domain.OrderAgg
         public Order()
         {
             OrderSellers = new List<OrderSeller>();
-            OrderAddress = new();
+            OrderAddress = new OrderAddress();
+          
         }
         public Order(int userId)
         {
             UserId = userId;
             OrderStatus = OrderStatus.پرداخت_نشده;
             OrderPayment = OrderPayment.پرداخت_از_درگاه;
-            OrderAddressId = 0;
+            OrderAddressId = null;
             DiscountId = 0;
             DiscountPercent = 0;
         }
@@ -105,6 +106,8 @@ namespace Shop.Domain.OrderAgg
         {
             OrderAddressId = key;
         }
+
+
     }
 }
 

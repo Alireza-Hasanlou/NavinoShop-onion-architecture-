@@ -1,4 +1,5 @@
-﻿using Shared.Domain.Enums;
+﻿using Shared.Application;
+using Shared.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,6 @@ namespace Discount.Application.Contract.OrderDiscounts.Query
     {
         Task<List<OrderDiscountsQueryModel>> GeAllAsync(int ShopId, OrderDiscountType type);
         Task<List<OrderDiscountsQueryModel>> GeAllExpiredDiscountsAsync(int ShopId, OrderDiscountType type);
-
+        Task<OperationResultOrderDiscount> GetOrderSellerDiscountAsync(int sellerId, string code);
     }
 }

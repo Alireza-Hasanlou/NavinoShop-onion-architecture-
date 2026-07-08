@@ -22,7 +22,7 @@ namespace Discount.Query.Queries
 
         public async Task<List<OrderDiscountsQueryModel>> GeAllAsync(int ShopId, OrderDiscountType type)
         {
-            
+
             return await _orderDiscountRepository.GetAllBy(x => x.ShopId == ShopId && x.OrderDiscountType == type)
                 .Select(x => new OrderDiscountsQueryModel
                 {
@@ -52,6 +52,28 @@ namespace Discount.Query.Queries
                      Title = x.Title,
                      Use = x.Use,
                  }).ToListAsync();
+        }
+
+        public async Task<OperationResultOrderDiscount> GetOrderSellerDiscountAsync(int sellerId, string code)
+        {
+            var discount = await _orderDiscountRepository.GetByCodeAsync(code);
+
+            if (discount is null)
+                return new(false, $"تخفیفی با کد {code} یافت نشد");
+            if (discount.ShopId != sellerId)
+                return new(false, $"تخفیفی با کد {code} برای این فروشگاه ثبت نشده");
+                if (discount.EndDate.Date < DateTime.Now.Date)
+                    return new(false, $"مهلت استفاده از کد تخفیف {code} به پایان رسیده ");
+            if (discount.StartDate.Date > DateTime.Now.Date)
+                return new(false, $"مهلت استفاده از کد تخفیف {code}هنوز شروع نشده تا تاریخ {discount.StartDate.Date.ToPersainDate()} صبرکنید");
+            if (discount.Count < 1)
+                return new(false, $"تخفیف با کد {code} به پایان رسیده");
+
+            discount.UsePlus();
+            if (!await _orderDiscountRepository.SaveAsync())
+                return new(false, "خطا در بارگذاری تخفیف");
+            return new(true, "", discount.Title, discount.Id, discount.Percent);
+
         }
     }
 }

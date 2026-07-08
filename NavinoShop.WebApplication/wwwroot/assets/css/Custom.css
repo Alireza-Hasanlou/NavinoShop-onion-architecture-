@@ -5371,3 +5371,1133 @@ input:checked + .custom-slider {
         max-height: calc(100vh - 180px);
     }
 }
+.products_old-price {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 5px;
+}
+
+    .products_old-price del {
+        color: #999;
+        font-size: 14px;
+        text-decoration: line-through;
+    }
+
+.products_discount-percent {
+    background-color: #ff4444;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.products_new-price {
+    color: #28a745;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.encode4365gbf265g43d {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+/*///////////////////Order Form**********************/
+/* ----- wrapper (section) ----- */
+.pre-invoice-section {
+    max-width: 1200px;
+    width: 100%;
+    background: #ffffff;
+    border-radius: 28px;
+    box-shadow: 0 20px 50px rgba(0, 20, 40, 0.08);
+    padding: 2rem;
+    transition: all 0.2s ease;
+    display: flex;
+    gap: 2rem;
+}
+
+/* right side - products */
+.invoice-products {
+    flex: 1;
+    min-width: 0;
+}
+
+/* left side - payment summary */
+.invoice-payment-side {
+    width: 340px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* header */
+.invoice-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #eef2f7;
+    padding-bottom: 1.5rem;
+}
+
+    .invoice-header h2 {
+        font-weight: 700;
+        font-size: 1.8rem;
+        color: #0b1e33;
+        letter-spacing: -0.5px;
+    }
+
+        .invoice-header h2 i {
+            color: #2563eb;
+            margin-left: 0.5rem;
+        }
+
+.order-badge {
+    background: #eef6ff;
+    color: #1e4f8a;
+    padding: 0.5rem 1.2rem;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid #d0e0ff;
+}
+
+/* ----- seller block (each فروشنده) ----- */
+.seller-block {
+    background: #fafcff;
+    border-radius: 20px;
+    border: 1px solid #e9edf4;
+    margin-bottom: 1.8rem;
+    padding: 1.5rem 1.5rem 1rem;
+    transition: box-shadow 0.15s;
+}
+
+    .seller-block:hover {
+        box-shadow: 0 6px 18px rgba(0, 20, 40, 0.04);
+    }
+
+.seller-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 2px dashed #dce3ed;
+}
+
+.seller-name {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+    .seller-name i {
+        color: #2563eb;
+        font-size: 1.3rem;
+        background: #e0edff;
+        padding: 0.4rem;
+        border-radius: 12px;
+    }
+
+    .seller-name span {
+        font-weight: 700;
+        font-size: 1.2rem;
+        color: #142b44;
+    }
+
+.seller-price-summary {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.95rem;
+    background: #f2f6fe;
+    padding: 0.3rem 1rem;
+    border-radius: 30px;
+}
+
+    .seller-price-summary .price-label {
+        color: #4a5b73;
+    }
+
+    .seller-price-summary .price-value {
+        font-weight: 700;
+        color: #0a2647;
+    }
+
+/* --- items table (inside seller) --- */
+.items-table-wrap {
+    overflow-x: auto;
+    margin: 0.5rem 0 0.2rem;
+}
+
+.items-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+    .items-table th {
+        text-align: right;
+        padding: 0.6rem 0.3rem 0.6rem 0;
+        font-weight: 600;
+        color: #38506b;
+        border-bottom: 1px solid #dce3ed;
+        font-size: 0.85rem;
+        letter-spacing: 0.3px;
+    }
+
+    .items-table td {
+        padding: 0.8rem 0.3rem 0.8rem 0;
+        border-bottom: 1px solid #eceff5;
+        vertical-align: middle;
+    }
+
+    .items-table tr:last-child td {
+        border-bottom: none;
+    }
+
+.product-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+.product-img {
+    width: 48px;
+    height: 48px;
+    background: #eef2f7;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4b6a8b;
+    font-weight: 600;
+    font-size: 0.7rem;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+    .product-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 12px;
+    }
+
+.product-name {
+    font-weight: 500;
+    color: #1c314a;
+}
+
+.price-original {
+    text-decoration: line-through;
+    color: #8a9bb0;
+    font-size: 0.85rem;
+    margin-left: 0.3rem;
+}
+
+.price-after {
+    font-weight: 700;
+    color: #0b2a4a;
+}
+
+.discount-tag {
+    background: #eaf6ef;
+    color: #0c6b3e;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 30px;
+    white-space: nowrap;
+}
+
+.quantity-badge {
+    background: #e8edf5;
+    color: #2c4a6a;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.7rem;
+    border-radius: 30px;
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+/* ----- discount code section (inside payment side) ----- */
+.discount-section {
+    background: #f8faff;
+    border-radius: 20px;
+    padding: 1.3rem 1.5rem;
+    border: 1px solid #e2eaf3;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+    .discount-section .discount-label {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        font-weight: 600;
+        color: #1f3a5e;
+        font-size: 0.95rem;
+    }
+
+        .discount-section .discount-label i {
+            color: #2563eb;
+            font-size: 1.2rem;
+        }
+
+.discount-input-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+    .discount-input-group input {
+        flex: 1;
+        padding: 0.7rem 1rem;
+        border: 1px solid #cddae9;
+        border-radius: 40px;
+        background: white;
+        font-size: 0.95rem;
+        outline: none;
+        transition: 0.2s;
+        min-width: 120px;
+    }
+
+        .discount-input-group input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+    .discount-input-group button {
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 0.7rem 1.5rem;
+        border-radius: 40px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.95rem;
+        white-space: nowrap;
+    }
+
+        .discount-input-group button:hover {
+            background: #1a4fc3;
+            transform: scale(1.01);
+        }
+
+.discount-applied-info {
+    font-size: 0.9rem;
+    color: #0b6e41;
+    background: #e2f3e9;
+    padding: 0.4rem 1rem;
+    border-radius: 30px;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 0.3rem;
+}
+
+/* ----- payment summary box (left side) ----- */
+.payment-summary-box {
+    background: #f2f8ff;
+    border-radius: 20px;
+    padding: 1.5rem;
+    border: 1px solid #e2eaf3;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+    .payment-summary-box .summary-title {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: #0b1e33;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #dce3ed;
+    }
+
+.payment-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.3rem 0;
+    font-size: 0.95rem;
+}
+
+    .payment-row .label {
+        color: #445e7c;
+        font-weight: 500;
+    }
+
+    .payment-row .value {
+        font-weight: 700;
+        color: #0b1e33;
+    }
+
+        .payment-row .value.discounted {
+            color: #0b6e41;
+        }
+
+    .payment-row.total-payment {
+        border-top: 2px solid #d0dceb;
+        margin-top: 0.5rem;
+        padding-top: 0.8rem;
+        font-size: 1.1rem;
+    }
+
+        .payment-row.total-payment .value {
+            font-size: 1.4rem;
+            color: #0b2a4a;
+        }
+
+.pay-btn {
+    background: #0b2a4a;
+    color: white;
+    border: none;
+    padding: 0.9rem;
+    border-radius: 40px;
+    font-weight: 700;
+    font-size: 1.05rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow: 0 4px 12px rgba(11, 42, 74, 0.15);
+    width: 100%;
+    margin-top: 0.3rem;
+}
+
+    .pay-btn:hover {
+        background: #1a3d61;
+        transform: translateY(-2px);
+    }
+
+.footer-info {
+    font-size: 0.75rem;
+    color: #6b7f99;
+    text-align: center;
+    padding-top: 0.5rem;
+    border-top: 1px solid #e2eaf3;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+/* ----- responsive ----- */
+@media (max-width: 992px) {
+    .pre-invoice-section {
+        flex-direction: column;
+        padding: 1.2rem;
+    }
+
+    .invoice-payment-side {
+        width: 100%;
+    }
+
+    .seller-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .discount-input-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+        .discount-input-group input {
+            width: 100%;
+        }
+
+        .discount-input-group button {
+            justify-content: center;
+        }
+
+    .payment-row {
+        font-size: 0.9rem;
+    }
+
+    .items-table th,
+    .items-table td {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .invoice-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+    }
+
+    .seller-price-summary {
+        font-size: 0.8rem;
+        padding: 0.2rem 0.8rem;
+    }
+
+    .product-cell {
+        flex-wrap: wrap;
+        gap: 0.3rem;
+    }
+}
+/* CSS مربوط به اینپوت و دکمه تخفیف فروشنده */
+.seller-discount-input {
+    padding: 0.4rem 0.8rem;
+    border: 1px solid #cddae9;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    outline: none;
+    flex: 1;
+    min-width: 150px;
+    background: white;
+    transition: all 0.2s ease;
+}
+
+    .seller-discount-input:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+.seller-discount-btn {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 0.4rem 1.2rem;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+    .seller-discount-btn:hover {
+        background: #1a4fc3;
+        transform: scale(1.02);
+    }
+
+    .seller-discount-btn:active {
+        transform: scale(0.98);
+    }
+/* ============================================================ */
+/* فایل: invoice-payment.css                                    */
+/* تمام کلاس‌ها با پیشوند "inv-" برای جلوگیری از تداخل         */
+/* ============================================================ */
+
+/* ----- wrapper (section) ----- */
+.inv-section {
+    max-width: 1200px;
+    width: 100%;
+    background: #ffffff;
+    border-radius: 28px;
+    box-shadow: 0 20px 50px rgba(0, 20, 40, 0.08);
+    padding: 2rem;
+    transition: all 0.2s ease;
+    display: flex;
+    gap: 2rem;
+}
+
+/* right side - products */
+.inv-products {
+    flex: 1;
+    min-width: 0;
+}
+
+/* left side - payment summary */
+.inv-payment-side {
+    width: 340px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* header */
+.inv-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #eef2f7;
+    padding-bottom: 1.5rem;
+}
+
+    .inv-header h2 {
+        font-weight: 700;
+        font-size: 1.8rem;
+        color: #0b1e33;
+        letter-spacing: -0.5px;
+    }
+
+        .inv-header h2 i {
+            color: #2563eb;
+            margin-left: 0.5rem;
+        }
+
+.inv-badge {
+    background: #eef6ff;
+    color: #1e4f8a;
+    padding: 0.5rem 1.2rem;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid #d0e0ff;
+}
+
+/* ----- seller block ----- */
+.inv-seller-block {
+    background: #fafcff;
+    border-radius: 20px;
+    border: 1px solid #e9edf4;
+    margin-bottom: 1.8rem;
+    padding: 1.5rem 1.5rem 1rem;
+    transition: box-shadow 0.15s;
+}
+
+    .inv-seller-block:hover {
+        box-shadow: 0 6px 18px rgba(0, 20, 40, 0.04);
+    }
+
+.inv-seller-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 2px dashed #dce3ed;
+}
+
+.inv-seller-name {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+    .inv-seller-name i {
+        color: #2563eb;
+        font-size: 1.3rem;
+        background: #e0edff;
+        padding: 0.4rem;
+        border-radius: 12px;
+    }
+
+    .inv-seller-name span {
+        font-weight: 700;
+        font-size: 1.2rem;
+        color: #142b44;
+    }
+
+.inv-seller-code {
+    font-size: 0.8rem;
+    color: #4d6e8f;
+    background: #eaf0fa;
+    padding: 0.1rem 0.8rem;
+    border-radius: 30px;
+}
+
+.inv-seller-summary {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.95rem;
+    background: #f2f6fe;
+    padding: 0.3rem 1rem;
+    border-radius: 30px;
+}
+
+    .inv-seller-summary .inv-label {
+        color: #4a5b73;
+    }
+
+.inv-price-value {
+    font-weight: 700;
+    color: #0a2647;
+}
+
+.inv-currency {
+    font-size: 0.7rem;
+}
+
+/* --- items table --- */
+.inv-table-wrap {
+    overflow-x: auto;
+    margin: 0.5rem 0 0.2rem;
+}
+
+.inv-items-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+    .inv-items-table th {
+        text-align: right;
+        padding: 0.6rem 0.3rem 0.6rem 0;
+        font-weight: 600;
+        color: #38506b;
+        border-bottom: 1px solid #dce3ed;
+        font-size: 0.85rem;
+        letter-spacing: 0.3px;
+    }
+
+    .inv-items-table td {
+        padding: 0.8rem 0.3rem 0.8rem 0;
+        border-bottom: 1px solid #eceff5;
+        vertical-align: middle;
+    }
+
+    .inv-items-table tr:last-child td {
+        border-bottom: none;
+    }
+
+.inv-product-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+.inv-product-img {
+    width: 48px;
+    height: 48px;
+    background: #eef2f7;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4b6a8b;
+    font-weight: 600;
+    font-size: 0.7rem;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+    .inv-product-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 12px;
+    }
+
+.inv-product-name {
+    font-weight: 500;
+    color: #1c314a;
+}
+
+.inv-price-original {
+    text-decoration: line-through;
+    color: #8a9bb0;
+    font-size: 0.85rem;
+    margin-left: 0.3rem;
+}
+
+.inv-price-after {
+    font-weight: 700;
+    color: #0b2a4a;
+}
+
+.inv-discount-tag {
+    background: #eaf6ef;
+    color: #0c6b3e;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 30px;
+    white-space: nowrap;
+}
+
+.inv-no-discount {
+    background: #f0f2f5;
+    color: #6b7f99;
+}
+
+.inv-qty-badge {
+    background: #e8edf5;
+    color: #2c4a6a;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.7rem;
+    border-radius: 30px;
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+.inv-empty-msg {
+    text-align: center;
+    color: #6b7f99;
+    padding: 1rem;
+}
+
+/* ----- seller discount row ----- */
+.inv-seller-discount-row {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: #2563eb;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.inv-discount-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.inv-discount-input {
+    padding: 0.4rem 0.8rem;
+    border: 1px solid #cddae9;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    outline: none;
+    min-width: 160px;
+    background: white;
+    transition: all 0.2s ease;
+}
+
+    .inv-discount-input:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+.inv-discount-btn {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 0.4rem 1.2rem;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+    .inv-discount-btn:hover {
+        background: #1a4fc3;
+        transform: scale(1.02);
+    }
+
+    .inv-discount-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+.inv-discount-badge {
+    background: #eaf6ef;
+    color: #0c6b3e;
+    padding: 0.3rem 1rem;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+    .inv-discount-badge i {
+        color: #0c6b3e;
+    }
+
+.inv-discount-display {
+    display: none;
+}
+
+.inv-payment-price {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+/* ----- discount section (global) ----- */
+.inv-discount-section {
+    background: #f8faff;
+    border-radius: 20px;
+    padding: 1.3rem 1.5rem;
+    border: 1px solid #e2eaf3;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.inv-discount-label {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-weight: 600;
+    color: #1f3a5e;
+    font-size: 0.95rem;
+}
+
+    .inv-discount-label i {
+        color: #2563eb;
+        font-size: 1.2rem;
+    }
+
+.inv-discount-hint {
+    font-size: 0.75rem;
+    color: #62748d;
+}
+
+.inv-discount-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+    .inv-discount-group input {
+        flex: 1;
+        padding: 0.7rem 1rem;
+        border: 1px solid #cddae9;
+        border-radius: 40px;
+        background: white;
+        font-size: 0.95rem;
+        outline: none;
+        transition: 0.2s;
+        min-width: 120px;
+    }
+
+        .inv-discount-group input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+    .inv-discount-group button {
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 0.7rem 1.5rem;
+        border-radius: 40px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.95rem;
+        white-space: nowrap;
+    }
+
+        .inv-discount-group button:hover {
+            background: #1a4fc3;
+            transform: scale(1.01);
+        }
+
+.inv-discount-info {
+    font-size: 0.9rem;
+    color: #0b6e41;
+    background: #e2f3e9;
+    padding: 0.4rem 1rem;
+    border-radius: 30px;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 0.3rem;
+}
+
+/* ----- payment summary box ----- */
+.inv-summary-box {
+    background: #f2f8ff;
+    border-radius: 20px;
+    padding: 1.5rem;
+    border: 1px solid #e2eaf3;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.inv-summary-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #0b1e33;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #dce3ed;
+}
+
+.inv-payment-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.3rem 0;
+    font-size: 0.95rem;
+}
+
+    .inv-payment-row .inv-label {
+        color: #445e7c;
+        font-weight: 500;
+    }
+
+    .inv-payment-row .inv-value {
+        font-weight: 700;
+        color: #0b1e33;
+    }
+
+.inv-value.inv-discounted {
+    color: #0b6e41;
+}
+
+.inv-payment-row.inv-total-payment {
+    border-top: 2px solid #d0dceb;
+    margin-top: 0.5rem;
+    padding-top: 0.8rem;
+    font-size: 1.1rem;
+}
+
+.inv-payment-row .inv-final-price {
+    font-size: 1.4rem;
+    color: #0b2a4a;
+}
+
+.inv-bold {
+    font-weight: 700;
+}
+
+.inv-pay-btn {
+    background: #0b2a4a;
+    color: white;
+    border: none;
+    padding: 0.9rem;
+    border-radius: 40px;
+    font-weight: 700;
+    font-size: 1.05rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow: 0 4px 12px rgba(11, 42, 74, 0.15);
+    width: 100%;
+    margin-top: 0.3rem;
+}
+
+    .inv-pay-btn:hover {
+        background: #1a3d61;
+        transform: translateY(-2px);
+    }
+
+.inv-footer {
+    font-size: 0.75rem;
+    color: #6b7f99;
+    text-align: center;
+    padding-top: 0.5rem;
+    border-top: 1px solid #e2eaf3;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.inv-empty-seller {
+    text-align: center;
+    padding: 2rem;
+    color: #6b7f99;
+    background: #f8faff;
+    border-radius: 20px;
+    border: 1px dashed #dce3ed;
+}
+
+    .inv-empty-seller i {
+        font-size: 2rem;
+        display: block;
+        margin-bottom: 1rem;
+    }
+
+/* ----- responsive ----- */
+@media (max-width: 992px) {
+    .inv-section {
+        flex-direction: column;
+        padding: 1.2rem;
+    }
+
+    .inv-payment-side {
+        width: 100%;
+    }
+
+    .inv-seller-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .inv-discount-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+        .inv-discount-group input {
+            width: 100%;
+        }
+
+        .inv-discount-group button {
+            justify-content: center;
+        }
+
+    .inv-payment-row {
+        font-size: 0.9rem;
+    }
+
+    .inv-items-table th,
+    .inv-items-table td {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .inv-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+    }
+
+    .inv-seller-summary {
+        font-size: 0.8rem;
+        padding: 0.2rem 0.8rem;
+    }
+
+    .inv-product-cell {
+        flex-wrap: wrap;
+        gap: 0.3rem;
+    }
+
+    .inv-discount-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .inv-discount-input {
+        min-width: 100%;
+    }
+}
+/*Order Form End*/

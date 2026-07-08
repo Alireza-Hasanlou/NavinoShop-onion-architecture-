@@ -14,9 +14,10 @@ namespace Shop.Domain.OrderAddressAgg
         public string NationalCode { get; private set; }
         public int OrderId { get; private set; }
         public Order Order { get; private set; }
+
         public OrderAddress()
         {
-          Order = new Order();  
+            
         }
         public OrderAddress(int stateId, int cityId, string addressDetail, string postalCode,
                            string phone, string fullName, string nationalCode, int orderId)

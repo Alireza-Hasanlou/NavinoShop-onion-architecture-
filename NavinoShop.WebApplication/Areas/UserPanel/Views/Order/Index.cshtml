@@ -1,0 +1,261 @@
+﻿@using Query.Contract.UI.UserPanel.Order
+@using Shared.Application
+@{
+    Layout = "_Layout";
+    string ErrorMessage = ViewData["Error"] as string;
+}
+@model OrderUserPanelViewModel
+
+
+
+<section class="inv-section" id="invSection_Unique_001">
+
+    <!-- ========== RIGHT SIDE: PRODUCTS ========== -->
+    <div class="inv-products">
+
+        <!-- header -->
+        <div class="inv-header">
+            <h2>
+                <i class="fas fa-file-invoice"></i>
+                پیش‌فاکتور پرداخت
+            </h2>
+            <div class="inv-badge">
+                <i class="fas fa-hashtag"></i>
+                سفارش #<span id="invOrderId_Unique_001">@Model.OrderId</span>
+                <span style="margin:0 0.5rem;color:#b0c8e0;">|</span>
+                <i class="far fa-clock"></i> پرداخت‌نشده
+            </div>
+        </div>
+
+        <!-- ========================================================= -->
+        <!--  حلقه فروشندگان – بر اساس مدل OrderSellers                -->
+        <!-- ========================================================= -->
+        @if (Model.OrderSellers != null && Model.OrderSellers.Any())
+        {
+            var sellerIndex = 0;
+            foreach (var seller in Model.OrderSellers)
+            {
+                sellerIndex++;
+                var sellerBlockId = $"invSellerBlock_{sellerIndex}";
+                var tableId = $"invItemsTable_{sellerIndex}";
+                var sellerId = seller.SellerId;
+
+                <div class="inv-seller-block" id="@sellerBlockId">
+                    <div class="inv-seller-header">
+                        <div class="inv-seller-name">
+                            <i class="fas fa-store-alt"></i>
+                            <span>فروشنده: @seller.SellerName</span>
+                            <span class="inv-seller-code">
+                                <i class="fas fa-tag"></i> کد: @sellerId
+                            </span>
+                        </div>
+                        <div class="inv-seller-summary">
+                            <span class="inv-label">جمع این فروشنده:</span>
+                            <span class="inv-price-value" id="invSellerTotal_@sellerId">@seller.Price.ToString("N0") <span class="inv-currency">تومان</span></span>
+                        </div>
+                    </div>
+
+                    <!-- جدول آیتم‌های این فروشنده -->
+                    <div class="inv-table-wrap">
+                        <table class="inv-items-table" id="@tableId">
+                            <thead>
+                                <tr>
+                                    <th>محصول</th>
+                                    <th>تعداد</th>
+                                    <th>قیمت</th>
+                                    <th>تخفیف</th>
+                                    <th>قیمت پس از تخفیف</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (seller.Items != null && seller.Items.Any())
+                                {
+                                    
+                                    foreach (var item in seller.Items)
+                                    {
+                                        var discountPercent = 0;
+                                        if (item.Price > 0 && item.PriceAfterOff > 0)
+                                        {
+                                            discountPercent = (int)Math.Round((1 - (decimal)item.PriceAfterOff / item.Price) * 100);
+                                        }
+
+                                        <tr>
+                                            <td>
+                                                <div class="inv-product-cell">
+                                                    <div class="inv-product-img">
+                                                        @if (!string.IsNullOrEmpty(item.ImageName))
+                                                        {
+                                                            <img src="@FileDirectories.ProductImageDirectory100@item.ImageName" alt="@item.ImageAlt" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <i class="fas fa-box"></i>
+                                                        }
+                                                    </div>
+                                                    <span class="inv-product-name">@item.ProductName</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="inv-qty-badge">
+                                                    <i class="fas fa-times"></i> @item.Quantity
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="inv-price-original" id="invPriceOrig_@seller.SellerId@item.ProductId">@item.Price.ToString("N0")</span>
+                                            </td>
+                                            <td>
+                                                @if (discountPercent > 0)
+                                                {
+                                                    <span class="inv-discount-tag" id="invDiscountTag_@seller.SellerId@item.ProductId">@discountPercent%</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="inv-discount-tag inv-no-discount" id="invDiscountTag_@seller.SellerId@item.ProductId">--</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <span class="inv-price-after" id="invPriceAfter_@seller.SellerId@item.ProductId">@item.PriceAfterOff.ToString("N0")</span>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="5" class="inv-empty-msg">
+                                            <i class="fas fa-info-circle"></i> هیچ محصولی در این سفارش وجود ندارد.
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- بخش تخفیف فروشنده -->
+                    <div class="inv-seller-discount-row">
+
+                        @if (seller.DiscountPercent > 0)
+                        {
+                            <div class="inv-discount-badge">
+                                <i class="fas fa-percent"></i>  تخفیف اعمال شده: ٪@seller.DiscountPercent
+                                @(!string.IsNullOrEmpty(seller.DiscountTitle) ? $"(مناسبت: {seller.DiscountTitle})" : "")
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="inv-discount-wrapper" id="invDiscountWrap_@sellerId">
+                                <input type="text" placeholder="کد تخفیف فروشنده"
+                                       id="invDiscountInput_@sellerId"
+                                       class="inv-discount-input" />
+                                <button id="invDiscountBtn_@sellerId"
+                                        class="inv-discount-btn"
+                                        onclick="invApplySellerDiscount('@sellerId')">
+                                    <i class="fas fa-check"></i> اعمال
+                                </button>
+                            </div>
+                        }
+
+                        <div class="inv-discount-display" id="invDiscountDisplay_@sellerId"></div>
+
+                        <span class="inv-payment-price">
+                            <i class="fas fa-credit-card"></i> 
+                            مبلغ قابل‌پرداخت فروشنده: 
+                            <span id="invPaymentPrice_@sellerId">@seller.PaymentPrice.ToString("N0")</span> تومان
+                        </span>
+                    </div>
+
+                </div>
+            }
+        }
+        else
+        {
+            <div class="inv-empty-seller">
+                <i class="fas fa-shopping-cart"></i>
+                <p>هیچ فروشنده‌ای در این سفارش وجود ندارد.</p>
+            </div>
+        }
+    </div>
+    <!-- ========== END RIGHT SIDE ========== -->
+
+    <!-- ========== LEFT SIDE: PAYMENT SUMMARY ========== -->
+    <div class="inv-payment-side" id="invPaymentSide_Unique_001">
+
+        <!-- discount section -->
+        <div class="inv-discount-section" id="invDiscountSection_Unique_001">
+            <div class="inv-discount-label">
+                <i class="fas fa-gift"></i>
+                <span>کد تخفیف</span>
+                <span class="inv-discount-hint">(در صورت داشتن کد وارد کنید)</span>
+            </div>
+            <div class="inv-discount-group">
+                <input type="text" placeholder="مثلاً SUMMER1405" id="invDiscountInputGlobal_Unique_001" />
+                <button id="invDiscountBtnGlobal_Unique_001">
+                    <i class="fas fa-check-circle"></i> اعمال
+                </button>
+            </div>
+            <div class="inv-discount-info" id="invDiscountInfo_Unique_001">
+                @if (Model.DiscountPercent > 0)
+                {
+                    <span><i class="fas fa-ticket-alt"></i> تخفیف: @Model.DiscountPercent% @(!string.IsNullOrEmpty(Model.DiscountTitle) ? $"(کد: {Model.DiscountTitle})" : "")</span>
+                }
+                else
+                {
+                    <span><i class="fas fa-ticket-alt"></i> تخفیف: بدون تخفیف</span>
+                }
+                <span><i class="fas fa-wallet"></i> قابل‌پرداخت: <span id="invFinalAmount_Unique_001">@Model.PaymentPrice.ToString("N0")</span> تومان</span>
+            </div>
+        </div>
+
+        <!-- payment summary box -->
+        <div class="inv-summary-box" id="invSummaryBox_Unique_001">
+            <div class="inv-summary-title">
+                <i class="fas fa-receipt"></i> خلاصه پرداخت
+            </div>
+
+            <div class="inv-payment-row">
+                <span class="inv-label">جمع کل سفارش</span>
+                <span class="inv-value" id="invOrderTotal_Unique_001">@Model.Price.ToString("N0") تومان</span>
+            </div>
+
+            <div class="inv-payment-row">
+                <span class="inv-label">تخفیف کل</span>
+                <span class="inv-value inv-discounted" id="invOrderDiscount_Unique_001">@Model.DiscountPrice.ToString("N0") تومان</span>
+            </div>
+
+            @if (Model.PostPrice > 0)
+            {
+                <div class="inv-payment-row">
+                    <span class="inv-label">هزینه ارسال</span>
+                    <span class="inv-value" id="invPostPrice_Unique_001">@Model.PostPrice.ToString("N0") تومان</span>
+                </div>
+            }
+
+            <div class="inv-payment-row inv-total-payment">
+                <span class="inv-label inv-bold">قابل پرداخت</span>
+                <span class="inv-value inv-final-price" id="invFinalSummary_Unique_001">@Model.PaymentPrice.ToString("N0") تومان</span>
+            </div>
+
+            <button class="inv-pay-btn" id="invPayBtn_Unique_001">
+                <i class="fas fa-lock"></i> پرداخت نهایی
+            </button>
+        </div>
+
+        <div class="inv-footer">
+            <span><i class="fas fa-shield-alt"></i> اطلاعات پرداخت شما محفوظ است</span>
+            <span><i class="fas fa-credit-card"></i> پشتیبانی از تمام کارت‌های بانکی</span>
+        </div>
+
+    </div>
+    <!-- ========== END LEFT SIDE ========== -->
+
+</section>
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <script>AlertSweetTimer("@ErrorMessage", "error", "Center");</script>
+}
+
+<!-- ============================================================ -->
+<!-- فایل: invoice-payment.js                                      -->
+<!-- ============================================================ -->
+<script src="~/js/invoice-payment.js"></script>

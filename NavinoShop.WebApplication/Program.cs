@@ -1,23 +1,16 @@
-using Blogs.Query.Bootstrapper;
-using Comments.Query.Bootstrapper;
-using Emails.Query.Bootstrapper;
-using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using NavinoShop.WebApplication.Utility;
+using NavinoShop.WebApplication.Utility.AutoMapper;
 using NavinoShop.WebApplication.Utility.Filters;
-using PostModule.Query.Bootstrapper;
-using Seos.Query.Bootstrapper;
-using Site.Query.Bootstrapper;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
-using Users.Query.Bootstrapper;
+
 
 var builder = WebApplication.CreateBuilder(args);
 var Services = builder.Services;
 var Configuration = builder.Configuration;
 var ConnectionString = Configuration.GetConnectionString("DefultConnection");
-
 Services.AddControllersWithViews();
 Services.AddRazorPages();
 Services.AddSingleton(HtmlEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Arabic));
@@ -31,11 +24,14 @@ builder.Services.Configure<RouteOptions>(options =>
 DependencyBootstrapper.Congig(Services, ConnectionString);
 #endregion
 
-builder.Services.AddControllersWithViews(options =>
+Services.AddControllersWithViews(options =>
 {
     options.Filters.Add<NotFoundFilter>();
 });
-
+Services.AddAutoMapper(x =>
+{
+    x.AddMaps(typeof(MappingProfile));
+});
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())

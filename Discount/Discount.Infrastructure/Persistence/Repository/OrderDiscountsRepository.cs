@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Discount.Infrastructure.Persistence.Repository
 {
-    internal class OrderDiscountsRepository:GenericRepository<OrderDiscount,int>, IOrderDiscountRepository
+    internal class OrderDiscountsRepository : GenericRepository<OrderDiscount, int>, IOrderDiscountRepository
     {
         private readonly DiscountContext _discountContext;
 
@@ -19,9 +19,14 @@ namespace Discount.Infrastructure.Persistence.Repository
             _discountContext = context;
         }
 
+        public async Task<OrderDiscount> GetByCodeAsync(string code) =>
+            await _discountContext.OrderDiscounts.SingleOrDefaultAsync(x => x.Code == code);
+
+
+
         public async Task<bool> IsExistByCodeAsync(string code, int shopId)
         {
-            return await _discountContext.OrderDiscounts.AnyAsync(x=>x.Code==code && x.ShopId==shopId);
+            return await _discountContext.OrderDiscounts.AnyAsync(x => x.Code == code && x.ShopId == shopId);
         }
     }
 }

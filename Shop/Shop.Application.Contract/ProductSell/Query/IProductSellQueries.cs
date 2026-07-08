@@ -8,6 +8,7 @@ namespace Shop.Application.Contract.ProductSell.Query
 {
     public interface IProductSellQueries
     {
+       
         Task<bool> ProductSellHaveAmount(int Id);
     }
 }

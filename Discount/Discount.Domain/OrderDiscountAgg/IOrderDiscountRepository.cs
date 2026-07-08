@@ -9,6 +9,7 @@ namespace Discount.Domain.OrderDiscountAgg
 {
     public interface IOrderDiscountRepository : IGenericRepository<OrderDiscount, int>
     {
+        Task<OrderDiscount> GetByCodeAsync(string code);
         Task<bool> IsExistByCodeAsync(string code, int shopId);
     }
 }

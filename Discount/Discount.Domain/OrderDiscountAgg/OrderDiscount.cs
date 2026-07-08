@@ -10,7 +10,9 @@ namespace Discount.Domain.OrderDiscountAgg
 {
     public class OrderDiscount : BaseEntityCreate<int>
     {
-        public OrderDiscount(int percent, string title, string code, int count,int shopId, DateTime startDate, DateTime endDate, OrderDiscountType orderDiscountType)
+        public OrderDiscount(int percent, string title, string code, 
+            int count,int shopId, DateTime startDate,
+            DateTime endDate, OrderDiscountType orderDiscountType)
         {
             Percent = percent;
             Title = title;

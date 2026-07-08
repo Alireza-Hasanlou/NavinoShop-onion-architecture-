@@ -13,5 +13,6 @@ namespace Discount.Application.Contract.OrderDiscounts.Command
         Task<OperationResult> EditOrderDiscountAsync(UpsertOrderDiscountCommandModel commandModel);
         Task<OperationResult> DeleteAsync(int Id);
         Task<UpsertOrderDiscountCommandModel> GetForEditAsync(int id);
+        Task MinusUseDiscountAsync(int id);
     }
 }

@@ -41,11 +41,11 @@ namespace Discount.Application.Commands
                 {
                     commandModel.ShopId = 0;
                 }
-                 
+
 
                 bool existingByCode =
                     await _orderDiscountRepository.IsExistByCodeAsync(
-                        commandModel.Code, commandModel.ShopId); 
+                        commandModel.Code, commandModel.ShopId);
 
 
                 if (existingByCode)
@@ -163,6 +163,13 @@ namespace Discount.Application.Commands
             {
                 return null;
             }
+        }
+
+        public async Task MinusUseDiscountAsync(int id)
+        {
+            var discount = await _orderDiscountRepository.GetByIdAsync(id);
+            discount.UseMinus();
+            await _orderDiscountRepository.SaveAsync();
         }
     }
 }

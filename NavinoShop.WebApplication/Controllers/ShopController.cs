@@ -31,8 +31,8 @@ namespace NavinoShop.WebApplication.Controllers
         [HttpGet]
         [Route("/Products")]
         [Route("/Products/{categorySlug}")]
-        [Route("{seller}/Products")]
-        [Route("{seller}/Products/{categorySlug}")]
+        [Route("/Products/Seller/{seller}")]
+        [Route("/Products/{Seller}/{categorySlug}")]
         public async Task<IActionResult> Products(int minPrice = 0, int maxprice = 0, ProductSort sort = ProductSort.جدیدترین,
                                                     string categorySlug = "", string Seller = "", int pageId = 1, string search = "", bool IsAjax = false)
         {

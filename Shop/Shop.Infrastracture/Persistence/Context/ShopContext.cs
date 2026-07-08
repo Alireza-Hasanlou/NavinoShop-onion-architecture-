@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Shop.Domain.CartAgg;
 using Shop.Domain.OrderAddressAgg;
 using Shop.Domain.OrderAgg;
 using Shop.Domain.OrderItemAgg;
@@ -27,7 +28,7 @@ namespace Shop.Infrastracture.Persistence.Context
     {
         public ShopContext(DbContextOptions<ShopContext> options) : base(options)
         {
-
+           
         }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderAddress> OrderAddresses { get; set; }
@@ -39,6 +40,7 @@ namespace Shop.Infrastracture.Persistence.Context
         public DbSet<ProductGallery> ProductGalleries { get; set; }
         public DbSet<ProductSell> productSells { get; set; }
         public DbSet<Seller> Sellers { get; set; }
+        public DbSet<Cart> Carts { get; set; }
         public DbSet<ShopSetting> shopSettings { get; set; }
         public DbSet<Product_Category_Rel> product_Category_Rels { get; set; }
         public DbSet<SellerChangeRequest> SellerChangeRequests { get; set; }

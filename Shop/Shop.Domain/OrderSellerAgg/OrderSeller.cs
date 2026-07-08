@@ -25,15 +25,10 @@ namespace Shop.Domain.OrderSellerAgg
         public Order Order { get; private set; }
         public ICollection<OrderItem> OrderItems { get; private set; }
         public Seller Seller { get; private set; }
-        public OrderSeller()
-        {
-            Order = new();
-            OrderItems = new List<OrderItem>();
-            Seller = new();
-        }
 
         public OrderSeller(int sellerId)
         {
+            OrderItems = new List<OrderItem>();
             SellerId = sellerId;
             Status = OrderSellerStatus.پرداخت_نشده;
             DiscountId = 0;
@@ -77,7 +72,7 @@ namespace Shop.Domain.OrderSellerAgg
         {
             get
             {
-                var discountPrice = DiscountPercent * PriceAfterOff / 100;
+                var discountPrice = PriceAfterOff * DiscountPercent / 100;
                 return PriceAfterOff - discountPrice;
             }
         }

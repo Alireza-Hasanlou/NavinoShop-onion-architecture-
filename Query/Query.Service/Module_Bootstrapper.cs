@@ -15,10 +15,12 @@ using Query.Contract.Admin.Seo;
 using Query.Contract.Admin.User;
 using Query.Contract.Site.Page;
 using Query.Contract.UI.Blogs;
+using Query.Contract.UI.Cart;
 using Query.Contract.UI.Comments;
 using Query.Contract.UI.PostPackage;
 using Query.Contract.UI.Products;
 using Query.Contract.UI.UserPanel;
+using Query.Contract.UI.UserPanel.Order;
 using Query.Contract.UI.UserPanel.PostOrder;
 using Query.Contract.UI.UserPanel.Seller;
 using Query.Contract.UI.UserPanel.Stores;
@@ -32,12 +34,14 @@ using Query.Service.Admin.Products;
 using Query.Service.Admin.Seller;
 using Query.Service.Admin.Seo;
 using Query.Service.Admin.User;
+using Query.Service.Cart;
 using Query.Service.Site.Page;
 using Query.Service.Ui.Blogs;
 using Query.Service.Ui.Comments;
 using Query.Service.Ui.PostPackages;
 using Query.Service.Ui.Products;
 using Query.Service.Ui.UserPanel;
+using Query.Service.Ui.UserPanel.Order;
 using Query.Service.Ui.UserPanel.PostOrder;
 using Query.Service.Ui.UserPanel.Seller;
 using Query.Service.Ui.UserPanel.Stores;
@@ -95,6 +99,8 @@ namespace Query.Service
             Services.AddTransient<IStoreUserPanelQueryService,StoreUserPanelQueryService>();
             Services.AddTransient<IProductUiQueryService, ProductUiQueryService>();
             Services.AddTransient<IAdminProductsQueryService, AdminProductsQueryService>();
+            Services.AddTransient<ICartUiQueryService,CartUiQueryService>();
+            Services.AddTransient<IOrderUserPanelQueryService, OrderUserPanelQueryService>();
 
             #endregion
           
