@@ -1,0 +1,105 @@
+﻿<!-- مودال انتخاب آدرس -->
+<div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-bottom-0">
+                <h5 class="modal-title fw-bold" id="addressModalLabel">انتخاب آدرس تحویل</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- لیست آدرس‌ها -->
+                <div id="addressListContainer">
+                </div>
+
+                <!-- پیام خالی بودن لیست -->
+                <div id="emptyAddressMessage" class="text-center py-5 d-none">
+                    <i class="fas fa-map-marker-alt fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">هیچ آدرسی ثبت نشده است</p>
+                    <p class="text-muted small">برای افزودن آدرس جدید روی دکمه زیر کلیک کنید</p>
+                </div>
+            </div>
+            <div class="modal-footer border-top-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">انصراف</button>
+                
+                <button type="button" class="btn btn-primary" id="addNewAddressBtn">
+                    <i class="fas fa-plus"></i> افزودن آدرس جدید
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- مودال افزودن آدرس جدید -->
+<div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="addAddressModalLabel">افزودن آدرس جدید</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addAddressForm">
+                    <!-- استان -->
+                    <div class="mb-3">
+                        <label for="stateSelect" class="form-label fw-bold">استان</label>
+                        <select class="form-select" id="stateSelect" required>
+                            <option value="">انتخاب استان...</option>
+                           
+                        </select>
+                    </div>
+
+                    <!-- شهر -->
+                    <div class="mb-3">
+                        <label for="citySelect" class="form-label fw-bold">شهر</label>
+                        <select class="form-select" id="citySelect" required>
+             
+                        </select>
+                    </div>
+
+                    <!-- جزییات آدرس -->
+                    <div class="mb-3">
+                        <label for="addressDetail" class="form-label fw-bold">جزییات آدرس</label>
+                        <textarea class="form-control" id="addressDetail" rows="2" placeholder="خیابان، پلاک، واحد..." required></textarea>
+                    </div>
+
+                    <!-- کد پستی -->
+                    <div class="mb-3">
+                        <label for="postalCode" class="form-label fw-bold">کد پستی</label>
+                        <input type="text" class="form-control" id="postalCode" placeholder="۱۰ رقم" maxlength="10" required>
+                    </div>
+
+                    <!-- نام تحویل گیرنده -->
+                    <div class="mb-3">
+                        <label for="fullName" class="form-label fw-bold">نام تحویل گیرنده</label>
+                        <input type="text" class="form-control" id="fullName" placeholder="نام و نام خانوادگی" required>
+                    </div>
+
+                    <!-- شماره تماس -->
+                    <div class="mb-3">
+                        <label for="phoneNumber" class="form-label fw-bold">شماره تماس تحویل گیرنده</label>
+                        <input type="text" class="form-control" id="phoneNumber" placeholder="۰۹۱۲۳۴۵۶۷۸۹" maxlength="11" required>
+                    </div>
+
+                    <!-- کد ملی -->
+                    <div class="mb-3">
+                        <label for="nationalCode" class="form-label fw-bold">کد ملی</label>
+                        <input type="text" class="form-control" id="nationalCode" placeholder="۱۰ رقم" maxlength="10">
+                    </div>
+
+                    <!-- آدرس اصلی -->
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="isMainAddress">
+                        <label class="form-check-label fw-bold" for="isMainAddress">
+                            این آدرس را به عنوان آدرس اصلی ثبت کن
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">انصراف</button>
+                <button type="button" class="btn btn-primary" id="submitNewAddressBtn">
+                    <i class="fas fa-save"></i> ذخیره آدرس
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

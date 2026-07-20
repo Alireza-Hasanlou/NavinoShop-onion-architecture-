@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PostModule.Application.Contract.StateQuery;
+using Shared.Application;
 using Shared.Application.Auth;
 using System.Net;
 using Users.Application.Contract.UserAddressService.Command;
@@ -110,5 +111,19 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
             var cities = await _stateQueryService.Cities(StateId);
             return Json(cities);
         }
+
+        public async Task<IActionResult> SetAddressToDefault(int AddressId)
+        {
+            int UserId = _authService.GetLoginUserId();
+            OperationResult res = await _userAddressCommandService.SetAddressToDefaultAsync(UserId, AddressId);
+            return new JsonResult(new { success = res.Success, message = res.Message });
+        }
+        public async Task<IActionResult> CreateAddressByAjax(CreateUserAddressCommand command)
+        {
+            var userId = _authService.GetLoginUserId();
+            var res = await _userAddressCommandService.CreateAsync(command, userId);
+            return new JsonResult(new { success = res.Success, message = res.Message });
+        }
+        
     }
 }

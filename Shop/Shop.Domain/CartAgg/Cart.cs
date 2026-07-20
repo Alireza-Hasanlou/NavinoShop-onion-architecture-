@@ -20,6 +20,7 @@ namespace Shop.Domain.CartAgg
         public int UserId { get; private set; }
         public int Quantity { get; private set; }
 
+        
         public void ChangeQuantity(int quantity)
         {
             Quantity = Quantity + quantity;

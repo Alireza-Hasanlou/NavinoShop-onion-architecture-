@@ -51,6 +51,13 @@ namespace Query.Service.Ui.UserPanel.Order
 
             if (order == null)
                 return null;
+            if (order.DiscountId > 0)
+            {
+                var res = await _discountRepository.DiscountIsValidAsync(order.DiscountId);
+                if (!res)
+                    order.RemoveDiscount();
+            }
+
 
             var result = new OrderUserPanelViewModel
             {
@@ -65,7 +72,7 @@ namespace Query.Service.Ui.UserPanel.Order
                 PaymentPrice = order.PaymentPrice,
                 OrderPayment = order.OrderPayment,
                 PaymentPriceSeller = order.PaymentPriceSeller,
-                DiscountPrice = CalculateDiscount(order.Price, order.PriceAfterOff),
+                DiscountPrice = order.Price - (order.PaymentPrice - order.PostPrice),
 
                 OrderSellers = order.OrderSellers.Select(s => new OrderSellerUserPanelQueryModel
                 {
@@ -75,11 +82,11 @@ namespace Query.Service.Ui.UserPanel.Order
                     PaymentPrice = s.PaymentPrice,
                     Price = s.Price,
                     DiscountTitle = s.DiscountTitle,
-                    PriceAfterOff = s.PriceAfterOff,
+                    PriceAfterOff = s.PriceAfterOff > 0 ? s.PriceAfterOff : s.Price,
                     PostPrice = s.PostPrice,
                     SellerId = s.SellerId,
                     SellerName = s.Seller?.Title ?? "نامشخص",
-                    DiscountPrice = CalculateDiscount(s.Price, s.PriceAfterOff),
+                    DiscountPrice = s.Price - (s.PaymentPrice - s.PostPrice),
                     Items = s.OrderItems.Select(i => new OrderItemQueryMoedel
                     {
                         Id = i.Id,
@@ -88,52 +95,42 @@ namespace Query.Service.Ui.UserPanel.Order
                         ImageName = i.ProductSell.Product.ImageName,
                         ImageAlt = i.ProductSell.Product.ImageAlt,
                         Price = i.Price,
-                        PriceAfterOff = i.PriceAfterOff,
+                        PriceAfterOff = i.PriceAfterOff > 0 ? i.PriceAfterOff : i.Price,
                         ProductId = i.ProductSell.ProductId,
                         ProductName = i.ProductSell.Product.Title,
                         SellerId = i.ProductSell.SellerId
                     }).ToList()
                 }).ToList()
             };
-
-            var addresses = await _userAddressRepository
-                .GetAllBy(x => x.UserId == userId)
-                .Select(a => new OrderAddressQueryModel
-                {
-                    AddressDetail = a.AddressDetail,
-                    CityId = a.CityId,
-                    NationalCode = a.NationalCode,
-                    FullName = a.FullName,
-                    Phone = a.Phone,
-                    PostalCode = a.PostalCode,
-                    StateId = a.StateId,
-                    StateName = "",
-                    CityName = ""
-                })
-                .ToListAsync();
-
-
-            foreach (var item in addresses)
+            foreach (var orderSeller in order.OrderSellers)
             {
-                item.CityName = await _cityRepository.GetCityTitle(item.CityId);
-                item.StateName = await _stateRepository.GetStateTitle(item.StateId);
+                if (orderSeller.DiscountId > 0)
+                {
+                    var res = await _discountRepository.DiscountIsValidAsync(orderSeller.DiscountId);
+                    if (!res)
+                        orderSeller.RemoveDiscount();
+                }
             }
 
-            result.Addresses = addresses;
+            var defaultAddress = await _userAddressRepository.GetDefaultAddressAsync(userId);
+            result.Address = new OrderAddressQueryModel
+            {
+                FullName = defaultAddress.FullName,
+                AddressDetail = defaultAddress.AddressDetail,
+                CityId = defaultAddress.CityId,
+                StateId = defaultAddress.StateId,
+                CityName = await _cityRepository.GetCityTitle(defaultAddress.CityId),
+                StateName = await _stateRepository.GetStateTitle(defaultAddress.StateId),
+                NationalCode = defaultAddress.NationalCode,
+                Phone = defaultAddress.Phone,
+                PostalCode = defaultAddress.PostalCode
+            };
+
             return result;
         }
 
 
-        private static int CalculateDiscount(int? originalPrice, int? priceAfterOff)
-        {
-            if (!originalPrice.HasValue || !priceAfterOff.HasValue || priceAfterOff <= 0)
-                return 0;
 
-            var discountPrice = originalPrice.Value - priceAfterOff.Value;
-            if (discountPrice < 1)
-                return 0;
-            return discountPrice;
-        }
 
 
     }

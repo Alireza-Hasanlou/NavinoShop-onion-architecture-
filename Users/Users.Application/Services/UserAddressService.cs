@@ -32,7 +32,7 @@ namespace Users.Application.Services
                 command.PostalCode, command.Phone, command.FullName, command.NationalCode, userId);
             var result = await _userAddressRepository.CreateAsync(userAddress);
             if (result.Success)
-                return new(true);
+                return new(true,"آدرس جدید با موفقیت ایجاد شد");
             return new(false, ValidationMessages.SystemErrorMessage, "UserAddress");
         }
 
@@ -59,6 +59,11 @@ namespace Users.Application.Services
         public async Task<UserAddressDto> GetAddressForEditAsync(int id)
         {
             return await _userAddressRepository.GetAddressForEditAsync(id);
+        }
+
+        public async Task<OperationResult> SetAddressToDefaultAsync(int userId, int addressId)
+        {
+          return await   _userAddressRepository.SetAddressToDefaultAsync(userId, addressId); 
         }
     }
 }

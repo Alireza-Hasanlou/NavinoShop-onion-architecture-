@@ -23,16 +23,16 @@ namespace Financial.infrastructure.Persistence.Context
         }
     }
 }
-public class FinancialContextFactory
-        : IDesignTimeDbContextFactory<FinancialContext>
-{
-    public FinancialContext CreateDbContext(string[] args)
-    {
-        var optionsBuilder = new DbContextOptionsBuilder<FinancialContext>();
+//public class FinancialContextFactory
+//        : IDesignTimeDbContextFactory<FinancialContext>
+//{
+//    public FinancialContext CreateDbContext(string[] args)
+//    {
+//        var optionsBuilder = new DbContextOptionsBuilder<FinancialContext>();
 
-        optionsBuilder.UseSqlServer(
-            "Server=.;Database=NavinoShop_DB;Trusted_Connection=True;TrustServerCertificate=True;");
+//        optionsBuilder.UseSqlServer(
+//            "Server=.;Database=NavinoShop_DB;Trusted_Connection=True;TrustServerCertificate=True;");
 
-        return new FinancialContext(optionsBuilder.Options);
-    }
-}
+//        return new FinancialContext(optionsBuilder.Options);
+//    }
+//}

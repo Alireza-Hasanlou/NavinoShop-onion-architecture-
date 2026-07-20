@@ -32,6 +32,7 @@ Services.AddAutoMapper(x =>
 {
     x.AddMaps(typeof(MappingProfile));
 });
+//Services.AddHostedService<OrderDiscountCleanupService>();
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())

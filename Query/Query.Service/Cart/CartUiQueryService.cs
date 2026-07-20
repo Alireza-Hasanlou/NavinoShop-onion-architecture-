@@ -49,11 +49,12 @@ namespace Query.Service.Cart
                 var cart = carts.FirstOrDefault(x => x.ProductSellId == item.ProductSellId);
                 item.quantity = cart.Quantity;
                 item.Id = cart.Id;
-                var discount = discounts.SingleOrDefault(x => x.ProductSellId == item.ProductSellId);
+                var discount = discounts.SingleOrDefault(x => x.ProductSellId == item.ProductSellId && x.EndDate.Date>=DateTime.Now.Date);
                 if (discount != null)
                 {
-                    item.PriceAfterOff = item.Price * ((decimal)discount.Percent / 100);
+                    item.PriceAfterOff = (item.Price * (decimal)discount.Percent) / 100;
                 }
+
 
             }
 
@@ -85,7 +86,7 @@ namespace Query.Service.Cart
 
             var discount = await _productDiscountRepository.GetByProductSellIdAsync(productsell.ProductId, productSellId);
             if (discount != null)
-                productsell.PriceAfterOff = productsell.Price * (discount.Percent / 100);
+                productsell.PriceAfterOff = productsell.Price * discount.Percent / 100;
 
             return productsell;
         }

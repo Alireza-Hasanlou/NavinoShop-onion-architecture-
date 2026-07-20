@@ -40,14 +40,15 @@ namespace Query.Service.Ui.UserPanel.UserAddress
                          Phone = u.Phone,
                          CityId = u.CityId,
                          StateId = u.StateId,
-                         State = "",
-                         City = ""
+                         IsDefault=u.Is_Default,
+                         StateName = "",
+                         CityName = ""
 
                      }).ToListAsync();
             foreach (var address in addresses)
             {
-                address.State = await _stateRepository.GetStateTitle(address.StateId);
-                address.City = await _cityRepository.GetCityTitle(address.CityId);
+                address.StateName = await _stateRepository.GetStateTitle(address.StateId);
+                address.CityName = await _cityRepository.GetCityTitle(address.CityId);
             }
             return addresses;
         }

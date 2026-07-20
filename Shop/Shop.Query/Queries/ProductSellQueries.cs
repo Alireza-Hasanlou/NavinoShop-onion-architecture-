@@ -17,9 +17,9 @@ namespace Shop.Query.Queries
             _productSellRepository = productSellRepository;
         }
 
-        public async Task<bool> ProductSellHaveAmount(int Id)
+        public async Task<bool> ProductSellHaveAmount(int Id, int quantity)
         {
-           return await _productSellRepository.ProductSellHaveAmount(Id);   
+           return await _productSellRepository.ProductSellHaveAmount(Id , quantity );   
         }
     }
 }

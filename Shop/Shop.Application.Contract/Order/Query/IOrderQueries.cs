@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Users.Application.Contract.UserAddressService.Query
+namespace Shop.Application.Contract.Order.Query
 {
-    public interface IUserAddressQueryService
+    public interface IOrderQueries
     {
-
+        
     }
 }

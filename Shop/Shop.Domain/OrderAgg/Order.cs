@@ -54,7 +54,8 @@ namespace Shop.Domain.OrderAgg
         {
             get
             {
-                var discountPrice = DiscountPercent * (PaymentPriceSeller / 100);
+                
+                var discountPrice = (PaymentPriceSeller * DiscountPercent) / 100;
 
 
                 return PaymentPriceSeller - discountPrice + PostPrice;
@@ -74,6 +75,7 @@ namespace Shop.Domain.OrderAgg
             OrderAddressId = null;
             DiscountId = 0;
             DiscountPercent = 0;
+            DiscountTitle = "";
         }
         public void ChangeStatus(OrderStatus status)
         {
@@ -107,7 +109,17 @@ namespace Shop.Domain.OrderAgg
             OrderAddressId = key;
         }
 
+        public void RemoveDiscount()
+        {
+            DiscountId = 0;
+            DiscountPercent = 0;
+            DiscountTitle = "";
+        }
 
+        public void RemoveOrderSeller(OrderSeller orderSeller)
+        {
+            OrderSellers.Remove(orderSeller);
+        }
     }
 }
 

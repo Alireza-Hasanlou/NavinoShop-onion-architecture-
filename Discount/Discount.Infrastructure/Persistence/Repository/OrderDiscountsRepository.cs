@@ -1,6 +1,7 @@
 ﻿using Discount.Domain.OrderDiscountAgg;
 using Discount.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using Shared.Insfrastructure;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,16 @@ namespace Discount.Infrastructure.Persistence.Repository
         public OrderDiscountsRepository(DiscountContext context) : base(context)
         {
             _discountContext = context;
+        }
+
+        public async Task DeleteExpireOrderDiscountsAsync()
+        {
+            await _discountContext.OrderDiscounts.Where(x => x.EndDate.Date < DateAndTime.Now.Date).ExecuteDeleteAsync();
+        }
+
+        public async Task<bool> DiscountIsValidAsync(int discountId)
+        {
+            return await ExistByAsync(x => x.Id == discountId && x.EndDate.Date >= DateTime.Now.Date);
         }
 
         public async Task<OrderDiscount> GetByCodeAsync(string code) =>

@@ -72,7 +72,7 @@ namespace Shop.Domain.OrderSellerAgg
         {
             get
             {
-                var discountPrice = PriceAfterOff * DiscountPercent / 100;
+                var discountPrice = (PriceAfterOff * DiscountPercent) / 100;
                 return PriceAfterOff - discountPrice;
             }
         }
@@ -80,6 +80,18 @@ namespace Shop.Domain.OrderSellerAgg
         {
             item.OrderSellerId = Id;
             OrderItems.Add(item);
+        }
+
+        public void RemoveDiscount()
+        {
+            DiscountId = 0;
+            DiscountPercent = 0;
+            DiscountTitle = "";
+        }
+
+        public void RemoveOrderItem(OrderItem item)
+        {
+            OrderItems.Remove(item);
         }
     }
 

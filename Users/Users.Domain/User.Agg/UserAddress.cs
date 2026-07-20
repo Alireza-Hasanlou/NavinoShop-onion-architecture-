@@ -12,6 +12,7 @@ namespace Users.Domain.User.Agg
         public string Phone { get; private set; }
         public string FullName { get; private set; }
         public string NationalCode { get; private set; }
+        public bool Is_Default { get; private set; }
         public int UserId { get; private set; }
         public User User { get; private set; }
 
@@ -27,6 +28,7 @@ namespace Users.Domain.User.Agg
             FullName = fullName;
             NationalCode = nationalCode;
             UserId = userId;
+            
 
         }
 
@@ -41,6 +43,11 @@ namespace Users.Domain.User.Agg
             FullName = fullName;
             NationalCode = nationalCode;
 
+        }
+
+        public void ChangeDefultStatus(bool status)
+        {
+            Is_Default = status;
         }
     }
 

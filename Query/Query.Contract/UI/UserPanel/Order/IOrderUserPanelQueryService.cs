@@ -26,7 +26,7 @@ namespace Query.Contract.UI.UserPanel.Order
         public int PaymentPrice { get; set; }
         public int DiscountPrice { get; set; }
         public List<OrderSellerUserPanelQueryModel> OrderSellers { get; set; }
-        public List<OrderAddressQueryModel> Addresses { get; set; }
+        public OrderAddressQueryModel Address { get; set; }
 
     }
 

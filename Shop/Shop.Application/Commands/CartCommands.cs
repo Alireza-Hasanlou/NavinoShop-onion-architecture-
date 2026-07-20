@@ -14,9 +14,11 @@ namespace Shop.Application.Commands
     internal class CartCommands : ICartCommands
     {
         private readonly ICartRepository _cartRepository;
-        public CartCommands(ICartRepository cartRepository)
+        private readonly IProductSellRepository _productSellRepository;
+        public CartCommands(ICartRepository cartRepository, IProductSellRepository productSellRepository)
         {
             _cartRepository = cartRepository;
+            _productSellRepository = productSellRepository;
         }
 
         public async Task<OperationResult> ClearCartAsync(int userId)
@@ -31,13 +33,16 @@ namespace Shop.Application.Commands
         {
             if (UserId < 1 || ProductSellId < 1)
                 return new OperationResult(false, "داده های نامعتبر");
+
             var cartProduct = await _cartRepository.GetCartProductAsync(UserId, ProductSellId);
             if (cartProduct != null)
             {
-                cartProduct.ChangeQuantity(1);
-                if (await _cartRepository.SaveAsync())
-                    return new(true);
-                return new(false, ValidationMessages.SystemErrorMessage);
+                
+
+                    cartProduct.ChangeQuantity(Quantity);
+                    if (await _cartRepository.SaveAsync())
+                        return new(true, "محصول با موفقیت به سبد خرید اضافه شد");
+                    return new(false, ValidationMessages.SystemErrorMessage);
             }
             else
             {

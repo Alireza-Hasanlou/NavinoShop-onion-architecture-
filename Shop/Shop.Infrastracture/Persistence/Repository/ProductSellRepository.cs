@@ -23,9 +23,9 @@ namespace Shop.Infrastracture.Persistence.Repository
             return await _shopContext.productSells.Where(i => productSellIds.Any(x => x == i.Id)).ToListAsync();
         }
 
-        public async Task<bool> ProductSellHaveAmount(int id)
+        public async Task<bool> ProductSellHaveAmount(int id, int quantity)
         {
-            return await _shopContext.productSells.AnyAsync(x => x.Id == id && x.Amount > 0);
+            return await _shopContext.productSells.AnyAsync(x => x.Id == id && x.Amount >= quantity);
         }
     }
 }

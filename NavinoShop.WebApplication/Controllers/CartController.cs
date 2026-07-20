@@ -8,6 +8,7 @@ using Shared.Application;
 using Shared.Application.Auth;
 using Shop.Application.Contract.Cart;
 using Shop.Application.Contract.ProductSell.Query;
+using Shop.Domain.ProductSellAgg;
 using System.Threading.Tasks;
 
 namespace NavinoShop.WebApplication.Controllers
@@ -128,7 +129,7 @@ namespace NavinoShop.WebApplication.Controllers
                     var finalPrice = hasDiscount ? item.PriceAfterOff : item.Price;
                     var itemTotal = finalPrice * item.quantity;
                     var discountAmount = hasDiscount ? (item.Price - item.PriceAfterOff) * item.quantity : 0;
-                    var hasStock = await _productSellQueries.ProductSellHaveAmount(item.ProductSellId);
+                    var hasStock = await _productSellQueries.ProductSellHaveAmount(item.ProductSellId , item.quantity);
 
                     cartItems.Add(new
                     {
@@ -183,7 +184,7 @@ namespace NavinoShop.WebApplication.Controllers
                                 var finalPrice = hasDiscount ? priceAfterOff : price;
                                 var itemTotal = finalPrice * item.Value.quantity;
                                 var discountAmount = hasDiscount ? (price - priceAfterOff) * item.Value.quantity : 0;
-                                var hasStock = await _productSellQueries.ProductSellHaveAmount(int.Parse(item.Key));
+                                var hasStock = await _productSellQueries.ProductSellHaveAmount(int.Parse(item.Key),item.Value.quantity);
 
                                 cartItems.Add(new
                                 {
@@ -228,17 +229,28 @@ namespace NavinoShop.WebApplication.Controllers
         {
             try
             {
+                var haveAmount = await _productSellQueries.ProductSellHaveAmount(productSellId, quantity);
+                if(!haveAmount)
+                    return Json(new
+                    {
+                        success = false,
+
+                        message = "مثل اینکه موجودی محصول تو انبار تموم شده"
+                    });
+
+
+
                 if (_authService.IsUserLogin())
                 {
                     var userId = _authService.GetLoginUserId();
-                    await _cartCommands.CreateAsync(userId, productSellId, quantity);
+                    var res = await _cartCommands.CreateAsync(userId, productSellId, quantity);
 
 
                     return Json(new
                     {
-                        success = true,
+                        success = res.Success,
 
-                        message = "محصول با موفقیت به سبد خرید اضافه شد"
+                        message = res.Message
                     });
                 }
                 else
@@ -417,7 +429,7 @@ namespace NavinoShop.WebApplication.Controllers
                     }
                     else
                     {
-                        var hasStock = await _productSellQueries.ProductSellHaveAmount(productId);
+                        var hasStock = await _productSellQueries.ProductSellHaveAmount(productId , newQuantity);
                         if (!hasStock)
                             return Json(new { success = false, message = "موجودی محصول کافی نیست" });
 
@@ -575,7 +587,7 @@ namespace NavinoShop.WebApplication.Controllers
         {
             try
             {
-              
+
                 if (!_authService.IsUserLogin())
                     return Json(new { success = false, message = "کاربر لاگین نیست" });
 
@@ -607,7 +619,7 @@ namespace NavinoShop.WebApplication.Controllers
                     });
                 }
 
-              
+
                 var dbCartItems = await _cartUiQueryService.GetAllAsync(userId);
                 var dbCartDict = dbCartItems.ToDictionary(x => x.ProductSellId);
 
@@ -621,8 +633,8 @@ namespace NavinoShop.WebApplication.Controllers
                     var productSellId = int.Parse(cookieItem.Key);
                     var cookieQuantity = cookieItem.Value.quantity;
 
-              
-                    var hasStock = await _productSellQueries.ProductSellHaveAmount(productSellId);
+
+                    var hasStock = await _productSellQueries.ProductSellHaveAmount(productSellId,cookieQuantity);
                     if (!hasStock)
                     {
 
@@ -631,17 +643,17 @@ namespace NavinoShop.WebApplication.Controllers
                         continue;
                     }
 
-            
+
                     if (dbCartDict.TryGetValue(productSellId, out var dbItem))
                     {
-                   
+
                         int dbQuantity = dbItem.quantity;
                         int dbAmount = dbItem.Amount;
 
-                 
+
                         if (cookieQuantity != dbQuantity)
                         {
-                        
+
                             if (cookieQuantity > dbQuantity)
                             {
                                 int maxAvailable = dbAmount;
@@ -649,7 +661,7 @@ namespace NavinoShop.WebApplication.Controllers
 
                                 if (canAdd > 0)
                                 {
-                                   
+
                                     var updateResult = await _cartCommands.UpdateQuantityAsync(userId, productSellId, canAdd);
                                     if (updateResult.Success)
                                     {
@@ -659,28 +671,28 @@ namespace NavinoShop.WebApplication.Controllers
                                 }
                                 else if (canAdd == 0 && cookieQuantity > dbQuantity)
                                 {
-                                    
+
                                     cookieItem.Value.quantity = dbAmount;
                                     anyChanges = true;
                                 }
                             }
-                      
+
                         }
 
                     }
                     else
                     {
-                   
+
                         await _cartCommands.CreateAsync(userId, productSellId, cookieQuantity);
                         addedCount++;
                         anyChanges = true;
                     }
                 }
 
-              
+
                 Response.Cookies.Delete("NavinoshoppingCart", new CookieOptions { Path = "/" });
 
-          
+
                 var newCartCount = await _cartUiQueryService.GetCartCountAsync(userId);
 
                 return Json(new

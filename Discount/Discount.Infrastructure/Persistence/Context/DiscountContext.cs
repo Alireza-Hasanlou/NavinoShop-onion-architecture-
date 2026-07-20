@@ -27,17 +27,17 @@ namespace Discount.Infrastructure.Persistence.Context
     }
 }
 
-//TODO RemoveThis
-public class FinancialContextFactory
-        : IDesignTimeDbContextFactory<DiscountContext>
-{
-    public DiscountContext CreateDbContext(string[] args)
-    {
-        var optionsBuilder = new DbContextOptionsBuilder<DiscountContext>();
+//TODO RemoveThi
+//public class FinancialContextFactory
+//        : IDesignTimeDbContextFactory<DiscountContext>
+//{
+//    public DiscountContext CreateDbContext(string[] args)
+//    {
+//        var optionsBuilder = new DbContextOptionsBuilder<DiscountContext>();
 
-        optionsBuilder.UseSqlServer(
-            "Server=.;Database=NavinoShop_DB;Trusted_Connection=True;TrustServerCertificate=True;");
+//        optionsBuilder.UseSqlServer(
+//            "Server=.;Database=NavinoShop_DB;Trusted_Connection=True;TrustServerCertificate=True;");
 
-        return new DiscountContext(optionsBuilder.Options);
-    }
-}
+//        return new DiscountContext(optionsBuilder.Options);
+   // }
+//}

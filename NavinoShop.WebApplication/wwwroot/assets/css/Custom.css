@@ -6500,4 +6500,241 @@ input:checked + .custom-slider {
         min-width: 100%;
     }
 }
+/* اطمینان از نمایش همیشگی اینپوت */
+.inv-discount-wrapper {
+    display: flex !important;
+    flex-wrap:nowrap;
+}
+
+/* استایل بخش نمایش تخفیف اعمال شده */
+.inv-discount-display {
+    display: inline-block;
+    margin: 0 0.5rem;
+}
+
+.inv-discount-badge {
+    background: #eaf6ef;
+    color: #0c6b3e;
+    padding: 0.3rem 1rem;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+/* دکمه حذف تخفیف */
+.inv-remove-discount-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.3rem 1rem;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+    .inv-remove-discount-btn:hover {
+        background: #c82333;
+        transform: scale(1.02);
+    }
+
+    .inv-remove-discount-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+.inv-discount-section {
+    margin-bottom: 20px;
+}
+
+.inv-discount-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #333;
+}
+
+    .inv-discount-label i {
+        color: #e67e22;
+        font-size: 18px;
+    }
+
+.inv-discount-hint {
+    font-size: 12px;
+    color: #999;
+    margin-right: 5px;
+}
+
+.inv-discount-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.inv-discount-input {
+    flex: 1;
+    padding: 10px 15px;
+    border: 2px solid #e0e7ef;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    direction: rtl;
+}
+
+    .inv-discount-input:focus {
+        border-color: #0b6e41;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(11, 110, 65, 0.1);
+    }
+
+.inv-discount-btn {
+    padding: 10px 20px;
+    background: #0b6e41;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+    .inv-discount-btn:hover {
+        background: #095a35;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(11, 110, 65, 0.3);
+    }
+
+    .inv-discount-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+.inv-discount-applied {
+    margin-top: 10px;
+    padding: 12px 16px;
+    background: #eaf6ef;
+    border-radius: 8px;
+    border-right: 3px solid #0b6e41;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.inv-discount-applied-icon {
+    color: #0b6e41;
+    font-size: 18px;
+}
+
+.inv-discount-applied-text {
+    color: #0b6e41;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.inv-discount-applied-code {
+    color: #0b6e41;
+    font-size: 13px;
+}
+
+.inv-remove-discount-btn {
+    padding: 5px 12px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+    .inv-remove-discount-btn:hover {
+        background: #c82333;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+    }
+
+    .inv-remove-discount-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+.inv-discount-info {
+    margin-top: 15px;
+    padding: 12px 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 14px;
+}
+
+    .inv-discount-info span {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .inv-discount-info i {
+        color: #0b6e41;
+    }
+
+#invFinalAmount_Unique_001 {
+    font-weight: 700;
+    color: #0b6e41;
+}
 /*Order Form End*/
+
+
+/***********SelectAddress modal*/
+
+.address-item {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+    .address-item:hover {
+        background-color: #f8f9fa;
+        transform: translateX(-5px);
+    }
+
+    .address-item.border-primary {
+        border-width: 2px !important;
+    }
+
+    .address-item .address-actions {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .address-item:hover .address-actions {
+        opacity: 1;
+    }
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.address-radio {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}

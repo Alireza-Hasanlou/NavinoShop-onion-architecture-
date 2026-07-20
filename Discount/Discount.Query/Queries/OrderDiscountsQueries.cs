@@ -20,6 +20,8 @@ namespace Discount.Query.Queries
             _orderDiscountRepository = orderDiscountRepository;
         }
 
+  
+
         public async Task<List<OrderDiscountsQueryModel>> GeAllAsync(int ShopId, OrderDiscountType type)
         {
 
@@ -60,10 +62,12 @@ namespace Discount.Query.Queries
 
             if (discount is null)
                 return new(false, $"تخفیفی با کد {code} یافت نشد");
-            if (discount.ShopId != sellerId)
+            if (sellerId == 0 && discount.ShopId != 0)
+                return new(false, $"تخفیفی با کد {code} یافت نشد");
+            if (sellerId > 0 && discount.ShopId != sellerId)
                 return new(false, $"تخفیفی با کد {code} برای این فروشگاه ثبت نشده");
-                if (discount.EndDate.Date < DateTime.Now.Date)
-                    return new(false, $"مهلت استفاده از کد تخفیف {code} به پایان رسیده ");
+            if (discount.EndDate.Date < DateTime.Now.Date)
+                return new(false, $"مهلت استفاده از کد تخفیف {code} به پایان رسیده ");
             if (discount.StartDate.Date > DateTime.Now.Date)
                 return new(false, $"مهلت استفاده از کد تخفیف {code}هنوز شروع نشده تا تاریخ {discount.StartDate.Date.ToPersainDate()} صبرکنید");
             if (discount.Count < 1)

@@ -161,7 +161,7 @@ function renderGuestMenu() {
 }
 
 function login() {
- 
+
     $.ajax({
         url: "/Account/Login",
         type: "POST",
@@ -174,7 +174,7 @@ function login() {
                 AlerSweetWithTimer("ورود با موفقیت انجام شد", "success", "center");
                 syncCartFromCookie();
                 setTimeout(function () {
-                
+
                     location.reload();
                 }, 3000);
             } else {
@@ -187,7 +187,7 @@ function login() {
             AlerSweetWithTimer("خطا در ارتباط با سرور", "error", "center");
         }
     });
-   
+
 }
 
 (function ($) {
@@ -442,7 +442,7 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-  
+
 
     $('#rialAmount').on('input', function () {
         let rialValue = $(this).val();
@@ -939,7 +939,7 @@ function CreateStore() {
 }
 
 function loadProductSells() {
-     
+
     var sellerId = $('#SellerId').val();
     $('#loadingSpinner').show();
     $('#productsell').prop('disabled', true);
@@ -977,7 +977,7 @@ function loadProductSells() {
 }
 
 function CreateStoreProduct() {
-     
+
     var productId = $('#productsell').val();
     var storeType = $('#StoreType').val();
     var count = $('#count').val();
@@ -1840,7 +1840,7 @@ function displayComments(pagingData) {
                 
                 <div id="${repliesContainerId}" class="replies-container">
         `;
-         
+
         if (comment.replys && comment.replys.length > 0) {
             comment.replys.forEach(function (reply) {
                 var replyUserImage = reply.imageName;
@@ -2119,7 +2119,7 @@ function loadOtherSellers(sellerId, productSlug) {
 
 
 function addDiscount(btn) {
-     
+
     // دریافت مقادیر
     var productId = $('#ProductId').val();
     var productSellId = $('#ProductSellId').val();
@@ -2410,3 +2410,623 @@ function EditOrderSellerDiscount(button) {
         }
     });
 }
+
+/*OrderAddress */
+$(document).ready(function () {
+    // ============================================
+    // متغیرهای سراسری
+    // ============================================
+    let selectedAddressId = null;
+    let addressModal = null;
+    let addAddressModal = null;
+    let statesData = [];
+    let citiesData = [];
+
+    // ============================================
+    // مقداردهی اولیه مودال‌ها
+    // ============================================
+    function initModals() {
+        addressModal = new bootstrap.Modal(document.getElementById('addressModal'), {
+            backdrop: 'static',
+            keyboard: false
+        });
+
+        addAddressModal = new bootstrap.Modal(document.getElementById('addAddressModal'), {
+            backdrop: 'static',
+            keyboard: false
+        });
+    }
+
+    // ============================================
+    // باز کردن مودال انتخاب آدرس
+    // ============================================
+    $('#openAddressModalBtn').on('click', function () {
+        if (!addressModal) initModals();
+        loadAddressList();
+        addressModal.show();
+    });
+
+    // ============================================
+    // باز کردن مودال افزودن آدرس جدید از صفحه اصلی
+    // ============================================
+    $('#addNewAddressBtn2').on('click', function () {
+        if (!addAddressModal) initModals();
+        resetAddAddressForm();
+        loadStates();
+        addAddressModal.show();
+    });
+
+    // ============================================
+    // باز کردن مودال افزودن آدرس جدید از داخل مودال اول
+    // ============================================
+    $('#addNewAddressBtn').on('click', function () {
+        if (addressModal) {
+            addressModal.hide();
+        }
+
+        setTimeout(function () {
+            if (!addAddressModal) initModals();
+            resetAddAddressForm();
+            loadStates();
+            addAddressModal.show();
+        }, 300);
+    });
+
+    // ============================================
+    // بارگذاری لیست استان‌ها
+    // ============================================
+    function loadStates() {
+        $('#stateSelect').html('<option value="">در حال بارگذاری استان‌ها...</option>');
+        $('#stateSelect').prop('disabled', true);
+
+        $.ajax({
+            url: '/api/Post/States',
+            method: 'GET',
+            success: function (response) {
+                $('#stateSelect').prop('disabled', false);
+
+                if (response && response.length > 0) {
+                    statesData = response;
+                    let options = '<option value="">انتخاب استان...</option>';
+
+                    response.forEach(function (state) {
+                        options += `<option value="${state.id}">${state.title}</option>`;
+                    });
+
+                    $('#stateSelect').html(options);
+                } else {
+                    $('#stateSelect').html('<option value="">استانی یافت نشد</option>');
+                    AlerSweetWithTimer('خطا در بارگذاری استان‌ها', 'warning', 'Center');
+                }
+            },
+            error: function (xhr) {
+                $('#stateSelect').prop('disabled', false);
+                $('#stateSelect').html('<option value="">خطا در بارگذاری استان‌ها</option>');
+
+                let message = 'خطا در بارگذاری استان‌ها';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    message = xhr.responseJSON.message;
+                }
+                AlerSweetWithTimer(message, 'error', 'Center');
+            }
+        });
+    }
+
+    // ============================================
+    // بارگذاری لیست شهرها بر اساس استان انتخاب شده
+    // ============================================
+    function loadCitiesByStateId(stateId) {
+        $('#citySelect').html('<option value="">در حال بارگذاری شهرها...</option>');
+        $('#citySelect').prop('disabled', true);
+
+        $.ajax({
+            url: `/api/Post/Cities?stateId=${stateId}`,
+            method: 'GET',
+            success: function (response) {
+                $('#citySelect').prop('disabled', false);
+
+                if (response && response.length > 0) {
+                    citiesData = response;
+                    let options = '<option value="">انتخاب شهر...</option>';
+
+                    response.forEach(function (city) {
+                        options += `<option value="${city.cityCode}">${city.title}</option>`;
+                    });
+
+                    $('#citySelect').html(options);
+                } else {
+                    $('#citySelect').html('<option value="">شهری یافت نشد</option>');
+                    AlerSweetWithTimer('هیچ شهری برای این استان یافت نشد', 'warning', 'Center');
+                }
+            },
+            error: function (xhr) {
+                $('#citySelect').prop('disabled', false);
+                $('#citySelect').html('<option value="">خطا در بارگذاری شهرها</option>');
+
+                let message = 'خطا در بارگذاری شهرها';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    message = xhr.responseJSON.message;
+                }
+                AlerSweetWithTimer(message, 'error', 'Center');
+            }
+        });
+    }
+
+    // ============================================
+    // رویداد تغییر استان
+    // ============================================
+    $(document).on('change', '#stateSelect', function () {
+        let stateId = $(this).val();
+
+        if (stateId) {
+            loadCitiesByStateId(stateId);
+        } else {
+            $('#citySelect').html('<option value="">انتخاب شهر...</option>');
+            $('#citySelect').prop('disabled', true);
+        }
+    });
+
+    // ============================================
+    // انتخاب رادیو باتن آدرس و ذخیره خودکار
+    // ============================================
+    $(document).on('change', '.address-radio', function () {
+        selectedAddressId = $(this).val();
+
+        // حذف هایلایت از همه آیتم‌ها
+        $('.address-item').removeClass('border-primary bg-light');
+
+        // هایلایت کردن آدرس انتخاب شده
+        $(this).closest('.address-item').addClass('border-primary bg-light');
+
+        // بلافاصله آدرس انتخاب شده را ذخیره کن
+        selectAndSaveAddress(selectedAddressId);
+    });
+
+
+    // ============================================
+    // تنظیم به عنوان آدرس اصلی
+    // ============================================
+    $(document).on('click', '.set-main-address', function (e) {
+        e.stopPropagation();
+        let addressId = $(this).data('id');
+        let $addressItem = $(this).closest('.address-item');
+
+        // دریافت اطلاعات آدرس از المان
+        let addressData = {
+            id: addressId,
+            stateName: $addressItem.find('.address-state-name').text() || '',
+            cityName: $addressItem.find('.address-city-name').text() || '',
+            addressDetail: $addressItem.find('.address-detail').text() || '',
+            nationalCode: $addressItem.find('.address-national-code').text() || '',
+            postalCode: $addressItem.find('.address-postal-code').text() || '',
+            fullName: $addressItem.find('.address-full-name').text() || '',
+            phone: $addressItem.find('.address-phone').text() || ''
+        };
+
+        // نمایش لودینگ
+        Swal.fire({
+            title: 'در حال پردازش...',
+            text: 'لطفاً صبر کنید',
+            allowOutsideClick: false,
+            didOpen: function () {
+                Swal.showLoading();
+            }
+        });
+
+        // درخواست AJAX برای تنظیم آدرس اصلی
+        $.ajax({
+            url: '/Profile/SetAddressToDefault',
+            method: 'POST',
+            data: { addressId: addressId },
+            success: function (response) {
+                Swal.close();
+
+                if (response.success) {
+                    AlerSweetWithTimer(response.message, 'success', 'Center');
+
+                    // به‌روزرسانی نمایش آدرس در صفحه اصلی با داده‌های موجود
+                    updateAddressDisplay(addressData);
+
+                    // بارگذاری مجدد لیست آدرس‌ها برای به‌روزرسانی نشان اصلی
+                    loadAddressList();
+                } else {
+                    AlerSweetWithTimer(response.message, 'error', 'Center');
+                }
+            },
+            error: function (xhr) {
+                Swal.close();
+                let message = 'خطا در تنظیم آدرس اصلی';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    message = xhr.responseJSON.message;
+                }
+                AlerSweetWithTimer(message, 'error', 'Center');
+            }
+        });
+    });
+
+    // ============================================
+    // ذخیره آدرس جدید
+    // ============================================
+    $('#submitNewAddressBtn').on('click', function () {
+        if (!validateAddAddressForm()) {
+            return;
+        }
+
+        let formData = {
+            StateId: $('#stateSelect').val(),
+            CityId: $('#citySelect').val(),
+            AddressDetail: $('#addressDetail').val().trim(),
+            PostalCode: $('#postalCode').val().trim(),
+            Phone: $('#phoneNumber').val().trim(),
+            FullName: $('#fullName').val().trim(),
+            NationalCode: $('#nationalCode').val().trim(),
+        };
+
+        Swal.fire({
+            title: 'در حال افزودن آدرس...',
+            text: 'لطفاً صبر کنید',
+            allowOutsideClick: false,
+            didOpen: function () {
+                Swal.showLoading();
+            }
+        });
+
+        $.ajax({
+            url: '/Profile/CreateAddressByAjax',
+            method: 'POST',
+            data: formData,
+            success: function (response) {
+                if (response.success) {
+                    Swal.close();
+                    addAddressModal.hide();
+                    AlerSweetWithTimer(response.message, 'success', 'Center');
+
+                    loadAddressList(response.addressId);
+
+                    if (response.address) {
+                        updateAddressDisplay(response.address);
+                    }
+                } else {
+                    Swal.close();
+                    addAddressModal.hide();
+                    AlerSweetWithTimer(response.message, 'error', 'Center');
+                }
+            },
+            error: function (xhr) {
+                Swal.close();
+                let message = 'خطا در افزودن آدرس';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    message = xhr.responseJSON.message;
+                }
+                AlerSweetWithTimer(message, 'error', 'Center');
+            }
+        });
+    });
+
+    // ============================================
+    // بارگذاری لیست آدرس‌ها
+    // ============================================
+    function loadAddressList(selectedId = null) {
+        $('#addressListContainer').html(`
+            <div class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">در حال بارگذاری...</span>
+                </div>
+                <p class="mt-2 text-muted">در حال بارگذاری آدرس‌ها...</p>
+            </div>
+        `);
+
+        $.ajax({
+            url: '/Order/GetUserAddresses',
+            method: 'GET',
+            success: function (response) {
+                let container = $('#addressListContainer');
+                container.empty();
+
+                if (!response || response.length === 0) {
+                    $('#emptyAddressMessage').removeClass('d-none');
+                    return;
+                }
+
+                $('#emptyAddressMessage').addClass('d-none');
+
+                response.forEach(function (address) {
+                    let isMain = address.isMain ? '<span class="badge bg-primary mb-2">آدرس اصلی</span>' : '';
+                    let checked = '';
+
+                    if (selectedId && selectedId == address.id) {
+                        checked = 'checked';
+                    } else if (address.isDefault && !selectedId) {
+                        checked = 'checked';
+                        selectedAddressId = address.id;
+                    }
+
+                    let addressHtml = `
+                        <div class="address-item mb-3 p-3 border rounded-3 ${checked ? 'border-primary bg-light' : ''}" data-address-id="${address.id}">
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+                                    <input type="radio" name="selectedAddress" value="${address.id}" 
+                                           class="form-check-input address-radio" id="address_${address.id}" ${checked}>
+                                </div>
+                                <div class="col">
+                                    <label for="address_${address.id}" class="w-100 cursor-pointer">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                ${isMain}
+                                                <h6 class="mb-1 fw-bold address-full-name">${address.fullName || 'نامشخص'}</h6>
+                                                <p class="mb-1 text-muted small">
+                                                    <span class="address-state-name">${address.stateName || ''}</span>
+                                                    <span class="address-city-name">${address.cityName ? '، ' + address.cityName : ''}</span>
+                                                    <span class="address-detail">${address.addressDetail ? '، ' + address.addressDetail : ''}</span>
+                                                </p>
+                                                <p class="mb-0 text-muted small">
+                                                    <span class="address-national-code">${address.nationalCode ? 'شماره ملی: ' + address.nationalCode : ''}</span>
+                                                    ${address.nationalCode && address.postalCode ? ' | ' : ''}
+                                                    <span class="address-postal-code">${address.postalCode ? 'کدپستی: ' + address.postalCode : ''}</span>
+                                                    ${address.postalCode && address.phone ? ' | ' : ''}
+                                                    <span class="address-phone">${address.phone ? 'تلفن: ' + address.phone : ''}</span>
+                                                </p>
+                                            </div>
+                                            <div class="address-actions">
+                                                <button type="button" class="btn btn-link text-success btn-sm set-main-address" data-id="${address.id}">
+                                                    <i class="fas fa-check-circle"></i> انتخاب
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.append(addressHtml);
+                });
+
+                if (selectedId) {
+                    $(`input[value="${selectedId}"]`).prop('checked', true);
+                    $(`input[value="${selectedId}"]`).closest('.address-item').addClass('border-primary bg-light');
+                    selectedAddressId = selectedId;
+
+                    let selectedAddress = response.find(addr => addr.id == selectedId);
+                    if (selectedAddress) {
+                        updateAddressDisplay(selectedAddress);
+                    }
+                }
+            },
+            error: function () {
+                $('#addressListContainer').html(`
+                    <div class="text-center py-5 text-danger">
+                        <i class="fas fa-exclamation-circle fa-3x mb-3"></i>
+                        <p>خطا در بارگذاری آدرس‌ها</p>
+                        <button class="btn btn-outline-primary btn-sm" onclick="loadAddressList()">
+                            <i class="fas fa-redo"></i> تلاش مجدد
+                        </button>
+                    </div>
+                `);
+                AlerSweetWithTimer('خطا در بارگذاری آدرس‌ها', 'error', 'Center');
+            }
+        });
+    }
+
+    // ============================================
+    // اعتبارسنجی فرم افزودن آدرس
+    // ============================================
+    function validateAddAddressForm() {
+        let isValid = true;
+        let errorMessage = '';
+
+        if (!$('#stateSelect').val()) {
+            errorMessage += 'لطفاً استان را انتخاب کنید\n';
+            $('#stateSelect').addClass('is-invalid');
+            isValid = false;
+        } else {
+            $('#stateSelect').removeClass('is-invalid');
+        }
+
+        if (!$('#citySelect').val()) {
+            errorMessage += 'لطفاً شهر را انتخاب کنید\n';
+            $('#citySelect').addClass('is-invalid');
+            isValid = false;
+        } else {
+            $('#citySelect').removeClass('is-invalid');
+        }
+
+        if (!$('#addressDetail').val().trim()) {
+            errorMessage += 'لطفاً جزییات آدرس را وارد کنید\n';
+            $('#addressDetail').addClass('is-invalid');
+            isValid = false;
+        } else {
+            $('#addressDetail').removeClass('is-invalid');
+        }
+
+        let postalCode = $('#postalCode').val().trim();
+        if (!postalCode) {
+            errorMessage += 'لطفاً کد پستی را وارد کنید\n';
+            $('#postalCode').addClass('is-invalid');
+            isValid = false;
+        } else if (postalCode.length !== 10) {
+            errorMessage += 'کد پستی باید ۱۰ رقم باشد\n';
+            $('#postalCode').addClass('is-invalid');
+            isValid = false;
+        } else {
+            $('#postalCode').removeClass('is-invalid');
+        }
+
+        let phone = $('#phoneNumber').val().trim();
+        if (!phone) {
+            errorMessage += 'لطفاً شماره تماس را وارد کنید\n';
+            $('#phoneNumber').addClass('is-invalid');
+            isValid = false;
+        } else if (phone.length !== 11) {
+            errorMessage += 'شماره تماس باید ۱۱ رقم باشد\n';
+            $('#phoneNumber').addClass('is-invalid');
+            isValid = false;
+        } else {
+            $('#phoneNumber').removeClass('is-invalid');
+        }
+
+        if (!$('#fullName').val().trim()) {
+            errorMessage += 'لطفاً نام تحویل گیرنده را وارد کنید\n';
+            $('#fullName').addClass('is-invalid');
+            isValid = false;
+        } else {
+            $('#fullName').removeClass('is-invalid');
+        }
+
+        let nationalCode = $('#nationalCode').val().trim();
+        if (nationalCode && nationalCode.length !== 10) {
+            errorMessage += 'کد ملی باید ۱۰ رقم باشد\n';
+            $('#nationalCode').addClass('is-invalid');
+            isValid = false;
+        } else {
+            $('#nationalCode').removeClass('is-invalid');
+        }
+
+        if (!isValid) {
+            AlerSweetWithTimer(errorMessage, 'warning', 'Center');
+        }
+
+        return isValid;
+    }
+
+    // ============================================
+    // ریست کردن فرم افزودن آدرس
+    // ============================================
+    function resetAddAddressForm() {
+        $('#addAddressForm')[0].reset();
+        $('#stateSelect').removeClass('is-invalid');
+        $('#citySelect').removeClass('is-invalid');
+        $('#addressDetail').removeClass('is-invalid');
+        $('#postalCode').removeClass('is-invalid');
+        $('#phoneNumber').removeClass('is-invalid');
+        $('#fullName').removeClass('is-invalid');
+        $('#nationalCode').removeClass('is-invalid');
+        $('#isMainAddress').prop('checked', false);
+
+        $('#stateSelect').html('<option value="">انتخاب استان...</option>');
+        $('#stateSelect').prop('disabled', false);
+        $('#citySelect').html('<option value="">انتخاب شهر...</option>');
+        $('#citySelect').prop('disabled', true);
+    }
+
+    // ============================================
+    // به‌روزرسانی نمایش آدرس در صفحه اصلی
+    // ============================================
+    function updateAddressDisplay(address) {
+        if (!address) return;
+
+        // به‌روزرسانی عنوان آدرس
+        $('#province-title').text(address.stateName || '');
+        $('#city-title').text(address.cityName || '');
+        $('#address').text(address.addressDetail || '');
+
+        // به‌روزرسانی شماره ملی
+        $('.address-to-send .col-12:contains("شماره ملی")').text(
+            address.nationalCode ?  address.nationalCode : ''
+        );
+
+        // به‌روزرسانی کد پستی
+        $('.address-to-send .row .col-12:eq(0)').text(
+            address.postalCode ?  address.postalCode : ''
+        );
+
+        // به‌روزرسانی تحویل گیرنده
+        let receiverText = '';
+        if (address.fullName) receiverText +=  address.fullName;
+        if (address.phone) receiverText += (receiverText ? ' | ' : '') + address.phone;
+        $('.address-to-send .row .col-12:eq(1)').text(receiverText);
+    }
+
+    // ============================================
+    // تابع نمایش Alert با SweetAlert2
+    // ============================================
+    function AlerSweetWithTimer(message, icon = 'info', position = 'Center') {
+        let timer = 3000;
+        let positionValue = 'center';
+
+        switch (position.toLowerCase()) {
+            case 'top':
+                positionValue = 'top';
+                break;
+            case 'top-start':
+                positionValue = 'top-start';
+                break;
+            case 'top-end':
+                positionValue = 'top-end';
+                break;
+            case 'center':
+                positionValue = 'center';
+                break;
+            case 'center-start':
+                positionValue = 'center-start';
+                break;
+            case 'center-end':
+                positionValue = 'center-end';
+                break;
+            case 'bottom':
+                positionValue = 'bottom';
+                break;
+            case 'bottom-start':
+                positionValue = 'bottom-start';
+                break;
+            case 'bottom-end':
+                positionValue = 'bottom-end';
+                break;
+            default:
+                positionValue = 'center';
+        }
+
+        if (icon === 'error') {
+            timer = 4000;
+        } else if (icon === 'warning') {
+            timer = 3500;
+        }
+
+        Swal.fire({
+            icon: icon,
+            text: message,
+            position: positionValue,
+            showConfirmButton: true,
+            confirmButtonText: 'متوجه شدم',
+            confirmButtonColor: icon === 'error' ? '#dc3545' : icon === 'warning' ? '#ffc107' : '#28a745',
+            timer: timer,
+            timerProgressBar: true,
+            showClass: {
+                popup: 'animate__animated animate__fadeInDown'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__fadeOutUp'
+            }
+        });
+    }
+
+    // ============================================
+    // بارگذاری اولیه
+    // ============================================
+    function init() {
+        initModals();
+
+        $('#addressModal').on('shown.bs.modal', function () {
+            loadAddressList();
+        });
+
+        $('#addAddressModal').on('hidden.bs.modal', function () {
+            resetAddAddressForm();
+        });
+    }
+
+    // ============================================
+    // اجرای توابع هنگام لود صفحه
+    // ============================================
+    init();
+
+    // ============================================
+    // توابع عمومی
+    // ============================================
+    window.loadAddressList = loadAddressList;
+    window.AlerSweetWithTimer = AlerSweetWithTimer;
+    window.resetAddAddressForm = resetAddAddressForm;
+    window.loadStates = loadStates;
+    window.loadCitiesByStateId = loadCitiesByStateId;
+    window.selectAndSaveAddress = selectAndSaveAddress;
+    window.updateAddressDisplay = updateAddressDisplay;
+});

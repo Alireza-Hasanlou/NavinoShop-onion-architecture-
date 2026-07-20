@@ -9,6 +9,6 @@ namespace Shop.Domain.OrderAgg
 {
     public interface IOrderRepository : IGenericRepository<Order, int>
     {
-        Task<Order> GetOpenOrderForUserAsync(int userId);
+        Task<Order> GetOpenOrderForUserAsync(int userId );
     }
 }

@@ -95,15 +95,19 @@
                                                             <div class="input-group mb-3 order-number">
                                                                 <div class="input-group-prepend">
                                                                     <button class="btn btn-outline-secondary btn-plus update-quantity"
-                                                                    type="button" data-id="@item.Id" 
-                                                                    data-change="1" @(isOutOfStock || item.Quantity >= item.Amount ? "disabled" : "")>+</button>
+                                                                            type="button" data-id="@item.Id"
+                                                                            data-change="1" @(isOutOfStock || item.Quantity >= item.Amount ? "disabled" : "")>
+                                                                        +
+                                                                    </button>
                                                                 </div>
-                                                                <input type="text" name="order-number[]" value="@item.Quantity" 
-                                                                class="form-control text-center order-number quantity-input" readonly data-id="@item.Id">
+                                                                <input type="text" name="order-number[]" value="@item.Quantity"
+                                                                       class="form-control text-center order-number quantity-input" readonly data-id="@item.Id">
                                                                 <div class="input-group-prepend">
                                                                     <button class="btn btn-outline-secondary btn-minus update-quantity"
-                                                                    type="button" data-id="@item.Id" data-change="-1" 
-                                                                    @(item.Quantity <= 1 ? "disabled" : "")>_</button>
+                                                                            type="button" data-id="@item.Id" data-change="-1"
+                                                                            @(item.Quantity <= 1 ? "disabled" : "")>
+                                                                        _
+                                                                    </button>
                                                                 </div>
                                                             </div>
                                                             @if (isOutOfStock)
@@ -115,7 +119,7 @@
                                                                 <span class="text-danger" style="font-size: 11px;">فقط @item.Amount عدد باقی مانده</span>
                                                             }
                                                         </div>
-                                                       
+
                                                         <div class="col-6 col-md-2 pr-0">
                                                             <div class="d-md-none font-weight-bold">قیمت نهایی</div>
                                                             <div class="pt-1 pr-2 bg-light">
@@ -183,7 +187,7 @@
                                     </div>
                                     <div class="row py-2">
                                         <div class="col-12">
-                                            <a href="/checkout" class="btn btn-success w-100 @(Model.Items.Any() ? "" : "disabled")">
+                                            <a href="/CheckOut" class="btn btn-success w-100 ">
                                                 ادامه ثبت سفارش
                                             </a>
                                         </div>
@@ -520,5 +524,65 @@
                 updateCartUI();
             });
         });
+        //         function checkout() {
+
+        //     $.ajax({
+        //         url: '/Order/HasPendingOrder',
+        //         type: 'GET',
+        //         success: function (result) {
+
+        //             // فاکتور بازی وجود ندارد
+        //             if (!result.hasPendingOrder) {
+        //                 window.location.href = "/Checkout";
+        //                 return;
+        //             }
+
+        //             // فاکتور باز وجود دارد
+        //             Swal.fire({
+        //                 title: 'سفارش پرداخت‌نشده',
+        //                 html: `
+        //                     شما یک سفارش پرداخت‌نشده دارید.<br><br>
+        //                     آیا می‌خواهید پرداخت همان سفارش را ادامه دهید یا سفارش جدیدی ایجاد کنید؟
+        //                 `,
+        //                 icon: 'warning',
+
+        //                 showConfirmButton: true,
+        //                 showDenyButton: true,
+        //                 showCancelButton: true,
+
+        //                 confirmButtonText: 'ادامه پرداخت',
+        //                 denyButtonText: 'ایجاد سفارش جدید',
+        //                 cancelButtonText: 'انصراف',
+
+        //                 allowOutsideClick: false,
+        //                 allowEscapeKey: false
+
+        //             }).then((swalResult) => {
+
+        //                 if (swalResult.isConfirmed) {
+
+        //                     // ادامه پرداخت سفارش قبلی
+        //                     window.location.href = "/Checkout;
+
+        //                 }
+        //                 else if (swalResult.isDenied) {
+
+        //                     // ایجاد سفارش جدید
+        //                     window.location.href = "/Checkout?newOrder=true";
+        //                 }
+
+        //             });
+
+        //         },
+        //         error: function () {
+        //             Swal.fire(
+        //                 'خطا',
+        //                 'خطایی در برقراری ارتباط با سرور رخ داد.',
+        //                 'error'
+        //             );
+        //         }
+        //     });
+
+        // }
     </script>
 }

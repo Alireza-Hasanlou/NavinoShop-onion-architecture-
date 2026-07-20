@@ -20,9 +20,11 @@ namespace Shop.Infrastracture.Persistence.Repository
             _shopContext = shopContext;
         }
 
-        public async Task<Order> GetOpenOrderForUserAsync(int userId)
+        public async Task<Order?> GetOpenOrderForUserAsync(int userId)
         {
-            var order = await _shopContext.Orders.Where(x => x.UserId == userId && x.OrderStatus == OrderStatus.پرداخت_نشده)
+            var order = await _shopContext.Orders
+                .Where(x => x.UserId == userId &&
+                            x.OrderStatus == OrderStatus.پرداخت_نشده)
                 .Include(x => x.OrderSellers)
                 .ThenInclude(x => x.OrderItems)
                 .SingleOrDefaultAsync();
@@ -30,17 +32,20 @@ namespace Shop.Infrastracture.Persistence.Repository
             if (order != null)
                 return order;
 
-            var Neworder = new Order(userId);
-            var res = await CreateAsync(Neworder);
-            if (res.Success)
-            {
-                return await _shopContext.Orders.Where(x => x.UserId == userId
-                    && x.OrderStatus == OrderStatus.پرداخت_نشده)
-                    .Include(x => x.OrderSellers)
-                    .ThenInclude(x => x.OrderItems)
-                    .SingleOrDefaultAsync();
-            }
-            return null;
+            order = new Order(userId);
+
+            var result = await CreateAsync(order);
+
+            if (!result.Success)
+                return null;
+
+            order = await _shopContext.Orders
+                .Where(x => x.UserId == userId &&
+                            x.OrderStatus == OrderStatus.پرداخت_نشده)
+                .Include(x => x.OrderSellers)
+                .ThenInclude(x => x.OrderItems)
+                .SingleOrDefaultAsync();
+            return order;
         }
     }
 }

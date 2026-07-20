@@ -9,5 +9,6 @@ namespace Users.Application.Contract.UserAddressService.Command
         Task<OperationResult> DeleteAsync(int id);
         Task<OperationResult> EditAsync(UserAddressDto command);
         Task<UserAddressDto> GetAddressForEditAsync(int id);
+        Task<OperationResult> SetAddressToDefaultAsync(int userId, int addressId);
     }
 }

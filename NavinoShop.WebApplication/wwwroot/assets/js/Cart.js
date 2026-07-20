@@ -1,4 +1,5 @@
-﻿
+﻿/*const { debug } = require("util");*/
+
 function verifyCartSaved() {
     try {
         const cookieData = Cookies.get('NavinoshoppingCart');
@@ -451,40 +452,31 @@ function syncCartFromCookie() {
         }
     });
 }
-// ======================================================
-// تخفیف فروشنده
-// ======================================================
-/* ============================================================ */
-/* فایل: invoice-payment.js                                     */
-/* تمام توابع با پیشوند "inv" برای جلوگیری از تداخل           */
-/* ============================================================ */
+// ============================================================
+//OrderDiscounts
+// ============================================================
 
 (function () {
     'use strict';
 
-    // =========================================================
-    // توابع کمکی
-    // =========================================================
     function invFormatNumber(num) {
+        if (!num && num !== 0) return '۰';
         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
-    // =========================================================
-    // تابع اعمال تخفیف فروشنده با Ajax
-    // =========================================================
     window.invApplySellerDiscount = function (sellerId) {
-        var discountCode = $(`input#invDiscountInput_${sellerId}`).val();
+        var discountCode = $(`#invDiscountInput_${sellerId}`).val();
 
         if (!discountCode || discountCode.trim() === '') {
-            if (typeof AlertSweetTimer === 'function') {
-                AlertSweetTimer('لطفاً کد تخفیف را وارد کنید!', "error", "Center");
+            if (typeof AlerSweetWithTimer === 'function') {
+                AlerSweetWithTimer('لطفاً کد تخفیف را وارد کنید!', "error", "Center");
             } else {
                 alert('لطفاً کد تخفیف را وارد کنید!');
             }
             return;
         }
 
-        var btn = $(`button#invDiscountBtn_${sellerId}`);
+        var btn = $(`#invDiscountBtn_${sellerId}`);
         btn.prop('disabled', true);
         btn.html('<i class="fas fa-spinner fa-spin"></i> در حال اعمال...');
 
@@ -497,18 +489,22 @@ function syncCartFromCookie() {
             },
             success: function (response) {
                 if (response.success) {
-                    if (typeof AlertSweetTimer === 'function') {
-                        AlertSweetTimer(response.message, "success", "Center");
-                    } else {
-                        alert(response.message);
+                    if (typeof AlerSweetWithTimer === 'function') {
+                        AlerSweetWithTimer(response.message, "success", "Center");
                     }
-                    invUpdateSellerDiscountUI(sellerId, response.data);
+                    if (response.data) {
+                        invUpdateSellerDiscountUI(sellerId, response.data);
+                    } else {
+                        invUpdateSellerDiscountUI(sellerId, response);
+                    }
                 } else {
-                    if (typeof AlertSweetTimer === 'function') {
-                        AlertSweetTimer(response.message, "error", "Center");
+                    if (typeof AlerSweetWithTimer === 'function') {
+                        AlerSweetWithTimer(response.message, "error", "Center");
                     } else {
                         alert(response.message);
                     }
+                    btn.prop('disabled', false);
+                    btn.html('<i class="fas fa-check"></i> اعمال');
                 }
             },
             error: function (xhr) {
@@ -516,112 +512,433 @@ function syncCartFromCookie() {
                 if (xhr.responseJSON && xhr.responseJSON.message) {
                     errorMessage = xhr.responseJSON.message;
                 }
-                if (typeof AlertSweetTimer === 'function') {
-                    AlertSweetTimer(errorMessage, "error", "Center");
+                if (typeof AlerSweetWithTimer === 'function') {
+                    AlerSweetWithTimer(errorMessage, "error", "Center");
                 } else {
                     alert(errorMessage);
                 }
-            },
-            complete: function () {
                 btn.prop('disabled', false);
                 btn.html('<i class="fas fa-check"></i> اعمال');
             }
         });
     };
 
-    // =========================================================
-    // تابع به‌روزرسانی UI بعد از اعمال تخفیف فروشنده
-    // =========================================================
     window.invUpdateSellerDiscountUI = function (sellerId, data) {
-        // 1. مخفی کردن اینپوت و دکمه اعمال
+        var isSuccess = data.success === true;
+        var discountPercent = data.discountPercent || 0;
+
         var wrapper = $(`#invDiscountWrap_${sellerId}`);
-        if (wrapper.length) {
-            wrapper.hide();
+        var display = $(`#invDiscountDisplay_${sellerId}`);
+
+        if (isSuccess && discountPercent > 0) {
+            if (wrapper.length) {
+                wrapper.html('');
+                wrapper.hide();
+            }
+
+            if (display.length) {
+                display.show();
+                var discountTitle = data.discountTitle || '';
+                var discountText = `<i class="fas fa-percent"></i> تخفیف: ${discountPercent}%`;
+
+                if (discountTitle) {
+                    discountText += ` (کد: ${discountTitle})`;
+                }
+
+                display.html(`
+                    <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+                        <span class="inv-discount-badge">
+                            ${discountText}
+                        </span>
+                        <button id="invRemoveDiscountBtn_${sellerId}" 
+                                class="inv-remove-discount-btn"
+                                onclick="invRemoveSellerDiscount('${sellerId}')">
+                            <i class="fas fa-times"></i> حذف تخفیف
+                        </button>
+                    </div>
+                `);
+            }
+        } else if (isSuccess && discountPercent < 1) {
+            if (wrapper.length) {
+                wrapper.html(`
+                    <input type="text" placeholder="کد تخفیف فروشنده"
+                           id="invDiscountInput_${sellerId}"
+                           class="inv-discount-input" />
+                    <button id="invDiscountBtn_${sellerId}"
+                            class="inv-discount-btn"
+                            onclick="invApplySellerDiscount('${sellerId}')">
+                        <i class="fas fa-check"></i> اعمال
+                    </button>
+                `);
+                wrapper.show();
+                wrapper.find('input').val('');
+                var btn = wrapper.find('button');
+                if (btn.length) {
+                    btn.prop('disabled', false);
+                    btn.html('<i class="fas fa-check"></i> اعمال');
+                }
+            }
+
+            if (display.length) {
+                display.hide();
+                display.html('');
+            }
         }
 
-        // 2. نمایش تخفیف اعمال شده
-        var display = $(`#invDiscountDisplay_${sellerId}`);
-        if (display.length) {
-            display.show();
-            display.html(`
-                <span class="inv-discount-badge">
-                    <i class="fas fa-percent"></i> تخفیف: ${data.discountPercent || 0}% 
-                    ${data.discountTitle ? `(کد: ${data.discountTitle})` : ''}
-                </span>
+        var sellerTotal = $(`#invSellerTotal_${sellerId}`);
+        if (sellerTotal.length) {
+            var originalPrice = data.sellerPrice || 0;
+            var discountedPrice = data.sellerPriceAfterOff || 0;
+
+            if (discountedPrice > 0 && discountedPrice < originalPrice) {
+                sellerTotal.html(`
+                    <span style="text-decoration:line-through;color:#8a9bb0;font-size:0.85rem;margin-left:0.3rem;">
+                        ${invFormatNumber(originalPrice)}
+                    </span>
+                    <span style="font-weight:700;color:#0b6e41;">
+                        ${invFormatNumber(discountedPrice)}
+                    </span>
+                    <span class="inv-currency">تومان</span>
+                `);
+            } else {
+                sellerTotal.html(`
+                    ${invFormatNumber(originalPrice)} 
+                    <span class="inv-currency">تومان</span>
+                `);
+            }
+        }
+
+        var paymentPrice = $(`#invPaymentPrice_${sellerId}`);
+        if (paymentPrice.length && data.sellerPaymentPrice !== undefined) {
+            paymentPrice.html(invFormatNumber(data.sellerPaymentPrice));
+        }
+
+        var totalOriginal = data.tolalPrice || 0;
+        var discountAmount = data.discountPrice || 0;
+
+        var totalPriceEl = $('#invOrderTotal_Unique_001');
+        if (totalPriceEl.length && totalOriginal > 0) {
+            totalPriceEl.html(`${invFormatNumber(totalOriginal)} تومان`);
+        }
+
+        var totalDiscountEl = $('#invOrderDiscount_Unique_001');
+        if (totalDiscountEl.length) {
+            if (discountAmount > 0) {
+                totalDiscountEl.html(`${invFormatNumber(discountAmount)} تومان`);
+            } else {
+                totalDiscountEl.html('۰ تومان');
+            }
+        }
+
+        var finalPayment = data.paymentPrice || 0;
+
+        var finalSummary = $('#invFinalSummary_Unique_001');
+        if (finalSummary.length && finalPayment > 0) {
+            finalSummary.html(`${invFormatNumber(finalPayment)} تومان`);
+        }
+
+        var finalAmount = $('#invFinalAmount_Unique_001');
+        if (finalAmount.length && finalPayment > 0) {
+            finalAmount.html(invFormatNumber(finalPayment));
+        }
+
+        var discountInfo = $('#invDiscountInfo_Unique_001');
+        if (discountInfo.length) {
+            var discountPercentDisplay = data.discountPercent || 0;
+            discountInfo.html(`
+                <span><i class="fas fa-ticket-alt"></i> تخفیف: ${discountPercentDisplay}% ${data.discountTitle ? `(کد: ${data.discountTitle})` : ''}</span>
+                <span><i class="fas fa-wallet"></i> قابل‌پرداخت: <span id="invFinalAmount_Unique_001">${invFormatNumber(finalPayment)}</span> تومان</span>
             `);
         }
 
-        // 3. به‌روزرسانی مبالغ در جدول محصولات
         if (data.items && data.items.length > 0) {
             data.items.forEach(function (item) {
-                var priceOriginal = $(`#invPriceOrig_${sellerId}_${item.productId}`);
-                if (priceOriginal.length) {
-                    priceOriginal.html(item.originalPrice);
-                }
-
-                var priceAfter = $(`#invPriceAfter_${sellerId}_${item.productId}`);
-                if (priceAfter.length) {
-                    priceAfter.html(item.discountedPrice);
-                }
-
-                var discountTag = $(`#invDiscountTag_${sellerId}_${item.productId}`);
+                var discountTag = $(`#invDiscountTag_${sellerId}${item.productId}`);
                 if (discountTag.length && item.discountPercent > 0) {
                     discountTag.html(`${item.discountPercent}%`);
                     discountTag.removeClass('inv-no-discount');
+                    discountTag.css('background', '#eaf6ef');
+                    discountTag.css('color', '#0c6b3e');
+                } else if (discountTag.length) {
+                    discountTag.html('--');
+                    discountTag.addClass('inv-no-discount');
+                    discountTag.css('background', '#f5f5f5');
+                    discountTag.css('color', '#999');
+                }
+            });
+        } else if (data.discountPercent > 0) {
+            $(`#invSellerBlock_${sellerId} .inv-discount-tag`).each(function () {
+                var $tag = $(this);
+                var currentText = $tag.text().trim();
+                if (currentText !== '--' && currentText !== '' && !$tag.hasClass('inv-no-discount')) {
+                    $tag.html(`${data.discountPercent}%`);
                 }
             });
         }
 
-        // 4. به‌روزرسانی خلاصه قیمت فروشنده
-        var sellerTotal = $(`#invSellerTotal_${sellerId}`);
-        if (sellerTotal.length && data.sellerTotal) {
-            sellerTotal.html(`${invFormatNumber(data.sellerTotal)} <span class="inv-currency">تومان</span>`);
+        if (data.items && data.items.length > 0) {
+            data.items.forEach(function (item) {
+                var priceAfter = $(`#invPriceAfter_${sellerId}${item.productId}`);
+                if (priceAfter.length && item.discountedPrice !== undefined) {
+                    priceAfter.html(invFormatNumber(item.discountedPrice));
+                }
+            });
         }
 
-        // 5. به‌روزرسانی مبلغ قابل پرداخت فروشنده
-        var paymentPrice = $(`#invPaymentPrice_${sellerId}`);
-        if (paymentPrice.length && data.paymentPrice) {
-            paymentPrice.html(invFormatNumber(data.paymentPrice));
+        var btn = $(`#invDiscountBtn_${sellerId}`);
+        if (btn.length) {
+            btn.prop('disabled', false);
+            btn.html('<i class="fas fa-check"></i> اعمال');
+        }
+    };
+
+    window.invRemoveSellerDiscount = function (sellerId) {
+        var btn = $(`#invRemoveDiscountBtn_${sellerId}`);
+        btn.prop('disabled', true);
+        btn.html('<i class="fas fa-spinner fa-spin"></i> در حال حذف...');
+
+        $.ajax({
+            url: '/order/RemoveSellerDiscount',
+            type: 'POST',
+            data: {
+                sellerId: sellerId
+            },
+            success: function (response) {
+                if (response.success) {
+                    if (typeof AlerSweetWithTimer === 'function') {
+                        AlerSweetWithTimer(response.message, "success", "Center");
+                    }
+                    invUpdateSellerDiscountUI(sellerId, response);
+                } else {
+                    if (typeof AlerSweetWithTimer === 'function') {
+                        AlerSweetWithTimer(response.message, "error", "Center");
+                    } else {
+                        alert(response.message);
+                    }
+                    btn.prop('disabled', false);
+                    btn.html('<i class="fas fa-times"></i> حذف تخفیف');
+                }
+            },
+            error: function (xhr) {
+                var errorMessage = 'خطا در ارتباط با سرور.';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                }
+                if (typeof AlerSweetWithTimer === 'function') {
+                    AlerSweetWithTimer(errorMessage, "error", "Center");
+                } else {
+                    alert(errorMessage);
+                }
+                btn.prop('disabled', false);
+                btn.html('<i class="fas fa-times"></i> حذف تخفیف');
+            }
+        });
+    };
+
+    window.invApplyOrderDiscount = function () {
+        var code = $('#invDiscountInputGlobal_Unique_001').val().trim();
+
+        if (code === '') {
+            if (typeof AlerSweetWithTimer === 'function') {
+                AlerSweetWithTimer('لطفاً کد تخفیف را وارد کنید.', "error", "Center");
+            } else {
+                alert('لطفاً کد تخفیف را وارد کنید.');
+            }
+            return;
         }
 
-        // 6. به‌روزرسانی مبالغ کلی
-        if (data.orderTotal) {
-            var totalPrice = $('#invOrderTotal_Unique_001');
-            if (totalPrice.length) {
-                totalPrice.html(`${invFormatNumber(data.orderTotal.originalTotal)} تومان`);
+        var btn = $('#invDiscountBtnGlobal_Unique_001');
+        btn.prop('disabled', true);
+        btn.html('<i class="fas fa-spinner fa-spin"></i> در حال اعمال...');
+
+        $.ajax({
+            url: '/order/ApplyOrderDiscount',
+            type: 'POST',
+            data: { Code: code },
+            success: function (response) {
+                if (response.success) {
+                    if (typeof AlerSweetWithTimer === 'function') {
+                        AlerSweetWithTimer(response.message, "success", "Center");
+                    }
+                    invUpdateOrderDiscountUI(response);
+                } else {
+                    if (typeof AlerSweetWithTimer === 'function') {
+                        AlerSweetWithTimer(response.message, "error", "Center");
+                    } else {
+                        alert(response.message);
+                    }
+                }
+            },
+            error: function (xhr) {
+                var msg = 'خطا در ارتباط با سرور.';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    msg = xhr.responseJSON.message;
+                }
+                if (typeof AlerSweetWithTimer === 'function') {
+                    AlerSweetWithTimer(msg, "error", "Center");
+                } else {
+                    alert(msg);
+                }
+            },
+            complete: function () {
+                btn.prop('disabled', false);
+                btn.html('<i class="fas fa-check-circle"></i> اعمال');
+            }
+        });
+    };
+    window.invUpdateOrderDiscountUI = function (data) {
+        var totalPriceEl = $('#invOrderTotal_Unique_001');
+        if (totalPriceEl.length) {
+            var totalPrice = data.tolalPrice || 0;
+            totalPriceEl.html(`${invFormatNumber(totalPrice)} تومان`);
+        }
+        debugger;
+        var totalDiscountEl = $('#invOrderDiscount_Unique_001');
+        if (totalDiscountEl.length) {
+            var discountPrice = data.discountPrice || 0;
+            if (discountPrice > 0) {
+                totalDiscountEl.html(`${invFormatNumber(discountPrice)} تومان`);
+            } else {
+                totalDiscountEl.html('۰ تومان');
+            }
+        }
+
+        var finalSummary = $('#invFinalSummary_Unique_001');
+        if (finalSummary.length) {
+            var finalPayment = data.paymentPrice || 0;
+            finalSummary.html(`${invFormatNumber(finalPayment)} تومان`);
+        }
+
+        var finalAmount = $('#invFinalAmount_Unique_001');
+        if (finalAmount.length) {
+            var finalPayment = data.paymentPrice || 0;
+            finalAmount.html(invFormatNumber(finalPayment));
+        }
+
+ 
+
+        var discountSection = $('#invDiscountSection_Unique_001');
+        var discountGroup = discountSection.find('#invDiscountGroup_Unique_001');
+        var discountApplied = discountSection.find('#invDiscountApplied_Unique_001');
+        var discountLabel = discountSection.find('.inv-discount-label');
+
+        if (data.discountPercent > 0) {
+            if (discountGroup.length) {
+                discountGroup.remove();
             }
 
-            var totalDiscount = $('#invOrderDiscount_Unique_001');
-            if (totalDiscount.length) {
-                totalDiscount.html(`${invFormatNumber(data.orderTotal.discountAmount)} تومان`);
+            if (discountApplied.length === 0) {
+                var appliedHtml = `
+                <div class="inv-discount-applied" id="invDiscountApplied_Unique_001">
+                    <span class="inv-discount-applied-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </span>
+                    <span class="inv-discount-applied-text">
+                        تخفیف ${data.discountPercent}% اعمال شد
+                    </span>
+                    ${data.discountTitle ? `<span class="inv-discount-applied-code">(کد: ${data.discountTitle})</span>` : ''}
+                    <button id="invRemoveOrderDiscountBtn" class="inv-remove-discount-btn" onclick="invRemoveOrderDiscount()">
+                        <i class="fas fa-times"></i> حذف تخفیف
+                    </button>
+                </div>
+            `;
+
+                if (discountLabel.length) {
+                    discountLabel.after(appliedHtml);
+                } else {
+                    discountSection.prepend(appliedHtml);
+                }
+            } else {
+                discountApplied.html(`
+                <span class="inv-discount-applied-icon">
+                    <i class="fas fa-check-circle"></i>
+                </span>
+                <span class="inv-discount-applied-text">
+                    تخفیف ${data.discountPercent}% اعمال شد
+                </span>
+                ${data.discountTitle ? `<span class="inv-discount-applied-code">(کد: ${data.discountTitle})</span>` : ''}
+                <button id="invRemoveOrderDiscountBtn" class="inv-remove-discount-btn" onclick="invRemoveOrderDiscount()">
+                    <i class="fas fa-times"></i> حذف تخفیف
+                </button>
+            `);
+            }
+        } else {
+            if (discountApplied.length) {
+                discountApplied.remove();
             }
 
-            var finalPayment = $('#invFinalAmount_Unique_001');
-            if (finalPayment.length) {
-                finalPayment.html(invFormatNumber(data.orderTotal.finalPayment));
-            }
+            if (discountGroup.length === 0) {
+                var groupHtml = `
+                <div class="inv-discount-group" id="invDiscountGroup_Unique_001">
+                    <input type="text" placeholder="مثلاً SUMMER1405" id="invDiscountInputGlobal_Unique_001" class="inv-discount-input" />
+                    <button id="invDiscountBtnGlobal_Unique_001" class="inv-discount-btn">
+                        <i class="fas fa-check-circle"></i> اعمال
+                    </button>
+                </div>
+            `;
 
-            var finalSummary = $('#invFinalSummary_Unique_001');
-            if (finalSummary.length) {
-                finalSummary.html(`${invFormatNumber(data.orderTotal.finalPayment)} تومان`);
-            }
+                if (discountLabel.length) {
+                    discountLabel.after(groupHtml);
+                } else {
+                    discountSection.prepend(groupHtml);
+                }
 
-            var discountInfo = $('#invDiscountInfo_Unique_001');
-            if (discountInfo.length && data.orderTotal.discountPercent !== undefined) {
-                discountInfo.html(`
-                    <span><i class="fas fa-ticket-alt"></i> تخفیف: ${data.orderTotal.discountPercent || 0}%</span>
-                    <span><i class="fas fa-wallet"></i> قابل‌پرداخت: <span id="invFinalAmount_Unique_001">${invFormatNumber(data.orderTotal.finalPayment)}</span> تومان</span>
-                `);
+                $('#invDiscountBtnGlobal_Unique_001').on('click', function (e) {
+                    e.preventDefault();
+                    invApplyOrderDiscount();
+                });
+
+                $('#invDiscountInputGlobal_Unique_001').on('keypress', function (e) {
+                    if (e.which === 13) {
+                        e.preventDefault();
+                        invApplyOrderDiscount();
+                    }
+                });
             }
         }
     };
 
-    // =========================================================
-    // رویدادها
-    // =========================================================
-    $(document).ready(function () {
+    window.invRemoveOrderDiscount = function () {
+        var btn = $('#invRemoveOrderDiscountBtn');
+        btn.prop('disabled', true);
+        btn.html('<i class="fas fa-spinner fa-spin"></i> در حال حذف...');
 
-        // ارسال با کلید Enter در اینپوت‌های تخفیف فروشنده
+        $.ajax({
+            url: '/order/RemoveOrderDiscount',
+            type: 'POST',
+            success: function (response) {
+                if (response.success) {
+                    if (typeof AlertSweetWithTimer === 'function') {
+                        AlertSweetWithTimer(response.message, "success", "Center");
+                    }
+                    response.discountPercent = 0
+                    invUpdateOrderDiscountUI(response);
+                } else {
+                    if (typeof AlertSweetWithTimer === 'function') {
+                        AlertSweetWithTimer(response.message, "error", "Center");
+                    } else {
+                        alert(response.message);
+                    }
+                    btn.prop('disabled', false);
+                    btn.html('<i class="fas fa-times"></i> حذف تخفیف');
+                }
+            },
+            error: function (xhr) {
+                var msg = 'خطا در ارتباط با سرور.';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    msg = xhr.responseJSON.message;
+                }
+                if (typeof AlertSweetWithTimer === 'function') {
+                    AlertSweetWithTimer(msg, "error", "Center");
+                } else {
+                    alert(msg);
+                }
+                btn.prop('disabled', false);
+                btn.html('<i class="fas fa-times"></i> حذف تخفیف');
+            }
+        });
+    };
+    $(document).ready(function () {
         $('input[id^="invDiscountInput_"]').on('keypress', function (e) {
             if (e.which === 13) {
                 e.preventDefault();
@@ -631,77 +948,57 @@ function syncCartFromCookie() {
             }
         });
 
-        // دکمه تخفیف کلی سفارش
-        $('#invDiscountBtnGlobal_Unique_001').on('click', function (e) {
-            e.preventDefault();
-            var code = $('#invDiscountInputGlobal_Unique_001').val().trim();
-            if (code === '') {
-                if (typeof AlertSweetTimer === 'function') {
-                    AlertSweetTimer('لطفاً کد تخفیف را وارد کنید.', "error", "Center");
-                } else {
-                    alert('لطفاً کد تخفیف را وارد کنید.');
+        $('.inv-seller-block').each(function () {
+            var $block = $(this);
+            var display = $block.find('.inv-discount-display');
+            var wrapper = $block.find('.inv-discount-wrapper');
+
+            var hasDiscount = false;
+            var discountBadge = display.find('.inv-discount-badge');
+            if (discountBadge.length && discountBadge.text().trim() !== '') {
+                var discountText = discountBadge.text().trim();
+                var discountMatch = discountText.match(/(\d+)%/);
+                if (discountMatch && parseInt(discountMatch[1]) > 0) {
+                    hasDiscount = true;
                 }
-                return;
             }
 
-            var btn = $(this);
-            btn.prop('disabled', true);
-            btn.html('<i class="fas fa-spinner fa-spin"></i> در حال اعمال...');
-
-            $.ajax({
-                url: '/order/ApplyOrderDiscount',
-                type: 'POST',
-                data: { Code: code },
-                success: function (response) {
-                    if (response.success) {
-                        if (typeof AlertSweetTimer === 'function') {
-                            AlertSweetTimer(response.message, "success", "Center");
-                        } else {
-                            alert(response.message);
-                        }
-                        // به‌روزرسانی کل صفحه
-                        location.reload();
-                    } else {
-                        if (typeof AlertSweetTimer === 'function') {
-                            AlertSweetTimer(response.message, "error", "Center");
-                        } else {
-                            alert(response.message);
-                        }
-                    }
-                },
-                error: function (xhr) {
-                    var msg = 'خطا در ارتباط با سرور.';
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        msg = xhr.responseJSON.message;
-                    }
-                    if (typeof AlertSweetTimer === 'function') {
-                        AlertSweetTimer(msg, "error", "Center");
-                    } else {
-                        alert(msg);
-                    }
-                },
-                complete: function () {
-                    btn.prop('disabled', false);
-                    btn.html('<i class="fas fa-check-circle"></i> اعمال');
+            if (hasDiscount) {
+                if (wrapper.length) {
+                    wrapper.html('');
                 }
-            });
+                if (display.length) {
+                    display.show();
+                }
+            } else {
+                if (wrapper.length) {
+                    wrapper.show();
+                }
+                if (display.length) {
+                    display.hide();
+                }
+            }
         });
 
-        // دکمه پرداخت نهایی
+        $('#invDiscountBtnGlobal_Unique_001').on('click', function (e) {
+            e.preventDefault();
+            invApplyOrderDiscount();
+        });
+
+        $('#invDiscountInputGlobal_Unique_001').on('keypress', function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                invApplyOrderDiscount();
+            }
+        });
+
         $('#invPayBtn_Unique_001').on('click', function (e) {
             e.preventDefault();
-            if (typeof AlertSweetTimer === 'function') {
-                AlertSweetTimer('شما به درگاه پرداخت هدایت می‌شوید.', "info", "Center");
+            if (typeof AlertSweetWithTimer === 'function') {
+                AlertSweetWithTimer('شما به درگاه پرداخت هدایت می‌شوید.', "info", "Center");
             } else {
                 alert('شما به درگاه پرداخت هدایت می‌شوید.');
             }
         });
-
-        // نمایش آیدی سفارش
-        var orderIdSpan = $('#invOrderId_Unique_001');
-        if (orderIdSpan.length) {
-            orderIdSpan.textContent = '@Model.OrderId';
-        }
     });
-
 })();

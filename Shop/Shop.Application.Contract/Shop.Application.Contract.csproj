@@ -14,7 +14,6 @@
     <Folder Include="OrderAddress\Query\" />
     <Folder Include="OrderItem\Query\" />
     <Folder Include="OrderSeller\Query\" />
-    <Folder Include="Order\Query\" />
     <Folder Include="ShopSetting\Query\" />
   </ItemGroup>
 

@@ -2335,6 +2335,7 @@
 
   <ItemGroup>
     <Folder Include="Areas\Admin\Pages\Post\Setting\" />
+    <Folder Include="Jobs\" />
     <Folder Include="wwwroot\Images\Baner\100\" />
     <Folder Include="wwwroot\Images\Menu\100\" />
     <Folder Include="wwwroot\Images\Site\" />

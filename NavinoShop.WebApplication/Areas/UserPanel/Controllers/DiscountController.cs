@@ -50,7 +50,7 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
             }
             if (command.ProductSellId > 0)
             {
-                var haveAmount = await _productSellQueries.ProductSellHaveAmount(command.ProductSellId);
+                var haveAmount = await _productSellQueries.ProductSellHaveAmount(command.ProductSellId, 1);
                 if (!haveAmount)
                     return Json(new { success = false, message = "محصول مورد نظر در انبار موجود نیست " });
 

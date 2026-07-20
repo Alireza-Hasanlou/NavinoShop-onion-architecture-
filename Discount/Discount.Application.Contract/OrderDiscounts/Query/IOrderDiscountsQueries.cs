@@ -13,5 +13,6 @@ namespace Discount.Application.Contract.OrderDiscounts.Query
         Task<List<OrderDiscountsQueryModel>> GeAllAsync(int ShopId, OrderDiscountType type);
         Task<List<OrderDiscountsQueryModel>> GeAllExpiredDiscountsAsync(int ShopId, OrderDiscountType type);
         Task<OperationResultOrderDiscount> GetOrderSellerDiscountAsync(int sellerId, string code);
+   
     }
 }

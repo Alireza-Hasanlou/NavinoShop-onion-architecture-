@@ -49,7 +49,9 @@ namespace Shop.Domain.OrderItemAgg
         {
             get
             {
-                return Count * PriceAfterOff;
+                if (PriceAfterOff > 0)
+                    return Count * PriceAfterOff;
+                else return Count * Price;
             }
         }
 
@@ -61,7 +63,7 @@ namespace Shop.Domain.OrderItemAgg
 
         public void ChangePrice(int price, int priceAfterOff)
         {
-            if (price > 0 && priceAfterOff > 0)
+            if (price > 0 && priceAfterOff >= 0)
             {
                 Price = price;
                 PriceAfterOff = priceAfterOff;
