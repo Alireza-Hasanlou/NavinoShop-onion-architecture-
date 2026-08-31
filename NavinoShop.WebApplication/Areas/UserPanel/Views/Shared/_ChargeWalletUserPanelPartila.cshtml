@@ -1,88 +1,44 @@
 ﻿
-            <div class="modal-header border-bottom-0">
-                <h5 class="modal-title fw-bold" id="addressModalLabel">انتخاب آدرس تحویل</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <!-- لیست آدرس‌ها -->
-                <div id="addressListContainer">
-                    <!-- آدرس نمونه -->
-                    <div class="address-item mb-3 p-3 border rounded-3" data-address-id="1">
-                        <div class="row align-items-center">
-                            <div class="col-auto">
-                                <input type="radio" name="selectedAddress" value="1" class="form-check-input address-radio" id="address_1">
-                            </div>
-                            <div class="col">
-                                <label for="address_1" class="w-100 cursor-pointer">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <div>
-                                            <span class="badge bg-primary mb-2">آدرس اصلی</span>
-                                            <h6 class="mb-1 fw-bold">محمد رضایی</h6>
-                                            <p class="mb-1 text-muted small">
-                                                استان فارس، شهر شیراز، بلوار آزادگان، کارخانه نوآوری شیراز
-                                            </p>
-                                            <p class="mb-0 text-muted small">
-                                                <span class="fw-bold">کدپستی:</span> 1234567890
-                                                <span class="mx-2">|</span>
-                                                <span class="fw-bold">تلفن:</span> 09351234567
-                                            </p>
-                                        </div>
-                                        <div class="address-actions">
-                                            <button type="button" class="btn btn-link text-danger btn-sm set-main-address" data-id="1">
-                                                <i class="fas fa-star"></i> اصلی
-                                            </button>
-                                        </div>
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+<div class="transaction-modal-card" id="transactionModalCard">
+    <form asp-controller="Wallet" asp-action="ChargeWallet" method="post">
+        <div class="transaction-modal-title">
+            شارژ کیف پول
 
-                    <!-- آدرس نمونه ۲ -->
-                    <div class="address-item mb-3 p-3 border rounded-3" data-address-id="2">
-                        <div class="row align-items-center">
-                            <div class="col-auto">
-                                <input type="radio" name="selectedAddress" value="2" class="form-check-input address-radio" id="address_2">
-                            </div>
-                            <div class="col">
-                                <label for="address_2" class="w-100 cursor-pointer">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <div>
-                                            <h6 class="mb-1 fw-bold">سارا احمدی</h6>
-                                            <p class="mb-1 text-muted small">
-                                                استان تهران، شهر تهران، خیابان ولیعصر، پلاک ۱۲۳
-                                            </p>
-                                            <p class="mb-0 text-muted small">
-                                                <span class="fw-bold">کدپستی:</span> 9876543210
-                                                <span class="mx-2">|</span>
-                                                <span class="fw-bold">تلفن:</span> 09121234567
-                                            </p>
-                                        </div>
-                                        <div class="address-actions">
-                                            <button type="button" class="btn btn-link btn-sm set-main-address" data-id="2">
-                                                <i class="fas fa-star"></i> اصلی
-                                            </button>
-                                        </div>
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        </div>
 
-                <!-- پیام خالی بودن لیست -->
-                <div id="emptyAddressMessage" class="text-center py-5 d-none">
-                    <i class="fas fa-map-marker-alt fa-3x text-muted mb-3"></i>
-                    <p class="text-muted">هیچ آدرسی ثبت نشده است</p>
-                    <p class="text-muted small">برای افزودن آدرس جدید روی دکمه زیر کلیک کنید</p>
-                </div>
-            </div>
-            <div class="modal-footer border-top-0">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">انصراف</button>
-                <button type="button" class="btn btn-success" id="saveAddressBtn">
-                    <i class="fas fa-check"></i> ذخیره تغییرات
-                </button>
-                <button type="button" class="btn btn-primary" id="addNewAddressBtn">
-                    <i class="fas fa-plus"></i> افزودن آدرس جدید
-                </button>
-            </div>
+        <!-- فرم (بدون تگ form برای کنترل دستی با ajax) -->
+        <!-- مبلغ -->
+        <div class="transaction-modal-group">
+            <label for="transactionAmountInput">💰 مبلغ (تومان)</label>
+            <input name="amount" type="number" id="transactionAmountInput" placeholder="مثلاً ۱,۲۵۰,۰۰۰" step="1000" min="0">
+        </div>
+
+        <!-- درگاه (Enum) -->
+        <div class="transaction-modal-group">
+            <label for="transactionPortalSelect">🏦 درگاه تراکنش</label>
+            <select name="portal" id="transactionPortalSelect">
+                <option value="زرین_پال">زرین‌پال</option>
+                <option value="به_پرداخت_ملت">به‌پرداخت ملت</option>
+                <option value="سامان">سامان</option>
+                <option value="دستی_ادمین">دستی ادمین</option>
+            </select>
+        </div>
+
+        <!-- توضیحات -->
+        <div class="transaction-modal-group">
+            <label for="transactionDescriptionInput">📝 توضیحات</label>
+            <textarea name="description" id="transactionDescriptionInput" placeholder="توضیح دلخواه ..."></textarea>
+        </div>
+
+        <!-- دکمه‌ها -->
+        <div class="transaction-modal-actions">
+            <button class="transaction-modal-btn transaction-modal-btn-secondary" onclick="close_Modal_Ajax()">انصراف</button>
+            <button type="submit" class="transaction-modal-btn transaction-modal-btn-primary" id="submitTransactionBtn">✔ ثبت و ارسال</button>
+        </div>
+
+    </form>
+</div>
+
+
+
+

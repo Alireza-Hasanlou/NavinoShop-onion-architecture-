@@ -1,6 +1,8 @@
 ﻿using Shared.Application;
 using Shared.Application.Validations;
+using Shared.Domain.Enums;
 using Shop.Application.Contract.Order.Command;
+using Shop.Domain.OrderAddressAgg;
 using Shop.Domain.OrderAgg;
 using Shop.Domain.OrderItemAgg;
 using Shop.Domain.OrderSellerAgg;
@@ -17,12 +19,13 @@ namespace Shop.Application.Commands
     internal class OrderCommands : IOrderCommands
     {
         private readonly IOrderRepository _orderRepository;
+        private readonly IOrderAddressRepository _orderAddressRepository;
         private readonly IProductSellRepository _productsellRepository;
-       
 
-        public OrderCommands(IOrderRepository orderRepository, IProductSellRepository productsellRepository)
+        public OrderCommands(IOrderRepository orderRepository, IOrderAddressRepository orderAddressRepository, IProductSellRepository productsellRepository)
         {
             _orderRepository = orderRepository;
+            _orderAddressRepository = orderAddressRepository;
             _productsellRepository = productsellRepository;
         }
 
@@ -130,7 +133,7 @@ namespace Shop.Application.Commands
 
         }
 
-        public async Task<OperationResult> UpsertUserOrder(int userId, List<ShopCartViewModel> cart)
+        public async Task<OperationResult> UpsertUserOrder(int userId, List<ShopCartViewModel> cart, UpsertOrderAddressCommandModel userAddress)
         {
             try
             {
@@ -147,6 +150,13 @@ namespace Shop.Application.Commands
                     .Distinct()
                     .ToHashSet();
 
+                if (order.OrderAddress.Id != 0 && userAddress.StateId > 0)
+                {
+                    var res = await UpsertOrderAddressAsync(userId, userAddress);
+                    if (!res.Success)
+                        return new(false, res.Message);
+                }
+
                 var productSells = await _productsellRepository.GetByIdsAsync(productSellIds.ToList());
 
                 if (!productSells.Any())
@@ -156,7 +166,7 @@ namespace Shop.Application.Commands
 
                 bool hasChanges = false;
 
-               
+
                 foreach (var orderSeller in order.OrderSellers.ToList())
                 {
                     var itemsToRemove = orderSeller.OrderItems
@@ -276,6 +286,56 @@ namespace Shop.Application.Commands
             };
         }
 
-   
+        public async Task<OperationResult> UpsertOrderAddressAsync(int UserId, UpsertOrderAddressCommandModel command)
+        {
+            var order = await _orderRepository.GetOpenOrderForUserAsync(UserId);
+
+            if (order == null)
+                return new(false, "فاکتوری برای کاربر یافت نشد ");
+
+            if (order.OrderAddress.Id == 0)
+            {
+                var newOrderAddres = new OrderAddress(command.StateId, command.CityId, command.AddressDetail, command.PostalCode,
+                    command.Phone, command.FullName, command.NationalCode, order.Id);
+                order.AddAddress(newOrderAddres);
+                if (await _orderRepository.SaveAsync())
+                    return new(true, "آدرس مورد نظر برای ارسال مرسوله انتخاب شد ");
+            }
+            else
+            {
+                var orderAddress = await _orderAddressRepository.GetByIdAsync(order.OrderAddress.Id);
+                await _orderAddressRepository.DeleteAsync(orderAddress);
+                var newOrderAddres = new OrderAddress(command.StateId, command.CityId, command.AddressDetail, command.PostalCode,
+                 command.Phone, command.FullName, command.NationalCode, order.Id);
+                order.AddAddress(newOrderAddres);
+                if (await _orderRepository.SaveAsync())
+                    return new(true, "آدرس مورد نظر برای ارسال مرسوله انتخاب شد ");
+            }
+            return new(false, ValidationMessages.SystemErrorMessage);
+        }
+
+        public async Task<OperationResult> SetOrderPaymentType(OrderPayment orderPayment, int userId)
+        {
+            bool res = await _orderRepository.SetOrderPaymentTypeAsync(userId, orderPayment);
+
+            return new(res);
+        }
+
+        public async Task<OperationResult> FinalizePaymentAsync(int UserId)
+        {
+            var order = await _orderRepository.GetOpenOrderForFinalizePaymentAsync(UserId);
+            if (order == null) return new(false, "خطا در نهایی کردن پرداخت لطفا با مدیر سایت تماس بگیرید");
+
+            order.ChangeStatus(OrderStatus.پرداخت_شده);
+
+            foreach (var orderSeller in order.OrderSellers)
+            {
+                orderSeller.ChangeStatus(OrderSellerStatus.پرداخت_شده);
+            }
+
+            if (await _orderRepository.SaveAsync())
+                return new(true);
+            return new(false, "خطا در نهایی کردن پرداخت لطفا با مدیر سایت تماس بگیرید");
+        }
     }
 }

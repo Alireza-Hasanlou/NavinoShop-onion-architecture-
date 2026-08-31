@@ -73,7 +73,7 @@ namespace Shop.Domain.OrderSellerAgg
             get
             {
                 var discountPrice = (PriceAfterOff * DiscountPercent) / 100;
-                return PriceAfterOff - discountPrice;
+                return (PriceAfterOff - discountPrice) + PostPrice;
             }
         }
         public void AddOrderItem(OrderItem item)

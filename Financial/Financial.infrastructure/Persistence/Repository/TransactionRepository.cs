@@ -19,6 +19,9 @@ namespace Financial.infrastructure.Persistence.Repository
             _Context = context;
         }
 
-    
+        public Task<Transaction> GetbyAutorityAsync(string autority)
+        {
+            return _Context.Transactions.SingleOrDefaultAsync(x => x.Authority.Trim().ToLower() == autority.Trim().ToLower());
+        }
     }
 }

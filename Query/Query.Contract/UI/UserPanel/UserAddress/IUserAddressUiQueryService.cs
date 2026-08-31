@@ -10,4 +10,7 @@ namespace Query.Contract.UI.UserPanel.UserAddress
     {
         Task<List<UserAddressQueryModel>> GetUserAddressesAsync(int UserId);
     }
+
+
+
 }

@@ -5,6 +5,7 @@ using NavinoShop.WebApplication.Utility.AutoMapper;
 using NavinoShop.WebApplication.Utility.Filters;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
+using ZarinPal.Class;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +16,7 @@ Services.AddControllersWithViews();
 Services.AddRazorPages();
 Services.AddSingleton(HtmlEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Arabic));
 Services.Configure<SiteData>(Configuration.GetSection("SiteData"));
-
+builder.Services.AddScoped<Payment>();
 builder.Services.Configure<RouteOptions>(options =>
 {
     options.ConstraintMap.Add("seller", typeof(SellerSlugConstraint));
@@ -32,7 +33,7 @@ Services.AddAutoMapper(x =>
 {
     x.AddMaps(typeof(MappingProfile));
 });
-//Services.AddHostedService<OrderDiscountCleanupService>();
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())

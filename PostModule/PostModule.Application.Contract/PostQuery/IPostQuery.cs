@@ -10,5 +10,7 @@ namespace PostModule.Application.Contract.PostQuery
     {
         Task<List<PostAdminQueryModel>> GetAllPostsForAdmin();
         Task<PostAdminDetailQueryModel> GetPostDetails(int id);
+        Task<bool> IsExistPostAsync(int PostId);
     }
+    
 }

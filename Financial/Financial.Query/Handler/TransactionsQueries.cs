@@ -40,7 +40,7 @@ namespace Financial.Query.Handler
             && t.Status == TransactionStatus.موفق);
             model.GetData(transations, pageId, 3, 5);
             model.transactions = transations
-                .OrderByDescending(d=>d.CreateDate)
+                .OrderByDescending(d => d.CreateDate)
                 .Skip(model.Skip)
                 .Take(model.Take)
                 .Select(t => new TransactionListQueryModel
@@ -53,10 +53,32 @@ namespace Financial.Query.Handler
             return model;
         }
 
-        public async Task<TransationViewModel> GetTransationForPayment(long transationId)
+        public async Task<TransationViewModel> GetTransationForPaymentByAuthorityAsync(string autority)
         {
-            var transation= await _transactionRepository.GetByIdAsync(transationId);
-            return new TransationViewModel
+            var transation = await _transactionRepository.GetbyAutorityAsync(autority);
+            if (transation == null)
+                return new();
+
+            return new()
+            {
+                Id = transation.Id,
+                UserId = transation.UserId,
+                RefId = transation.RefId,
+                Authority=transation.Authority,
+                Portal = transation.Portal,
+                Price = transation.Price,
+                Status = transation.Status,
+                TransactionFor = transation.TransactionFor,
+            };
+        }
+
+        public async Task<TransationViewModel> GetTransationForPaymentByIdAsync(long Id)
+        {
+            var transation = await _transactionRepository.GetByIdAsync(Id);
+            if (transation == null)
+                return new();
+
+            return new()
             {
                 Id = transation.Id,
                 UserId = transation.UserId,

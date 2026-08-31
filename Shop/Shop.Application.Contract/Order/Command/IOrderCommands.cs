@@ -1,5 +1,6 @@
 ﻿using Shared.Application;
 using Shared.Domain;
+using Shared.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +14,28 @@ namespace Shop.Application.Contract.Order.Command
         Task<PricesAfterApplyDiscountDto> ApplySellerDiscountAsync(int userId, int sellerId, int DiscountId, int DiscountPercent, string Title);
         Task<PricesAfterApplyDiscountDto> RemoveSellerDiscountAsync(int UserId, int sellerId);
         Task<PricesAfterApplyDiscountDto> ApplyOrderDiscountAsync(int userId, int DiscountId, int DiscountPercent, string Title);
-        Task<OperationResult> UpsertUserOrder(int UserId, List<ShopCartViewModel> cart);
+        Task<OperationResult> UpsertUserOrder(int UserId, List<ShopCartViewModel> cart , UpsertOrderAddressCommandModel userAddress );
         Task<PricesAfterApplyDiscountDto> RemoveOrderDiscountAsync(int userId, int orderId);
+        Task<OperationResult> UpsertOrderAddressAsync(int UserId, UpsertOrderAddressCommandModel command);
+        Task<OperationResult> SetOrderPaymentType(OrderPayment orderPayment, int userId);
+        Task<OperationResult> FinalizePaymentAsync(int UserId);
+
 
     }
 
+    public class UpsertOrderAddressCommandModel
+    {
+        public int StateId { get; private set; }
+        public int CityId { get; private set; }
+        public string AddressDetail { get; private set; }
+        public string PostalCode { get; private set; }
+        public string Phone { get; private set; }
+        public string FullName { get; private set; }
+        public string NationalCode { get; private set; }
 
+      
+    }
+         
     public class PricesAfterApplyDiscountDto
     {
 

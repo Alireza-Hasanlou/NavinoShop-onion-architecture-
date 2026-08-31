@@ -45,6 +45,9 @@ internal class StateRepository : GenericRepository<State, int>, IStateRepository
 
     public async Task<string> GetStateTitle(int stateId)
     {
-        return await _context.States.Where(i => i.Id == stateId).Select(t => t.Title).SingleAsync();
+        var stateName= await _context.States.Where(i => i.Id == stateId).Select(t => t.Title).SingleAsync();
+        if(string.IsNullOrEmpty(stateName)) 
+            return string.Empty;    
+        return stateName;
     }
 }

@@ -1,0 +1,405 @@
+﻿@using NavinoShop.WebApplication.Utility.ViewModels
+@model PaymentStatusViewModel
+<style>
+    .psv-payment-status {
+        --psv-text: #172033;
+        --psv-muted: #667085;
+        --psv-border: #e4e7ec;
+        --psv-surface: #ffffff;
+        width: 100%;
+        direction: rtl;
+        font-family: inherit;
+        color: var(--psv-text);
+    }
+
+        .psv-payment-status *,
+        .psv-payment-status *::before,
+        .psv-payment-status *::after {
+            box-sizing: border-box;
+        }
+
+    .psv-payment-status__card {
+        width: 100%;
+        max-width: 680px;
+        margin: 0 auto;
+        overflow: hidden;
+        background: var(--psv-surface);
+        border: 1px solid var(--psv-border);
+        border-radius: 20px;
+        box-shadow: 0 4px 6px -1px rgba(16, 24, 40, 0.04), 0 12px 32px -8px rgba(16, 24, 40, 0.10);
+    }
+
+    .psv-payment-status__header {
+        padding: 36px 32px 30px;
+        text-align: center;
+        background: linear-gradient( 180deg, #f8fafc 0%, #ffffff 100% );
+        border-bottom: 1px solid var(--psv-border);
+    }
+
+    .psv-payment-status__icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 76px;
+        height: 76px;
+        margin: 0 auto 20px;
+        border-radius: 50%;
+    }
+
+        .psv-payment-status__icon svg {
+            width: 38px;
+            height: 38px;
+        }
+
+    .psv-payment-status__title {
+        margin: 0;
+        font-size: 24px;
+        line-height: 1.5;
+        font-weight: 800;
+        letter-spacing: -0.3px;
+    }
+
+    .psv-payment-status__subtitle {
+        max-width: 500px;
+        margin: 8px auto 0;
+        font-size: 14px;
+        line-height: 1.9;
+        color: var(--psv-muted);
+    }
+
+    .psv-payment-status__body {
+        padding: 28px 32px 32px;
+    }
+
+    .psv-payment-status__message {
+        margin-bottom: 22px;
+        padding: 16px 18px;
+        border-radius: 12px;
+        font-size: 14px;
+        line-height: 1.9;
+    }
+
+    .psv-payment-status__message-label {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .psv-payment-status__details {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .psv-payment-status__row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        min-height: 58px;
+        padding: 12px 16px;
+        border: 1px solid var(--psv-border);
+        border-radius: 12px;
+        background: #fcfcfd;
+    }
+
+    .psv-payment-status__label {
+        flex: 0 0 auto;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--psv-muted);
+    }
+
+    .psv-payment-status__value {
+        min-width: 0;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--psv-text);
+        text-align: left;
+        word-break: break-word;
+    }
+
+    .psv-payment-status__ref {
+        direction: ltr;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+
+    .psv-payment-status__status {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 6px 11px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    .psv-payment-status__status-dot {
+        width: 7px;
+        height: 7px;
+        flex: 0 0 7px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+
+    .psv-payment-status__footer {
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid var(--psv-border);
+        text-align: center;
+    }
+
+    .psv-payment-status__footer-text {
+        margin: 0;
+        font-size: 12px;
+        line-height: 1.8;
+        color: #98a2b3;
+    }
+
+    /* =========================
+           SUCCESS
+           ========================= */
+
+    .psv-payment-status--success
+    .psv-payment-status__icon {
+        background: #ecfdf3;
+        color: #16a34a;
+        box-shadow: 0 0 0 8px #f0fdf4;
+    }
+
+    .psv-payment-status--success
+    .psv-payment-status__message {
+        border: 1px solid #d1fae5;
+        background: #f0fdf4;
+        color: #166534;
+    }
+
+    .psv-payment-status--success
+    .psv-payment-status__message-label {
+        color: #15803d;
+    }
+
+    .psv-payment-status--success
+    .psv-payment-status__status {
+        background: #ecfdf3;
+        color: #15803d;
+    }
+
+    /* =========================
+           FAILED
+           ========================= */
+
+    .psv-payment-status--failed
+    .psv-payment-status__icon {
+        background: #fef2f2;
+        color: #dc2626;
+        box-shadow: 0 0 0 8px #fef2f2;
+    }
+
+    .psv-payment-status--failed
+    .psv-payment-status__message {
+        border: 1px solid #fecaca;
+        background: #fef2f2;
+        color: #991b1b;
+    }
+
+    .psv-payment-status--failed
+    .psv-payment-status__message-label {
+        color: #b91c1c;
+    }
+
+    .psv-payment-status--failed
+    .psv-payment-status__status {
+        background: #fef2f2;
+        color: #b91c1c;
+    }
+
+    @@media (max-width: 600px) {
+        .psv-payment-status__header
+
+    {
+        padding: 30px 20px 26px;
+    }
+
+    .psv-payment-status__body {
+        padding: 22px 20px 24px;
+    }
+
+    .psv-payment-status__icon {
+        width: 68px;
+        height: 68px;
+    }
+
+        .psv-payment-status__icon svg {
+            width: 34px;
+            height: 34px;
+        }
+
+    .psv-payment-status__title {
+        font-size: 21px;
+    }
+
+    .psv-payment-status__row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 6px;
+        padding: 13px 14px;
+    }
+
+    .psv-payment-status__value {
+        width: 100%;
+        text-align: right;
+    }
+
+    }
+</style>
+
+
+@{
+    // فرض:
+    // Status = 1  => موفق
+    // سایر مقادیر => ناموفق
+
+    var isPaymentSuccessful = Model.Status == 100;
+
+    var statusClass = isPaymentSuccessful
+        ? "psv-payment-status--success"
+        : "psv-payment-status--failed";
+
+    var statusTitle = isPaymentSuccessful
+        ? "پرداخت با موفقیت انجام شد"
+        : "پرداخت ناموفق بود";
+
+    var statusSubtitle = isPaymentSuccessful
+        ? "تراکنش شما با موفقیت ثبت و پردازش شد."
+        : "متأسفانه پرداخت شما انجام نشد. لطفاً اطلاعات تراکنش را بررسی کرده و در صورت نیاز مجدداً تلاش کنید.";
+
+    var statusText = isPaymentSuccessful
+        ? "موفق"
+        : "ناموفق";
+
+    var footerText = isPaymentSuccessful
+        ? "لطفاً شماره پیگیری را برای مراجعات بعدی نزد خود نگه دارید."
+        : "در صورت کسر وجه از حساب، مبلغ پس از بررسی توسط درگاه یا بانک مربوطه بازگردانده خواهد شد.";
+}
+
+
+<div class="psv-payment-status @statusClass" id="psv-payment-status">
+
+    <div class="psv-payment-status__card">
+
+        <!-- Header -->
+        <div class="psv-payment-status__header">
+
+            <div class="psv-payment-status__icon" aria-hidden="true">
+
+                @if (isPaymentSuccessful)
+                {
+                    <!-- Success Icon -->
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         xmlns="http://www.w3.org/2000/svg">
+
+                        <path d="M20 6L9 17L4 12"
+                              stroke="currentColor"
+                              stroke-width="2.5"
+                              stroke-linecap="round"
+                              stroke-linejoin="round" />
+                    </svg>
+                }
+                else
+                {
+                    <!-- Failed Icon -->
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         xmlns="http://www.w3.org/2000/svg">
+
+                        <path d="M18 6L6 18M6 6L18 18"
+                              stroke="currentColor"
+                              stroke-width="2.5"
+                              stroke-linecap="round"
+                              stroke-linejoin="round" />
+                    </svg>
+                }
+
+            </div>
+
+            <h2 class="psv-payment-status__title">
+                @statusTitle
+            </h2>
+
+            <p class="psv-payment-status__subtitle">
+                @statusSubtitle
+            </p>
+
+        </div>
+
+
+        <!-- Body -->
+        <div class="psv-payment-status__body">
+
+            <!-- Message -->
+            <div class="psv-payment-status__message">
+
+                <span class="psv-payment-status__message-label">
+                    پیام سیستم
+                </span>
+
+                @Model.Message
+
+            </div>
+
+
+            <!-- Transaction Details -->
+            <div class="psv-payment-status__details">
+
+                <!-- Status -->
+                <div class="psv-payment-status__row">
+
+                    <span class="psv-payment-status__label">
+                        وضعیت پرداخت
+                    </span>
+
+                    <span class="psv-payment-status__status">
+
+                        <span class="psv-payment-status__status-dot"></span>
+
+                        @statusText
+
+                    </span>
+
+                </div>
+
+
+                <!-- Reference ID -->
+                <div class="psv-payment-status__row">
+
+                    <span class="psv-payment-status__label">
+                        شماره پیگیری
+                    </span>
+
+                    <span class="psv-payment-status__value psv-payment-status__ref">
+                        @Model.RefId
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Footer -->
+            <div class="psv-payment-status__footer">
+
+                <p class="psv-payment-status__footer-text">
+                    @footerText
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

@@ -9,8 +9,14 @@ namespace Query.Contract.UI.UserPanel.Order
 {
     public interface IOrderUserPanelQueryService
     {
+        Task<int> CalculateOrdersellerWeightAsync(int OrderSellerId);
         Task<OrderUserPanelViewModel> GetOrderAsync(int userId);
+        Task<int> GetUserCityAsync(int userId);
+        Task<List<OrdersForUserPanelQueryService>> GetOrdersAsync(int userId);
+        Task<OrderUserPanelViewModel> GetOrderDetailsAsync(int userId, int orderId);
     }
+
+    public record OrdersForUserPanelQueryService(int orderId, string OrderDate, int paymentPrice , OrderStatus status);
     public class OrderUserPanelViewModel
     {
         public int OrderId { get; set; }
@@ -28,17 +34,21 @@ namespace Query.Contract.UI.UserPanel.Order
         public List<OrderSellerUserPanelQueryModel> OrderSellers { get; set; }
         public OrderAddressQueryModel Address { get; set; }
 
+
     }
 
     public class OrderSellerUserPanelQueryModel
     {
         public int Id { get; set; }
         public int SellerId { get; set; }
+        public int SellerCityId { get; set; }
         public string SellerName { get; set; }
+        public string? ImageName { get; set; }
         public int DiscountPercent { get; set; }
         public int DiscountId { get; set; }
         public string DiscountTitle { get; set; }
         public int PostPrice { get; set; }
+        public string PostTitle { get; set; }
         public int Price { get; set; }
         public int PriceAfterOff { get; set; }
         public int PaymentPrice { get; set; }

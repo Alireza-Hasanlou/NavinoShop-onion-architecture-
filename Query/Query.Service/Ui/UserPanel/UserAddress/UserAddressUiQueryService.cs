@@ -52,5 +52,6 @@ namespace Query.Service.Ui.UserPanel.UserAddress
             }
             return addresses;
         }
+
     }
 }

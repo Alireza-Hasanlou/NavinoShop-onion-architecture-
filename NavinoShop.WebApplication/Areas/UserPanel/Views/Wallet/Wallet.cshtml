@@ -24,7 +24,7 @@
         </div>
     </div>
     <div class="charge-btn-wrapper">
-        <button id="showChargeModalBtn" class="charge-btn">
+        <button id="showChargeModalBtn" onclick="open_Modal_Ajax('/Profile/ChargeWallet','')" class="charge-btn">
             <span class="icon-placeholder">➕</span>
             افزایش موجودی
         </button>
@@ -58,7 +58,7 @@
     </div>
 
 </div>
-<partial name="_ChargeWalletUserPanelPartila" />
+
 @section scripts {
     <script>
         document.addEventListener("DOMContentLoaded", () => {

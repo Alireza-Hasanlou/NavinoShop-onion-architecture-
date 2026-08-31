@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using PostModule.Infrastracture.Context;
 using Shared.Insfrastructure;
 using Shared.Domain.Enums;
+using PostModule.Application.Contract.PostQuery;
 
 namespace PostModule.Infrastracture.Repositories;
 
@@ -63,15 +64,11 @@ internal class PostRepository : GenericRepository<Post, int> , IPostRepository
                 model.Add(postPrice);
             }
         }
-
-
-
-        return model;
+        return model;     
     }
 
     private async Task<CalculatePost> GetCalculatePostAsync(PostPriceRequestModel command)
     {
-        
         var sourceCity = await _context.Cities.Include(c => c.State).SingleOrDefaultAsync(c=>c.Id ==command.SourceCityId);
         var destinationCity = await _context.Cities.Include(c => c.State).SingleOrDefaultAsync(c=>c.Id ==command.DestinationCityId);
         if (sourceCity == null || destinationCity == null) return CalculatePost.هیچکدام;
@@ -116,4 +113,7 @@ internal class PostRepository : GenericRepository<Post, int> , IPostRepository
             Description = p.Description
         }).SingleOrDefaultAsync(p => p.Id == id);
     }
+
+
+
 }

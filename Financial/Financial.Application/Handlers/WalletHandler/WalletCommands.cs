@@ -31,7 +31,7 @@ namespace Financial.Application.Handlers.WalletHandler
             wallet.Deposit(amount);
             var Depositres = await _walletRepository.SaveAsync();
             if (Depositres)
-                return new OperationResult(false);
+                return new OperationResult(true);
             return new OperationResult(false, ValidationMessages.SystemErrorMessage);
         }
 

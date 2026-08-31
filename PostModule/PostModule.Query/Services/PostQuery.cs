@@ -72,5 +72,12 @@ namespace PostModule.Query.Services
             }).ToList();
             return model;
         }
+
+        public async Task<bool> IsExistPostAsync(int PostId)
+        {
+            return await _postRepository.ExistByAsync(x=>x.Id== PostId);    
+        }
     }
+
+ 
 }

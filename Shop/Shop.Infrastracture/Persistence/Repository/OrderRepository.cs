@@ -20,6 +20,20 @@ namespace Shop.Infrastracture.Persistence.Repository
             _shopContext = shopContext;
         }
 
+        public async Task<Order> GetOpenOrderForFinalizePaymentAsync(int userId)
+        {
+            return await _shopContext.Orders
+              .Where(x => x.UserId == userId &&
+                          x.OrderStatus == OrderStatus.پرداخت_نشده)
+              .Include(x => x.OrderSellers)
+              .ThenInclude(x => x.OrderItems)
+              .Include(x => x.OrderAddress)
+              .SingleOrDefaultAsync();
+
+
+
+        }
+
         public async Task<Order?> GetOpenOrderForUserAsync(int userId)
         {
             var order = await _shopContext.Orders
@@ -27,6 +41,7 @@ namespace Shop.Infrastracture.Persistence.Repository
                             x.OrderStatus == OrderStatus.پرداخت_نشده)
                 .Include(x => x.OrderSellers)
                 .ThenInclude(x => x.OrderItems)
+                .Include(x => x.OrderAddress)
                 .SingleOrDefaultAsync();
 
             if (order != null)
@@ -44,8 +59,18 @@ namespace Shop.Infrastracture.Persistence.Repository
                             x.OrderStatus == OrderStatus.پرداخت_نشده)
                 .Include(x => x.OrderSellers)
                 .ThenInclude(x => x.OrderItems)
+                .Include(x=>x.OrderAddress)
                 .SingleOrDefaultAsync();
             return order;
+        }
+
+        public async Task<bool> SetOrderPaymentTypeAsync(int userId, OrderPayment orderPayment)
+        {
+            int result = await _shopContext.Orders.Where(x => x.UserId == userId && x.OrderStatus == OrderStatus.پرداخت_نشده)
+                .ExecuteUpdateAsync(x => x.SetProperty(p => p.OrderPayment, orderPayment));
+            if (result > 0)
+                return true;
+            return false;
         }
     }
 }

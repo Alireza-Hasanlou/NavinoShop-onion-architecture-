@@ -357,17 +357,21 @@ function LoadWalletTransactions(pageId) {
             for (let i = 0; i < res.transactions.length; i++) {
                 const transaction = res.transactions[i];
                 let amountClass = '';
+                let arrow = '';
                 let amountSign = '';
                 if (transaction.transactionType === 'واریز' || transaction.transactionType === 2) {
                     amountClass = 'amount-positive';
                     amountSign = '+';
+                    arrow = '⬇️';
+
                 } else {
                     amountClass = 'amount-negative';
                     amountSign = '-';
+                    arrow = '⬆️';
                 }
                 parent.append(`<div class="transaction-item">
                 <div class="transaction-info">
-                    <div class="transaction-icon">⬇️</div>
+                    <div class="transaction-icon">${arrow}</div>
                     <div class="transaction-details">
                         <span class="transaction-name">${transaction.transactionSource}</span>
                         <span class="transaction-date"><span class="icon-placeholder">📅</span> ${transaction.transactionDate}</span>
@@ -2426,17 +2430,22 @@ $(document).ready(function () {
     // مقداردهی اولیه مودال‌ها
     // ============================================
     function initModals() {
-        addressModal = new bootstrap.Modal(document.getElementById('addressModal'), {
-            backdrop: 'static',
-            keyboard: false
-        });
+        const addressModalEl = document.getElementById('addressModal');
+        if (addressModalEl) {
+            addressModal = bootstrap.Modal.getOrCreateInstance(addressModalEl, {
+                backdrop: 'static',
+                keyboard: false
+            });
+        }
 
-        addAddressModal = new bootstrap.Modal(document.getElementById('addAddressModal'), {
-            backdrop: 'static',
-            keyboard: false
-        });
+        const addAddressModalEl = document.getElementById('addAddressModal');
+        if (addAddressModalEl) {
+            addAddressModal = bootstrap.Modal.getOrCreateInstance(addAddressModalEl, {
+                backdrop: 'static',
+                keyboard: false
+            });
+        }
     }
-
     // ============================================
     // باز کردن مودال انتخاب آدرس
     // ============================================
@@ -2578,8 +2587,7 @@ $(document).ready(function () {
         // هایلایت کردن آدرس انتخاب شده
         $(this).closest('.address-item').addClass('border-primary bg-light');
 
-        // بلافاصله آدرس انتخاب شده را ذخیره کن
-        selectAndSaveAddress(selectedAddressId);
+     
     });
 
 
@@ -2615,7 +2623,7 @@ $(document).ready(function () {
 
         // درخواست AJAX برای تنظیم آدرس اصلی
         $.ajax({
-            url: '/Profile/SetAddressToDefault',
+            url: '/Order/SelectOrderAddress',
             method: 'POST',
             data: { addressId: addressId },
             success: function (response) {
@@ -2753,6 +2761,7 @@ $(document).ready(function () {
                                         <div class="d-flex justify-content-between align-items-start">
                                             <div>
                                                 ${isMain}
+
                                                 <h6 class="mb-1 fw-bold address-full-name">${address.fullName || 'نامشخص'}</h6>
                                                 <p class="mb-1 text-muted small">
                                                     <span class="address-state-name">${address.stateName || ''}</span>
@@ -3027,6 +3036,209 @@ $(document).ready(function () {
     window.resetAddAddressForm = resetAddAddressForm;
     window.loadStates = loadStates;
     window.loadCitiesByStateId = loadCitiesByStateId;
-    window.selectAndSaveAddress = selectAndSaveAddress;
+
     window.updateAddressDisplay = updateAddressDisplay;
 });
+
+/* ChargeWallet */
+
+function chargeWallet() {
+   
+    const amountInput = document.getElementById('transactionAmountInput');
+    const portalSelect = document.getElementById('transactionPortalSelect');
+    const descInput = document.getElementById('transactionDescriptionInput');
+    const submitBtn = document.getElementById('submitTransactionBtn');
+    const statusDiv = document.getElementById('transactionModalStatus');
+
+    // بررسی وجود المان‌ها
+    if (!amountInput || !portalSelect || !descInput || !submitBtn || !statusDiv) {
+        console.error('❌ یکی از المان‌ها پیدا نشد!');
+        alert('خطا در بارگذاری فرم. لطفاً صفحه را مجدداً بارگذاری کنید.');
+        return;
+    }
+
+    // ===== تابع اعتبارسنجی =====
+    function validateForm() {
+        // حذف استایل‌های خطای قبلی
+        amountInput.classList.remove('input-error');
+        const existingError = amountInput.nextElementSibling;
+        if (existingError && existingError.classList.contains('error-message')) {
+            existingError.remove();
+        }
+
+        let isValid = true;
+        let errorMessage = '';
+
+        // اعتبارسنجی مبلغ
+        const amount = amountInput.value.trim();
+        if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
+            isValid = false;
+            errorMessage = '⚠️ لطفاً مبلغ معتبر (بزرگتر از ۰) وارد کنید.';
+            amountInput.classList.add('input-error');
+
+            // نمایش پیام خطا
+            const errorSpan = document.createElement('span');
+            errorSpan.className = 'error-message';
+            errorSpan.style.cssText = 'color:#d32f2f;font-size:0.8rem;margin-top:0.3rem;display:block;';
+            errorSpan.textContent = 'لطفاً مبلغ معتبر وارد کنید';
+            amountInput.parentNode.insertBefore(errorSpan, amountInput.nextSibling);
+        }
+
+        return { isValid, errorMessage };
+    }
+
+    // ===== اجرای اعتبارسنجی =====
+    const validation = validateForm();
+    if (!validation.isValid) {
+        // نمایش خطا در وضعیت
+        statusDiv.textContent = validation.errorMessage;
+        statusDiv.className = 'transaction-modal-status show';
+        statusDiv.style.cssText = `
+                background: #fee9e9;
+                border-color: #f5bebe;
+                display: block;
+                padding: 12px;
+                border-radius: 6px;
+                margin-top: 12px;
+                font-size: 14px;
+            `;
+        return;
+    }
+
+    // ===== دریافت مقادیر =====
+    const amount = amountInput.value.trim();
+    const portal = portalSelect.value;
+    const description = descInput.value.trim();
+
+    // ===== ساخت payload =====
+    const payload = {
+        Amount: Number(amount),
+        Portal: portal,
+        Description: description || ''
+    };
+
+    console.log('📤 ارسال داده:', payload);
+
+    // ===== نمایش وضعیت "در حال ارسال" =====
+    statusDiv.textContent = '⏳ در حال ارسال درخواست ...';
+    statusDiv.className = 'transaction-modal-status show';
+    statusDiv.style.cssText = `
+            background: #eef3fa;
+            border-color: #b6c9e0;
+            display: block;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 12px;
+            font-size: 14px;
+        `;
+
+    // ===== غیرفعال کردن دکمه =====
+    submitBtn.disabled = true;
+    submitBtn.textContent = '⏳ در حال ارسال';
+
+    // ===== درخواست Ajax با XMLHttpRequest (Native) =====
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/Profile/ChargeWallet', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.timeout = 30000; // 30 ثانیه
+
+    xhr.onload = function () {
+        if (xhr.status >= 200 && xhr.status < 300) {
+            // موفقیت
+            console.log('✅ پاسخ سرور:', xhr.responseText);
+
+            statusDiv.textContent = '✅ درخواست با موفقیت ثبت شد. در حال انتقال به درگاه ...';
+            statusDiv.style.cssText = `
+                    background: #e3f3e6;
+                    border-color: #a8d8b0;
+                    display: block;
+                    padding: 12px;
+                    border-radius: 6px;
+                    margin-top: 12px;
+                    font-size: 14px;
+                `;
+
+            // بررسی پاسخ برای هدایت
+            try {
+                const response = JSON.parse(xhr.responseText);
+                if (response && response.redirectUrl) {
+                    setTimeout(function () {
+                        window.location.href = response.redirectUrl;
+                    }, 1500);
+                } else {
+                    setTimeout(function () {
+                        statusDiv.style.display = 'none';
+                        // بستن مدال (اگر تابعی دارید)
+                        // closeModal();
+                    }, 2000);
+                }
+            } catch (e) {
+                // اگر پاسخ JSON نبود
+                setTimeout(function () {
+                    statusDiv.style.display = 'none';
+                }, 2000);
+            }
+        } else {
+            // خطا
+            handleError(xhr);
+        }
+    };
+
+    xhr.onerror = function () {
+        handleError(xhr);
+    };
+
+    xhr.ontimeout = function () {
+        statusDiv.textContent = '❌ زمان درخواست به پایان رسید. مجدداً تلاش کنید.';
+        statusDiv.style.cssText = `
+                background: #fee9e9;
+                border-color: #f5bebe;
+                display: block;
+                padding: 12px;
+                border-radius: 6px;
+                margin-top: 12px;
+                font-size: 14px;
+            `;
+        submitBtn.disabled = false;
+        submitBtn.textContent = '✔ ثبت و ارسال';
+    };
+
+    // ===== تابع مدیریت خطا =====
+    function handleError(xhr) {
+        let errorMsg = '❌ خطا در ارتباط با سرور';
+
+        if (xhr.status === 0) {
+            errorMsg = '❌ ارتباط با سرور برقرار نشد. اتصال اینترنت خود را بررسی کنید.';
+        } else if (xhr.status === 404) {
+            errorMsg = '❌ آدرس /Profile/ChargeWallet یافت نشد.';
+        } else if (xhr.status === 400) {
+            errorMsg = '❌ داده‌های ارسالی معتبر نیستند.';
+            try {
+                const response = JSON.parse(xhr.responseText);
+                if (response && response.message) {
+                    errorMsg = '❌ ' + response.message;
+                }
+            } catch (e) { }
+        } else if (xhr.status >= 500) {
+            errorMsg = '❌ خطای داخلی سرور (کد ' + xhr.status + ')';
+        }
+
+        statusDiv.textContent = errorMsg;
+        statusDiv.style.cssText = `
+                background: #fee9e9;
+                border-color: #f5bebe;
+                display: block;
+                padding: 12px;
+                border-radius: 6px;
+                margin-top: 12px;
+                font-size: 14px;
+            `;
+
+        console.error('❌ خطا:', xhr.status, xhr.responseText);
+        submitBtn.disabled = false;
+        submitBtn.textContent = '✔ ثبت و ارسال';
+    }
+
+    // ===== ارسال درخواست =====
+    xhr.send(JSON.stringify(payload));
+}

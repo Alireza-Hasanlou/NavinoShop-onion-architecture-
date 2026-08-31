@@ -1,0 +1,2093 @@
+﻿@using Query.Contract.UI.UserPanel.Order
+@using Shared.Application
+@model OrderUserPanelViewModel
+
+<style>
+
+    /* =========================================================
+       Order User Panel - Order Detail
+       Prefix: oup-
+       ========================================================= */
+
+
+    #oup-order-detail-page {
+        font-family: 'B Mitra';
+    }
+
+    #oup-order-detail-page {
+        --oup-primary: #fcb941;
+        --oup-primary-dark: #e7a526;
+        --oup-primary-light: #fff6df;
+
+        --oup-text: #222;
+        --oup-text-light: #777;
+        --oup-border: #e9e9e9;
+        --oup-background: #f7f8fa;
+        --oup-white: #ffffff;
+
+        --oup-success: #20a464;
+        --oup-success-light: #eaf8f1;
+
+        direction: rtl;
+        width: 100%;
+        box-sizing: border-box;
+
+        font-family: Tahoma, Arial, sans-serif;
+
+        color: var(--oup-text);
+        background: var(--oup-background);
+
+        padding: 25px;
+    }
+
+    #oup-order-detail-page *,
+    #oup-order-detail-page *::before,
+    #oup-order-detail-page *::after {
+        box-sizing: border-box;
+    }
+
+    #oup-order-detail-page h1,
+    #oup-order-detail-page h2,
+    #oup-order-detail-page h3,
+    #oup-order-detail-page h4,
+    #oup-order-detail-page p {
+        margin: 0;
+    }
+
+    #oup-order-detail-page img {
+        max-width: 100%;
+        display: block;
+    }
+
+
+    /* =========================================================
+       Page Header
+       ========================================================= */
+
+    .oup-page-header {
+        width: 100%;
+        background: var(--oup-white);
+
+        border: 1px solid var(--oup-border);
+        border-radius: 18px;
+
+        margin-bottom: 18px;
+
+        overflow: hidden;
+    }
+
+    .oup-header-content {
+        display: flex;
+        align-items: center;
+
+        gap: 16px;
+
+        padding: 22px 25px;
+    }
+
+    .oup-header-icon {
+        width: 58px;
+        height: 58px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        flex-shrink: 0;
+
+        background: var(--oup-primary-light);
+
+        border-radius: 15px;
+
+        font-size: 28px;
+    }
+
+    .oup-header-info {
+        flex: 1;
+    }
+
+    .oup-header-info h1 {
+        font-size: 22px;
+        font-weight: 800;
+
+        margin-bottom: 7px;
+    }
+
+    .oup-header-info p {
+        color: var(--oup-text-light);
+
+        font-size: 13px;
+        line-height: 1.8;
+    }
+
+    .oup-order-number {
+        min-width: 150px;
+
+        padding: 12px 18px;
+
+        background: #fafafa;
+
+        border: 1px solid var(--oup-border);
+        border-radius: 12px;
+
+        text-align: center;
+    }
+
+    .oup-order-number span {
+        display: block;
+
+        color: var(--oup-text-light);
+
+        font-size: 11px;
+
+        margin-bottom: 5px;
+    }
+
+    .oup-order-number strong {
+        font-size: 17px;
+
+        color: var(--oup-primary-dark);
+    }
+
+
+    /* =========================================================
+       Payment Status
+       ========================================================= */
+
+    .oup-payment-status {
+        display: flex;
+        align-items: center;
+
+        gap: 13px;
+
+        padding: 15px 18px;
+
+        margin-bottom: 18px;
+
+        border-radius: 14px;
+
+        background: var(--oup-success-light);
+
+        border: 1px solid #ccefe0;
+    }
+
+    .oup-payment-status-icon {
+        width: 40px;
+        height: 40px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 50%;
+
+        background: var(--oup-success);
+
+        color: white;
+
+        font-size: 19px;
+        font-weight: bold;
+
+        flex-shrink: 0;
+    }
+
+    .oup-payment-status-content {
+        display: flex;
+        flex-direction: column;
+
+        gap: 4px;
+
+        flex: 1;
+    }
+
+    .oup-payment-status-content strong {
+        font-size: 14px;
+
+        color: var(--oup-success);
+    }
+
+    .oup-payment-status-content span {
+        color: #687a71;
+
+        font-size: 12px;
+    }
+
+    .oup-payment-status-date {
+        font-size: 11px;
+
+        color: #687a71;
+    }
+
+
+    /* =========================================================
+       Main Grid
+       ========================================================= */
+
+    .oup-main-grid {
+        display: grid;
+
+        grid-template-columns:
+            minmax(0, 1fr)
+            340px;
+
+        gap: 18px;
+
+        align-items: start;
+    }
+
+    .oup-main-column {
+        min-width: 0;
+    }
+
+
+    /* =========================================================
+       Section Card
+       ========================================================= */
+
+    .oup-section-card,
+    .oup-sidebar-card {
+        background: var(--oup-white);
+
+        border: 1px solid var(--oup-border);
+
+        border-radius: 18px;
+
+        margin-bottom: 18px;
+
+        overflow: hidden;
+    }
+
+    .oup-section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 20px 22px;
+
+        border-bottom: 1px solid var(--oup-border);
+    }
+
+    .oup-section-title {
+        display: flex;
+        align-items: center;
+
+        gap: 12px;
+    }
+
+    .oup-title-icon {
+        width: 44px;
+        height: 44px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: var(--oup-primary-light);
+
+        border-radius: 12px;
+
+        font-size: 20px;
+    }
+
+    .oup-section-title h2 {
+        font-size: 16px;
+        font-weight: 800;
+
+        margin-bottom: 5px;
+    }
+
+    .oup-section-title span {
+        color: var(--oup-text-light);
+
+        font-size: 11px;
+    }
+
+    .oup-count-badge {
+        background: var(--oup-primary-light);
+
+        color: var(--oup-primary-dark);
+
+        padding: 7px 12px;
+
+        border-radius: 20px;
+
+        font-size: 11px;
+        font-weight: bold;
+    }
+
+
+    /* =========================================================
+       Summary
+       ========================================================= */
+
+    .oup-summary-grid {
+        display: grid;
+
+        grid-template-columns: repeat(4, 1fr);
+
+        padding: 20px;
+    }
+
+    .oup-summary-item {
+        padding: 8px 18px;
+
+        border-left: 1px solid var(--oup-border);
+    }
+
+    .oup-summary-item:first-child {
+        padding-right: 0;
+    }
+
+    .oup-summary-item:last-child {
+        border-left: none;
+
+        padding-left: 0;
+    }
+
+    .oup-summary-item span {
+        display: block;
+
+        color: var(--oup-text-light);
+
+        font-size: 11px;
+
+        margin-bottom: 8px;
+    }
+
+    .oup-summary-item strong {
+        font-size: 13px;
+    }
+
+    .oup-discount-text {
+        color: var(--oup-success) !important;
+    }
+
+    .oup-summary-total strong {
+        color: var(--oup-primary-dark);
+
+        font-size: 15px;
+    }
+
+
+    /* =========================================================
+       Seller
+       ========================================================= */
+
+    .oup-seller-card {
+        margin: 18px;
+
+        border: 1px solid var(--oup-border);
+
+        border-radius: 15px;
+
+        overflow: hidden;
+
+        background: #fff;
+    }
+
+    .oup-seller-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 18px;
+
+        background: #fcfcfc;
+
+        border-bottom: 1px solid var(--oup-border);
+    }
+
+    .oup-seller-info {
+        display: flex;
+        align-items: center;
+
+        gap: 12px;
+    }
+
+    .oup-seller-avatar {
+        width: 48px;
+        height: 48px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 50%;
+
+        background: var(--oup-primary);
+
+        color: #222;
+
+        font-size: 10px;
+        font-weight: bold;
+
+        text-align: center;
+    }
+
+    .oup-seller-info h3 {
+        font-size: 14px;
+        font-weight: 800;
+
+        margin-bottom: 7px;
+    }
+
+    .oup-seller-meta {
+        display: flex;
+        align-items: center;
+
+        gap: 14px;
+
+        color: var(--oup-text-light);
+
+        font-size: 10px;
+    }
+
+    .oup-seller-price {
+        text-align: left;
+    }
+
+    .oup-seller-price span {
+        display: block;
+
+        color: var(--oup-text-light);
+
+        font-size: 10px;
+
+        margin-bottom: 5px;
+    }
+
+    .oup-seller-price strong {
+        font-size: 13px;
+    }
+
+
+    /* =========================================================
+       Seller Discount
+       ========================================================= */
+
+    .oup-seller-discount {
+        display: flex;
+        align-items: center;
+
+        gap: 10px;
+
+        margin: 14px 16px;
+
+        padding: 10px 12px;
+
+        background: var(--oup-primary-light);
+
+        border: 1px dashed var(--oup-primary);
+
+        border-radius: 10px;
+    }
+
+    .oup-discount-icon {
+        width: 32px;
+        height: 32px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 8px;
+
+        background: var(--oup-primary);
+
+        font-size: 15px;
+        font-weight: bold;
+    }
+
+    .oup-discount-info {
+        display: flex;
+        flex-direction: column;
+
+        gap: 3px;
+
+        flex: 1;
+    }
+
+    .oup-discount-info strong {
+        font-size: 11px;
+    }
+
+    .oup-discount-info span {
+        color: var(--oup-text-light);
+
+        font-size: 9px;
+    }
+
+    .oup-discount-value {
+        font-size: 13px;
+        font-weight: 800;
+
+        color: var(--oup-primary-dark);
+    }
+
+
+    /* =========================================================
+       Products
+       ========================================================= */
+
+    .oup-products-list {
+        padding: 0 16px;
+    }
+
+    .oup-product-item {
+        display: flex;
+        align-items: center;
+
+        gap: 15px;
+
+        padding: 15px 0;
+
+        border-bottom: 1px solid var(--oup-border);
+    }
+
+    .oup-product-item:last-child {
+        border-bottom: none;
+    }
+
+    .oup-product-image {
+        width: 78px;
+        height: 78px;
+
+        flex-shrink: 0;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: #f7f7f7;
+
+        border: 1px solid var(--oup-border);
+
+        border-radius: 11px;
+
+        overflow: hidden;
+    }
+
+    .oup-product-image img {
+        width: 100%;
+        height: 100%;
+
+        object-fit: cover;
+    }
+
+    .oup-product-info {
+        flex: 1;
+
+        min-width: 0;
+    }
+
+    .oup-product-info h4 {
+        font-size: 13px;
+        font-weight: 700;
+
+        margin-bottom: 8px;
+
+        overflow: hidden;
+
+        text-overflow: ellipsis;
+
+        white-space: nowrap;
+    }
+
+    .oup-product-details {
+        display: flex;
+        flex-wrap: wrap;
+
+        gap: 10px;
+
+        color: var(--oup-text-light);
+
+        font-size: 9px;
+
+        margin-bottom: 8px;
+    }
+
+    .oup-product-quantity {
+        font-size: 10px;
+
+        color: var(--oup-text-light);
+    }
+
+    .oup-product-quantity strong {
+        color: var(--oup-text);
+    }
+
+    .oup-product-price {
+        min-width: 130px;
+
+        display: flex;
+        flex-direction: column;
+
+        align-items: flex-end;
+
+        gap: 5px;
+    }
+
+    .oup-product-price strong {
+        font-size: 13px;
+    }
+
+    .oup-old-price {
+        color: #aaa;
+
+        font-size: 10px;
+
+        text-decoration: line-through;
+    }
+
+
+    /* =========================================================
+       Seller Footer
+       ========================================================= */
+
+    .oup-seller-footer {
+        display: flex;
+        align-items: center;
+
+        gap: 25px;
+
+        padding: 14px 17px;
+
+        background: #fafafa;
+
+        border-top: 1px solid var(--oup-border);
+    }
+
+    .oup-seller-footer > div {
+        display: flex;
+        flex-direction: column;
+
+        gap: 5px;
+
+        flex: 1;
+    }
+
+    .oup-seller-footer span {
+        color: var(--oup-text-light);
+
+        font-size: 9px;
+    }
+
+    .oup-seller-footer strong {
+        font-size: 11px;
+    }
+
+    .oup-seller-total {
+        text-align: left;
+    }
+
+    .oup-seller-total strong {
+        color: var(--oup-primary-dark);
+
+        font-size: 13px;
+    }
+
+
+    /* =========================================================
+       Sidebar
+       ========================================================= */
+
+    .oup-sidebar {
+        min-width: 0;
+    }
+
+    .oup-sidebar-card {
+        padding: 18px;
+    }
+
+    .oup-sidebar-title {
+        display: flex;
+        align-items: center;
+
+        gap: 10px;
+
+        padding-bottom: 15px;
+
+        margin-bottom: 15px;
+
+        border-bottom: 1px solid var(--oup-border);
+    }
+
+    .oup-sidebar-icon {
+        width: 40px;
+        height: 40px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: var(--oup-primary-light);
+
+        border-radius: 10px;
+
+        font-size: 17px;
+
+        flex-shrink: 0;
+    }
+
+    .oup-sidebar-title h2 {
+        font-size: 14px;
+
+        margin-bottom: 4px;
+    }
+
+    .oup-sidebar-title span {
+        color: var(--oup-text-light);
+
+        font-size: 10px;
+    }
+
+
+    /* =========================================================
+       Address
+       ========================================================= */
+
+    .oup-address-content {
+        display: flex;
+        flex-direction: column;
+
+        gap: 13px;
+    }
+
+    .oup-address-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 10px;
+    }
+
+    .oup-address-row span,
+    .oup-address-detail > span {
+        color: var(--oup-text-light);
+
+        font-size: 10px;
+    }
+
+    .oup-address-row strong {
+        font-size: 11px;
+
+        text-align: left;
+    }
+
+    .oup-address-detail {
+        padding: 11px;
+
+        background: #fafafa;
+
+        border-radius: 9px;
+
+        border: 1px solid #f0f0f0;
+    }
+
+    .oup-address-detail p {
+        color: #444;
+
+        font-size: 10px;
+
+        line-height: 2;
+
+        margin-top: 6px;
+    }
+
+
+    /* =========================================================
+       Order Discount
+       ========================================================= */
+
+    .oup-order-discount {
+        display: flex;
+        flex-direction: column;
+
+        gap: 13px;
+    }
+
+    .oup-order-discount > div {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .oup-order-discount span {
+        color: var(--oup-text-light);
+
+        font-size: 10px;
+    }
+
+    .oup-order-discount strong {
+        font-size: 11px;
+    }
+
+    .oup-discount-final {
+        padding-top: 13px;
+
+        border-top: 1px solid var(--oup-border);
+    }
+
+    .oup-discount-final strong {
+        color: var(--oup-success);
+    }
+
+
+    /* =========================================================
+       Payment
+       ========================================================= */
+
+    .oup-payment-info {
+        display: flex;
+        flex-direction: column;
+
+        gap: 13px;
+    }
+
+    .oup-payment-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .oup-payment-row span {
+        color: var(--oup-text-light);
+
+        font-size: 10px;
+    }
+
+    .oup-payment-row strong {
+        font-size: 11px;
+    }
+
+    .oup-payment-divider {
+        width: 100%;
+        height: 1px;
+
+        background: var(--oup-border);
+
+        margin: 3px 0;
+    }
+
+    .oup-payment-total {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 13px;
+
+        background: var(--oup-primary-light);
+
+        border-radius: 10px;
+    }
+
+    .oup-payment-total span {
+        font-size: 11px;
+        font-weight: bold;
+    }
+
+    .oup-payment-total strong {
+        color: var(--oup-primary-dark);
+
+        font-size: 14px;
+    }
+
+
+    /* =========================================================
+       Responsive - Tablet
+       ========================================================= */
+
+    @@media (max-width: 1100px) {
+
+        #oup-order-detail-page {
+            padding: 18px;
+        }
+
+        .oup-main-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .oup-sidebar {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 18px;
+        }
+
+        .oup-sidebar-card {
+            margin-bottom: 0;
+        }
+
+        .oup-summary-grid {
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 15px;
+        }
+
+        .oup-summary-item {
+            border-left: none;
+
+            padding: 8px;
+
+            border-bottom: 1px solid var(--oup-border);
+        }
+
+        .oup-summary-item:nth-child(odd) {
+            border-left: 1px solid var(--oup-border);
+        }
+
+        .oup-summary-item:nth-last-child(-n+2) {
+            border-bottom: none;
+        }
+    }
+
+
+    /* =========================================================
+       Responsive - Mobile
+       ========================================================= */
+
+    @@media (max-width: 700px) {
+        
+        #oup-order-detail-page {
+            padding: 10px;
+        }
+
+        .oup-header-content {
+            flex-wrap: wrap;
+
+            padding: 17px;
+        }
+
+        .oup-header-icon {
+            width: 48px;
+            height: 48px;
+        }
+
+        .oup-header-info h1 {
+            font-size: 17px;
+        }
+
+        .oup-header-info p {
+            font-size: 10px;
+        }
+
+        .oup-order-number {
+            width: 100%;
+        }
+
+        .oup-payment-status {
+            flex-wrap: wrap;
+        }
+
+        .oup-payment-status-date {
+            width: 100%;
+
+            padding-right: 53px;
+        }
+
+        .oup-sidebar {
+            grid-template-columns: 1fr;
+        }
+
+        .oup-summary-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .oup-summary-item,
+        .oup-summary-item:nth-child(odd) {
+            border-left: none;
+
+            border-bottom: 1px solid var(--oup-border);
+
+            padding: 10px 0;
+        }
+
+        .oup-summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .oup-section-header {
+            padding: 15px;
+        }
+
+        .oup-section-title h2 {
+            font-size: 14px;
+        }
+
+        .oup-count-badge {
+            display: none;
+        }
+
+        .oup-seller-card {
+            margin: 10px;
+        }
+
+        .oup-seller-header {
+            align-items: flex-start;
+
+            flex-direction: column;
+
+            gap: 15px;
+        }
+
+        .oup-seller-price {
+            width: 100%;
+
+            padding-top: 12px;
+
+            border-top: 1px solid var(--oup-border);
+
+            text-align: right;
+        }
+
+        .oup-product-item {
+            align-items: flex-start;
+
+            flex-wrap: wrap;
+        }
+
+        .oup-product-image {
+            width: 65px;
+            height: 65px;
+        }
+
+        .oup-product-info {
+            width: calc(100% - 80px);
+
+            flex: none;
+        }
+
+        .oup-product-price {
+            width: 100%;
+
+            flex-direction: row;
+
+            justify-content: flex-end;
+
+            align-items: center;
+
+            padding-top: 10px;
+
+            border-top: 1px dashed var(--oup-border);
+        }
+
+        .oup-seller-footer {
+            flex-direction: column;
+
+            align-items: stretch;
+
+            gap: 12px;
+        }
+
+        .oup-seller-footer > div,
+        .oup-seller-total {
+            flex-direction: row;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            text-align: right;
+        }
+
+        .oup-seller-total {
+            padding-top: 12px;
+
+            border-top: 1px solid var(--oup-border);
+        }
+    }
+
+</style>
+
+
+<div id="oup-order-detail-page" class="oup-order-detail-page">
+
+
+    <!-- =====================================================
+         Page Header
+         ====================================================== -->
+
+    <div class="oup-page-header">
+
+        <div class="oup-header-content">
+
+            <div class="oup-header-icon">
+                🧾
+            </div>
+
+
+            <div class="oup-header-info">
+
+                <h1>
+                    جزئیات سفارش
+                </h1>
+
+                <p>
+                    مشاهده محصولات، فروشندگان، آدرس و اطلاعات پرداخت سفارش
+                </p>
+
+            </div>
+
+
+            <div class="oup-order-number">
+
+                <span>
+                    شماره سفارش
+                </span>
+
+                <strong>
+                    #@Model.OrderId
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         Payment Status
+         ====================================================== -->
+
+    <div class="oup-payment-status">
+
+        <div class="oup-payment-status-icon">
+            ✓
+        </div>
+
+        <div class="oup-payment-status-content">
+
+            <strong>
+                پرداخت موفق
+            </strong>
+
+            <span>
+                پرداخت سفارش با موفقیت انجام شده است.
+            </span>
+
+        </div>
+
+        <div class="oup-payment-status-date">
+
+            سفارش شماره
+            <strong>
+                @Model.OrderId
+            </strong>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         Main Grid
+         ====================================================== -->
+
+    <div class="oup-main-grid">
+
+
+        <!-- =================================================
+             Main Column
+             ================================================== -->
+
+        <div class="oup-main-column">
+
+
+            <!-- =================================================
+                 Order Summary
+                 ================================================== -->
+
+            <section class="oup-section-card">
+
+
+                <div class="oup-section-header">
+
+                    <div class="oup-section-title">
+
+                        <span class="oup-title-icon">
+                            🛒
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                خلاصه سفارش
+                            </h2>
+
+                            <span>
+                                اطلاعات کلی سفارش شما
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="oup-summary-grid">
+
+
+                    <!-- Price -->
+
+                    <div class="oup-summary-item">
+
+                        <span>
+                            مبلغ کالاها
+                        </span>
+
+                        <strong>
+                            @Model.Price.ToString("N0") تومان
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Discount -->
+
+                    <div class="oup-summary-item">
+
+                        <span>
+                            تخفیف
+                        </span>
+
+                        <strong class="oup-discount-text">
+
+                            @Model.DiscountPrice.ToString("N0") تومان
+
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Post -->
+
+                    <div class="oup-summary-item">
+
+                        <span>
+                            هزینه ارسال
+                        </span>
+
+                        <strong>
+                            @Model.PostPrice.ToString("N0") تومان
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Payment -->
+
+                    <div class="oup-summary-item oup-summary-total">
+
+                        <span>
+                            مبلغ قابل پرداخت
+                        </span>
+
+                        <strong>
+                            @Model.PaymentPrice.ToString("N0") تومان
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 Sellers
+                 ================================================== -->
+
+            <section class="oup-section-card">
+
+
+                <!-- Sellers Header -->
+
+                <div class="oup-section-header">
+
+                    <div class="oup-section-title">
+
+                        <span class="oup-title-icon">
+                            🏪
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                فروشندگان سفارش
+                            </h2>
+
+                            <span>
+                                محصولات خریداری شده به تفکیک فروشنده
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <span class="oup-count-badge">
+
+                        @Model.OrderSellers.Count
+                        فروشنده
+
+                    </span>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     Sellers Loop
+                     ================================================== -->
+
+                @if (Model.OrderSellers != null && Model.OrderSellers.Any())
+                {
+
+                    foreach (var seller in Model.OrderSellers)
+                    {
+
+                        <div class="oup-seller-card">
+
+
+                            <!-- =========================================
+                                 Seller Header
+                                 ========================================== -->
+
+                            <div class="oup-seller-header">
+
+
+                                <div class="oup-seller-info">
+
+
+                                    <div class="oup-seller-avatar">
+                                         <img
+                                                        src="@FileDirectories.SellerImageDirectory100@seller.ImageName"
+                                                        alt="@seller.SellerName"
+                                                        asp-append-version="true" />
+                                    </div>
+
+
+                                    <div>
+
+                                        <h3>
+                                            @seller.SellerName
+                                        </h3>
+
+
+                                        <div class="oup-seller-meta">
+
+                                            <span>
+                                                🏪 شناسه فروشنده:
+                                                @seller.SellerId
+                                            </span>
+
+
+                                            @if (!string.IsNullOrWhiteSpace(seller.PostTitle))
+                                            {
+                                                <span>
+                                                    🚚 @seller.PostTitle
+                                                </span>
+                                            }
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+
+                                <div class="oup-seller-price">
+
+                                    <span>
+                                        مبلغ فروشنده
+                                    </span>
+
+                                    <strong>
+                                        @seller.Price.ToString("N0") تومان
+                                    </strong>
+
+                                </div>
+
+
+                            </div>
+
+
+
+                            <!-- =========================================
+                                 Seller Discount
+                                 ========================================== -->
+
+                            @if (seller.DiscountId > 0 ||
+                                 seller.DiscountPercent > 0 ||
+                                 !string.IsNullOrWhiteSpace(seller.DiscountTitle))
+                            {
+
+                                <div class="oup-seller-discount">
+
+
+                                    <div class="oup-discount-icon">
+                                        %
+                                    </div>
+
+
+                                    <div class="oup-discount-info">
+
+                                        <strong>
+
+                                            @if (!string.IsNullOrWhiteSpace(seller.DiscountTitle))
+                                            {
+                                                @seller.DiscountTitle
+                                            }
+                                            else
+                                            {
+                                                <text>
+                                                    تخفیف فروشنده
+                                                </text>
+                                            }
+
+                                        </strong>
+
+
+                                        @if (seller.DiscountId > 0)
+                                        {
+                                            <span>
+                                                شناسه تخفیف:
+                                                @seller.DiscountId
+                                            </span>
+                                        }
+
+                                    </div>
+
+
+                                    <div class="oup-discount-value">
+
+                                        @seller.DiscountPercent٪
+
+                                    </div>
+
+
+                                </div>
+
+                            }
+
+
+
+                            <!-- =========================================
+                                 Products
+                                 ========================================== -->
+
+                            <div class="oup-products-list">
+
+
+                                @if (seller.Items != null && seller.Items.Any())
+                                {
+
+                                    foreach (var item in seller.Items)
+                                    {
+
+                                        <div class="oup-product-item">
+
+
+                                            <!-- Product Image -->
+
+                                            <div class="oup-product-image">
+
+                                                @if (!string.IsNullOrWhiteSpace(item.ImageName))
+                                                {
+
+                                                    <img
+                                                        src="@FileDirectories.ProductImageDirectory100@item.ImageName"
+                                                        alt="@item.ImageAlt"
+                                                        asp-append-version="true" />
+
+                                                }
+                                                else
+                                                {
+
+                                                    <img
+                                                        src="https://placehold.co/160x160/f7f7f7/777?text=Product"
+                                                        alt="@item.ProductName" />
+
+                                                }
+
+                                            </div>
+
+
+
+                                            <!-- Product Info -->
+
+                                            <div class="oup-product-info">
+
+
+                                                <h4>
+                                                    @item.ProductName
+                                                </h4>
+
+
+                                                <div class="oup-product-details">
+
+                                                    <span>
+                                                        کد محصول:
+                                                        @item.ProductId
+                                                    </span>
+
+
+                                                    <span>
+                                                        کد فروش:
+                                                        @item.ProductSellId
+                                                    </span>
+
+                                                </div>
+
+
+                                                <div class="oup-product-quantity">
+
+                                                    تعداد:
+
+                                                    <strong>
+                                                        @item.Quantity
+                                                    </strong>
+
+                                                    عدد
+
+                                                </div>
+
+
+                                            </div>
+
+
+
+                                            <!-- Product Price -->
+
+                                            <div class="oup-product-price">
+
+
+                                                @if (item.PriceAfterOff < item.Price)
+                                                {
+
+                                                    <span class="oup-old-price">
+
+                                                        @item.Price.ToString("N0")
+                                                        تومان
+
+                                                    </span>
+
+                                                }
+
+
+                                                <strong>
+
+                                                    @item.PriceAfterOff.ToString("N0")
+                                                    تومان
+
+                                                </strong>
+
+
+                                            </div>
+
+
+                                        </div>
+
+                                    }
+
+                                }
+                                else
+                                {
+
+                                    <div style="
+                                        padding: 25px;
+                                        text-align: center;
+                                        color: #888;
+                                        font-size: 12px;
+                                    ">
+                                        محصولی برای این فروشنده ثبت نشده است.
+                                    </div>
+
+                                }
+
+                            </div>
+
+
+
+                            <!-- =========================================
+                                 Seller Footer
+                                 ========================================== -->
+
+                            <div class="oup-seller-footer">
+
+
+                                <!-- Post -->
+
+                                <div>
+
+                                    <span>
+                                        هزینه ارسال
+                                    </span>
+
+                                    <strong>
+                                        @seller.PostPrice.ToString("N0")
+                                        تومان
+                                    </strong>
+
+                                </div>
+
+
+                                <!-- Discount -->
+
+                                <div>
+
+                                    <span>
+                                        تخفیف
+                                    </span>
+
+                                    <strong class="oup-discount-text">
+
+                                        @seller.DiscountPrice.ToString("N0")
+                                        تومان
+
+                                    </strong>
+
+                                </div>
+
+
+                                <!-- Payment -->
+
+                                <div class="oup-seller-total">
+
+                                    <span>
+                                        مبلغ پرداختی
+                                    </span>
+
+                                    <strong>
+
+                                        @seller.PaymentPrice.ToString("N0")
+                                        تومان
+
+                                    </strong>
+
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+                    }
+
+                }
+                else
+                {
+
+                    <div style="
+                        padding: 35px;
+                        text-align: center;
+                        color: #888;
+                        font-size: 13px;
+                    ">
+                        هیچ فروشنده‌ای برای این سفارش ثبت نشده است.
+                    </div>
+
+                }
+
+
+            </section>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             Sidebar
+             ================================================== -->
+
+        <aside class="oup-sidebar">
+
+
+            <!-- =================================================
+                 Address
+                 ================================================== -->
+
+            @if (Model.Address != null)
+            {
+
+                <section class="oup-sidebar-card">
+
+
+                    <div class="oup-sidebar-title">
+
+                        <span class="oup-sidebar-icon">
+                            📍
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                آدرس ارسال
+                            </h2>
+
+                            <span>
+                                آدرس تحویل سفارش
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="oup-address-content">
+
+
+                        <!-- Full Name -->
+
+                        <div class="oup-address-row">
+
+                            <span>
+                                تحویل گیرنده
+                            </span>
+
+                            <strong>
+                                @Model.Address.FullName
+                            </strong>
+
+                        </div>
+
+
+                        <!-- State / City -->
+
+                        <div class="oup-address-row">
+
+                            <span>
+                                استان / شهر
+                            </span>
+
+                            <strong>
+                                @Model.Address.StateName،
+                                @Model.Address.CityName
+                            </strong>
+
+                        </div>
+
+
+                        <!-- Address -->
+
+                        <div class="oup-address-detail">
+
+                            <span>
+                                آدرس
+                            </span>
+
+                            <p>
+                                @Model.Address.AddressDetail
+                            </p>
+
+                        </div>
+
+
+                        <!-- Postal Code -->
+
+                        <div class="oup-address-row">
+
+                            <span>
+                                کد پستی
+                            </span>
+
+                            <strong>
+                                @Model.Address.PostalCode
+                            </strong>
+
+                        </div>
+
+
+                        <!-- Phone -->
+
+                        <div class="oup-address-row">
+
+                            <span>
+                                شماره تماس
+                            </span>
+
+                            <strong>
+                                @Model.Address.Phone
+                            </strong>
+
+                        </div>
+
+
+                        <!-- National Code -->
+
+                        @if (!string.IsNullOrWhiteSpace(Model.Address.NationalCode))
+                        {
+
+                            <div class="oup-address-row">
+
+                                <span>
+                                    کد ملی
+                                </span>
+
+                                <strong>
+                                    @Model.Address.NationalCode
+                                </strong>
+
+                            </div>
+
+                        }
+
+
+                    </div>
+
+
+                </section>
+
+            }
+
+
+
+            <!-- =================================================
+                 Order Discount
+                 ================================================== -->
+
+            @if (Model.DiscountId > 0 ||
+                 Model.DiscountPercent > 0 ||
+                 !string.IsNullOrWhiteSpace(Model.DiscountTitle))
+            {
+
+                <section class="oup-sidebar-card">
+
+
+                    <div class="oup-sidebar-title">
+
+                        <span class="oup-sidebar-icon">
+                            %
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                تخفیف سفارش
+                            </h2>
+
+                            <span>
+                                تخفیف اعمال شده
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="oup-order-discount">
+
+
+                        <!-- Discount Title -->
+
+                        <div>
+
+                            <span>
+                                عنوان تخفیف
+                            </span>
+
+                            <strong>
+
+                                @if (!string.IsNullOrWhiteSpace(Model.DiscountTitle))
+                                {
+                                    @Model.DiscountTitle
+                                }
+                                else
+                                {
+                                    <text>
+                                        تخفیف سفارش
+                                    </text>
+                                }
+
+                            </strong>
+
+                        </div>
+
+
+                        <!-- Discount Percent -->
+
+                        <div>
+
+                            <span>
+                                درصد تخفیف
+                            </span>
+
+                            <strong>
+                                @Model.DiscountPercent٪
+                            </strong>
+
+                        </div>
+
+
+                        <!-- Discount Price -->
+
+                        <div class="oup-discount-final">
+
+                            <span>
+                                مبلغ تخفیف
+                            </span>
+
+                            <strong>
+                                @Model.DiscountPrice.ToString("N0")
+                                تومان
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+
+                </section>
+
+            }
+
+
+
+            <!-- =================================================
+                 Payment Information
+                 ================================================== -->
+
+            <section class="oup-sidebar-card">
+
+
+                <div class="oup-sidebar-title">
+
+                    <span class="oup-sidebar-icon">
+                        💳
+                    </span>
+
+                    <div>
+
+                        <h2>
+                            اطلاعات پرداخت
+                        </h2>
+
+                        <span>
+                            جزئیات پرداخت سفارش
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="oup-payment-info">
+
+
+                    <!-- Product Price -->
+
+                    <div class="oup-payment-row">
+
+                        <span>
+                            مبلغ کالاها
+                        </span>
+
+                        <strong>
+                            @Model.Price.ToString("N0")
+                            تومان
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Price After Discount -->
+
+                    <div class="oup-payment-row">
+
+                        <span>
+                            مبلغ پس از تخفیف
+                        </span>
+
+                        <strong>
+                            @Model.PriceAfterOff.ToString("N0")
+                            تومان
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Discount -->
+
+                    <div class="oup-payment-row">
+
+                        <span>
+                            تخفیف
+                        </span>
+
+                        <strong class="oup-discount-text">
+
+                            -
+                            @Model.DiscountPrice.ToString("N0")
+                            تومان
+
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Post -->
+
+                    <div class="oup-payment-row">
+
+                        <span>
+                            هزینه ارسال
+                        </span>
+
+                        <strong>
+                            @Model.PostPrice.ToString("N0")
+                            تومان
+                        </strong>
+
+                    </div>
+
+
+                    <div class="oup-payment-divider"></div>
+
+
+                    <!-- Payment -->
+
+                    <div class="oup-payment-total">
+
+                        <span>
+                            مبلغ نهایی
+                        </span>
+
+                        <strong>
+
+                            @Model.PaymentPrice.ToString("N0")
+                            تومان
+
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+            </section>
+
+
+        </aside>
+
+
+    </div>
+
+
+</div>

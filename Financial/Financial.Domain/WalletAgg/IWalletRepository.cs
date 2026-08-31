@@ -11,6 +11,7 @@ namespace Financial.Domain.WalletAgg
     {
 
         Task<Wallet> GetWalletByUserIdAsync(int userId);
+        
     }
 
 }

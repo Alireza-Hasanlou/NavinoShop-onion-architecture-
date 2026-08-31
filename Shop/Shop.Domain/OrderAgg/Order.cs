@@ -58,7 +58,7 @@ namespace Shop.Domain.OrderAgg
                 var discountPrice = (PaymentPriceSeller * DiscountPercent) / 100;
 
 
-                return PaymentPriceSeller - discountPrice + PostPrice;
+                return PaymentPriceSeller - discountPrice;
             }
         }
         public Order()
@@ -86,9 +86,10 @@ namespace Shop.Domain.OrderAgg
         {
             OrderPayment = payment;
         }
-        public void AddAddress(int addressId)
+        public void AddAddress(OrderAddress orderAddress)
         {
-            OrderAddressId = addressId;
+            
+            OrderAddress = orderAddress;
             UpdateEntity();
         }
         public void AddDiscount(int discountId, int percent, string title)

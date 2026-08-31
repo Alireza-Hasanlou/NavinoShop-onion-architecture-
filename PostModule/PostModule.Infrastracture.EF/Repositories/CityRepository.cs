@@ -76,7 +76,10 @@ namespace PostModule.Infrastracture.Repositories
 
         public async Task<string> GetCityTitle(int cityId)
         {
-            return await _context.Cities.Where(i => i.Id == cityId).Select(t => t.Title).SingleAsync();
+            var citiyName = await _context.Cities.Where(i => i.Id == cityId).Select(t => t.Title).SingleAsync();
+            if(string.IsNullOrEmpty(citiyName))
+                return string.Empty;    
+            return citiyName;
         }
     }
 }

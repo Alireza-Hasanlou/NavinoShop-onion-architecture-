@@ -5,12 +5,50 @@
     string ErrorMessage = ViewData["Error"] as string;
 }
 @model OrderUserPanelViewModel
-
 <!-- مودال انتخاب آدرس -->
 <partial name="_SelectOrderAddressPartial" />
+<div class="modal fade" id="shippingModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-truck"></i> انتخاب روش ارسال
+                </h5>
+                <button type="button" class="close modal-close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="inv-shipping-box" id="invShippingBox_Unique_001">
+                    <div class="inv-shipping-title">
+                        <i class="fas fa-box"></i>
+                        <span>روش‌های ارسال موجود</span>
+                    </div>
+                    <div class="inv-shipping-options">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary modal-close" data-dismiss="modal">
+                    انصراف
+                </button>
+                <button type="button" class="btn btn-primary" id="confirmShippingBtn">
+                    <i class="fas fa-check"></i> تایید و ثبت
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<button class="btn-open-shipping">
+    <i class="fas fa-truck"></i>
+    <span id="shippingMethodBtn">انتخاب روش ارسال</span>
+</button>
 
 <section class="inv-section" id="invSection_Unique_001">
-
+    <input type="hidden" id="orderId" value="@Model.OrderId" />
     <!-- ========== RIGHT SIDE: PRODUCTS ========== -->
     <div class="inv-products">
 
@@ -42,7 +80,7 @@
                                 <div class="col-12 col-md-4">شماره ملی: @Model.Address.NationalCode</div>
                                 <div class="row">
                                     <div class="col-12 col-md-4">کدپستی: @Model.Address.PostalCode</div>
-                                 
+
                                     <div class="col-12 col-md-8">تحویل گیرنده: @Model.Address.FullName | @Model.Address.Phone</div>
                                 </div>
                             </div>
@@ -53,7 +91,7 @@
                                     <a id="openAddressModalBtn"><div class="btn btn-light w-100">تغییر آدرس</div></a>
                                 </div>
                                 <div class="col-6 col-md-12 pr-2 px-md-3">
-                                    <a onclick="open_Modal_Ajax('/Order/SelectOrderAddress','')"><div class="btn btn-outline-dark mt-0 mt-md-1 w-100">افزودن آدرس جدید</div></a>@* id="addNewAddressBtn2" *@
+                                    <a id="addNewAddressBtn2"><div class="btn btn-outline-dark mt-0 mt-md-1 w-100">افزودن آدرس جدید</div></a>
                                 </div>
                             </div>
                         </div>
@@ -207,6 +245,13 @@
                             مبلغ قابل‌پرداخت فروشنده:
                             <span id="invPaymentPrice_@sellerId">@String.Format("{0:N0}", seller.PaymentPrice)</span> تومان
                         </span>
+
+
+                        <button id="invChoosePost" class="btn-open-shipping" onclick="openShippingModal('@seller.Id')">
+                            <i class="fas fa-shipping-fast"></i>  انتخاب روش ارسال
+                        </button>
+
+                            <span class="text-secondary postMethod_@seller.Id"  >روش ارسال : @seller.PostTitle - @seller.PostPrice</span>
                     </div>
 
                 </div>
@@ -260,7 +305,45 @@
                 </div>
             }
 
-        
+
+        </div>
+
+
+        <!-- باکس انتخاب روش پرداخت - سمت چپ -->
+        <div class="inv-payment-method-box" id="invPaymentMethodBox_Unique_001">
+            <div class="inv-payment-method-title">
+                <i class="fas fa-credit-card"></i>
+                <span>روش پرداخت</span>
+            </div>
+            <div class="inv-payment-method-options">
+                <label class="inv-payment-method-option">
+                    <input type="radio"
+                           name="paymentMethod"
+                           value="0"
+                           checked
+                           data-payment="پرداخت_از_درگاه" />
+                    <div class="inv-payment-method-content">
+                        <i class="fas fa-wallet"></i>
+                        <div>
+                            <span class="inv-payment-method-title-text">پرداخت از درگاه</span>
+                            <span class="inv-payment-method-desc">پرداخت آنلاین از طریق درگاه بانکی</span>
+                        </div>
+                    </div>
+                </label>
+                <label class="inv-payment-method-option">
+                    <input type="radio"
+                           name="paymentMethod"
+                           value="1"
+                           data-payment="پرداخت_از_کیف_پول" />
+                    <div class="inv-payment-method-content">
+                        <i class="fas fa-piggy-bank"></i>
+                        <div>
+                            <span class="inv-payment-method-title-text">پرداخت از کیف پول</span>
+                            <span class="inv-payment-method-desc">پرداخت با اعتبار کیف پول شما</span>
+                        </div>
+                    </div>
+                </label>
+            </div>
         </div>
 
         <!-- payment summary box -->
@@ -282,8 +365,8 @@
             @if (Model.PostPrice > 0)
             {
                 <div class="inv-payment-row">
-                    <span class="inv-label">هزینه ارسال</span>
-                    <span class="inv-value" id="invPostPrice_Unique_001">@Model.PostPrice.ToString("N0") تومان</span>
+                    <span class="inv-label"> مجموع هزینه ارسال </span>
+                    <span class="inv-value inv-discounted" id="PostPrice">@Model.PostPrice.ToString("N0") تومان</span>
                 </div>
             }
 
@@ -311,10 +394,3 @@
 {
     <script>AlertSweetTimer("@ErrorMessage", "error", "Center");</script>
 }
-
-<!-- ============================================================ -->
-<!-- فایل: invoice-payment.js                                      -->
-<!-- ============================================================ -->
-<script src="~/js/invoice-payment.js"></script>
-
-            

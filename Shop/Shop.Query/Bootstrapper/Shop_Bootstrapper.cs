@@ -25,6 +25,7 @@ namespace Shop.Query.Bootstrapper
             services.AddTransient<IProductQueries, ProductQueries>();
             services.AddTransient<IProductSellQueries, ProductSellQueries>();
             services.AddTransient<IOrderQueries, OrderQueries>();
+            
         }
     }
 }

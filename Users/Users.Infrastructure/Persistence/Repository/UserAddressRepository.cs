@@ -48,6 +48,12 @@ namespace Users.Infrastructure.Persistence.Repository
             return await _context.UserAddresses.CountAsync();
         }
 
+        public async Task<int> GetUserCityAsync(int userId)
+        {
+            return await _context.UserAddresses.Where(x => x.UserId == userId && x.Is_Default)
+                 .Select(x => x.CityId).SingleOrDefaultAsync();
+        }
+
         public async Task<OperationResult> SetAddressToDefaultAsync(int userId, int addressId)
         {
             try

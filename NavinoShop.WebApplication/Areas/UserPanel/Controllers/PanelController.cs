@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using PostModule.Application.Contract.StateQuery;
 using Query.Contract.UI.UserPanel;
+using Query.Contract.UI.UserPanel.Order;
 using Query.Contract.UI.UserPanel.Wallet;
 using Shared.Application.Auth;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Users.Application.Contract.UserAddressService.Command;
 using Users.Application.Contract.UserService.Command;
@@ -18,16 +20,19 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
     {
         private readonly IUserPanelQueryService _userPanelQueryService;
         private readonly IAuthService _authService;
+        private readonly IOrderUserPanelQueryService _orderUserPanelQueryService;
         private readonly IUserCommandService _userCommandService;
- 
+        private int _userId;
+
 
         public PanelController(IUserPanelQueryService userPanelQueryService, IAuthService authService,
-            IUserCommandService userCommandService )
+            IUserCommandService userCommandService, IOrderUserPanelQueryService orderUserPanelQueryService)
         {
             _userPanelQueryService = userPanelQueryService;
             _authService = authService;
             _userCommandService = userCommandService;
-       
+            _orderUserPanelQueryService = orderUserPanelQueryService;
+
         }
 
         public async Task<IActionResult> PersonalInfo()
@@ -59,11 +64,24 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
             var res = await _userCommandService.EditByUserAsync(command, userId);
             if (res.Success)
             {
-                return RedirectToAction("EditProfile",new {status=true});
+                return RedirectToAction("EditProfile", new { status = true });
             }
             ModelState.AddModelError("Email", res.Message);
             return View(command);
         }
-
+        public async Task<IActionResult> Orders()
+        {
+            _userId = _authService.GetLoginUserId();
+            List<OrdersForUserPanelQueryService> Orders = await _orderUserPanelQueryService.GetOrdersAsync(_userId);
+            return View(Orders);
+        }
+        public async Task <IActionResult> OrderDetails(int orderId)
+        {
+            _userId = _authService.GetLoginUserId();
+            OrderUserPanelViewModel order = await _orderUserPanelQueryService.GetOrderDetailsAsync(_userId, orderId);
+            if (order == null || order.OrderId == 0)
+                return NotFound();
+            return View(order);
+        }
     }
 }

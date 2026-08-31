@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Shop.Application.Bootstrapper;
 using Shop.Domain.CartAgg;
+using Shop.Domain.OrderAddressAgg;
 using Shop.Domain.OrderAgg;
 using Shop.Domain.OrderItemAgg;
 using Shop.Domain.OrderSellerAgg;
@@ -41,6 +42,7 @@ namespace Shop.Infrastracture.Bootstrapper
             services.AddTransient<ISellerChangeRequestsRepository, SellerChangeRequestsRepository>();
             services.AddTransient<ICartRepository, CartRepository>();
             services.AddTransient<IOrderRepository,OrderRepository>();
+            services.AddTransient<IOrderAddressRepository, OrderAddressRepository>();
         }
     }
 }

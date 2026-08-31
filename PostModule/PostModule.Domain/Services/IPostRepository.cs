@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PostModule.Application.Contract.PostCalculate;
+using PostModule.Application.Contract.PostQuery;
 
 namespace PostModule.Domain.Services
 {
@@ -14,5 +15,7 @@ namespace PostModule.Domain.Services
     {
         Task<List<PostPriceResponseModel>> CalculatePostAsync(PostPriceRequestModel command);
         Task<EditPost> GetForEditAsync(int id);
+        
+      
     }
 }

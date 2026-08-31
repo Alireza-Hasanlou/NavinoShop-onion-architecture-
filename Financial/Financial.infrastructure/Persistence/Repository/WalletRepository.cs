@@ -24,5 +24,7 @@ namespace Financial.infrastructure.Persistence.Repository
         {
             return await _financialContext.Wallets.SingleOrDefaultAsync(u => u.OwnerId == userId);
         }
+
+    
     }
 }

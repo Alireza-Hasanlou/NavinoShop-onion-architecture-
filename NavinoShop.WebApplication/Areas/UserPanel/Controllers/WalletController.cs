@@ -3,16 +3,23 @@ using Dto.Response.Payment;
 using Financial.Application.Contract.Transaction.Command;
 using Financial.Application.Contract.Transaction.Query;
 using Financial.Application.Contract.WalletService.Commands;
+using Leaf.xNet;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using NavinoShop.WebApplication.Utility;
 using NavinoShop.WebApplication.Utility.ViewModels;
+using Newtonsoft.Json;
 using Query.Contract.UI.UserPanel.Wallet;
 using Shared.Application.Auth;
 using Shared.Domain.Enums;
-using System.Threading.Tasks;
+using System.Net;
+using System.Text;
+using System.Text.Json;
 using ZarinPal.Class;
+using static System.Net.WebRequestMethods;
+using static ZarinPal.Class.Payment;
+using HttpStatusCode = Leaf.xNet.HttpStatusCode;
 
 namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
 {
@@ -27,8 +34,8 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
         private readonly IAuthService _authService;
         private readonly ITransactionQueries _transactionQueries;
         private readonly ITransactionCommands _transactionCommands;
-        private readonly Payment _payment;
         private readonly SiteData _siteData;
+        private int _userId;
 
 
         public WalletController(IWalletQueryService walletQueryService, IWalletCommands walletCommands,
@@ -40,90 +47,107 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
             _authService = authService;
             _transactionQueries = transactionQueries;
             _transactionCommands = transactionCommands;
-            var expose = new Expose();
-            _payment = expose.CreatePayment();
             _siteData = options.Value;
         }
 
+
+        [HttpGet]
+        public IActionResult ChargeWallet() => PartialView("_ChargeWalletUserPanelPartila");
+
+        [HttpPost]
         public async Task<IActionResult> ChargeWallet(int amount, string description, TransactionPortal portal)
         {
-            var userId = _authService.GetLoginUserId();
-            var transactionResult = await _transactionCommands.CreateAsync(new CreateTransacionCommandModel
+            if (amount < 1000)
             {
-                UserId = userId,
-                Description = description,
-                Portal = portal,
-                TransactionFor = TransactionFor.Wallet,
-                TransactionSource = TransactionSource.پرداخت_از_درگاه,
-                Price = amount,
-                TransactionType = TransactionType.واریز,
-                Authority = "",
-                TransationById = userId
-            });
-
-            if (!transactionResult.Success)
-            {
-                TempData["Error"] = "خطا در ثبت درخواست پرداخت";
-                return RedirectToAction("Wallet");
+                ModelState.AddModelError("transactionAmountInput", "مبلغ تراکنش باید بیشتر 1000 تومان باشد");
+                return View();
             }
-
-            var transactionId = Convert.ToInt64(transactionResult.Data);
 
             return portal switch
             {
-                TransactionPortal.زرین_پال => await ProcessZarinPalPayment(transactionId, amount, description),
-                TransactionPortal.به_پرداخت_ملت => await ProcessMellatPayment(transactionId, amount),
-                TransactionPortal.سامان => await ProcessSamanPayment(transactionId, amount),
+                TransactionPortal.زرین_پال => await ProcessZarinPalPayment(amount),
+                TransactionPortal.به_پرداخت_ملت => await ProcessMellatPayment(0, amount),//not Implimented
+                TransactionPortal.سامان => await ProcessSamanPayment(0, amount),//not Implimented
                 _ => RedirectToAction("Wallet")
             };
         }
 
-        [Route("/Profile/[action]/{transationId}/{authority}/{status}")]
-        public async Task<IActionResult> Payment(long transactionId, string authority, string status)
+        [Route("/Profile/Payment")]
+        public async Task<IActionResult> Payment(string Authority, string Status)
         {
-            if (transactionId < 1 || string.IsNullOrEmpty(authority) || string.IsNullOrEmpty(status))
+            if (string.IsNullOrEmpty(Authority) || string.IsNullOrEmpty(Status))
                 return NotFound();
 
-            var transaction = await _transactionQueries.GetTransationForPayment(transactionId);
+            var transaction = await _transactionQueries.GetTransationForPaymentByAuthorityAsync(Authority);
             if (transaction?.Id == 0)
                 return NotFound();
 
             try
             {
-                var Verification = await _payment.Verification(new DtoVerification
+                string url = "https://sandbox.zarinpal.com/pg/v4/payment/verify.json";
+                var payload = new
                 {
-                    Amount = transaction.Price,
-                    MerchantId = _siteData.ZarinPalMerchantId,
-                    Authority = authority
-                }, ZarinPal.Class.Payment.Mode.sandbox);
+                    merchant_id = _siteData.ZarinPalMerchantId,
+                    authority =transaction.Authority,
+                    amount = transaction.Price
+                };
 
-                if (Verification.Status == 100 && transaction.Status != TransactionStatus.موفق)
+                string jsonPayload = JsonConvert.SerializeObject(payload);
+                ZarinPalVerificationResponse result = new();
+                using (var httpRequest = new Leaf.xNet.HttpRequest())
                 {
-                    var success = transaction.TransactionFor switch
+                    // تنظیم هدرها
+                    httpRequest.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36";
+                    httpRequest.AddHeader("Accept", "application/json");
+                    httpRequest.AddHeader("Content-Type", "application/json");
+                    httpRequest.ConnectTimeout = 30000; // 30 ثانیه
+
+                    // ارسال درخواست POST
+                    var response =  httpRequest.Post(url, jsonPayload, "application/json");
+
+                    // 4. دریافت پاسخ
+                    string responseBody = response.ToString();
+
+                    // 5. بررسی وضعیت HTTP
+                    if (response.StatusCode != HttpStatusCode.OK)
                     {
-                        TransactionFor.Wallet => await ProcessWalletTransaction(transaction, Verification.RefId),
-                        TransactionFor.Order => await ProcessDefaultTransaction(transaction, Verification.RefId),
-                        TransactionFor.PostOrder => await ProcessDefaultTransaction(transaction, Verification.RefId),
-                        _ => false
-                    };
+                        throw new Exception($"خطا در ارتباط با زرین‌پال: {response.StatusCode}");
+                    }
+
+                    // 6. دسریالایز کردن پاسخ
+                     result = JsonConvert.DeserializeObject<ZarinPalVerificationResponse>(responseBody);
+
+                    // 7. اعتبارسنجی پاسخ زرین‌پال
+                    if (result == null)
+                    {
+                        throw new Exception("پاسخ دریافتی از زرین‌پال نامعتبر است");
+                    }
+
+                  
+                }
+
+                if (result.Status == 100 && transaction.Status != TransactionStatus.موفق)
+                {
+                    
+                    var success = await ProcessWalletTransaction(transaction, result.RefId);
 
                     if (success)
                     {
                         return View(new PaymentStatusViewModel
                         {
-                            Status = Verification.Status,
-                            RefId = Verification.RefId,
-                            Message = $"پرداخت با موفقیت انجام شد. کد پیگیری: {Verification.RefId}"
+                            Status = result.Status,
+                            RefId = result.RefId.ToString(),
+                            Message = $"پرداخت با موفقیت انجام شد. کد پیگیری: {result.RefId}"
                         });
                     }
                 }
 
-                await _transactionCommands.Payment(TransactionStatus.نا_موفق, transaction.Id, Verification.RefId.ToString());
+                await _transactionCommands.Payment(TransactionStatus.نا_موفق, transaction.Id, result.RefId.ToString());
 
                 return View(new PaymentStatusViewModel
                 {
-                    Status = Verification?.Status ?? -1,
-                    RefId = Verification.RefId,
+                    Status = result?.Status ?? -1,
+                    RefId = result.RefId.ToString(),
                     Message = "تراکنش ناموفق - در صورت کسر وجه از حساب شما، مبلغ حداکثر تا 72 ساعت به حساب شما باز خواهد گشت"
                 });
             }
@@ -135,7 +159,7 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
                 return View(new PaymentStatusViewModel
                 {
                     Status = -1,
-                    RefId = 0,
+                    RefId = "-",
                     Message = "خطا در ارتباط با درگاه پرداخت. لطفاً مجدداً تلاش کنید."
                 });
             }
@@ -158,45 +182,70 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
 
         #region Private Methods
 
-        private async Task<IActionResult> ProcessZarinPalPayment(long transactionId, int amount, string description)
+        private async Task<IActionResult> ProcessZarinPalPayment(int amount)
         {
             try
             {
+                _userId = _authService.GetLoginUserId();
                 var mobile = _authService.GetLoginUserMobile();
                 var email = _authService.GetLoginUserEmail();
+                string transactionDescription = $"شارژ کیف پول از درگاه ";
 
-                var callbackUrl = $"{_siteData.SiteUrl}Profile/Payment/{transactionId}";
-
-                var result = await _payment.Request(new DtoRequest
+                var callbackUrl = $"{_siteData.SiteUrl}Profile/Payment";
+                var requestZarinPalUrl = "https://sandbox.zarinpal.com/pg/v4/payment/request.json";
+                var request = new ZarinPalRequestModel
                 {
-                    Mobile = mobile,
-                    CallbackUrl = callbackUrl,
-                    Description = description,
-                    Email = email,
-                    Amount = amount,
-                    MerchantId = _siteData.ZarinPalMerchantId,
-                }, ZarinPal.Class.Payment.Mode.sandbox);
+                    mobile = mobile,
+                    callback_url = callbackUrl,
+                    description = transactionDescription,
+                    email = email,
+                    currency = "IRT",
+                    amount = amount,
+                    merchant_id = _siteData.ZarinPalMerchantId
+                };
 
-                if (result.Status == 100)
+                using (WebClient client = new WebClient())
                 {
-                    var paymentUrl = _siteData.UseSandbox
-                        ? $"https://sandbox.zarinpal.com/pg/StartPay/{result.Authority}"
-                        : $"https://www.zarinpal.com/pg/StartPay/{result.Authority}";
+                    client.Headers[HttpRequestHeader.ContentType] = "application/json";
+                    string jsonData = System.Text.Json.JsonSerializer.Serialize(request);
+                    byte[] requestData = Encoding.UTF8.GetBytes(jsonData);
+                    byte[] responseData = client.UploadData(requestZarinPalUrl, "POST", requestData);
+                    string responseString = Encoding.UTF8.GetString(responseData);
+                    ZarinPalResponseModel response = System.Text.Json.JsonSerializer.Deserialize<ZarinPalResponseModel>(responseString);
+                    if (response.data.code == 100 && response.data.message.ToLower() == "success")
+                    {
+                        var transactionResult = await _transactionCommands.CreateAsync(new CreateTransacionCommandModel
+                        {
+                            UserId = _userId,
+                            Description = transactionDescription,
+                            Portal = TransactionPortal.زرین_پال,
+                            TransactionFor = TransactionFor.Wallet,
+                            TransactionSource = TransactionSource.پرداخت_از_درگاه,
+                            Price = amount,
+                            TransactionType = TransactionType.واریز,
+                            Authority = response.data.authority,
+                            TransationById = _userId,
+                        });
 
-                    return Redirect(paymentUrl);
+                        if (!transactionResult.Success)
+                        {
+                            ViewData["error"] = "خطا در ثبت درخواست پرداخت";
+                            return RedirectToAction("Wallet");
+                        }
+
+
+                        var transactionId = Convert.ToInt64(transactionResult.Data);
+                        string RedirectUrl = $"https://sandbox.zarinpal.com/pg/StartPay/{response.data.authority}";
+                        return Redirect(RedirectUrl);
+                    }
+                    ViewData["error"] = "خطا در ارتباط با درگاه پرداخت. لطفاً مجدداً تلاش کنید";
+                    return View();
                 }
-
-                await _transactionCommands.DeleteAsync(transactionId);
-                TempData["Error"] = $"خطا در ارتباط با درگاه پرداخت: کد خطا {result.Status}";
-                return RedirectToAction("Wallet");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                // _logger.LogError(ex, "خطا در پرداخت زرین‌پال برای تراکنش {TransactionId}", transactionId);
-
-                await _transactionCommands.DeleteAsync(transactionId);
-                TempData["Error"] = "خطا در ارتباط با درگاه پرداخت. لطفاً مجدداً تلاش کنید.";
-                return RedirectToAction("Wallet");
+                ViewData["error"] = "خطا در ارتباط با درگاه پرداخت. لطفاً مجدداً تلاش کنید";
+                return View();
             }
         }
 
@@ -216,7 +265,7 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
             TempData["Error"] = "درگاه سامان در حال پیاده‌سازی است";
             return RedirectToAction("Wallet");
         }
-        private async Task<bool> ProcessWalletTransaction(TransationViewModel transaction, int RefId)
+        private async Task<bool> ProcessWalletTransaction(TransationViewModel transaction, long RefId)
         {
             var deposit = await _walletCommands.DepositAsync(transaction.UserId, transaction.Price, transaction.Id);
             if (deposit.Success)
@@ -231,11 +280,7 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
                 return false;
             }
         }
-        private async Task<bool> ProcessDefaultTransaction(TransationViewModel transaction, int RefId)
-        {
-            await _transactionCommands.Payment(TransactionStatus.موفق, transaction.Id, RefId.ToString());
-            return true;
-        }
+
         #endregion
     }
 }

@@ -6185,7 +6185,7 @@ input:checked + .custom-slider {
         box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
     }
 
-.inv-discount-btn {
+.btn-open-shipping {
     background: #2563eb;
     color: white;
     border: none;
@@ -6200,11 +6200,25 @@ input:checked + .custom-slider {
     align-items: center;
     gap: 0.3rem;
 }
-
-    .inv-discount-btn:hover {
-        background: #1a4fc3;
-        transform: scale(1.02);
-    }
+.btn-open-shipping {
+    background: #4269f5;
+    color: white;
+    border: none;
+    padding: 0.4rem 1.2rem;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+.inv-discount-btn:hover {
+    background: #6d8bf7;
+    transform: scale(1.02);
+}
 
     .inv-discount-btn:disabled {
         opacity: 0.6;
@@ -6737,4 +6751,435 @@ input:checked + .custom-slider {
     width: 20px;
     height: 20px;
     cursor: pointer;
+}
+
+/* باکس انتخاب روش ارسال - سمت چپ */
+.inv-shipping-box {
+    background: #f8faff;
+    border-radius: 16px;
+    padding: 1.2rem 1.5rem;
+    border: 1px solid #e2eaf3;
+    margin-bottom: 1rem;
+}
+
+.inv-shipping-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #0b1e33;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid #e2eaf3;
+    margin-bottom: 0.8rem;
+}
+
+    .inv-shipping-title i {
+        color: #2563eb;
+        font-size: 1.1rem;
+    }
+
+.inv-shipping-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.inv-shipping-option {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.6rem 0.8rem;
+    border-radius: 12px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #ffffff;
+}
+
+    .inv-shipping-option:hover {
+        background: #f0f4fe;
+        border-color: #d0e0ff;
+    }
+
+    .inv-shipping-option input[type="radio"] {
+        width: 18px;
+        height: 18px;
+        accent-color: #2563eb;
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+
+    .inv-shipping-option:has(input:checked) {
+        background: #eef6ff;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+.inv-shipping-option-content {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    flex: 1;
+}
+
+    .inv-shipping-option-content i {
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #eef2f7;
+        border-radius: 8px;
+        color: #2563eb;
+        font-size: 0.9rem;
+        flex-shrink: 0;
+    }
+
+.inv-shipping-option:has(input:checked) .inv-shipping-option-content i {
+    background: #2563eb;
+    color: white;
+}
+
+.inv-shipping-option-content div {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.inv-shipping-option-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #0b1e33;
+}
+
+.inv-shipping-option-price {
+    font-size: 0.8rem;
+    color: #4a5b73;
+}
+
+.inv-shipping-option:has(input:checked) .inv-shipping-option-price {
+    color: #0b6e41;
+    font-weight: 600;
+}
+/* باکس انتخاب روش پرداخت */
+.inv-payment-method-box {
+    background: #f8faff;
+    border-radius: 16px;
+    padding: 1.2rem 1.5rem;
+    border: 1px solid #e2eaf3;
+    margin-bottom: 1rem;
+}
+
+.inv-payment-method-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #0b1e33;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid #e2eaf3;
+    margin-bottom: 0.8rem;
+}
+
+    .inv-payment-method-title i {
+        color: #2563eb;
+        font-size: 1.1rem;
+    }
+
+.inv-payment-method-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.inv-payment-method-option {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.6rem 0.8rem;
+    border-radius: 12px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #ffffff;
+}
+
+    .inv-payment-method-option:hover {
+        background: #f0f4fe;
+        border-color: #d0e0ff;
+    }
+
+    .inv-payment-method-option input[type="radio"] {
+        width: 18px;
+        height: 18px;
+        accent-color: #2563eb;
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+
+    .inv-payment-method-option:has(input:checked) {
+        background: #eef6ff;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+.inv-payment-method-content {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    flex: 1;
+}
+
+    .inv-payment-method-content i {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #eef2f7;
+        border-radius: 8px;
+        color: #2563eb;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+
+.inv-payment-method-option:has(input:checked) .inv-payment-method-content i {
+    background: #2563eb;
+    color: white;
+}
+
+.inv-payment-method-content div {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.inv-payment-method-title-text {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #0b1e33;
+}
+
+.inv-payment-method-desc {
+    font-size: 0.75rem;
+    color: #6b7f99;
+}
+
+.inv-payment-method-option:has(input:checked) .inv-payment-method-desc {
+    color: #2563eb;
+}
+
+
+/*Charge Wallet*/
+/* reset & base */
+.modal-trigger-btn {
+    background: #1e2b3c;
+    color: white;
+    border: none;
+    padding: 0.9rem 2.2rem;
+    border-radius: 40px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+    transition: 0.2s ease;
+    letter-spacing: 0.3px;
+}
+
+    .modal-trigger-btn:hover {
+        background: #2c3e55;
+        transform: scale(1.02);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+    }
+
+/* ---------- مدال اختصاصی (با کلاس و آیدی یکتا) ---------- */
+.transaction-modal-overlay {
+    display: none; /* مخفی پیش‌فرض */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(4px);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 1rem;
+}
+
+    /* نمایش مدال (با کلاس active) */
+    .transaction-modal-overlay.active {
+        display: flex;
+    }
+
+/* کارت مدال */
+.transaction-modal-card {
+    background: #ffffff;
+    max-width: 520px;
+    width: 100%;
+    border-radius: 32px;
+    padding: 2rem 2rem 2.2rem;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+    position: relative;
+    transition: 0.25s ease;
+    animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.transaction-modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0b1a2b;
+    margin-bottom: 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 2px solid #eef2f7;
+    padding-bottom: 0.9rem;
+}
+
+    .transaction-modal-title span {
+        background: #eef3fa;
+        padding: 0.2rem 0.8rem;
+        border-radius: 40px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: #1f3a5f;
+    }
+
+/* گروه‌های فرم */
+.transaction-modal-group {
+    margin-bottom: 1.5rem;
+}
+
+    .transaction-modal-group label {
+        display: block;
+        font-weight: 600;
+        color: #1f2e44;
+        margin-bottom: 0.4rem;
+        font-size: 0.9rem;
+        letter-spacing: 0.2px;
+    }
+
+    .transaction-modal-group input,
+    .transaction-modal-group select,
+    .transaction-modal-group textarea {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1.5px solid #d8dfe9;
+        border-radius: 18px;
+        font-size: 0.95rem;
+        background: #fafcff;
+        transition: 0.2s;
+        font-family: inherit;
+        color: #0a1a2b;
+    }
+
+        .transaction-modal-group input:focus,
+        .transaction-modal-group select:focus,
+        .transaction-modal-group textarea:focus {
+            outline: none;
+            border-color: #2b4b77;
+            box-shadow: 0 0 0 4px rgba(43, 75, 119, 0.15);
+            background: #ffffff;
+        }
+
+    .transaction-modal-group textarea {
+        resize: vertical;
+        min-height: 75px;
+    }
+
+    .transaction-modal-group select {
+        appearance: auto;
+        cursor: pointer;
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%233b5a7a" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>');
+        background-repeat: no-repeat;
+        background-position: left 1rem center;
+        background-size: 16px;
+    }
+
+/* دکمه‌های مدال */
+.transaction-modal-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.transaction-modal-btn {
+    flex: 1;
+    min-width: 100px;
+    padding: 0.8rem 1.4rem;
+    border: none;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: 0.2s ease;
+    background: #eef2f7;
+    color: #1a2c42;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+}
+
+.transaction-modal-btn-primary {
+    background: #1a314b;
+    color: white;
+    box-shadow: 0 6px 14px rgba(26, 49, 75, 0.25);
+}
+
+    .transaction-modal-btn-primary:hover {
+        background: #27466b;
+        transform: scale(1.02);
+        box-shadow: 0 8px 18px rgba(26, 49, 75, 0.3);
+    }
+
+.transaction-modal-btn-secondary {
+    background: #e6ecf5;
+    color: #1f2e44;
+}
+
+    .transaction-modal-btn-secondary:hover {
+        background: #d5deea;
+    }
+
+/* پیام وضعیت (ajax) */
+.transaction-modal-status {
+    margin-top: 1.2rem;
+    padding: 0.6rem 1rem;
+    border-radius: 30px;
+    background: #f1f5fa;
+    font-size: 0.9rem;
+    color: #1a2f47;
+    text-align: center;
+    display: none;
+    border: 1px solid #d3deec;
+}
+
+    .transaction-modal-status.show {
+        display: block;
+    }
+
+/* ریسپانسیو */
+@media (max-width: 480px) {
+    .transaction-modal-card {
+        padding: 1.5rem;
+    }
+
+    .transaction-modal-actions {
+        flex-direction: column;
+    }
 }

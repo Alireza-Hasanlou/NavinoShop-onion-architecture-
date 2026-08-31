@@ -124,7 +124,7 @@ function removeFromCart(productSellId) {
 
 function updateQuantity(productSellId, change) {
     const productId = String(productSellId).trim();
-    debugger;
+
     $.ajax({
         url: '/Cart/UpdateQuantity',
         type: 'POST',
@@ -792,7 +792,7 @@ function syncCartFromCookie() {
             var totalPrice = data.tolalPrice || 0;
             totalPriceEl.html(`${invFormatNumber(totalPrice)} تومان`);
         }
-        debugger;
+
         var totalDiscountEl = $('#invOrderDiscount_Unique_001');
         if (totalDiscountEl.length) {
             var discountPrice = data.discountPrice || 0;
@@ -815,7 +815,7 @@ function syncCartFromCookie() {
             finalAmount.html(invFormatNumber(finalPayment));
         }
 
- 
+
 
         var discountSection = $('#invDiscountSection_Unique_001');
         var discountGroup = discountSection.find('#invDiscountGroup_Unique_001');
@@ -908,14 +908,14 @@ function syncCartFromCookie() {
             type: 'POST',
             success: function (response) {
                 if (response.success) {
-                    if (typeof AlertSweetWithTimer === 'function') {
-                        AlertSweetWithTimer(response.message, "success", "Center");
+                    if (typeof AlerSweetWithTimer === 'function') {
+                        AlerSweetWithTimer(response.message, "success", "Center");
                     }
                     response.discountPercent = 0
                     invUpdateOrderDiscountUI(response);
                 } else {
-                    if (typeof AlertSweetWithTimer === 'function') {
-                        AlertSweetWithTimer(response.message, "error", "Center");
+                    if (typeof AlerSweetWithTimer === 'function') {
+                        AlerSweetWithTimer(response.message, "error", "Center");
                     } else {
                         alert(response.message);
                     }
@@ -928,8 +928,8 @@ function syncCartFromCookie() {
                 if (xhr.responseJSON && xhr.responseJSON.message) {
                     msg = xhr.responseJSON.message;
                 }
-                if (typeof AlertSweetWithTimer === 'function') {
-                    AlertSweetWithTimer(msg, "error", "Center");
+                if (typeof AlerSweetWithTimer === 'function') {
+                    AlerSweetWithTimer(msg, "error", "Center");
                 } else {
                     alert(msg);
                 }
@@ -938,6 +938,8 @@ function syncCartFromCookie() {
             }
         });
     };
+
+
     $(document).ready(function () {
         $('input[id^="invDiscountInput_"]').on('keypress', function (e) {
             if (e.which === 13) {
@@ -994,11 +996,340 @@ function syncCartFromCookie() {
 
         $('#invPayBtn_Unique_001').on('click', function (e) {
             e.preventDefault();
-            if (typeof AlertSweetWithTimer === 'function') {
-                AlertSweetWithTimer('شما به درگاه پرداخت هدایت می‌شوید.', "info", "Center");
-            } else {
-                alert('شما به درگاه پرداخت هدایت می‌شوید.');
+            
+            // دریافت روش پرداخت انتخاب شده
+            var selectedPayment = $('input[name="paymentMethod"]:checked');
+
+            if (!selectedPayment.length) {
+                AlerSweetWithTimer('لطفاً روش پرداخت را انتخاب کنید.', "warning", "Center");
+                return;
             }
+
+            var OrderPayment = parseInt(selectedPayment.val());
+            var Portal = parseInt(selectedPayment.data('portal'));
+
+
+            var btn = $(this);
+            btn.prop('disabled', true);
+            btn.html('<i class="fas fa-spinner fa-spin"></i> در حال پردازش...');
+
+            $.ajax({
+                url: '/order/FactorPayment',
+                type: 'POST',
+                data: {
+                    orderPayment: OrderPayment,
+                    portal: Portal
+                },
+                success: function (response) {
+                    console.log('Response:', response);
+
+                    if (response.success) {
+
+
+                        if (response.redirectUrl) {
+                            setTimeout(function () {
+                                window.location.href = response.redirectUrl;
+                            }, 1500);
+                        } else if (response.orderStatus) {
+                            // به‌روزرسانی وضعیت سفارش
+                            $('.inv-badge').html(`
+                            <i class="fas fa-check-circle"></i>
+                            سفارش #${response.orderId}
+                            <span style="margin:0 0.5rem;color:#b0c8e0;">|</span>
+                            <i class="fas fa-check"></i> ${response.orderStatus}
+                        `);
+
+                            // به‌روزرسانی قیمت‌ها
+                            if (response.paymentPrice !== undefined) {
+                                $('#invFinalAmount_Unique_001').html(response.paymentPrice.toLocaleString());
+                                $('#invFinalSummary_Unique_001').html(response.paymentPrice.toLocaleString() + ' تومان');
+                            }
+                        }
+                    } else {
+                        AlerSweetWithTimer(response.message, "error", "Center");
+                    }
+
+                    btn.prop('disabled', false);
+                    btn.html('<i class="fas fa-lock"></i> پرداخت نهایی');
+                },
+                error: function (xhr) {
+                    var errorMessage = 'خطا در پردازش پرداخت.';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
+                    AlerSweetWithTimer(errorMessage, "error", "Center");
+
+                    btn.prop('disabled', false);
+                    btn.html('<i class="fas fa-lock"></i> پرداخت نهایی');
+                }
+            });
+
         });
     });
 })();
+function openShippingModal(orderSellerId) {
+
+    $('#shippingModal').modal('show');
+
+    $('#invShippingBox_Unique_001 .inv-shipping-options').html(`
+        <div style="text-align:center;padding:2rem;color:#6b7f99;">
+            <i class="fas fa-spinner fa-spin fa-2x"></i>
+            <p style="margin-top:0.5rem;">در حال دریافت روش‌های ارسال...</p>
+        </div>
+    `);
+
+    $.ajax({
+        url: '/order/CalculatePostPrice',
+        type: 'GET',
+        data: {
+            orderSellerId: orderSellerId
+        },
+        success: function (response) {
+            console.log('Shipping methods:', response);
+
+            if (response && response.length > 0) {
+                var optionsHtml = '';
+
+                var icons = {
+                    'پست پیشتاز': 'fa-box',
+                    'ارسال اکسپرس': 'fa-rocket',
+                    'تیپاکس': 'fa-truck-fast',
+                    'باربری': 'fa-truck',
+                    'تحویل در فروشگاه': 'fa-store',
+                    'پست معمولی': 'fa-envelope'
+                };
+
+                $.each(response, function (index, item) {
+                    var iconClass = 'fa-box';
+                    $.each(icons, function (key, value) {
+                        if (item.title && item.title.includes(key)) {
+                            iconClass = value;
+                            return false;
+                        }
+                    });
+
+                    var priceText = item.price > 0 ?
+                        item.price.toLocaleString() + ' تومان' :
+                        'رایگان';
+
+                    var deliveryDesc = item.status || '';
+
+                    optionsHtml += `
+                        <label class="inv-shipping-option">
+                            <input type="radio" 
+                                   name="shippingMethod" 
+                                   value="${item.postId}" 
+                                   data-price="${item.price}"
+                                   data-title="${item.title}"
+                                   data-ordersellerid="${orderSellerId}"
+                                   data-status="${item.status}" />
+                            <div class="inv-shipping-option-content">
+                                <i class="fas ${iconClass}"></i>
+                                <div>
+                                    <span class="inv-shipping-option-title">${item.title}</span>
+                                    <span class="inv-shipping-option-price">${priceText}</span>
+                                    ${deliveryDesc ? `<span class="inv-shipping-delivery">${deliveryDesc}</span>` : ''}
+                                </div>
+                            </div>
+                        </label>
+                    `;
+                });
+
+                $('#invShippingBox_Unique_001 .inv-shipping-options').html(optionsHtml);
+
+                var firstOption = $('#invShippingBox_Unique_001 input[name="shippingMethod"]').first();
+                if (firstOption.length) {
+                    firstOption.prop('checked', true);
+                }
+
+            } else {
+                $('#invShippingBox_Unique_001 .inv-shipping-options').html(`
+                    <div style="text-align:center;padding:2rem;color:#dc3545;">
+                        <i class="fas fa-exclamation-circle fa-2x"></i>
+                        <p style="margin-top:0.5rem;">هیچ روش ارسالی موجود نیست.</p>
+                    </div>
+                `);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error loading shipping methods:', error);
+            console.error('Status:', status);
+            console.error('XHR:', xhr);
+
+            var errorMsg = 'خطا در دریافت روش‌های ارسال.';
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                errorMsg = xhr.responseJSON.message;
+            } else if (xhr.status === 0) {
+                errorMsg = 'ارتباط با سرور برقرار نشد.';
+            } else if (xhr.status === 404) {
+                errorMsg = 'آدرس مورد نظر یافت نشد.';
+            } else if (xhr.status === 500) {
+                errorMsg = 'خطای داخلی سرور.';
+            }
+
+            $('#invShippingBox_Unique_001 .inv-shipping-options').html(`
+                <div style="text-align:center;padding:2rem;color:#dc3545;">
+                    <i class="fas fa-exclamation-circle fa-2x"></i>
+                    <p style="margin-top:0.5rem;">${errorMsg}</p>
+                    <small>لطفاً مجدداً تلاش کنید.</small>
+                    <br>
+                    <button class="btn btn-sm btn-primary mt-2" onclick="openShippingModal(${orderSellerId})">
+                        <i class="fas fa-redo"></i> تلاش مجدد
+                    </button>
+                </div>
+            `);
+        }
+    });
+}
+
+function confirmShippingMethod() {
+    var selected = $('#invShippingBox_Unique_001 input[name="shippingMethod"]:checked');
+
+    if (!selected.length) {
+        AlerSweetWithTimer('لطفاً یک روش ارسال را انتخاب کنید.', "warning", "Center");
+        return;
+    }
+
+    var postId = parseInt(selected.val()) || 0;
+    var title = selected.data('title') || '';
+    var price = parseInt(selected.data('price')) || 0;
+    var status = selected.data('status') || '';
+    var orderId = parseInt($('#orderId').val()) || 0;
+    var orderSellerId = parseInt(selected.data('ordersellerid')) || 0;
+
+    if (orderId === 0 || orderSellerId === 0) {
+        AlerSweetWithTimer('اطلاعات سفارش کامل نیست.', "error", "Center");
+        return;
+    }
+
+    $('#confirmShippingBtn').prop('disabled', true);
+    $('#confirmShippingBtn').html('<i class="fas fa-spinner fa-spin"></i> در حال ثبت...');
+
+    var postData = {
+        orderId: orderId,
+        orderSellerId: orderSellerId,
+        postId: postId,
+        postPrice: price,
+        postTitle: title
+    };
+
+    console.log('Sending data:', postData);
+
+    $.ajax({
+        url: '/order/UpdateShippingMethod',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(postData),
+        success: function (response) {
+            console.log('Response:', response);
+
+            if (response.success) {
+                AlerSweetWithTimer(response.message, "success", "Center");
+
+
+                $(`.postMethod_${orderSellerId}`).html(`روش ارسال : ${response.postTitle} - ${response.postPrice}`);
+
+                updatePricesAfterShipping(response);
+
+                $('#shippingModal').modal('hide');
+
+                $('#confirmShippingBtn').prop('disabled', false);
+                $('#confirmShippingBtn').html('تایید و ثبت');
+
+            } else {
+                AlerSweetWithTimer(response.message, "error", "Center");
+                $('#confirmShippingBtn').prop('disabled', false);
+                $('#confirmShippingBtn').html('تایید و ثبت');
+            }
+        },
+        error: function (xhr) {
+            var errorMessage = 'خطا در ثبت روش ارسال.';
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                errorMessage = xhr.responseJSON.message;
+            }
+            AlerSweetWithTimer(errorMessage, "error", "Center");
+            $('#confirmShippingBtn').prop('disabled', false);
+            $('#confirmShippingBtn').html('تایید و ثبت');
+        }
+    });
+}
+
+function updatePricesAfterShipping(response) {
+    var postPriceElement = $('#PostPrice');
+    if (postPriceElement.length) {
+        if (response.totalPostPrice > 0) {
+            postPriceElement.html(response.totalPostPrice.toLocaleString());
+        } else {
+            postPriceElement.html('رایگان');
+        }
+    }
+
+    var totalPriceElement = $('#invOrderTotal_Unique_001');
+    if (totalPriceElement.length && response.totalPrice !== undefined) {
+        totalPriceElement.html(response.totalPrice.toLocaleString() + ' تومان');
+    }
+
+    if (response.paymentPrice !== undefined) {
+        $('#invFinalAmount_Unique_001').html(response.paymentPrice.toLocaleString());
+        $('#invFinalSummary_Unique_001').html(response.paymentPrice.toLocaleString() + ' تومان');
+    }
+
+    if (response.totalPriceAfterOff !== undefined) {
+        var discountAmount = response.totalPrice - response.totalPriceAfterOff;
+        var totalDiscountEl = $('#invOrderDiscount_Unique_001');
+        if (totalDiscountEl.length) {
+            if (discountAmount > 0) {
+                totalDiscountEl.html(discountAmount.toLocaleString() + ' تومان');
+            } else {
+                totalDiscountEl.html('۰ تومان');
+            }
+        }
+    }
+
+    var discountInfo = $('#invDiscountInfo_Unique_001');
+    if (discountInfo.length) {
+        var discountPercent = 0;
+        if (response.totalPrice > 0 && response.totalPriceAfterOff !== undefined) {
+            var discountAmount = response.totalPrice - response.totalPriceAfterOff;
+            discountPercent = Math.round((discountAmount / response.totalPrice) * 100);
+        }
+        discountInfo.html(`
+            <span><i class="fas fa-ticket-alt"></i> تخفیف: ${discountPercent}%</span>
+            <span><i class="fas fa-wallet"></i> قابل‌پرداخت: <span id="invFinalAmount_Unique_001">${response.paymentPrice ? response.paymentPrice.toLocaleString() : '۰'}</span> تومان</span>
+        `);
+    }
+
+    console.log('Prices updated:', {
+        totalPostPrice: response.totalPostPrice,
+        totalPrice: response.totalPrice,
+        totalPriceAfterOff: response.totalPriceAfterOff,
+        paymentPrice: response.paymentPrice
+    });
+}
+
+
+$(document).ready(function () {
+    $('#confirmShippingBtn').on('click', function () {
+        confirmShippingMethod();
+    });
+
+    $('.btn-open-shipping').on('click', function () {
+        var orderSellerId = $(this).data('ordersellerid') || 0;
+        openShippingModal(orderSellerId);
+    });
+
+    $('.btn-close-modal, .modal-close').on('click', function () {
+        $('#shippingModal').modal('hide');
+    });
+
+    $('#shippingModal').on('hidden.bs.modal', function () {
+        $('#confirmShippingBtn').prop('disabled', false);
+        $('#confirmShippingBtn').html('تایید و ثبت');
+    });
+});
+
+
+/*Charge Wallet */
+
+
+

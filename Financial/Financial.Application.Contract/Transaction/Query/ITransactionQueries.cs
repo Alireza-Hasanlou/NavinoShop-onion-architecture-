@@ -11,6 +11,7 @@ namespace Financial.Application.Contract.Transaction.Query
     {
         Task<TransactionDetailDto> GetTransactionDetailAsync(long id);
         Task<TransactionListLoading> GetTransactionsForUserAsync(int pageId,int UserId, TransactionFor transactionFor);
-        Task<TransationViewModel> GetTransationForPayment(long transationId);
+        Task<TransationViewModel> GetTransationForPaymentByAuthorityAsync(string autority);
+        Task<TransationViewModel> GetTransationForPaymentByIdAsync(long Id);
     }
 }
