@@ -8,6 +8,7 @@ using Seos.Domain.SeoAgg;
 using Shared.Domain.Enums;
 using Shared.Ui;
 using Shared.Ui.Enums;
+using Shop.Application.Contract.ProductView;
 using Shop.Domain.ProductAgg;
 using Shop.Domain.ProductCategoryAgg;
 using Shop.Domain.ProductSellAgg;
@@ -27,10 +28,12 @@ namespace Query.Service.Ui.Products
         private readonly ICityRepository _cityRepository;
         private readonly ShopContext _shopContext;
         private readonly DiscountContext _discountContext;
+        private readonly IProductViewCommands _productViewCommands;
 
         public ProductUiQueryService(IProductSellRepository productSellRepository, ISeoRepository seoRepository,
             IProductCategoryRepository categoryRepository, ISellerRepository sellerRepository,
-            IStateRepository stateRepository, ICityRepository cityRepository, ShopContext shopContext, DiscountContext discountContext)
+            IStateRepository stateRepository, ICityRepository cityRepository, ShopContext shopContext,
+            DiscountContext discountContext, IProductViewCommands productViewCommands)
         {
             _productSellRepository = productSellRepository;
             _seoRepository = seoRepository;
@@ -40,6 +43,7 @@ namespace Query.Service.Ui.Products
             _cityRepository = cityRepository;
             _shopContext = shopContext;
             _discountContext = discountContext;
+            _productViewCommands = productViewCommands;
         }
 
         public async Task<ProductSinglePageQueryModel> GetProductAsync(string sellerSlug, string productSlug)
@@ -213,9 +217,6 @@ namespace Query.Service.Ui.Products
 
             return product;
         }
-
-
-
         public async Task<ProductUiPaging> GetProducts(int minPrice, int maxprice, ProductSort sort,
        string categorySlug = "", string sellerSlug = "", int pageId = 1, string filter = "")
         {
@@ -355,7 +356,7 @@ namespace Query.Service.Ui.Products
                 var discount = Discounts.FirstOrDefault(x => x.ProductId == product.ProductId);
                 var hasDiscount = discount != null;
 
-                productSell = hasDiscount && discount.ProductSellId > 0
+                productSell = hasDiscount && discount?.ProductSellId > 0
                     ? (!string.IsNullOrEmpty(seller.Slug)
                         ? product.productSells.FirstOrDefault(x => x.SellerSlug == seller.Slug)
                         : product.productSells.FirstOrDefault(x => x.Id == discount.ProductSellId))
@@ -379,9 +380,6 @@ namespace Query.Service.Ui.Products
             model.Seo = await GetSeoAsync(SeoOwnerId, SeoTitle);
             return model;
         }
-
-
-
 
         public async Task<List<ProductUiQueryModel>> GetProductOtherSellers(int SellerId, string productSlug)
         {
@@ -442,10 +440,11 @@ namespace Query.Service.Ui.Products
             return OtherSellers;
 
         }
-        public async Task<List<ProductUiQueryModel>> GetProductsForIndexPage(IndexPagesProduct sort)
+        public async Task<List<ProductUiQueryModel>> GetBestProducts(IndexPagesProduct sort)
         {
             var productsQuery = _shopContext.Products
       .Where(x => x.ProductSells.Any(x => x.Amount > 0) && x.Active)
+      .Include(x=>x.ProductViews)
       .Include(x => x.ProductSells)
       .ThenInclude(x => x.Seller);
 
@@ -472,13 +471,18 @@ namespace Query.Service.Ui.Products
 
                 case IndexPagesProduct.تخفیف_خورده:
 
+                    var now = DateTime.Now;
                     var productIds = await _discountContext.ProductDiscounts
-                        .Where(x =>
-                            x.CreateDate.Date <= DateTime.Now.Date &&
-                            x.EndDate.Date >= DateTime.Now.Date)
+                        .Where(x => x.StartDate <= now && x.EndDate >= now)
+                        .GroupBy(x => x.ProductId)
+                        .Select(x => new
+                        {
+                            ProductId = x.Key,
+                            Percent = x.Max(discount => discount.Percent)
+                        })
                         .OrderByDescending(x => x.Percent)
-                        .Select(x => x.ProductId)
                         .Take(4)
+                        .Select(x => x.ProductId)
                         .ToListAsync();
 
                     products = await productsQuery
@@ -496,10 +500,15 @@ namespace Query.Service.Ui.Products
                         })
                         .ToListAsync();
 
+                    products = products
+                        .OrderBy(x => productIds.IndexOf(x.Id))
+                        .ToList();
+
                     break;
 
                 case IndexPagesProduct.پربازدیدترین:
                     products = await productsQuery
+                        .OrderByDescending(x => x.ProductViews.Count())
                         .Take(4)
                         .Select(x => new ProductUiQueryModel
                         {
@@ -519,6 +528,8 @@ namespace Query.Service.Ui.Products
                     products = new List<ProductUiQueryModel>();
                     break;
             }
+
+            return products;
         }
         #region PrivateMthods
         private async Task<SeoUiQueryModel> GetSeoAsync(int ownerId, string defaultTitle)

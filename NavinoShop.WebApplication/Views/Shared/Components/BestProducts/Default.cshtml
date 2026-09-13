@@ -1,0 +1,50 @@
+@using Query.Contract.UI.Products
+@using Shared.Ui.Enums
+@model List<ProductUiQueryModel>
+
+@{
+    var selectedSort = IndexPagesProduct.محصولات_منتخب;
+    var sortValue = Context.Request.Query["sort"].ToString();
+
+    if (Enum.TryParse<IndexPagesProduct>(sortValue, out var parsedSort))
+    {
+        selectedSort = parsedSort;
+    }
+}
+
+<section id="featured-products" class="my-5">
+    <div class="container">
+        <div class="row pb-2 pb-sm-4">
+            <div class="col-12 text-center">
+                <div class="btn-group" role="group" id="featured-products-nav">
+                          <a class="btn featured-category-button @(selectedSort == IndexPagesProduct.محصولات_منتخب ? "active" : "")"
+                            
+                              data-sort="@((int)IndexPagesProduct.محصولات_منتخب)">
+                        محصولات منتخب
+                    </a>
+                          <a class="btn featured-category-button @(selectedSort == IndexPagesProduct.تخفیف_خورده ? "active" : "")"
+                            
+                              data-sort="@((int)IndexPagesProduct.تخفیف_خورده)">
+                        تخفیف خورده
+                    </a>
+                          <a class="btn featured-category-button @(selectedSort == IndexPagesProduct.پربازدیدترین ? "active" : "")"
+                
+                              data-sort="@((int)IndexPagesProduct.پربازدیدترین)">
+                        پربازدیدترین
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        @if (Model != null && Model.Count > 0)
+        {
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-md-4 featured-product"
+                 data-aos="fade-up" data-aos-duration="1000">
+                @foreach (var product in Model)
+                {
+                    @await Html.PartialAsync("_ProductPartial", product)
+                }
+            </div>
+        }
+    </div>
+</section>

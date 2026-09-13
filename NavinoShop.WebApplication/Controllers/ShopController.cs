@@ -83,6 +83,33 @@ namespace NavinoShop.WebApplication.Controllers
                 });
             }
         }
+
+        [HttpGet]
+        [Route("/BestProducts")]
+        public async Task<IActionResult> BestProducts(
+            IndexPagesProduct sort = IndexPagesProduct.محصولات_منتخب)
+        {
+            var products = await _productUiQueryService.GetBestProducts(sort);
+
+            return Json(new
+            {
+                success = true,
+                products = products ?? new List<ProductUiQueryModel>()
+            });
+        }
+
+        [HttpGet]
+        [Route("/Shop/BestProductsPartial")]
+        public async Task<IActionResult> BestProductsPartial(
+            IndexPagesProduct sort = IndexPagesProduct.محصولات_منتخب)
+        {
+            var products = await _productUiQueryService.GetBestProducts(sort);
+
+            return PartialView(
+                "~/Views/Shared/Components/BestProducts/Default.cshtml",
+                products ?? new List<ProductUiQueryModel>());
+        }
+
         [HttpGet]
         [Route("{seller}/Product/{productSlug}")]
         public async Task<IActionResult> Product(string seller, string productSlug)
@@ -123,7 +150,8 @@ namespace NavinoShop.WebApplication.Controllers
 
             return Json(new { success = true, data = products });
         }
-
+          
+           
 
     }
 }

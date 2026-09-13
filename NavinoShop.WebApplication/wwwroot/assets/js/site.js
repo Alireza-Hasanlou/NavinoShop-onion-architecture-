@@ -3423,4 +3423,35 @@ function chargeWallet() {
 
     });
 
+    $(document).on('click', '.featured-category-button', function (event) {
+        event.preventDefault();
+
+        var $button = $(this);
+        var sort = $button.data('sort');
+        var $section = $('#featured-products');
+
+        if (sort === undefined || !$section.length) {
+            return;
+        }
+
+        $button.siblings('.featured-category-button').removeClass('active');
+        $button.addClass('active');
+        $section.addClass('loading');
+
+        $.ajax({
+            url: '/Shop/BestProductsPartial',
+            type: 'GET',
+            data: { sort: sort },
+            dataType: 'html'
+        })
+            .done(function (html) {
+                $section.replaceWith(html);
+            })
+            .fail(function () {
+                $section.removeClass('loading');
+                $button.removeClass('active');
+                console.error('دریافت محصولات انتخاب شده با خطا مواجه شد.');
+            });
+    });
+
 })(jQuery);
