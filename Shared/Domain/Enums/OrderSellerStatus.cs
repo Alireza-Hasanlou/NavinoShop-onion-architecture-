@@ -2,6 +2,7 @@
 {
     public enum OrderSellerStatus
     {
+        همه,
         پرداخت_نشده,
         پرداخت_شده,
         لغو_شده_توسط_مشتری,

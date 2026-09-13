@@ -31,7 +31,7 @@ namespace Shop.Application.Commands
         {
             if (command.ProductId == 0)
                 return new(false, "لطفا محصول مورد نظر را انتخاب کنید", nameof(command.ProductId));
-            if (await _productSellRepository.ExistByAsync(x => x.ProductId == command.ProductId && x.SellerId ==command.SellerId) )
+            if (await _productSellRepository.ExistByAsync(x => x.ProductId == command.ProductId && x.SellerId == command.SellerId))
                 return new OperationResult(false, "محصول در حال حاضر در فروشگاه شما موجود است", nameof(command.ProductId));
             var ProductSell = new ProductSell(command.ProductId, command.Price, command.Unit, command.SellerId, command.Weight);
             var res = await _productSellRepository.CreateAsync(ProductSell);
@@ -63,20 +63,9 @@ namespace Shop.Application.Commands
             return new(false, ValidationMessages.SystemErrorMessage, nameof(command.Unit));
 
         }
-
-
-        public async Task<OperationResult> EditProductSellAmountAsync(EditProductSellAmountCommandModel EditAmountModel)
-        {
-
-            var sell = await _productSellRepository.GetByIdAsync(EditAmountModel.SellId);
-            if (sell == null)
-                return new(false, "محصولی با شناسه ارسالی یافت نشد");
-            sell.ChangeAmount(EditAmountModel.count, EditAmountModel.Type);
-
-            if (await _productSellRepository.SaveAsync())
-                return new(true);
-            return new(false, ValidationMessages.SystemErrorMessage);
-        }
+        public async Task<OperationResult> EditProductSellAmountAsync(
+            EditProductSellAmountCommandModel EditAmountModel)=>
+             await _productSellRepository.EditProductSellAmountAsync(EditAmountModel);
 
         public async Task<EditProductSellCommandModel> GetForEditAsync(int id)
         {

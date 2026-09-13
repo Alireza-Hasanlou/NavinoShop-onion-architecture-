@@ -72,6 +72,8 @@ namespace Query.Service.Ui.UserPanel.Order
                   .ThenInclude(ps => ps.Product)
       .Include(o => o.OrderSellers)
           .ThenInclude(os => os.Seller)
+          .Include(x=>x.OrderAddress)
+          
       .FirstOrDefaultAsync(o => o.UserId == userId &&
                                o.OrderStatus == OrderStatus.پرداخت_نشده);
 
@@ -140,18 +142,18 @@ namespace Query.Service.Ui.UserPanel.Order
                 }
             }
 
-            var defaultAddress = await _userAddressRepository.GetDefaultAddressAsync(userId);
+       
             result.Address = new OrderAddressQueryModel
             {
-                FullName = defaultAddress.FullName,
-                AddressDetail = defaultAddress.AddressDetail,
-                CityId = defaultAddress.CityId,
-                StateId = defaultAddress.StateId,
-                CityName = await _cityRepository.GetCityTitle(defaultAddress.CityId),
-                StateName = await _stateRepository.GetStateTitle(defaultAddress.StateId),
-                NationalCode = defaultAddress.NationalCode,
-                Phone = defaultAddress.Phone,
-                PostalCode = defaultAddress.PostalCode
+                FullName = order.OrderAddress.FullName,
+                AddressDetail = order.OrderAddress.AddressDetail,
+                CityId = order.OrderAddress.CityId,
+                StateId = order.OrderAddress.StateId,
+                CityName = await _cityRepository.GetCityTitle(order.OrderAddress.CityId),
+                StateName = await _stateRepository.GetStateTitle(order.OrderAddress.StateId),
+                NationalCode = order.OrderAddress.NationalCode,
+                Phone = order.OrderAddress.Phone,
+                PostalCode = order.OrderAddress.PostalCode
             };
 
             return result;

@@ -33,15 +33,23 @@ Services.AddAutoMapper(x =>
 {
     x.AddMaps(typeof(MappingProfile));
 });
+Services.AddDistributedMemoryCache();
 
+Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 var app = builder.Build();
+
 
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
-
+app.UseSession();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -64,8 +72,6 @@ app.MapControllerRoute(name: "areas",
     pattern: "{area:exists}/{controller=Blog}/{action=Index}/{id?}");
 
 app.MapAreaControllerRoute("areas", "UserPanel", "UserPanel/{controller=Panel}/{action=Profile}/{id?}");
-
-
 app.MapControllerRoute(
     name: "notFound",
     pattern: "{*url}",

@@ -9,7 +9,9 @@ namespace Store.Application.Contract.StoreProduct.Command
 {
     public interface IStoreProductCommands
     {
+
         Task<OperationResult> CreateAsync(CreateStoreProductCommandModel command);
         Task<OperationResult> DeleteAsync(int Id);
     }
+
 }

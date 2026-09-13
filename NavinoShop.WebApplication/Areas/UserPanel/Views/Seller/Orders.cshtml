@@ -1,0 +1,228 @@
+﻿@using Query.Contract.UI.UserPanel.Seller
+@using Shared.Domain.Enums
+@model SellersOrdersPaging
+
+<div id="seller-orders">
+
+    <!-- Search -->
+    <div class="orders-search">
+        <input type="hidden" asp-for="SellerId" id="sellerId" />
+        <!-- Filter -->
+        <input type="text"
+               id="orderFilter"
+               value="@Model.Filter"
+               placeholder="جستجو..." />
+
+
+        <!-- Order Id -->
+        <input type="number"
+               id="orderId"
+               value="@(Model.OrderId == 0 ? "" : Model.OrderId.ToString())"
+               placeholder="شماره سفارش" />
+
+
+        <!-- Ref Id -->
+        <input type="number"
+               id="refId"
+               value="@(Model.RefId == 0 ? "" : Model.RefId.ToString())"
+               placeholder="شماره پیگیری" />
+
+
+        <!-- Status -->
+        <select id="orderSellerStatus">
+
+            <option value="">
+                همه وضعیت‌ها
+            </option>
+
+            @foreach (var status in Enum.GetValues<OrderSellerStatus>())
+            {
+                <option value="@status"
+                        selected="@(Model.orderSellerStatus == status)">
+                    @status
+                </option>
+            }
+
+        </select>
+
+
+        <!-- Search Button -->
+        <button type="button"
+                id="btnSearchOrders">
+
+            جستجو
+
+        </button>
+
+
+        <!-- Reset -->
+        <button type="button"
+                id="btnResetOrders">
+
+            حذف فیلترها
+
+        </button>
+
+    </div>
+
+
+    <!-- Orders -->
+    <div id="orders-container">
+
+        @await Html.PartialAsync("_SellersOrdersListPartial", Model)
+
+    </div>
+
+</div>
+
+
+<script>
+
+    $(document).ready(function () {
+
+
+        /*
+         * ==============================
+         * Search
+         * ==============================
+         */
+
+        $(document).on("click", "#btnSearchOrders", function () {
+
+            loadOrders(1);
+
+        });
+
+
+        /*
+         * ==============================
+         * Pagination
+         * ==============================
+         */
+
+        $(document).on("click", ".pagination-btn", function () {
+
+            const page = $(this).data("page");
+
+            loadOrders(page);
+
+        });
+
+
+        /*
+         * ==============================
+         * Reset Filters
+         * ==============================
+         */
+
+        $(document).on("click", "#btnResetOrders", function () {
+
+            $("#orderFilter").val("");
+
+            $("#orderId").val("");
+
+            $("#refId").val("");
+
+            $("#orderSellerStatus").val("");
+
+            loadOrders(1);
+
+        });
+
+
+        /*
+         * ==============================
+         * Enter Key
+         * ==============================
+         */
+
+        $("#orderFilter, #orderId, #refId").on("keydown", function (e) {
+
+            if (e.key === "Enter") {
+
+                e.preventDefault();
+
+                loadOrders(1);
+
+            }
+
+        });
+
+
+        /*
+         * ==============================
+         * AJAX
+         * ==============================
+         */
+
+        function loadOrders(page) {
+
+            const sellerId = $("#sellerId").val();
+
+            const filter = $("#orderFilter").val();
+
+            const orderId = $("#orderId").val();
+
+            const refId = $("#refId").val();
+
+            const orderSellerStatus =
+                $("#orderSellerStatus").val();
+
+
+            $.ajax({
+
+                url: "/Profile/Seller/Orders",
+
+                type: "POST",
+
+                data: {
+                    SellerId: sellerId,
+                    status: orderSellerStatus,
+                    RefId: refId,
+                    OrderId: orderId,
+                    PageId: page,
+                    Filter: filter,
+                },
+
+
+                beforeSend: function () {
+
+                    $("#orders-container")
+                        .addClass("loading");
+
+                },
+
+
+                success: function (result) {
+
+                    $("#orders-container")
+                        .html(result);
+
+                },
+
+
+                error: function (xhr) {
+
+                    console.log(xhr);
+
+                    alert(
+                        "خطا در دریافت اطلاعات سفارش‌ها."
+                    );
+
+                },
+
+
+                complete: function () {
+
+                    $("#orders-container")
+                        .removeClass("loading");
+
+                }
+
+            });
+
+        }
+
+    });
+
+</script>

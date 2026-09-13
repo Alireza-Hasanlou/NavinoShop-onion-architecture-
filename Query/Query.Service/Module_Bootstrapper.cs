@@ -9,6 +9,7 @@ using Query.Contract.Admin.Comment;
 using Query.Contract.Admin.Email.EmailUser;
 using Query.Contract.Admin.Email.MessageUser;
 using Query.Contract.Admin.Financial.Transaction;
+using Query.Contract.Admin.Order;
 using Query.Contract.Admin.Products;
 using Query.Contract.Admin.Seller;
 using Query.Contract.Admin.Seo;
@@ -30,6 +31,7 @@ using Query.Service.Admin.Comment;
 using Query.Service.Admin.Email.EmailUser;
 using Query.Service.Admin.Email.MessageUser;
 using Query.Service.Admin.Financial.Transaction;
+using Query.Service.Admin.Order;
 using Query.Service.Admin.Products;
 using Query.Service.Admin.Seller;
 using Query.Service.Admin.Seo;
@@ -83,6 +85,7 @@ namespace Query.Service
             Services.AddTransient<ISeoAdminQuery, SeoAdminQuery>();
             Services.AddTransient<IAdminUserQueryService, AdminUserQueryService>();
             Services.AddTransient<IAdminTransactionQueryService, AdminTransactionQueryService>();
+            Services.AddTransient<IOrderAdminQueryService , OrderAdminQueryService>();
             #endregion
             #region Ui
 
@@ -101,6 +104,7 @@ namespace Query.Service
             Services.AddTransient<IAdminProductsQueryService, AdminProductsQueryService>();
             Services.AddTransient<ICartUiQueryService,CartUiQueryService>();
             Services.AddTransient<IOrderUserPanelQueryService, OrderUserPanelQueryService>();
+            
 
             #endregion
           

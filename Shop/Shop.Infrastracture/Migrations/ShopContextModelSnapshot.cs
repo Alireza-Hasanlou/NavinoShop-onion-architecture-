@@ -396,6 +396,34 @@ namespace Shop.Infrastracture.Migrations
                     b.ToTable("productSells");
                 });
 
+            modelBuilder.Entity("Shop.Domain.ProductViewAgg.ProductView", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SessionId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductViews");
+                });
+
             modelBuilder.Entity("Shop.Domain.Relations.ProductCategoryRel.Product_Category_Rel", b =>
                 {
                     b.Property<int>("Id")
@@ -683,6 +711,17 @@ namespace Shop.Infrastracture.Migrations
                     b.Navigation("Seller");
                 });
 
+            modelBuilder.Entity("Shop.Domain.ProductViewAgg.ProductView", b =>
+                {
+                    b.HasOne("Shop.Domain.ProductAgg.Product", "Product")
+                        .WithMany("ProductViews")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("Shop.Domain.Relations.ProductCategoryRel.Product_Category_Rel", b =>
                 {
                     b.HasOne("Shop.Domain.ProductCategoryAgg.ProductCategory", "ProductCategory")
@@ -738,6 +777,8 @@ namespace Shop.Infrastracture.Migrations
                     b.Navigation("ProductGalleries");
 
                     b.Navigation("ProductSells");
+
+                    b.Navigation("ProductViews");
                 });
 
             modelBuilder.Entity("Shop.Domain.ProductCategoryAgg.ProductCategory", b =>

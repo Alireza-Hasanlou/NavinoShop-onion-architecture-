@@ -8,6 +8,7 @@ namespace Shared.Domain.Enums
 {
     public enum OrderStatus
     {
+        همه,
         پرداخت_نشده,
         پرداخت_شده,
         لغو_شده_توسط_مشتری,

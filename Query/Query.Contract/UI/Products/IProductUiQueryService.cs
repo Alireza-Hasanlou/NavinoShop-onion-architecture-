@@ -13,5 +13,8 @@ namespace Query.Contract.UI.Products
             string categorySlug = "", string sellerSlug = "", int pageId = 1, string filter = "");
         Task<ProductSinglePageQueryModel> GetProductAsync(string SellerSlug, string Productslug);
         Task<List<ProductUiQueryModel>> GetProductOtherSellers(int SellerId, string productSlug);
+        Task<List<ProductUiQueryModel>> GetMostViewdProduct(IndexPagesProduct sort);
     }
+
+
 }

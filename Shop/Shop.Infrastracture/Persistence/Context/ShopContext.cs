@@ -11,6 +11,7 @@ using Shop.Domain.ProductCategoryAgg;
 using Shop.Domain.ProductFreatureAgg;
 using Shop.Domain.ProductGalleryAgg;
 using Shop.Domain.ProductSellAgg;
+using Shop.Domain.ProductViewAgg;
 using Shop.Domain.Relations.ProductCategoryRel;
 using Shop.Domain.SellerAgg;
 using Shop.Domain.SellerChangeRequestsAgg;
@@ -44,6 +45,7 @@ namespace Shop.Infrastracture.Persistence.Context
         public DbSet<ShopSetting> shopSettings { get; set; }
         public DbSet<Product_Category_Rel> product_Category_Rels { get; set; }
         public DbSet<SellerChangeRequest> SellerChangeRequests { get; set; }
+        public DbSet<ProductView>  ProductViews { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -2,6 +2,7 @@
 using Query.Contract.UI.UserPanel.Seller;
 using Query.Contract.UI.UserPanel.Stores;
 using Shared.Application.Auth;
+using Shared.Domain.Enums;
 using Shop.Application.Contract.ProductSell.Command;
 using Shop.Application.Contract.Seller.Query;
 using Store.Application.Contract.Store.Command;
@@ -92,8 +93,8 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
             });
             if (changeAmountRes.Success)
             {
-                await _storeProductCommands.CreateAsync(model);
-                return new JsonResult(new { success = true, message = "عملیات موفق" });
+                    await _storeProductCommands.CreateAsync(model);
+                    return new JsonResult(new { success = true, message = "عملیات موفق" });
             }
             return new JsonResult(new { success = false, message = changeAmountRes.Message });
 
@@ -102,7 +103,7 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
         {
             if (storeId < 1)
                 return NotFound();
-            var store= await _storeCommands.GetForEditAsync(storeId);
+            var store = await _storeCommands.GetForEditAsync(storeId);
             return PartialView("_EditStoreDescription", store);
         }
 

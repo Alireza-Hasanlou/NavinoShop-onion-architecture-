@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Query.Contract.UI.UserPanel.Seller;
 using Shared.Application.Auth;
+using Shared.Domain.Enums;
 using Shop.Application.Contract.Product.Query;
 using Shop.Application.Contract.ProductCategory.Query;
 using Shop.Application.Contract.ProductSell.Command;
@@ -25,6 +26,7 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
         private readonly IProductCategoryQueries _productCategoryQueries;
         private readonly IProductQueries _productQueries;
         private readonly ISellerQueries _sellerQueries;
+        private int _userId;
 
         public SellerController(ISellerCommands sellerCommands, IAuthService authService,
             ISellerUserPanelQueries sellerUserPanelQueries, IProductSellCommands productSellCommands,
@@ -70,7 +72,7 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
         {
             if (Id < 1)
                 return NotFound();
-           
+
 
             var Request = await _sellerCommands.GetForEditRequestForSales(Id);
             if (Request == null)
@@ -99,7 +101,7 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
             var seller = await _sellerCommands.GetForEditSellerAsync(Id);
             if (seller == null)
                 return NotFound();
-            return View( seller);
+            return View(seller);
         }
         [HttpPost]
         public async Task<IActionResult> EditSeller(EditSellerQueryModel model)
@@ -115,7 +117,7 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
 
             TempData["Error"] = res.Message;
             return View(model);
-           
+
         }
         public async Task<IActionResult> AddProductToShop(int Id)
         {
@@ -147,7 +149,7 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
                 data = products.Select(p => new { id = p.Id, title = p.Title })
             });
         }
-        public async Task<IActionResult> SellersProducts(int sellerId, int pageId = 1, 
+        public async Task<IActionResult> SellersProducts(int sellerId, int pageId = 1,
             int take = 5, int categoryId = 0, string filter = "")
         {
             var userId = _authService.GetLoginUserId();
@@ -190,6 +192,49 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
             if (res.Success)
                 return new JsonResult(new { success = true, title = "محصول با موفقیت از فروشگاه شما حذف شد" });
             return new JsonResult(new { success = false, title = res.Message });
+        }
+
+        public async Task<IActionResult> Orders(int sellerId)
+        {
+            if (sellerId <= 0)
+                return NotFound();
+            _userId = _authService.GetLoginUserId();
+
+            var ok = await _sellerQueries.IsSellerForUser(_userId, sellerId);
+            if (!ok)
+                return NotFound();
+            SellersOrdersPaging orders = await _sellerUserPanelQueries.GetSellersOrdersForUserPanelAsync(sellerId, OrderSellerStatus.همه, 0, 0, "");
+            orders.SellerId = sellerId;
+            return View(orders);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Orders(int sellerId, OrderSellerStatus status, int RefId, int OrderId, int PageId, string Filter = "")
+        {
+            if (sellerId <= 0)
+                return NotFound();
+            _userId = _authService.GetLoginUserId();
+
+            var ok = await _sellerQueries.IsSellerForUser(_userId, sellerId);
+            if (!ok)
+                return NotFound();
+            SellersOrdersPaging orders = await _sellerUserPanelQueries.GetSellersOrdersForUserPanelAsync(sellerId, status, RefId, PageId, Filter);
+
+            return PartialView("_SellersOrdersListPartial", orders);
+        }
+
+
+        public async Task<IActionResult> OrderDetails(int SellerId, int OrderId)
+        {
+            if (SellerId <= 0 || OrderId <= 0)
+                return NotFound();
+
+            _userId = _authService.GetLoginUserId();
+            var ok = await _sellerQueries.IsSellerForUser(_userId,SellerId);   
+            if (!ok)
+                return NotFound();
+            var orderDetails = await _sellerUserPanelQueries.GetOrderDetailsForSellerAsync(SellerId, _userId, OrderId);
+
+            return View(orderDetails);
         }
     }
 }

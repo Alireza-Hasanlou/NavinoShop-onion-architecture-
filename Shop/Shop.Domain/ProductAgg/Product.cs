@@ -4,6 +4,7 @@ using Shop.Domain.ProductCategoryAgg;
 using Shop.Domain.ProductFreatureAgg;
 using Shop.Domain.ProductGalleryAgg;
 using Shop.Domain.ProductSellAgg;
+using Shop.Domain.ProductViewAgg;
 using Shop.Domain.Relations.ProductCategoryRel;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ namespace Shop.Domain.ProductAgg
             ProductFreatures = new List<ProductFreature>();
             ProductGalleries = new List<ProductGallery>();
             ProductSells = new List<ProductSell>();
+            ProductViews = new List<ProductView>();
         }
 
         public Product(string title, string imageName, string imageAlt, string shortDescription, string description, int weight, string slug)
@@ -47,6 +49,7 @@ namespace Shop.Domain.ProductAgg
         public ICollection<ProductFreature> ProductFreatures { get; private set; }
         public ICollection<ProductGallery> ProductGalleries { get; private set; }
         public ICollection<ProductSell> ProductSells { get; private set; }
+        public ICollection<ProductView> ProductViews { get; private set; }
 
 
         public void EditProductCategoryRelation(List<Product_Category_Rel> product_Category_Rels)

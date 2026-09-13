@@ -3242,3 +3242,185 @@ function chargeWallet() {
     // ===== ارسال درخواست =====
     xhr.send(JSON.stringify(payload));
 }
+/*Orders for panel */
+
+(function ($) {
+    'use strict';
+
+    $(document).ready(function () {
+
+        // ================================
+        // 1. فیلتر بر اساس تب
+        // ================================
+        $('.filter-tab').on('click', function () {
+            // حذف کلاس active از همه تب‌ها و اضافه به تب کلیک شده
+            $('.filter-tab').removeClass('active');
+            $(this).addClass('active');
+
+            var tab = $(this).data('tab');
+            console.log('تب انتخاب شد:', tab);
+
+            // نمایش همه آیتم‌ها
+            $('.order-item').removeClass('hidden').show();
+
+            if (tab !== 'all') {
+                $('.order-item').each(function () {
+                    var $item = $(this);
+                    var status = $item.data('status');
+                    var badge = $item.find('.status-badge');
+                    var show = false;
+
+                    // بررسی وضعیت بر اساس تب انتخاب شده
+                    switch (tab) {
+                        case 'paid':
+                            if (status === 'پرداخت_شده' || badge.hasClass('status-paid')) {
+                                show = true;
+                            }
+                            break;
+                        case 'pending':
+                            if (status === 'در_انتظار_پرداخت' || badge.hasClass('status-pending')) {
+                                show = true;
+                            }
+                            break;
+                        case 'delivered':
+                            if (status === 'تحویل_شده' || badge.hasClass('status-delivered')) {
+                                show = true;
+                            }
+                            break;
+                        case 'cancelled':
+                            if (status === 'لغو_شده' || badge.hasClass('status-cancelled')) {
+                                show = true;
+                            }
+                            break;
+                        default:
+                            show = true;
+                    }
+
+                    if (!show) {
+                        $item.addClass('hidden').hide();
+                    }
+                });
+            }
+        });
+
+        // ================================
+        // 2. مرتب‌سازی سفارش‌ها
+        // ================================
+        $('.filter-select').on('change', function () {
+            var sort = $(this).val();
+            console.log('ترتیب انتخاب شد:', sort);
+
+            var $list = $('.order-list');
+            var items = $list.find('.order-item:visible').get();
+
+            if (items.length > 1) {
+                if (sort === 'newest') {
+                    items.sort(function (a, b) {
+                        var dateA = $(a).find('.order-value').eq(1).text().trim() || '';
+                        var dateB = $(b).find('.order-value').eq(1).text().trim() || '';
+                        return dateB.localeCompare(dateA);
+                    });
+                } else {
+                    items.sort(function (a, b) {
+                        var dateA = $(a).find('.order-value').eq(1).text().trim() || '';
+                        var dateB = $(b).find('.order-value').eq(1).text().trim() || '';
+                        return dateA.localeCompare(dateB);
+                    });
+                }
+
+                // بازسازی لیست با ترتیب جدید
+                $.each(items, function (index, item) {
+                    $list.append(item);
+                });
+            }
+        });
+
+        // ================================
+        // 3. نمایش جزئیات سفارش
+        // ================================
+        window.showOrderDetail = function (orderId) {
+            console.log('نمایش جزئیات سفارش:', orderId);
+
+            // استفاده از تابع AlertSweetWithTimer اگر موجود باشد
+            if (typeof AlerSweetWithTimer === 'function') {
+                AlerSweetWithTimer('در حال انتقال به صفحه جزئیات سفارش ' + orderId, "info", "Center");
+            } else {
+                alert('در حال انتقال به صفحه جزئیات سفارش ' + orderId);
+            }
+
+            // هدایت به صفحه جزئیات (غیرفعال کردن خط زیر برای فعال‌سازی)
+            // window.location.href = '/Order/Detail/' + orderId;
+        };
+
+        // ================================
+        // 4. کلیک روی دکمه جزئیات (با Event Delegation)
+        // ================================
+        $(document).on('click', '.order-detail-btn', function () {
+            var orderId = $(this).data('orderid') || $(this).attr('onclick')?.match(/'([^']+)'/)?.[1];
+
+            if (orderId) {
+                showOrderDetail(orderId);
+            } else {
+                console.warn('OrderId یافت نشد');
+            }
+        });
+
+        // ================================
+        // 5. فعال‌سازی تب پیش‌فرض (پرداخت شده)
+        // ================================
+        var defaultTab = $('.filter-tab.active').data('tab') || 'paid';
+        if (defaultTab !== 'all') {
+            $('.filter-tab').removeClass('active');
+            $(`.filter-tab[data-tab="${defaultTab}"]`).addClass('active');
+            // اجرای فیلتر برای تب پیش‌فرض
+            $('.filter-tab.active').trigger('click');
+        }
+
+        // ================================
+        // 6. شمارش تعداد سفارش‌ها
+        // ================================
+        function updateOrderCount() {
+            var visibleCount = $('.order-item:visible').length;
+            var totalCount = $('.order-item').length;
+
+            if (totalCount > 0) {
+                var countText = visibleCount + ' از ' + totalCount + ' سفارش';
+                $('.order-count').text(countText);
+            }
+        }
+
+        // اضافه کردن المان نمایش تعداد به صفحه
+        if ($('.order-count').length === 0) {
+            $('.order-filters').append('<span class="order-count"></span>');
+        }
+        updateOrderCount();
+
+        // بروزرسانی تعداد بعد از هر فیلتر
+        $(document).on('click', '.filter-tab', function () {
+            setTimeout(updateOrderCount, 100);
+        });
+
+        // ================================
+        // 7. نمایش/مخفی کردن ستون‌ها در موبایل
+        // ================================
+        function handleResponsive() {
+            var width = $(window).width();
+            if (width < 768) {
+                $('.order-label').each(function () {
+                    $(this).show();
+                });
+            } else {
+                $('.order-label').each(function () {
+                    $(this).show();
+                });
+            }
+        }
+
+        $(window).on('resize', handleResponsive);
+        handleResponsive();
+
+        console.log('اسکریپت سفارشات با موفقیت بارگذاری شد ✅');
+
+    });
+
+})(jQuery);

@@ -59,8 +59,8 @@ namespace Query.Service.Ui.Products
                     StateId = x.Seller.StateId,
                     CityId = x.Seller.CityId,
                     ProductSlug = x.Product.Slug,
-                    ProductImageName=x.Product.ImageName,
-                    Amount=x.Amount,
+                    ProductImageName = x.Product.ImageName,
+                    Amount = x.Amount,
                     SellerSlug = x.Seller.Slug,
                     SellerImageName = x.Seller.ImageName,
                     Category = x.Product.Poduct_Category_Rels
@@ -128,7 +128,7 @@ namespace Query.Service.Ui.Products
                         .OrderByDescending(x => x.ProductCategory.Id)
                         .Select(pcr => pcr.ProductCategory.Title)
                         .FirstOrDefault() ?? "بدون دسته",
-                    Price =0,
+                    Price = 0,
                     productSells = p.ProductSells.Where(x => x.Amount > 0)
                     .Select(x => new productSellQuery
                     {
@@ -191,7 +191,7 @@ namespace Query.Service.Ui.Products
                 product.priceAfterOff = product.Price * ((decimal)productDiscount.Percent / 100);
                 product.discountPercent = productDiscount.Percent;
             }
-       
+
             var seoTitle = $"[{product.ProductName}] | [بهترین قیمت] | [{product.SelleTitle}] + [ناوینو شاپ]";
             var seo = await _seoRepository.GetSeoForUi(product.ProductId, WhereSeo.Product, seoTitle);
             product.Seo = new SeoUiQueryModel
@@ -442,7 +442,84 @@ namespace Query.Service.Ui.Products
             return OtherSellers;
 
         }
+        public async Task<List<ProductUiQueryModel>> GetProductsForIndexPage(IndexPagesProduct sort)
+        {
+            var productsQuery = _shopContext.Products
+      .Where(x => x.ProductSells.Any(x => x.Amount > 0) && x.Active)
+      .Include(x => x.ProductSells)
+      .ThenInclude(x => x.Seller);
 
+            List<ProductUiQueryModel> products;
+
+            switch (sort)
+            {
+                case IndexPagesProduct.محصولات_منتخب:
+                    products = await productsQuery
+                        .Take(4)
+                        .Select(x => new ProductUiQueryModel
+                        {
+                            Id = x.Id,
+                            ImageAlt = x.ImageAlt,
+                            ImageName = x.ImageName,
+                            Price = x.ProductSells
+                                .OrderBy(x => x.Price)
+                                .First().Price,
+                            Title = x.Title,
+                            Slug = x.Slug
+                        })
+                        .ToListAsync();
+                    break;
+
+                case IndexPagesProduct.تخفیف_خورده:
+
+                    var productIds = await _discountContext.ProductDiscounts
+                        .Where(x =>
+                            x.CreateDate.Date <= DateTime.Now.Date &&
+                            x.EndDate.Date >= DateTime.Now.Date)
+                        .OrderByDescending(x => x.Percent)
+                        .Select(x => x.ProductId)
+                        .Take(4)
+                        .ToListAsync();
+
+                    products = await productsQuery
+                        .Where(x => productIds.Contains(x.Id))
+                        .Select(x => new ProductUiQueryModel
+                        {
+                            Id = x.Id,
+                            ImageAlt = x.ImageAlt,
+                            ImageName = x.ImageName,
+                            Price = x.ProductSells
+                                .OrderBy(x => x.Price)
+                                .First().Price,
+                            Title = x.Title,
+                            Slug = x.Slug
+                        })
+                        .ToListAsync();
+
+                    break;
+
+                case IndexPagesProduct.پربازدیدترین:
+                    products = await productsQuery
+                        .Take(4)
+                        .Select(x => new ProductUiQueryModel
+                        {
+                            Id = x.Id,
+                            ImageAlt = x.ImageAlt,
+                            ImageName = x.ImageName,
+                            Price = x.ProductSells
+                                .OrderBy(x => x.Price)
+                                .First().Price,
+                            Title = x.Title,
+                            Slug = x.Slug
+                        })
+                        .ToListAsync();
+                    break;
+
+                default:
+                    products = new List<ProductUiQueryModel>();
+                    break;
+            }
+        }
         #region PrivateMthods
         private async Task<SeoUiQueryModel> GetSeoAsync(int ownerId, string defaultTitle)
         {
@@ -500,6 +577,8 @@ namespace Query.Service.Ui.Products
 
             }
         }
+
+
         #endregion
     }
 }

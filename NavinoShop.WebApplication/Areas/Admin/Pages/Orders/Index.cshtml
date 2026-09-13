@@ -1,0 +1,274 @@
+﻿@page 
+@using Shared.Domain.Enums
+@model NavinoShop.WebApplication.Areas.Admin.Pages.Orders.IndexModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["title"] = "فاکتور ها";
+}
+<div id="orders-admin-page">
+
+    <div class="orders-admin-filter-card">
+
+        <div class="orders-admin-filter-header">
+
+            <div class="orders-admin-filter-title">
+
+                <div>
+                    <h3>جستجوی فاکتورها</h3>
+                    <span>فاکتور مورد نظر خود را جستجو و فیلتر کنید</span>
+                </div>
+            </div>
+
+        </div>
+
+
+        <form id="orders-admin-search-form"
+              method="get"
+              asp-action="Orders"
+              asp-controller="Order">
+
+            <div class="orders-admin-filter-body">
+
+                <!-- شماره فاکتور -->
+
+                <div class="orders-admin-filter-field">
+
+                    <label for="orders-admin-order-id">
+                        شماره فاکتور
+                    </label>
+
+                    <input type="text"
+                           id="orders-admin-order-id"
+                           name="orderId"
+                           value="@Model.OrdersPageModel.OrderId"
+                           class="orders-admin-filter-input"
+                           placeholder="شماره فاکتور را وارد کنید..." />
+
+                </div>
+
+
+                <!-- نام مشتری / موبایل -->
+
+                <div class="orders-admin-filter-field">
+
+                    <label for="orders-admin-filter">
+
+                        <i class="bi bi-search"></i>
+
+                        جستجوی مشتری
+
+                    </label>
+
+                    <input type="text"
+                           id="orders-admin-filter"
+                           name="filter"
+                           value="@Model.OrdersPageModel.Filter"
+                           class="orders-admin-filter-input"
+                           placeholder="نام مشتری یا شماره موبایل..." />
+
+                </div>
+
+
+                <!-- وضعیت -->
+
+                <div class="orders-admin-filter-field">
+
+                    <label for="orders-admin-status">
+                        وضعیت فاکتور
+                    </label>
+
+                    <select id="orders-admin-status"
+                            name="status"
+                            class="orders-admin-filter-select"
+                            asp-items="@Html.GetEnumSelectList<OrderStatus>()">
+                    </select>
+
+                </div>
+
+
+                <!-- جستجو -->
+
+                <div class="orders-admin-filter-actions">
+
+                    <button type="submit"
+                            id="orders-admin-search-button"
+                            class="orders-admin-search-button">
+
+                        <i class="bi bi-search"></i>
+
+                        جستجو
+
+                    </button>
+
+
+                    <button type="button"
+                            id="orders-admin-reset-button"
+                            class="orders-admin-reset-button">
+
+                        <i class="bi bi-arrow-counterclockwise"></i>
+
+                        پاک کردن
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- ==========================================
+         Orders List
+         این قسمت با Partial جایگزین می‌شود
+         ========================================== -->
+
+    <div id="orders-admin-list-container">
+
+        <partial name="_OrdersListPartial"
+                 model="Model.OrdersPageModel" />
+
+    </div>
+
+</div>
+
+
+    <script>
+
+    $(document).ready(function () {
+
+
+        // ==========================================
+        // Search
+        // ==========================================
+
+        $('#orders-admin-search-form').on('submit', function (e) {
+
+            e.preventDefault();
+
+            loadOrders(1);
+
+        });
+
+
+        // ==========================================
+        // Pagination
+        // ==========================================
+
+        $(document).on(
+            'click',
+            '.pagination-btn',
+            function (e) {
+
+                e.preventDefault();
+
+                const page = $(this).data('page');
+
+                loadOrders(page);
+
+            }
+        );
+
+
+        // ==========================================
+        // Reset
+        // ==========================================
+
+        $('#orders-admin-reset-button').on('click', function () {
+
+            $('#orders-admin-order-id').val('');
+
+            $('#orders-admin-filter').val('');
+
+            $('#orders-admin-status').val('همه');
+
+            loadOrders(1);
+
+        });
+
+
+        // ==========================================
+        // Load Orders
+        // ==========================================
+
+        function loadOrders(pageId) {
+            const form = $('#orders-admin-search-form');
+
+            const orderId =
+                $('#orders-admin-order-id').val();
+
+            const filter =
+                $('#orders-admin-filter').val();
+
+            const status =
+                $('#orders-admin-status').val();
+
+
+            const searchButton =
+                $('#orders-admin-search-button');
+
+
+            // Loading
+
+            searchButton.prop('disabled', true);
+
+            searchButton.html(
+                '<i class="bi bi-arrow-repeat"></i> در حال جستجو...'
+            );
+
+
+            $.ajax({
+
+                url: '/Admin/Orders/Index',
+
+                type: 'POST',
+
+                data: {
+
+                    orderId: orderId,
+
+                    filter: filter,
+
+                    status: status,
+
+                    pageId: pageId
+
+                },
+
+                success: function (result) {
+
+                    $('#orders-admin-list-container')
+                        .html(result);
+
+                },
+
+                error: function () {
+
+                    alert(
+                        'در دریافت اطلاعات فاکتورها خطایی رخ داد.'
+                    );
+
+                },
+
+                complete: function () {
+
+                    searchButton.prop(
+                        'disabled',
+                        false
+                    );
+
+                    searchButton.html(
+                        '<i class="bi bi-search"></i> جستجو'
+                    );
+
+                }
+
+            });
+
+        }
+
+    });
+
+</script>

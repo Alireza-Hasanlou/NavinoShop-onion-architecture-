@@ -1,0 +1,179 @@
+﻿@using Query.Contract.UI.UserPanel.Seller
+@using Shared.Domain.Enums
+
+@model SellersOrdersPaging
+
+
+@if (Model.Orders != null && Model.Orders.Any())
+{
+    foreach (var order in Model.Orders)
+    {
+        string statusClass = "";
+        string statusText = "";
+
+        switch (order.status)
+        {
+            case OrderSellerStatus.پرداخت_شده:
+
+                statusClass = "status-success";
+                statusText = "پرداخت شده";
+
+                break;
+
+            case OrderSellerStatus.پرداخت_نشده:
+
+                statusClass = "status-warning";
+                statusText = "در انتظار پرداخت";
+
+                break;
+
+            case OrderSellerStatus.لغو_شده_توسط_مشتری:
+
+                statusClass = "status-danger";
+                statusText = "لغو شده";
+
+                break;
+
+            case OrderSellerStatus.لغو_شده_توسط_ادمین:
+
+                statusClass = "status-danger";
+                statusText = "لغو شده";
+
+                break;
+
+            default:
+
+                statusText = order.status.ToString();
+
+                break;
+        }
+
+
+        <div class="order-item"
+             data-status="@order.status.ToString()">
+
+
+            <div class="order-number">
+
+                <span class="order-label">
+                    شماره سفارش:
+                </span>
+
+                <span class="order-value">
+                    @order.OrderId
+                </span>
+
+            </div>
+            <div class="order-number">
+
+                <span class="order-label">
+                    نام مشتری:
+                </span>
+
+                <span class="order-value">
+                    @order.CustomerName
+                </span>
+
+            </div>
+
+            <div class="order-date">
+
+                <span class="order-label">
+                    تاریخ:
+                </span>
+
+                <span class="order-value">
+                    @order.PayDate
+                </span>
+
+            </div>
+
+
+            <div class="order-amount">
+
+                <span class="order-label">
+                    مبلغ:
+                </span>
+
+                <span class="order-value">
+                    @String.Format(
+                    "{0:N0}",
+                        order.PaymentPrice
+                        ) تومان
+        </span>
+
+    </div>
+
+
+    <div class="order-status">
+
+        <span class="status-badge @statusClass">
+            @statusText
+        </span>
+
+    </div>
+
+
+    <a href="/Profile/Seller/OrderDetails?SellerId=@Model.SellerId&OrderId=@order.OrderId"
+       class="order-detail-btn">
+
+        جزئیات
+
+    </a>
+
+</div>
+    }
+
+
+    <!-- Pagination -->
+    @if (Model.PageCount > 1)
+    {
+        <div class="orders-pagination">
+
+
+            @if (Model.PageId > 1)
+            {
+                <button type="button"
+                        class="pagination-btn"
+                        data-page="@(Model.PageId - 1)">
+
+                    قبلی
+
+                </button>
+            }
+
+
+            @for (int i = 1; i <= Model.PageCount; i++)
+            {
+                <button type="button"
+                        class="pagination-btn @(i == Model.PageId ? "active" : "")"
+                        data-page="@i">
+
+                    @i
+
+                </button>
+            }
+
+
+            @if (Model.PageId < Model.PageCount)
+            {
+                <button type="button"
+                        class="pagination-btn"
+                        data-page="@(Model.PageId + 1)">
+
+                    بعدی
+
+                </button>
+            }
+
+        </div>
+    }
+}
+else
+{
+    <div class="empty-orders">
+
+        سفارشی یافت نشد.
+
+    </div>
+}

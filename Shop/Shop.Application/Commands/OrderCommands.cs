@@ -150,7 +150,7 @@ namespace Shop.Application.Commands
                     .Distinct()
                     .ToHashSet();
 
-                if (order.OrderAddress.Id != 0 && userAddress.StateId > 0)
+                if (order.OrderAddress == null && userAddress.StateId > 0)
                 {
                     var res = await UpsertOrderAddressAsync(userId, userAddress);
                     if (!res.Success)
@@ -293,7 +293,7 @@ namespace Shop.Application.Commands
             if (order == null)
                 return new(false, "فاکتوری برای کاربر یافت نشد ");
 
-            if (order.OrderAddress.Id == 0)
+            if (order.OrderAddress == null)
             {
                 var newOrderAddres = new OrderAddress(command.StateId, command.CityId, command.AddressDetail, command.PostalCode,
                     command.Phone, command.FullName, command.NationalCode, order.Id);
@@ -335,6 +335,8 @@ namespace Shop.Application.Commands
 
             if (await _orderRepository.SaveAsync())
                 return new(true);
+            
+
             return new(false, "خطا در نهایی کردن پرداخت لطفا با مدیر سایت تماس بگیرید");
         }
     }

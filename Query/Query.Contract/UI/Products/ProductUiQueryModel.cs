@@ -18,7 +18,7 @@ namespace Query.Contract.UI.Products
         public decimal PriceAfterOff { get; set; }
         public string ImageName { get; set; }
         public string ImageAlt { get; set; }
-        public List<productSellQuery> productSells { get; set; }
+        public List<productSellQuery> productSells { get; set; } = new();
     }
 
     public class productSellQuery

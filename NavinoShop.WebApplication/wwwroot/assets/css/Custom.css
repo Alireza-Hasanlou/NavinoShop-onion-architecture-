@@ -7183,3 +7183,1928 @@ input:checked + .custom-slider {
         flex-direction: column;
     }
 }
+
+
+/*Orders For Panel */
+.order-history-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* فیلترها */
+.order-filters {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid #eef2f7;
+}
+
+.filter-tabs {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.filter-tab {
+    padding: 0.3rem 1.2rem;
+    border: none;
+    border-radius: 30px;
+    background: #f4f7fc;
+    color: #4a5b73;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+    .filter-tab:hover {
+        background: #e8edf5;
+    }
+
+    .filter-tab.active {
+        background: #fcb941;
+        color: white;
+    }
+
+.filter-select {
+    padding: 0.3rem 1rem;
+    border: 1px solid #dce3ed;
+    border-radius: 30px;
+    background: white;
+    color: #0b1e33;
+    font-size: 0.8rem;
+    outline: none;
+    cursor: pointer;
+}
+
+    .filter-select:focus {
+        border-color: #fcb941;
+    }
+
+/* لیست سفارش‌ها */
+.order-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* آیتم سفارش - یک خطی */
+.order-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.4rem 1rem;
+    background: #fafcff;
+    border-radius: 10px;
+    border: 1px solid #e9edf4;
+    transition: all 0.15s ease;
+    gap: 1rem;
+    flex-wrap: nowrap;
+    min-height: 44px;
+}
+
+    .order-item:hover {
+        background: #f4f8ff;
+        border-color: #d0e0ff;
+    }
+
+    .order-item.hidden {
+        display: none !important;
+    }
+
+.order-number,
+.order-date,
+.order-amount,
+.order-status {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.order-label {
+    color: #6b7f99;
+    font-size: 0.75rem;
+    margin-left: 0.1rem;
+}
+
+.order-value {
+    color: #0b1e33;
+    font-weight: 500;
+    font-size: 0.85rem;
+}
+
+/* وضعیت سفارش */
+.status-badge {
+    padding: 0.15rem 0.7rem;
+    border-radius: 30px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.status-paid {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-delivered {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.status-cancelled {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* دکمه جزئیات */
+.order-detail-btn {
+    padding: 0.2rem 1rem;
+    border: none;
+    border-radius: 30px;
+    background: #fcb941;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+    height: 30px;
+    line-height: 1;
+}
+
+    .order-detail-btn:hover {
+        background: #e8a832;
+        transform: scale(1.02);
+    }
+
+    .order-detail-btn:active {
+        transform: scale(0.98);
+    }
+
+/* حالت خالی */
+.order-empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6b7f99;
+}
+
+    .order-empty i {
+        font-size: 3rem;
+        display: block;
+        margin-bottom: 1rem;
+        color: #dce3ed;
+    }
+
+    .order-empty p {
+        font-size: 1rem;
+    }
+
+/* ریسپانسیو */
+@media (max-width: 768px) {
+    .order-item {
+        flex-wrap: wrap;
+        min-height: auto;
+        padding: 0.6rem 1rem;
+        gap: 0.3rem 1rem;
+    }
+
+    .order-number,
+    .order-date,
+    .order-amount,
+    .order-status {
+        font-size: 0.8rem;
+    }
+
+    .order-detail-btn {
+        order: 10;
+        width: 100%;
+        text-align: center;
+        height: 32px;
+    }
+
+    .order-filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-tabs {
+        justify-content: center;
+    }
+
+    .filter-select {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .order-item {
+        gap: 0.2rem;
+    }
+
+    .order-number,
+    .order-date,
+    .order-amount {
+        font-size: 0.75rem;
+    }
+}
+
+/*OrderDetails*/
+/* =========================================================
+       Order User Panel - Order Detail
+       Prefix: oup-
+       ========================================================= */
+
+
+
+#oup-order-detail-page {
+    --oup-primary: #fcb941;
+    --oup-primary-dark: #e7a526;
+    --oup-primary-light: #fff6df;
+    --oup-text: #222;
+    --oup-text-light: #777;
+    --oup-border: #e9e9e9;
+    --oup-background: #f7f8fa;
+    --oup-white: #ffffff;
+    --oup-success: #20a464;
+    --oup-success-light: #eaf8f1;
+    direction: rtl;
+    width: 100%;
+    box-sizing: border-box;
+    color: var(--oup-text);
+    background: var(--oup-background);
+    padding: 25px;
+}
+
+    #oup-order-detail-page *,
+    #oup-order-detail-page *::before,
+    #oup-order-detail-page *::after {
+        box-sizing: border-box;
+    }
+
+    #oup-order-detail-page h1,
+    #oup-order-detail-page h2,
+    #oup-order-detail-page h3,
+    #oup-order-detail-page h4,
+    #oup-order-detail-page p {
+        margin: 0;
+    }
+
+    #oup-order-detail-page img {
+        max-width: 100%;
+        display: block;
+    }
+
+
+/* =========================================================
+       Page Header
+       ========================================================= */
+
+.oup-page-header {
+    width: 100%;
+    background: var(--oup-white);
+    border: 1px solid var(--oup-border);
+    border-radius: 18px;
+    margin-bottom: 18px;
+    overflow: hidden;
+}
+
+.oup-header-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 22px 25px;
+}
+
+.oup-header-icon {
+    width: 58px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: var(--oup-primary-light);
+    border-radius: 15px;
+    font-size: 28px;
+}
+
+.oup-header-info {
+    flex: 1;
+}
+
+    .oup-header-info h1 {
+        font-size: 22px;
+        font-weight: 800;
+        margin-bottom: 7px;
+    }
+
+    .oup-header-info p {
+        color: var(--oup-text-light);
+        font-size: 13px;
+        line-height: 1.8;
+    }
+
+.oup-order-number {
+    min-width: 150px;
+    padding: 12px 18px;
+    background: #fafafa;
+    border: 1px solid var(--oup-border);
+    border-radius: 12px;
+    text-align: center;
+}
+
+    .oup-order-number span {
+        display: block;
+        color: var(--oup-text-light);
+        font-size: 11px;
+        margin-bottom: 5px;
+    }
+
+    .oup-order-number strong {
+        font-size: 17px;
+        color: var(--oup-primary-dark);
+    }
+
+
+/* =========================================================
+       Payment Status
+       ========================================================= */
+
+.oup-payment-status {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 15px 18px;
+    margin-bottom: 18px;
+    border-radius: 14px;
+    background: var(--oup-success-light);
+    border: 1px solid #ccefe0;
+}
+
+.oup-payment-status-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--oup-success);
+    color: white;
+    font-size: 19px;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+.oup-payment-status-icon_faild {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #a4203e;
+    color: white;
+    font-size: 19px;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+.oup-payment-status-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+    .oup-payment-status-content strong {
+        font-size: 14px;
+        color:black;
+    }
+.oup-payment-status-content_faild strong {
+    font-size: 14px;
+     color: #a4203e;
+    
+}
+    .oup-payment-status-content span {
+        color: #687a71;
+        font-size: 12px;
+    }
+
+.oup-payment-status-date {
+    font-size: 11px;
+    color: #687a71;
+}
+
+
+/* =========================================================
+       Main Grid
+       ========================================================= */
+
+.oup-main-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 18px;
+    align-items: start;
+}
+
+.oup-main-column {
+    min-width: 0;
+}
+
+
+/* =========================================================
+       Section Card
+       ========================================================= */
+
+.oup-section-card,
+.oup-sidebar-card {
+    background: var(--oup-white);
+    border: 1px solid var(--oup-border);
+    border-radius: 18px;
+    margin-bottom: 18px;
+    overflow: hidden;
+}
+
+.oup-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 22px;
+    border-bottom: 1px solid var(--oup-border);
+}
+
+.oup-section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.oup-title-icon {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--oup-primary-light);
+    border-radius: 12px;
+    font-size: 20px;
+}
+
+.oup-section-title h2 {
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.oup-section-title span {
+    color: var(--oup-text-light);
+    font-size: 11px;
+}
+
+.oup-count-badge {
+    background: var(--oup-primary-light);
+    color: var(--oup-primary-dark);
+    padding: 7px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+
+/* =========================================================
+       Summary
+       ========================================================= */
+
+.oup-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    padding: 20px;
+}
+
+.oup-summary-item {
+    padding: 8px 18px;
+    border-left: 1px solid var(--oup-border);
+}
+
+    .oup-summary-item:first-child {
+        padding-right: 0;
+    }
+
+    .oup-summary-item:last-child {
+        border-left: none;
+        padding-left: 0;
+    }
+
+    .oup-summary-item span {
+        display: block;
+        color: var(--oup-text-light);
+        font-size: 11px;
+        margin-bottom: 8px;
+    }
+
+    .oup-summary-item strong {
+        font-size: 13px;
+    }
+
+.oup-discount-text {
+    color: var(--oup-success) !important;
+}
+
+.oup-summary-total strong {
+    color: var(--oup-primary-dark);
+    font-size: 15px;
+}
+
+
+/* =========================================================
+       Seller
+       ========================================================= */
+
+.oup-seller-card {
+    margin: 18px;
+    border: 1px solid var(--oup-border);
+    border-radius: 15px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.oup-seller-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px;
+    background: #fcfcfc;
+    border-bottom: 1px solid var(--oup-border);
+}
+
+.oup-seller-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.oup-seller-avatar {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--oup-primary);
+    color: #222;
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.oup-seller-info h3 {
+    font-size: 14px;
+    font-weight: 800;
+    margin-bottom: 7px;
+}
+
+.oup-seller-meta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--oup-text-light);
+    font-size: 10px;
+}
+
+.oup-seller-price {
+    text-align: left;
+}
+
+    .oup-seller-price span {
+        display: block;
+        color: var(--oup-text-light);
+        font-size: 10px;
+        margin-bottom: 5px;
+    }
+
+    .oup-seller-price strong {
+        font-size: 13px;
+    }
+
+
+/* =========================================================
+       Seller Discount
+       ========================================================= */
+
+.oup-seller-discount {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 14px 16px;
+    padding: 10px 12px;
+    background: var(--oup-primary-light);
+    border: 1px dashed var(--oup-primary);
+    border-radius: 10px;
+}
+
+.oup-discount-icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: var(--oup-primary);
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.oup-discount-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1;
+}
+
+    .oup-discount-info strong {
+        font-size: 11px;
+    }
+
+    .oup-discount-info span {
+        color: var(--oup-text-light);
+        font-size: 9px;
+    }
+
+.oup-discount-value {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--oup-primary-dark);
+}
+
+
+/* =========================================================
+       Products
+       ========================================================= */
+
+.oup-products-list {
+    padding: 0 16px;
+}
+
+.oup-product-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--oup-border);
+}
+
+    .oup-product-item:last-child {
+        border-bottom: none;
+    }
+
+.oup-product-image {
+    width: 78px;
+    height: 78px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f7f7f7;
+    border: 1px solid var(--oup-border);
+    border-radius: 11px;
+    overflow: hidden;
+}
+
+    .oup-product-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.oup-product-info {
+    flex: 1;
+    min-width: 0;
+}
+
+    .oup-product-info h4 {
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+.oup-product-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    color: var(--oup-text-light);
+    font-size: 9px;
+    margin-bottom: 8px;
+}
+
+.oup-product-quantity {
+    font-size: 10px;
+    color: var(--oup-text-light);
+}
+
+    .oup-product-quantity strong {
+        color: var(--oup-text);
+    }
+
+.oup-product-price {
+    min-width: 130px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+}
+
+    .oup-product-price strong {
+        font-size: 13px;
+    }
+
+.oup-old-price {
+    color: #aaa;
+    font-size: 10px;
+    text-decoration: line-through;
+}
+
+
+/* =========================================================
+       Seller Footer
+       ========================================================= */
+
+.oup-seller-footer {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    padding: 14px 17px;
+    background: #fafafa;
+    border-top: 1px solid var(--oup-border);
+}
+
+    .oup-seller-footer > div {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        flex: 1;
+    }
+
+    .oup-seller-footer span {
+        color: var(--oup-text-light);
+        font-size: 9px;
+    }
+
+    .oup-seller-footer strong {
+        font-size: 11px;
+    }
+
+.oup-seller-total {
+    text-align: left;
+}
+
+    .oup-seller-total strong {
+        color: var(--oup-primary-dark);
+        font-size: 13px;
+    }
+
+
+/* =========================================================
+       Sidebar
+       ========================================================= */
+
+.oup-sidebar {
+    min-width: 0;
+}
+
+.oup-sidebar-card {
+    padding: 18px;
+}
+
+.oup-sidebar-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--oup-border);
+}
+
+.oup-sidebar-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--oup-primary-light);
+    border-radius: 10px;
+    font-size: 17px;
+    flex-shrink: 0;
+}
+
+.oup-sidebar-title h2 {
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.oup-sidebar-title span {
+    color: var(--oup-text-light);
+    font-size: 10px;
+}
+
+
+/* =========================================================
+       Address
+       ========================================================= */
+
+.oup-address-content {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+
+.oup-address-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+    .oup-address-row span,
+    .oup-address-detail > span {
+        color: var(--oup-text-light);
+        font-size: 10px;
+    }
+
+    .oup-address-row strong {
+        font-size: 11px;
+        text-align: left;
+    }
+
+.oup-address-detail {
+    padding: 11px;
+    background: #fafafa;
+    border-radius: 9px;
+    border: 1px solid #f0f0f0;
+}
+
+    .oup-address-detail p {
+        color: #444;
+        font-size: 10px;
+        line-height: 2;
+        margin-top: 6px;
+    }
+
+
+/* =========================================================
+       Order Discount
+       ========================================================= */
+
+.oup-order-discount {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+
+    .oup-order-discount > div {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .oup-order-discount span {
+        color: var(--oup-text-light);
+        font-size: 10px;
+    }
+
+    .oup-order-discount strong {
+        font-size: 11px;
+    }
+
+.oup-discount-final {
+    padding-top: 13px;
+    border-top: 1px solid var(--oup-border);
+}
+
+    .oup-discount-final strong {
+        color: var(--oup-success);
+    }
+
+
+/* =========================================================
+       Payment
+       ========================================================= */
+
+.oup-payment-info {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+
+.oup-payment-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+    .oup-payment-row span {
+        color: var(--oup-text-light);
+        font-size: 10px;
+    }
+
+    .oup-payment-row strong {
+        font-size: 11px;
+    }
+
+.oup-payment-divider {
+    width: 100%;
+    height: 1px;
+    background: var(--oup-border);
+    margin: 3px 0;
+}
+
+.oup-payment-total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px;
+    background: var(--oup-primary-light);
+    border-radius: 10px;
+}
+
+    .oup-payment-total span {
+        font-size: 11px;
+        font-weight: bold;
+    }
+
+    .oup-payment-total strong {
+        color: var(--oup-primary-dark);
+        font-size: 14px;
+    }
+
+
+/* =========================================================
+       Responsive - Tablet
+       ========================================================= */
+
+@media (max-width: 1100px) {
+
+    #oup-order-detail-page {
+        padding: 18px;
+    }
+
+    .oup-main-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .oup-sidebar {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .oup-sidebar-card {
+        margin-bottom: 0;
+    }
+
+    .oup-summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .oup-summary-item {
+        border-left: none;
+        padding: 8px;
+        border-bottom: 1px solid var(--oup-border);
+    }
+
+        .oup-summary-item:nth-child(odd) {
+            border-left: 1px solid var(--oup-border);
+        }
+
+        .oup-summary-item:nth-last-child(-n+2) {
+            border-bottom: none;
+        }
+}
+
+
+/* =========================================================
+       Responsive - Mobile
+       ========================================================= */
+
+@media (max-width: 700px) {
+
+    #oup-order-detail-page {
+        padding: 10px;
+    }
+
+    .oup-header-content {
+        flex-wrap: wrap;
+        padding: 17px;
+    }
+
+    .oup-header-icon {
+        width: 48px;
+        height: 48px;
+    }
+
+    .oup-header-info h1 {
+        font-size: 17px;
+    }
+
+    .oup-header-info p {
+        font-size: 10px;
+    }
+
+    .oup-order-number {
+        width: 100%;
+    }
+
+    .oup-payment-status {
+        flex-wrap: wrap;
+    }
+
+    .oup-payment-status-date {
+        width: 100%;
+        padding-right: 53px;
+    }
+
+    .oup-sidebar {
+        grid-template-columns: 1fr;
+    }
+
+    .oup-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .oup-summary-item,
+    .oup-summary-item:nth-child(odd) {
+        border-left: none;
+        border-bottom: 1px solid var(--oup-border);
+        padding: 10px 0;
+    }
+
+        .oup-summary-item:last-child {
+            border-bottom: none;
+        }
+
+    .oup-section-header {
+        padding: 15px;
+    }
+
+    .oup-section-title h2 {
+        font-size: 14px;
+    }
+
+    .oup-count-badge {
+        display: none;
+    }
+
+    .oup-seller-card {
+        margin: 10px;
+    }
+
+    .oup-seller-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .oup-seller-price {
+        width: 100%;
+        padding-top: 12px;
+        border-top: 1px solid var(--oup-border);
+        text-align: right;
+    }
+
+    .oup-product-item {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .oup-product-image {
+        width: 65px;
+        height: 65px;
+    }
+
+    .oup-product-info {
+        width: calc(100% - 80px);
+        flex: none;
+    }
+
+    .oup-product-price {
+        width: 100%;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+        padding-top: 10px;
+        border-top: 1px dashed var(--oup-border);
+    }
+
+    .oup-seller-footer {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+        .oup-seller-footer > div,
+        .oup-seller-total {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            text-align: right;
+        }
+
+    .oup-seller-total {
+        padding-top: 12px;
+        border-top: 1px solid var(--oup-border);
+    }
+}
+/*Seller Orders*/
+/* =========================================================
+   Seller Orders
+   ========================================================= */
+
+#seller-orders {
+    width: 100%;
+    direction: rtl;
+    font-family: inherit;
+}
+
+
+/* =========================================================
+   Search Section
+   ========================================================= */
+
+.orders-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 25px;
+    padding: 18px;
+    background: #ffffff;
+    border: 1px solid #e8e8e8;
+    border-radius: 12px;
+    box-sizing: border-box;
+}
+
+
+    /* =========================================================
+   Search Inputs & Select
+   ========================================================= */
+
+    .orders-search input,
+    .orders-search select {
+        height: 44px;
+        padding: 0 14px;
+        border: 1px solid #dcdcdc;
+        border-radius: 8px;
+        background-color: #ffffff;
+        color: #333333;
+        font-family: inherit;
+        font-size: 14px;
+        outline: none;
+        box-sizing: border-box;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    }
+
+
+/* =========================================================
+   General Search
+   ========================================================= */
+
+#orderFilter {
+    flex: 1;
+    min-width: 180px;
+}
+
+
+/* =========================================================
+   Order ID
+   ========================================================= */
+
+#orderId {
+    flex: 1;
+    min-width: 150px;
+}
+
+
+/* =========================================================
+   Reference ID
+   ========================================================= */
+
+#refId {
+    flex: 1;
+    min-width: 150px;
+}
+
+
+/* =========================================================
+   Status Select
+   ========================================================= */
+
+#orderSellerStatus {
+    flex: 1;
+    min-width: 170px;
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   Placeholder
+   ========================================================= */
+
+.orders-search input::placeholder {
+    color: #999999;
+}
+
+
+/* =========================================================
+   Focus
+   ========================================================= */
+
+.orders-search input:focus,
+.orders-search select:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.10);
+}
+
+
+/* =========================================================
+   Number Input
+   ========================================================= */
+
+.orders-search input[type="number"] {
+    direction: rtl;
+}
+
+
+    /* Remove Number Spinner */
+
+    .orders-search input[type="number"]::-webkit-inner-spin-button,
+    .orders-search input[type="number"]::-webkit-outer-spin-button {
+        margin: 0;
+    }
+
+
+/* =========================================================
+   Search Button
+   ========================================================= */
+
+#btnSearchOrders {
+    height: 44px;
+    padding: 0 24px;
+    border: none;
+    border-radius: 8px;
+    background: #4f46e5;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+
+    #btnSearchOrders:hover {
+        background: #4338ca;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+    }
+
+
+    #btnSearchOrders:active {
+        transform: translateY(1px);
+    }
+
+
+/* =========================================================
+   Reset Button
+   ========================================================= */
+
+#btnResetOrders {
+    height: 44px;
+    padding: 0 20px;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #555555;
+    font-family: inherit;
+    font-size: 14px;
+    white-space: nowrap;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+
+    #btnResetOrders:hover {
+        background: #f7f7f7;
+        border-color: #cfcfcf;
+        color: #333333;
+    }
+
+
+/* =========================================================
+   Orders Container
+   ========================================================= */
+
+#orders-container {
+    position: relative;
+    width: 100%;
+    transition: opacity 0.2s ease;
+}
+
+
+    /* =========================================================
+   AJAX Loading
+   ========================================================= */
+
+    #orders-container.loading {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+
+/* =========================================================
+   Order List
+   ========================================================= */
+
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+
+/* =========================================================
+   Order Item
+   ========================================================= */
+
+.order-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    padding: 16px 20px;
+    background: #ffffff;
+    border: 1px solid #e8e8e8;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   Order Number
+   ========================================================= */
+
+.order-number {
+    flex: 1;
+}
+
+
+/* =========================================================
+   Order Date
+   ========================================================= */
+
+.order-date {
+    flex: 1;
+}
+
+
+/* =========================================================
+   Order Amount
+   ========================================================= */
+
+.order-amount {
+    flex: 1;
+}
+
+
+/* =========================================================
+   Order Status
+   ========================================================= */
+
+.order-status {
+    flex: 1;
+}
+
+
+/* =========================================================
+   Labels
+   ========================================================= */
+
+.order-label {
+    margin-left: 5px;
+    color: #888888;
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   Values
+   ========================================================= */
+
+.order-value {
+    color: #333333;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   Status Badge
+   ========================================================= */
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 90px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+
+/* Success */
+
+.status-success {
+    background: #ecfdf3;
+    color: #15803d;
+}
+
+
+/* Warning */
+
+.status-warning {
+    background: #fffbeb;
+    color: #b45309;
+}
+
+
+/* Danger */
+
+.status-danger {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+
+/* =========================================================
+   Detail Button
+   ========================================================= */
+
+.order-detail-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 38px;
+    padding: 0 18px;
+    border: 1px solid #4f46e5;
+    border-radius: 7px;
+    background: #ffffff;
+    color: #4f46e5;
+    text-decoration: none;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+
+    .order-detail-btn:hover {
+        background: #4f46e5;
+        color: #ffffff;
+    }
+
+
+/* =========================================================
+   Pagination
+   ========================================================= */
+
+.orders-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    margin-top: 25px;
+    direction: rtl;
+}
+
+
+/* =========================================================
+   Pagination Button
+   ========================================================= */
+
+.pagination-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 10px;
+    border: 1px solid #dedede;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #555555;
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+
+    /* Pagination Hover */
+
+    .pagination-btn:hover {
+        background: #f4f4ff;
+        border-color: #4f46e5;
+        color: #4f46e5;
+    }
+
+
+    /* =========================================================
+   Active Page
+   ========================================================= */
+
+    .pagination-btn.active {
+        background: #4f46e5;
+        border-color: #4f46e5;
+        color: #ffffff;
+        font-weight: 600;
+        box-shadow: 0 3px 8px rgba(79, 70, 229, 0.20);
+    }
+
+
+        .pagination-btn.active:hover {
+            background: #4338ca;
+            border-color: #4338ca;
+            color: #ffffff;
+        }
+
+
+/* =========================================================
+   Empty Orders
+   ========================================================= */
+
+.empty-orders {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px;
+    padding: 30px;
+    background: #ffffff;
+    border: 1px solid #e8e8e8;
+    border-radius: 12px;
+    color: #888888;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   Responsive - Tablet
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    .orders-search {
+        flex-wrap: wrap;
+    }
+
+
+    #orderFilter {
+        flex: 1 1 100%;
+    }
+
+
+    #orderId,
+    #refId,
+    #orderSellerStatus {
+        flex: 1 1 calc(33.333% - 10px);
+    }
+
+
+    #btnSearchOrders,
+    #btnResetOrders {
+        flex: 1;
+    }
+
+
+    .order-item {
+        flex-wrap: wrap;
+    }
+
+
+    .order-number,
+    .order-date,
+    .order-amount,
+    .order-status {
+        flex: 1 1 calc(50% - 20px);
+    }
+}
+
+
+/* =========================================================
+   Responsive - Mobile
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .orders-search {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 14px;
+    }
+
+
+    #orderFilter,
+    #orderId,
+    #refId,
+    #orderSellerStatus,
+    #btnSearchOrders,
+    #btnResetOrders {
+        width: 100%;
+        flex: none;
+    }
+
+
+    .order-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        padding: 15px;
+    }
+
+
+    .order-number,
+    .order-date,
+    .order-amount,
+    .order-status {
+        width: 100%;
+        flex: none;
+    }
+
+
+    .order-detail-btn {
+        width: 100%;
+    }
+
+
+    .orders-pagination {
+        gap: 5px;
+        flex-wrap: wrap;
+    }
+
+
+    .pagination-btn {
+        min-width: 38px;
+        height: 38px;
+    }
+}
+
+/****************************************************************/
+/*                       ORDER FOR ADMIN PANEL                  */
+/****************************************************************/
+
+#orders-admin-page {
+    direction: rtl;
+    width: 100%;
+}
+
+
+    /* ==========================================
+   Filter Card
+   ========================================== */
+
+    #orders-admin-page .orders-admin-filter-card {
+        background: #fff;
+        border: 1px solid #eeeeee;
+        border-radius: 12px;
+        margin-bottom: 25px;
+        overflow: hidden;
+    }
+
+
+    /* ==========================================
+   Filter Header
+   ========================================== */
+
+    #orders-admin-page .orders-admin-filter-header {
+        padding: 18px 22px;
+        border-bottom: 1px solid #eeeeee;
+    }
+
+
+    #orders-admin-page .orders-admin-filter-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+
+    #orders-admin-page .orders-admin-filter-icon {
+        width: 42px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fcb941;
+        color: #fff;
+        border-radius: 10px;
+        font-size: 19px;
+    }
+
+
+    #orders-admin-page .orders-admin-filter-title h3 {
+        margin: 0 0 4px;
+        font-size: 16px;
+        font-weight: 700;
+        color: #333;
+    }
+
+
+    #orders-admin-page .orders-admin-filter-title span {
+        font-size: 12px;
+        color: #888;
+    }
+
+
+    /* ==========================================
+   Filter Body
+   ========================================== */
+
+    #orders-admin-page .orders-admin-filter-body {
+        display: grid;
+        grid-template-columns: 1fr 1.5fr 1fr auto;
+        gap: 15px;
+        align-items: end;
+        padding: 22px;
+    }
+
+
+    /* ==========================================
+   Fields
+   ========================================== */
+
+    #orders-admin-page .orders-admin-filter-field {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+    }
+
+
+        #orders-admin-page .orders-admin-filter-field label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #555;
+        }
+
+
+            #orders-admin-page .orders-admin-filter-field label i {
+                margin-left: 4px;
+            }
+
+
+    #orders-admin-page .orders-admin-filter-input,
+    #orders-admin-page .orders-admin-filter-select {
+        width: 100%;
+        height: 43px;
+        border: 1px solid #dddddd;
+        border-radius: 8px;
+        padding: 0 12px;
+        background: #fff;
+        font-family: inherit;
+        font-size: 13px;
+        color: #333;
+        outline: none;
+        transition: all .2s ease;
+    }
+
+
+        #orders-admin-page .orders-admin-filter-input:focus,
+        #orders-admin-page .orders-admin-filter-select:focus {
+            border-color: #fcb941;
+            box-shadow: 0 0 0 3px rgba(252, 185, 65, .15);
+        }
+
+
+    /* ==========================================
+   Buttons
+   ========================================== */
+
+    #orders-admin-page .orders-admin-filter-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+
+    #orders-admin-page .orders-admin-search-button,
+    #orders-admin-page .orders-admin-reset-button {
+        height: 43px;
+        padding: 0 18px;
+        border-radius: 8px;
+        border: none;
+        font-family: inherit;
+        font-size: 13px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        white-space: nowrap;
+        transition: all .2s ease;
+    }
+
+
+    #orders-admin-page .orders-admin-search-button {
+        background: #fcb941;
+        color: #222;
+    }
+
+
+        #orders-admin-page .orders-admin-search-button:hover {
+            background: #e9a92f;
+            transform: translateY(-1px);
+        }
+
+
+    #orders-admin-page .orders-admin-reset-button {
+        background: #f3f3f3;
+        color: #666;
+    }
+
+
+        #orders-admin-page .orders-admin-reset-button:hover {
+            background: #e8e8e8;
+        }
+
+
+    /* ==========================================
+   Pagination
+   ========================================== */
+
+    #orders-admin-page .orders-admin-pagination-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+
+    #orders-admin-page .orders-admin-pagination-info {
+        font-size: 13px;
+        color: #777;
+    }
+
+
+/* ==========================================
+   Responsive
+   ========================================== */
+
+@media (max-width: 992px) {
+
+    #orders-admin-page .orders-admin-filter-body {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+
+@media (max-width: 576px) {
+
+    #orders-admin-page .orders-admin-filter-body {
+        grid-template-columns: 1fr;
+    }
+
+
+    #orders-admin-page .orders-admin-filter-actions {
+        width: 100%;
+    }
+
+
+    #orders-admin-page .orders-admin-search-button,
+    #orders-admin-page .orders-admin-reset-button {
+        flex: 1;
+    }
+}
+
+
+/****************************************************************/
+/*                  ENd     ORDER FOR ADMIN PANEL                  */
+/****************************************************************/

@@ -22,6 +22,7 @@ namespace Shop.Domain.OrderAgg
         public string? DiscountTitle { get; private set; }
         public ICollection<OrderSeller> OrderSellers { get; private set; }
         public OrderAddress OrderAddress { get; private set; }
+       
         public int Price
         {
             get

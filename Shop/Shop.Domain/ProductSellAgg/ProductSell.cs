@@ -33,7 +33,7 @@ namespace Shop.Domain.ProductSellAgg
 
         public int ProductId { get; private set; }
         public int Price { get; private set; }
-        public int Amount { get; private set; }
+        public int Amount { get; set ; }
         public string Unit { get; private set; }
         public int SellerId { get; private set; }
         public int Weight { get; private set; }
@@ -48,19 +48,6 @@ namespace Shop.Domain.ProductSellAgg
             Unit = unit;
             Weight = weight; 
         }
-        public void ChangeAmount(int amount, StoreProductType type)
-        {
-            switch (type)
-            {
-                case StoreProductType.افزایش:
-                    Amount = Amount + amount;
-                    break;
-                case StoreProductType.کاهش:
-                    Amount = Amount - amount < 0 ? 0 : Amount - amount;
-                    break;
-                default:
-                    break;
-            }
-        }
+       
     }
 }

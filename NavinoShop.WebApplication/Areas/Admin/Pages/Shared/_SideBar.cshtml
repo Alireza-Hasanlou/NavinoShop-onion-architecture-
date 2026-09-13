@@ -33,8 +33,14 @@
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">تیتر</li>
             <li><a href="/"><i class="fa fa-book"></i> <span>صفحه‌اصلی‌سایت‌</span></a></li>
+            <li class="@(currentPath.Contains("/admin/transactions") ? "active" : "")">
+                <a href="/Admin/Transactions/Index"><i class="fa fa-book"></i> <span>تراکنش ها</span></a>
+            </li>
+            <li class="@(currentPath.Contains("/admin/orders") ? "active" : "")">
+                <a href="/Admin/Orders/Index"><i class="fa fa-book"></i> <span> فاکتور ها</span></a>
+            </li>
             <li class="@(currentPath.Contains("/admin/roles")
-                                      || currentPath.Contains("/admin/users") ? "active" : "") treeview">
+                                                      || currentPath.Contains("/admin/users") ? "active" : "") treeview">
                 <a href="">
                     <i class="fa fa-user"></i> <span>مدیریت کاربران</span>
                     <span class="pull-left-container">
@@ -53,9 +59,9 @@
                     </li>
                 </ul>
             </li>
-            <li><a href="/Admin/Transactions/Index"><i class="fa fa-book"></i> <span>تراکنش ها</span></a></li>
-            <li class="@(currentPath.Contains("/admin/products")|| currentPath.Contains("/admin/productcategories")? "active" : "") treeview">
-                                                                                              
+               
+            <li class="@(currentPath.Contains("/admin/products") || currentPath.Contains("/admin/productcategories") ? "active" : "") treeview">
+
                 <a href="#">
                     <i class="fa fa-newspaper-o"></i> <span>مدیریت محصولات</span>
                     <span class="pull-left-container">
@@ -89,7 +95,7 @@
                 </ul>
             </li>
             <li class="@(currentPath.Contains("/admin/blogs")|| currentPath.Contains("/admin/blogcategories")
-                                                                              ? "active" : "") treeview">
+                                                                                              ? "active" : "") treeview">
                 <a href="#">
                     <i class="fa fa-newspaper-o"></i> <span>مدیریت مقالات</span>
                     <span class="pull-left-container">
@@ -109,9 +115,9 @@
 
 
             <li class="@(currentPath.Contains("/admin/usersemail")
-                                                                            || currentPath.Contains("/admin/sendemail")
-                                                                                            || currentPath.Contains("/admin/usersmessage")
-                                                                              ? "active" : "") treeview">
+                                                                                            || currentPath.Contains("/admin/sendemail")
+                                                                                                            || currentPath.Contains("/admin/usersmessage")
+                                                                                              ? "active" : "") treeview">
                 <a href="#">
                     <i class="fa fa-envelope-open"></i> <span>مدیریت خبرنامه</span>
                     <span class="pull-left-container">
@@ -131,13 +137,13 @@
                 </ul>
             </li>
             <li class="@(currentPath.Contains("/admin/site")
-                                      || currentPath.Contains("/admin/site/baners")
-                                      || currentPath.Contains("/admin/site/sliders")
-                                      || currentPath.Contains("/admin/site/service")
-                                      || currentPath.Contains("/admin/site/menu")
-                                      || currentPath.Contains("/admin/site/images")
-                                      || currentPath.Contains("/admin/site/sitepage")
-                                      ? "active" : "") treeview">
+                                                      || currentPath.Contains("/admin/site/baners")
+                                                      || currentPath.Contains("/admin/site/sliders")
+                                                      || currentPath.Contains("/admin/site/service")
+                                                      || currentPath.Contains("/admin/site/menu")
+                                                      || currentPath.Contains("/admin/site/images")
+                                                      || currentPath.Contains("/admin/site/sitepage")
+                                                      ? "active" : "") treeview">
                 <a href="#">
                     <i class="fa fa-gear"></i> <span>تنظیمات سایت</span>
                     <span class="pull-left-container">
@@ -171,7 +177,7 @@
 
             <li class="@(currentPath.Contains("/admin/comments")
 
-                                                                              ? "active" : "") treeview">
+                                                                                              ? "active" : "") treeview">
                 <a href="#">
                     <i class="fa fa-envelope-open"></i> <span>کامنت ها</span>
                     <span class="pull-left-container">
@@ -189,10 +195,10 @@
             </li>
 
             <li class="@(currentPath.Contains("/admin/post")
-                                            || currentPath.Contains("/admin/state")
-                                            || currentPath.Contains("/admin/package")
-                                            || currentPath.Contains("/admin/city")
-                                              ? "active" : "") treeview">
+                                                            || currentPath.Contains("/admin/state")
+                                                            || currentPath.Contains("/admin/package")
+                                                            || currentPath.Contains("/admin/city")
+                                                              ? "active" : "") treeview">
                 <a href="#">
                     <i class="fa fa-ship"></i> <span>مدیریت پست</span>
                     <span class="pull-left-container">
@@ -214,8 +220,8 @@
                     </li>
                 </ul>
             </li>
-            <li class="@(currentPath.Contains("/admin/sellers")? "active" : "") treeview">
-                                                                                              
+            <li class="@(currentPath.Contains("/admin/sellers") ? "active" : "") treeview">
+
                 <a href="#">
                     <i class="fa fa-newspaper-o"></i> <span>مدیریت فروشندگان</span>
                     <span class="pull-left-container">
@@ -237,7 +243,7 @@
                     </li>
                 </ul>
             </li>
-           
+
         </ul>
 
 

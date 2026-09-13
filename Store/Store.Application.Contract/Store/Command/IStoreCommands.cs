@@ -9,6 +9,7 @@ namespace Store.Application.Contract.Store.Command
 {
     public interface IStoreCommands
     {
+       
         Task<OperationResult> CreateAsync(CreateStoreCommandModel command);
         Task<EditStoreCommandModel> GetForEditAsync(int Id);
         Task<OperationResult> EditAsync(EditStoreCommandModel command);

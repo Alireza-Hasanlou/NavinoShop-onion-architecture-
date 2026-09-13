@@ -1,5 +1,6 @@
 ﻿using Shared.Application;
 using Shared.Application.Validations;
+using Shared.Domain.Enums;
 using Store.Application.Contract.StoreProduct.Command;
 using Store.Domain.StoreProductAgg;
 using System;
@@ -19,6 +20,15 @@ namespace Store.Application.Commands
             _storeProductRepository = storeProductRepository;
         }
 
+        public async Task<OperationResult> CreateAsync(CreateStoreProductCommandModel command)
+        {
+            var produtcstore = new StoreProduct(command.StoreId, command.ProdcutSellId, command.StoreProductType, command.Count);
+            var res = await _storeProductRepository.CreateAsync(produtcstore);
+            if (res.Success)
+                return new(true);
+            return new(false, ValidationMessages.SystemErrorMessage);
+        }
+
         public async Task<OperationResult> DeleteAsync(int Id)
         {
             var storeProduct = await _storeProductRepository.GetByIdAsync(Id);
@@ -31,13 +41,6 @@ namespace Store.Application.Commands
 
         }
 
-        public async Task<OperationResult> CreateAsync(CreateStoreProductCommandModel command)
-        {
-                var produtcstore = new StoreProduct(command.StoreId, command.ProdcutSellId, command.StoreProductType, command.Count);
-                var res = await _storeProductRepository.CreateAsync(produtcstore);
-                if (res.Success)
-                    return new(true);
-                return new(false, ValidationMessages.SystemErrorMessage);
-        }
+
     }
 }

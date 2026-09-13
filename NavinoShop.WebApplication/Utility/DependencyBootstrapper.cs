@@ -26,6 +26,9 @@ namespace NavinoShop.WebApplication.Utility
                
                 option.ExpireTimeSpan = TimeSpan.FromDays(20);
             });
+
+            
+
             Module_Bootstrapper.Config(services, connectionString);
             services.AddScoped<IFileService, FileServices>();
             services.AddScoped<IAuthService, AuthService>();

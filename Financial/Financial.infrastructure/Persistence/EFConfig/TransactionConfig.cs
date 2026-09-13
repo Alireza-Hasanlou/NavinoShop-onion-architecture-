@@ -1,6 +1,7 @@
 ﻿using Financial.Domain.TransactionAgg;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Reflection.Emit;
 
 namespace Financial.infrastructure.Persistence.EFConfig
 {
@@ -13,6 +14,7 @@ namespace Financial.infrastructure.Persistence.EFConfig
             builder.Property(x => x.TransactionFor).IsRequired();
             builder.Property(x => x.Status).IsRequired();
             builder.Property(x => x.Portal).IsRequired();
+            builder.HasIndex(x => x.RefId).IsUnique();
             builder.HasOne(w => w.Wallet).WithMany();
         }
     }

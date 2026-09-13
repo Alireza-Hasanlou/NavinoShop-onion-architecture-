@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shared.Insfrastructure;
+using Store.Application.Contract.StoreProduct.Command;
+using Store.Domain.StoreAgg;
 using Store.Domain.StoreProductAgg;
 using Store.Infrastructure.Persistence.Context;
 using System;
@@ -19,6 +21,6 @@ namespace Store.Infrastructure.Persistence.Repository
             _storeContext = context;
         }
 
-  
+
     }
 }

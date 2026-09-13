@@ -11,6 +11,7 @@ using Shop.Domain.ProductCategoryAgg;
 using Shop.Domain.ProductFreatureAgg;
 using Shop.Domain.ProductGalleryAgg;
 using Shop.Domain.ProductSellAgg;
+using Shop.Domain.ProductViewAgg;
 using Shop.Domain.Relations.ProductCategoryRel;
 using Shop.Domain.SellerAgg;
 using Shop.Domain.SellerChangeRequestsAgg;
@@ -43,6 +44,7 @@ namespace Shop.Infrastracture.Bootstrapper
             services.AddTransient<ICartRepository, CartRepository>();
             services.AddTransient<IOrderRepository,OrderRepository>();
             services.AddTransient<IOrderAddressRepository, OrderAddressRepository>();
+            services.AddTransient<IProductViewRepository,ProductViewRepository>();
         }
     }
 }

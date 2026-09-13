@@ -1,0 +1,142 @@
+﻿@using Query.Contract.Admin.Order
+@model OrdersForAdminPanelPaging
+
+<div id="orders-admin-table-wrapper">
+
+    <div class="table-responsive">
+
+        <table class="table table-bordered table-striped">
+
+            <thead>
+
+                <tr>
+
+                    <th>شماره فاکتور</th>
+
+                    <th>مشتری</th>
+
+                    <th>تاریخ</th>
+
+                    <th>مبلغ</th>
+
+                    <th>وضعیت</th>
+
+                    <th>عملیات</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                @if (Model.Orders != null && Model.Orders.Any())
+                {
+                    foreach (var item in Model.Orders)
+                    {
+                        <tr>
+
+                            <td>
+                                @item.orderId
+                            </td>
+
+                            <td>
+                                @item.customerName
+                            </td>
+
+                            <td>
+                                @item.OrderDate
+                            </td>
+
+                            <td data-format="money">
+                                @item.paymentPrice
+                            </td>
+
+                            <td>
+
+                                @item.status
+
+                            </td>
+
+                            <td>
+
+                                <a href="/Admin/Orders/OrderDetails/@item.orderId"
+                           class="btn btn-sm btn-primary">
+
+                                    مشاهده
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+                                }
+                }
+                else
+                {
+                    <tr>
+
+                        <td colspan="6"
+                            class="text-center">
+
+                            فاکتوری پیدا نشد.
+
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+
+    <!-- ===============================
+         Paging
+         =============================== -->
+    @if (Model.PageCount > 1)
+    {
+        <div class="orders-pagination">
+
+
+            @if (Model.PageId > 1)
+            {
+                <button type="button"
+                        class="pagination-btn"
+                        data-page="@(Model.PageId - 1)">
+
+                    قبلی
+
+                </button>
+            }
+
+
+            @for (int i = 1; i <= Model.PageCount; i++)
+            {
+                <button type="button"
+                        class="pagination-btn @(i == Model.PageId ? "active" : "")"
+                        data-page="@i">
+
+                    @i
+
+                </button>
+            }
+
+
+            @if (Model.PageId < Model.PageCount)
+            {
+                <button type="button"
+                        class="pagination-btn"
+                        data-page="@(Model.PageId + 1)">
+
+                    بعدی
+
+                </button>
+            }
+
+        </div>
+    }
+</div>

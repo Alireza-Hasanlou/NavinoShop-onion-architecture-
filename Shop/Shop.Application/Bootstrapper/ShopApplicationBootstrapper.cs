@@ -8,6 +8,7 @@ using Shop.Application.Contract.ProductCategory.Commands;
 using Shop.Application.Contract.ProductFeature.Command;
 using Shop.Application.Contract.ProductGallery.Command;
 using Shop.Application.Contract.ProductSell.Command;
+using Shop.Application.Contract.ProductView;
 using Shop.Application.Contract.Seller.Command;
 
 
@@ -26,6 +27,7 @@ namespace Shop.Application.Bootstrapper
             services.AddTransient<ICartCommands,CartCommands>();
             services.AddTransient<IOrderCommands, OrderCommands>();
             services.AddTransient<IOrderSellerCommands, OrderSellerCommands>();
+            services.AddTransient<IProductViewCommands, ProductViewCommands>();
     
 
         }

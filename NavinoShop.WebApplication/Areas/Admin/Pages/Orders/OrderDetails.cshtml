@@ -1,0 +1,1002 @@
+﻿
+@page "{orderId:int}"
+@using Shared.Application
+@using Shared.Domain.Enums
+@model NavinoShop.WebApplication.Areas.Admin.Pages.Orders.OrderDetailsModel
+@{
+    Layout = "_AdminLayout";
+   
+}
+
+
+
+
+<div id="oup-order-detail-page" class="oup-order-detail-page">
+
+
+    <!-- =====================================================
+         Page Header
+         ====================================================== -->
+
+    <div class="oup-page-header">
+
+        <div class="oup-header-content">
+
+            <div class="oup-header-icon">
+                🧾
+            </div>
+
+
+            <div class="oup-header-info">
+
+                <h1>
+                    جزئیات سفارش
+                </h1>
+
+                <p>
+                    مشاهده محصولات، فروشندگان، آدرس و اطلاعات پرداخت سفارش
+                </p>
+
+            </div>
+
+
+            <div class="oup-order-number">
+
+                <span>
+                    تاریخ سفارش
+                </span>
+
+                <strong>
+                    @Model.OrderDetails.OrderDate
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         Payment Status
+         ====================================================== -->
+         
+    <div class="oup-payment-status" style=" @((Model.OrderDetails.status==OrderStatus.پرداخت_شده
+        ||Model.OrderDetails.status == OrderStatus.ارسال_شده) ? "background: var(--oup-success-light)" : "background: #f8eaeb; border: 1px solid #de566a;") ">
+
+        <div class=" @((Model.OrderDetails.status==OrderStatus.پرداخت_شده
+             ||Model.OrderDetails.status == OrderStatus.ارسال_شده) ? "oup-payment-status-icon" : "oup-payment-status-icon_faild")">
+            
+            @((Model.OrderDetails.status==OrderStatus.پرداخت_شده
+             ||Model.OrderDetails.status == OrderStatus.ارسال_شده) ? "✓" : "X") 
+        </div>
+
+        <div class=" @((Model.OrderDetails.status==OrderStatus.پرداخت_شده
+             ||Model.OrderDetails.status == OrderStatus.ارسال_شده) ? "oup-payment-status-content" : "oup-payment-status-content_faild") ">
+
+            <strong>
+               @Model.OrderDetails.status.ToString().Replace("_"," ")
+            </strong>
+
+        </div>
+
+        <div  class="oup-payment-status-date">
+
+            سفارش شماره
+            <strong>
+                @Model.OrderDetails.OrderId
+            </strong>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         Main Grid
+         ====================================================== -->
+
+    <div class="oup-main-grid">
+
+
+        <!-- =================================================
+             Main Column
+             ================================================== -->
+
+        <div class="oup-main-column">
+
+
+            <!-- =================================================
+                 Order Summary
+                 ================================================== -->
+
+            <section class="oup-section-card">
+
+
+                <div class="oup-section-header">
+
+                    <div class="oup-section-title">
+
+                        <span class="oup-title-icon">
+                            🛒
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                خلاصه سفارش
+                            </h2>
+
+                            <span>
+                                اطلاعات کلی سفارش شما
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="oup-summary-grid">
+
+
+                    <!-- Price -->
+
+                    <div class="oup-summary-item">
+
+                        <span>
+                            مبلغ کالاها
+                        </span>
+
+                        <strong>
+                            @Model.OrderDetails.Price.ToString("N0") تومان
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Discount -->
+
+                    <div class="oup-summary-item">
+
+                        <span>
+                            تخفیف
+                        </span>
+
+                        <strong class="oup-discount-text">
+
+                            @Model.OrderDetails.DiscountPrice.ToString("N0") تومان
+
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Post -->
+
+                    <div class="oup-summary-item">
+
+                        <span>
+                            هزینه ارسال
+                        </span>
+
+                        <strong>
+                            @Model.OrderDetails.PostPrice.ToString("N0") تومان
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Payment -->
+
+                    <div class="oup-summary-item oup-summary-total">
+
+                        <span>
+                            مبلغ قابل پرداخت
+                        </span>
+
+                        <strong>
+                            @Model.OrderDetails.PaymentPrice.ToString("N0") تومان
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 Sellers
+                 ================================================== -->
+
+            <section class="oup-section-card">
+
+
+                <!-- Sellers Header -->
+
+                <div class="oup-section-header">
+
+                    <div class="oup-section-title">
+
+                        <span class="oup-title-icon">
+                            🏪
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                فروشندگان سفارش
+                            </h2>
+
+                            <span>
+                                محصولات خریداری شده به تفکیک فروشنده
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <span class="oup-count-badge">
+
+                        @Model.OrderDetails.OrderSellers.Count
+                        فروشنده
+
+                    </span>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     Sellers Loop
+                     ================================================== -->
+
+                @if (Model.OrderDetails.OrderSellers != null && Model.OrderDetails.OrderSellers.Any())
+                {
+
+                    foreach (var seller in Model.OrderDetails.OrderSellers)
+                    {
+
+                        <div class="oup-seller-card">
+
+
+                            <!-- =========================================
+                                 Seller Header
+                                 ========================================== -->
+
+                            <div class="oup-seller-header">
+
+
+                                <div class="oup-seller-info">
+
+
+                                    <div class="oup-seller-avatar">
+                                         <img
+                                                        src="@FileDirectories.SellerImageDirectory100@seller.ImageName"
+                                                        alt="@seller.SellerName"
+                                                        asp-append-version="true" />
+                                    </div>
+
+
+                                    <div>
+
+                                        <h3>
+                                            @seller.SellerName
+                                        </h3>
+
+
+                                        <div class="oup-seller-meta">
+
+                                            <span>
+                                                🏪 شناسه فروشنده:
+                                                @seller.SellerId
+                                            </span>
+
+
+                                            @if (!string.IsNullOrWhiteSpace(seller.PostTitle))
+                                            {
+                                                <span>
+                                                    🚚 @seller.PostTitle
+                                                </span>
+                                            }
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+
+                                <div class="oup-seller-price">
+
+                                    <span>
+                                        مبلغ فروشنده
+                                    </span>
+
+                                    <strong>
+                                        @seller.Price.ToString("N0") تومان
+                                    </strong>
+
+                                </div>
+
+
+                            </div>
+
+
+
+                            <!-- =========================================
+                                 Seller Discount
+                                 ========================================== -->
+
+                            @if (seller.DiscountId > 0 ||
+                                 seller.DiscountPercent > 0 ||
+                                 !string.IsNullOrWhiteSpace(seller.DiscountTitle))
+                            {
+
+                                <div class="oup-seller-discount">
+
+
+                                    <div class="oup-discount-icon">
+                                        %
+                                    </div>
+
+
+                                    <div class="oup-discount-info">
+
+                                        <strong>
+
+                                            @if (!string.IsNullOrWhiteSpace(seller.DiscountTitle))
+                                            {
+                                                @seller.DiscountTitle
+                                            }
+                                            else
+                                            {
+                                                <text>
+                                                    تخفیف فروشنده
+                                                </text>
+                                            }
+
+                                        </strong>
+
+
+                                        @if (seller.DiscountId > 0)
+                                        {
+                                            <span>
+                                                شناسه تخفیف:
+                                                @seller.DiscountId
+                                            </span>
+                                        }
+
+                                    </div>
+
+
+                                    <div class="oup-discount-value">
+
+                                        @seller.DiscountPercent٪
+
+                                    </div>
+
+
+                                </div>
+
+                            }
+
+
+
+                            <!-- =========================================
+                                 Products
+                                 ========================================== -->
+
+                            <div class="oup-products-list">
+
+
+                                @if (seller.Items != null && seller.Items.Any())
+                                {
+
+                                    foreach (var item in seller.Items)
+                                    {
+
+                                        <div class="oup-product-item">
+
+
+                                            <!-- Product Image -->
+
+                                            <div class="oup-product-image">
+
+                                                @if (!string.IsNullOrWhiteSpace(item.ImageName))
+                                                {
+
+                                                    <img
+                                                        src="@FileDirectories.ProductImageDirectory100@item.ImageName"
+                                                        alt="@item.ImageAlt"
+                                                        asp-append-version="true" />
+
+                                                }
+                                                else
+                                                {
+
+                                                    <img
+                                                        src="https://placehold.co/160x160/f7f7f7/777?text=Product"
+                                                        alt="@item.ProductName" />
+
+                                                }
+
+                                            </div>
+
+
+
+                                            <!-- Product Info -->
+
+                                            <div class="oup-product-info">
+
+
+                                                <h4>
+                                                    @item.ProductName
+                                                </h4>
+
+
+                                                <div class="oup-product-details">
+
+                                                    <span>
+                                                        کد محصول:
+                                                        @item.ProductId
+                                                    </span>
+
+
+                                                    <span>
+                                                        کد فروش:
+                                                        @item.ProductSellId
+                                                    </span>
+
+                                                </div>
+
+
+                                                <div class="oup-product-quantity">
+
+                                                    تعداد:
+
+                                                    <strong>
+                                                        @item.Quantity
+                                                    </strong>
+
+                                                    عدد
+
+                                                </div>
+
+
+                                            </div>
+
+
+
+                                            <!-- Product Price -->
+
+                                            <div class="oup-product-price">
+
+
+                                                @if (item.PriceAfterOff < item.Price)
+                                                {
+
+                                                    <span class="oup-old-price">
+
+                                                        @item.Price.ToString("N0")
+                                                        تومان
+
+                                                    </span>
+
+                                                }
+
+
+                                                <strong>
+
+                                                    @item.PriceAfterOff.ToString("N0")
+                                                    تومان
+
+                                                </strong>
+
+
+                                            </div>
+
+
+                                        </div>
+
+                                    }
+
+                                }
+                                else
+                                {
+
+                                    <div style="
+                                        padding: 25px;
+                                        text-align: center;
+                                        color: #888;
+                                        font-size: 12px;
+                                    ">
+                                        محصولی برای این فروشنده ثبت نشده است.
+                                    </div>
+
+                                }
+
+                            </div>
+
+
+
+                            <!-- =========================================
+                                 Seller Footer
+                                 ========================================== -->
+
+                            <div class="oup-seller-footer">
+
+
+                                <!-- Post -->
+
+                                <div>
+
+                                    <span>
+                                        هزینه ارسال
+                                    </span>
+
+                                    <strong>
+                                        @seller.PostPrice.ToString("N0")
+                                        تومان
+                                    </strong>
+
+                                </div>
+
+
+                                <!-- Discount -->
+
+                                <div>
+
+                                    <span>
+                                        تخفیف
+                                    </span>
+
+                                    <strong class="oup-discount-text">
+
+                                        @seller.DiscountPrice.ToString("N0")
+                                        تومان
+
+                                    </strong>
+
+                                </div>
+
+
+                                <!-- Payment -->
+
+                                <div class="oup-seller-total">
+
+                                    <span>
+                                        مبلغ پرداختی
+                                    </span>
+
+                                    <strong>
+
+                                        @seller.PaymentPrice.ToString("N0")
+                                        تومان
+
+                                    </strong>
+
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+                    }
+
+                }
+                else
+                {
+
+                    <div style="
+                        padding: 35px;
+                        text-align: center;
+                        color: #888;
+                        font-size: 13px;
+                    ">
+                        هیچ فروشنده‌ای برای این سفارش ثبت نشده است.
+                    </div>
+
+                }
+
+
+            </section>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             Sidebar
+             ================================================== -->
+
+        <aside class="oup-sidebar">
+
+
+            <!-- =================================================
+                 Address
+                 ================================================== -->
+
+            @if (Model.OrderDetails.Address != null)
+            {
+
+                <section class="oup-sidebar-card">
+
+
+                    <div class="oup-sidebar-title">
+
+                        <span class="oup-sidebar-icon">
+                            📍
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                آدرس ارسال
+                            </h2>
+
+                            <span>
+                                آدرس تحویل سفارش
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="oup-address-content">
+
+
+                        <!-- Full Name -->
+
+                        <div class="oup-address-row">
+
+                            <span>
+                                تحویل گیرنده
+                            </span>
+
+                            <strong>
+                                @Model.OrderDetails.Address.FullName
+                            </strong>
+
+                        </div>
+
+
+                        <!-- State / City -->
+
+                        <div class="oup-address-row">
+
+                            <span>
+                                استان / شهر
+                            </span>
+
+                            <strong>
+                                @Model.OrderDetails.Address.StateName،
+                                @Model.OrderDetails.Address.CityName
+                            </strong>
+
+                        </div>
+
+
+                        <!-- Address -->
+
+                        <div class="oup-address-detail">
+
+                            <span>
+                                آدرس
+                            </span>
+
+                            <p>
+                                @Model.OrderDetails.Address.AddressDetail
+                            </p>
+
+                        </div>
+
+
+                        <!-- Postal Code -->
+
+                        <div class="oup-address-row">
+
+                            <span>
+                                کد پستی
+                            </span>
+
+                            <strong>
+                                @Model.OrderDetails.Address.PostalCode
+                            </strong>
+
+                        </div>
+
+
+                        <!-- Phone -->
+
+                        <div class="oup-address-row">
+
+                            <span>
+                                شماره تماس
+                            </span>
+
+                            <strong>
+                                @Model.OrderDetails.Address.Phone
+                            </strong>
+
+                        </div>
+
+
+                        <!-- National Code -->
+
+                        @if (!string.IsNullOrWhiteSpace(Model.OrderDetails.Address.NationalCode))
+                        {
+
+                            <div class="oup-address-row">
+
+                                <span>
+                                    کد ملی
+                                </span>
+
+                                <strong>
+                                    @Model.OrderDetails.Address.NationalCode
+                                </strong>
+
+                            </div>
+
+                        }
+
+
+                    </div>
+
+
+                </section>
+
+            }
+
+
+
+            <!-- =================================================
+                 Order Discount
+                 ================================================== -->
+
+            @if (Model.OrderDetails.DiscountId > 0 ||
+                 Model.OrderDetails.DiscountPercent > 0 ||
+                 !string.IsNullOrWhiteSpace(Model.OrderDetails.DiscountTitle))
+            {
+
+                <section class="oup-sidebar-card">
+
+
+                    <div class="oup-sidebar-title">
+
+                        <span class="oup-sidebar-icon">
+                            %
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                تخفیف سفارش
+                            </h2>
+
+                            <span>
+                                تخفیف اعمال شده
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="oup-order-discount">
+
+
+                        <!-- Discount Title -->
+
+                        <div>
+
+                            <span>
+                                عنوان تخفیف
+                            </span>
+
+                            <strong>
+
+                                @if (!string.IsNullOrWhiteSpace(Model.OrderDetails.DiscountTitle))
+                                {
+                                    @Model.OrderDetails.DiscountTitle
+                                }
+                                else
+                                {
+                                    <text>
+                                        تخفیف سفارش
+                                    </text>
+                                }
+
+                            </strong>
+
+                        </div>
+
+
+                        <!-- Discount Percent -->
+
+                        <div>
+
+                            <span>
+                                درصد تخفیف
+                            </span>
+
+                            <strong>
+                                @Model.OrderDetails.DiscountPercent٪
+                            </strong>
+
+                        </div>
+
+
+                        <!-- Discount Price -->
+
+                        <div class="oup-discount-final">
+
+                            <span>
+                                مبلغ تخفیف
+                            </span>
+
+                            <strong>
+                                @Model.OrderDetails.DiscountPrice.ToString("N0")
+                                تومان
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+
+                </section>
+
+            }
+
+
+
+            <!-- =================================================
+                 Payment Information
+                 ================================================== -->
+
+            <section class="oup-sidebar-card">
+
+
+                <div class="oup-sidebar-title">
+
+                    <span class="oup-sidebar-icon">
+                        💳
+                    </span>
+
+                    <div>
+
+                        <h2>
+                            اطلاعات پرداخت
+                        </h2>
+
+                        <span>
+                            جزئیات پرداخت سفارش
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="oup-payment-info">
+
+
+                    <!-- Product Price -->
+
+                    <div class="oup-payment-row">
+
+                        <span>
+                            مبلغ کالاها
+                        </span>
+
+                        <strong>
+                            @Model.OrderDetails.Price.ToString("N0")
+                            تومان
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Price After Discount -->
+
+                    <div class="oup-payment-row">
+
+                        <span>
+                            مبلغ پس از تخفیف
+                        </span>
+
+                        <strong>
+                            @Model.OrderDetails.PriceAfterOff.ToString("N0")
+                            تومان
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Discount -->
+
+                    <div class="oup-payment-row">
+
+                        <span>
+                            تخفیف
+                        </span>
+
+                        <strong class="oup-discount-text">
+
+                            -
+                            @Model.OrderDetails.DiscountPrice.ToString("N0")
+                            تومان
+
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Post -->
+
+                    <div class="oup-payment-row">
+
+                        <span>
+                            هزینه ارسال
+                        </span>
+
+                        <strong>
+                            @Model.OrderDetails.PostPrice.ToString("N0")
+                            تومان
+                        </strong>
+
+                    </div>
+
+
+                    <div class="oup-payment-divider"></div>
+
+
+                    <!-- Payment -->
+
+                    <div class="oup-payment-total">
+
+                        <span>
+                            مبلغ نهایی
+                        </span>
+
+                        <strong>
+
+                            @Model.OrderDetails.PaymentPrice.ToString("N0")
+                            تومان
+
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+            </section>
+
+
+        </aside>
+
+
+    </div>
+
+
+</div>

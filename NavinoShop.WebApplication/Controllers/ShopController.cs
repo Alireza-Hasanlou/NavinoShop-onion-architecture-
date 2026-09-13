@@ -13,6 +13,7 @@ using Query.Contract.UI.Products;
 using Shared.Application.Auth;
 using Shared.Domain.Enums;
 using Shared.Ui.Enums;
+using Shop.Application.Contract.ProductView;
 using System.Threading.Tasks;
 
 namespace NavinoShop.WebApplication.Controllers
@@ -22,10 +23,14 @@ namespace NavinoShop.WebApplication.Controllers
     public class ShopController : Controller
     {
         private readonly IProductUiQueryService _productUiQueryService;
+        private readonly IProductViewCommands _productViewCommands;
+        private readonly IAuthService _authService;
 
-        public ShopController(IProductUiQueryService productUiQueryService)
+        public ShopController(IProductUiQueryService productUiQueryService, IProductViewCommands productViewCommands , IAuthService authService)
         {
             _productUiQueryService = productUiQueryService;
+            _productViewCommands = productViewCommands;
+            _authService = authService;
         }
 
         [HttpGet]
@@ -82,6 +87,9 @@ namespace NavinoShop.WebApplication.Controllers
         [Route("{seller}/Product/{productSlug}")]
         public async Task<IActionResult> Product(string seller, string productSlug)
         {
+
+
+
             if (string.IsNullOrEmpty(seller) || string.IsNullOrEmpty(productSlug))
                 return NotFound();
 
@@ -89,6 +97,14 @@ namespace NavinoShop.WebApplication.Controllers
             if (prodcut == null)
                 return NotFound();
 
+
+            var sessionId = HttpContext.Session.Id;
+            var UserId = _authService.GetLoginUserId();
+            var alreadyViewed = await _productViewCommands.IsExistProductViewAsync(prodcut.ProductId, sessionId);    
+            if(!alreadyViewed)
+            {
+                await _productViewCommands.CreateAsync(new CreateProductViewCommandModel(UserId, prodcut.ProductId, sessionId));
+            }
             return View(prodcut);
         }
 

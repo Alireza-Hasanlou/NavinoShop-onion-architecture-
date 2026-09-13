@@ -23,6 +23,7 @@ namespace Shop.Domain.OrderSellerAgg
         public string? PostTitle { get; private set; }
         public int PostPrice { get; private set; }
         public Order Order { get; private set; }
+        
         public ICollection<OrderItem> OrderItems { get; private set; }
         public Seller Seller { get; private set; }
 

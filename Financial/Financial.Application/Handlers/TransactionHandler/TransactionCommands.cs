@@ -1,6 +1,8 @@
 ﻿
 using Financial.Application.Contract.Transaction.Command;
 using Financial.Domain.TransactionAgg;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Shared.Application;
 using Shared.Application.Validations;
 using Shared.Domain.Enums;
@@ -42,15 +44,64 @@ namespace Financial.Application.Handlers.TransactionHandler
             return new OperationResult(res.Success);
         }
 
-        public async Task<OperationResult> Payment(TransactionStatus status,long id, string refid)
+        public async Task<OperationResult> Payment(
+       TransactionStatus status,
+       long id,
+       string refid)
         {
             var transaction = await _transactionRepository.GetByIdAsync(id);
+
             if (transaction == null)
-                return new OperationResult(false, ValidationMessages.SystemErrorMessage);
-            transaction.Payment(status,refid);
-            if (await _transactionRepository.SaveAsync())
-                return new OperationResult(true);
-            return new OperationResult(false, ValidationMessages.SystemErrorMessage);
+                return new OperationResult(
+                    false,
+                    ValidationMessages.SystemErrorMessage);
+
+            const int maxRetries = 5;
+
+            for (var attempt = 0; attempt < maxRetries; attempt++)
+            {
+                try
+                {
+                    if (transaction.TransactionFor == TransactionFor.Wallet)
+                        refid = GenerateRefId().ToString();
+
+                    transaction.Payment(status, refid);
+
+                    if (await _transactionRepository.SaveAsync())
+                        return new OperationResult(true);
+
+                    return new OperationResult(
+                        false,
+                        ValidationMessages.SystemErrorMessage);
+                }
+                catch (DbUpdateException ex) when (IsUniqueConstraintViolation(ex))
+                {
+                    if (transaction.TransactionFor != TransactionFor.Wallet)
+                        return new OperationResult(
+                            false,
+                            ValidationMessages.SystemErrorMessage);
+
+                    if (attempt == maxRetries - 1)
+                        return new OperationResult(
+                            false,
+                            ValidationMessages.SystemErrorMessage);
+
+                 
+                }
+            }
+
+            return new OperationResult(
+                false,
+                ValidationMessages.SystemErrorMessage);
+        }
+        private static int GenerateRefId()
+        {
+            return Random.Shared.Next(100_000_000, 1_000_000_000);
+        }
+        private static bool IsUniqueConstraintViolation(DbUpdateException ex)
+        {
+            return ex.InnerException is SqlException sqlException
+                   && (sqlException.Number == 2601 || sqlException.Number == 2627);
         }
     }
 }

@@ -9,6 +9,7 @@ namespace Shop.Application.Contract.ProductSell.Command
         Task<EditProductSellCommandModel> GetForEditAsync(int id);
         Task<OperationResult> ActivationChangeAsync(int sellerId, int id);
         Task<OperationResult> EditProductSellAmountAsync(EditProductSellAmountCommandModel EditAmountModel);
+
         Task<OperationResult> DeleteAsync(int Id);
     }
 }   
