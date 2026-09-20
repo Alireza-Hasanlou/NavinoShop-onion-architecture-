@@ -1,0 +1,40 @@
+﻿@using NavinoShop.WebApplication.Utility.ViewModels
+@model BestSellersByCategoryViewModel
+ @if (Model.Menus.Any())
+{
+    <section id="encode436bvf2vrf" class="pt-4">
+        <h1 class="section-title">پرفروش ترین محصولات</h1>
+        <div class="container pt-4">
+        
+
+            <div class="row pb-2 pb-sm-4">
+                <div class="col-12 text-center">
+                    <div class="btn-group" role="group" id="encode436bvf2vrf-nav">
+                        @for (int i = 0; i < Model.Menus.Count; i++)
+                        {
+                            var menu = Model.Menus[i];
+                            <button type="button"
+                                    id="most-sales-categories_{@menu.Id}"
+                                    class="btn  most-sales-categories"
+                                    data-category-title="@menu.Title"
+                                    data-category-slug="@menu.Slug"
+                                    data-val="@menu.Title"
+                                    onclick="loadBestSellingProducts(this)">
+                                    
+                                @menu.Title
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div id="most-sales-products">
+                <div class="row g-4">
+                    @foreach (var product in Model.Products)
+                    {
+                        @await Html.PartialAsync("_ProductPartial", product)
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+}

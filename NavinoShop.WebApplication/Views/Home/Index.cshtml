@@ -37,8 +37,14 @@
     </div>
 </section>
 @await Component.InvokeAsync("BestProducts")
-@await Component.InvokeAsync("SpecialsaleBaner")
+<div class="container aos-init aos-animate" data-aos="fade-up" data-aos-duration="1200">
+    <div class="row">
+        @await Component.InvokeAsync("promoCenterBaner")
 
+    </div>
+</div>
+@* @await Component.InvokeAsync("SpecialsaleBaner") *@
+@await Component.InvokeAsync("BestSellersByCategory")
 
 
 <section id="benefits" class="pt-4">
@@ -67,10 +73,6 @@
             </div>
         </div>
     </div>
+  
 </section>
-<div class="container aos-init aos-animate" data-aos="fade-up" data-aos-duration="1200">
-    <div class="row">
-        @await Component.InvokeAsync("promoCenterBaner")
 
-    </div>
-</div>

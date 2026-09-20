@@ -1,0 +1,56 @@
+﻿@using Query.Contract.UI.Products
+@using Shared.Application
+
+@model List<ProductUiQueryModel>
+
+@if (Model.Any())
+{
+    <div id="most-sales-products">
+        <div class="row g-4">
+
+            @foreach (var item in Model)
+            {
+                <div class="col-12 col-sm-6 col-lg-3 d-flex">
+
+                    <div class="encode4326654321vfb h-100 w-100 d-flex flex-column">
+
+                        <a href="product.html">
+                            <div class="image"
+                                 style="background-image: url('@FileDirectories.ProductImageDirectory500@item.ImageName')">
+                            </div>
+                        </a>
+
+                        <div class="details p-3 d-flex flex-column flex-grow-1">
+
+                            <div class="category">
+                                <a href="products.html">
+                                    @item.Category
+                                </a>
+                            </div>
+
+                            <a href="product.html">
+                                <h2>@item.Title</h2>
+                            </a>
+
+                            <div class="encode4365gbf265g43d">
+                                @item.Price تومان
+                            </div>
+
+                            <small>
+                                <a>@item.SellerTitle</a>
+                            </small>
+
+                            <div class="rate mt-auto">
+                                ...
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    </div>
+}

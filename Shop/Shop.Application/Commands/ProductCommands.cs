@@ -63,16 +63,17 @@ namespace Shop.Application.Commands
             var newProduct = new Product(command.Title.Trim().ToLower(), imageName, command.ImageAlt.Trim().ToLower(), command.ShortDescription,
                 command.Text, command.Weight, command.Slug.Trim().ToLower());
 
-            //TODO how to add parent ID
+
             var rels = new List<Product_Category_Rel>();
             foreach (var item in command.categoryIds)
             {
                 rels.Add(new Product_Category_Rel(item));
             }
-
-            newProduct.EditProductCategoryRelation(rels);
             var res = await _productRepository.CreateAsync(newProduct);
-            if (res.Success)
+            var product = await _productRepository.GetForAddRelToCategory(newProduct.Id);
+            product.EditProductCategoryRelation(rels);
+            var saveResult = await _productRepository.SaveAsync();
+            if (saveResult)
                 return new OperationResult(true);
 
 
@@ -99,7 +100,7 @@ namespace Shop.Application.Commands
             if (await _productRepository.ExistByAsync(s => s.Slug == command.Slug && s.Id != command.Id))
                 return new OperationResult(false, ValidationMessages.DuplicatedMessage);
 
-            if (command.SelectedCategory?.Count < 1 ||  command.SelectedCategory?.Count==null)
+            if (command.SelectedCategory?.Count < 1 || command.SelectedCategory?.Count == null)
                 return new OperationResult(false, "لطفا حداقل یک دسته بندی برای محصول انتخاب کنید");
 
             if (command.Weight < 1)

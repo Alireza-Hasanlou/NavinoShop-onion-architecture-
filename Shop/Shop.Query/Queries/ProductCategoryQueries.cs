@@ -56,12 +56,6 @@ namespace Shop.Query.Queries
             return categoryTree;
 
         }
-
-
-
-
-
-
         public async Task<ProductCategoryAdminPageQueryModel> GetCategoriesForAdmin(int id)
         {
             var model = new ProductCategoryAdminPageQueryModel();
@@ -104,9 +98,7 @@ namespace Shop.Query.Queries
             return model;
         }
 
-
-
-
+  
     }
 
 

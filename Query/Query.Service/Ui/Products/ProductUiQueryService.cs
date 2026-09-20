@@ -8,7 +8,6 @@ using Seos.Domain.SeoAgg;
 using Shared.Domain.Enums;
 using Shared.Ui;
 using Shared.Ui.Enums;
-using Shop.Application.Contract.ProductView;
 using Shop.Domain.ProductAgg;
 using Shop.Domain.ProductCategoryAgg;
 using Shop.Domain.ProductSellAgg;
@@ -24,26 +23,25 @@ namespace Query.Service.Ui.Products
         private readonly ISeoRepository _seoRepository;
         private readonly IProductCategoryRepository _categoryRepository;
         private readonly ISellerRepository _sellerRepository;
+        private readonly IProductCategoryRepository _productCategoryRepository;
         private readonly IStateRepository _stateRepository;
         private readonly ICityRepository _cityRepository;
         private readonly ShopContext _shopContext;
         private readonly DiscountContext _discountContext;
-        private readonly IProductViewCommands _productViewCommands;
 
         public ProductUiQueryService(IProductSellRepository productSellRepository, ISeoRepository seoRepository,
-            IProductCategoryRepository categoryRepository, ISellerRepository sellerRepository,
-            IStateRepository stateRepository, ICityRepository cityRepository, ShopContext shopContext,
-            DiscountContext discountContext, IProductViewCommands productViewCommands)
+            IProductCategoryRepository categoryRepository, ISellerRepository sellerRepository, IProductCategoryRepository productCategoryRepository,
+            IStateRepository stateRepository, ICityRepository cityRepository, ShopContext shopContext, DiscountContext discountContext)
         {
             _productSellRepository = productSellRepository;
             _seoRepository = seoRepository;
             _categoryRepository = categoryRepository;
             _sellerRepository = sellerRepository;
+            _productCategoryRepository = productCategoryRepository;
             _stateRepository = stateRepository;
             _cityRepository = cityRepository;
             _shopContext = shopContext;
             _discountContext = discountContext;
-            _productViewCommands = productViewCommands;
         }
 
         public async Task<ProductSinglePageQueryModel> GetProductAsync(string sellerSlug, string productSlug)
@@ -356,7 +354,7 @@ namespace Query.Service.Ui.Products
                 var discount = Discounts.FirstOrDefault(x => x.ProductId == product.ProductId);
                 var hasDiscount = discount != null;
 
-                productSell = hasDiscount && discount?.ProductSellId > 0
+                productSell = hasDiscount && discount.ProductSellId > 0
                     ? (!string.IsNullOrEmpty(seller.Slug)
                         ? product.productSells.FirstOrDefault(x => x.SellerSlug == seller.Slug)
                         : product.productSells.FirstOrDefault(x => x.Id == discount.ProductSellId))
@@ -380,7 +378,6 @@ namespace Query.Service.Ui.Products
             model.Seo = await GetSeoAsync(SeoOwnerId, SeoTitle);
             return model;
         }
-
         public async Task<List<ProductUiQueryModel>> GetProductOtherSellers(int SellerId, string productSlug)
         {
 
@@ -440,96 +437,84 @@ namespace Query.Service.Ui.Products
             return OtherSellers;
 
         }
-        public async Task<List<ProductUiQueryModel>> GetBestProducts(IndexPagesProduct sort)
+        public async Task<BestProductUiQueryModel> GetBestProducts()
         {
+            var now = DateTime.Now;
+
             var productsQuery = _shopContext.Products
-      .Where(x => x.ProductSells.Any(x => x.Amount > 0) && x.Active)
-      .Include(x=>x.ProductViews)
-      .Include(x => x.ProductSells)
-      .ThenInclude(x => x.Seller);
+                .AsNoTracking()
+                .Where(x =>
+                    x.ProductSells.Any(s => s.Amount > 0) &&
+                    x.Active);
 
-            List<ProductUiQueryModel> products;
+            var model = new BestProductUiQueryModel();
 
-            switch (sort)
-            {
-                case IndexPagesProduct.محصولات_منتخب:
-                    products = await productsQuery
-                        .Take(4)
-                        .Select(x => new ProductUiQueryModel
-                        {
-                            Id = x.Id,
-                            ImageAlt = x.ImageAlt,
-                            ImageName = x.ImageName,
-                            Price = x.ProductSells
-                                .OrderBy(x => x.Price)
-                                .First().Price,
-                            Title = x.Title,
-                            Slug = x.Slug
-                        })
-                        .ToListAsync();
-                    break;
+            var productIds = await _discountContext.ProductDiscounts
+                .AsNoTracking()
+                .Where(x =>
+                    x.StartDate <= now &&
+                    x.EndDate >= now)
+                .GroupBy(x => x.ProductId)
+                .Select(x => new
+                {
+                    ProductId = x.Key,
+                    Percent = x.Max(discount => discount.Percent)
+                })
+                .OrderByDescending(x => x.Percent)
+                .Take(4)
+                .Select(x => x.ProductId)
+                .ToListAsync();
 
-                case IndexPagesProduct.تخفیف_خورده:
+            model.MostDiscountProduct = await productsQuery
+                .Where(x => productIds.Contains(x.Id))
+                .Select(x => new ProductUiQueryModel
+                {
+                    Id = x.Id,
+                    ImageAlt = x.ImageAlt,
+                    ImageName = x.ImageName,
+                    Price = x.ProductSells
+                        .OrderBy(s => s.Price)
+                        .Select(s => s.Price)
+                        .FirstOrDefault(),
+                    Title = x.Title,
+                    Slug = x.Slug
+                })
+                .ToListAsync();
 
-                    var now = DateTime.Now;
-                    var productIds = await _discountContext.ProductDiscounts
-                        .Where(x => x.StartDate <= now && x.EndDate >= now)
-                        .GroupBy(x => x.ProductId)
-                        .Select(x => new
-                        {
-                            ProductId = x.Key,
-                            Percent = x.Max(discount => discount.Percent)
-                        })
-                        .OrderByDescending(x => x.Percent)
-                        .Take(4)
-                        .Select(x => x.ProductId)
-                        .ToListAsync();
+            model.MostViewdProduct = await productsQuery
+                .OrderByDescending(x => x.ProductViews.Count())
+                .Take(4)
+                .Select(x => new ProductUiQueryModel
+                {
+                    Id = x.Id,
+                    ImageAlt = x.ImageAlt,
+                    ImageName = x.ImageName,
+                    Price = x.ProductSells
+                        .OrderBy(s => s.Price)
+                        .Select(s => s.Price)
+                        .FirstOrDefault(),
+                    Title = x.Title,
+                    Slug = x.Slug
+                })
+                .ToListAsync();
 
-                    products = await productsQuery
-                        .Where(x => productIds.Contains(x.Id))
-                        .Select(x => new ProductUiQueryModel
-                        {
-                            Id = x.Id,
-                            ImageAlt = x.ImageAlt,
-                            ImageName = x.ImageName,
-                            Price = x.ProductSells
-                                .OrderBy(x => x.Price)
-                                .First().Price,
-                            Title = x.Title,
-                            Slug = x.Slug
-                        })
-                        .ToListAsync();
+            model.ChoosenProduct = await productsQuery
+                .Take(4)
+                .Select(x => new ProductUiQueryModel
+                {
+                    Id = x.Id,
+                    ImageAlt = x.ImageAlt,
+                    ImageName = x.ImageName,
+                    Price = x.ProductSells
+                        .OrderBy(s => s.Price)
+                        .Select(s => s.Price)
+                        .FirstOrDefault(),
+                    Title = x.Title,
+                    Slug = x.Slug
+                })
+                .ToListAsync();
 
-                    products = products
-                        .OrderBy(x => productIds.IndexOf(x.Id))
-                        .ToList();
-
-                    break;
-
-                case IndexPagesProduct.پربازدیدترین:
-                    products = await productsQuery
-                        .OrderByDescending(x => x.ProductViews.Count())
-                        .Take(4)
-                        .Select(x => new ProductUiQueryModel
-                        {
-                            Id = x.Id,
-                            ImageAlt = x.ImageAlt,
-                            ImageName = x.ImageName,
-                            Price = x.ProductSells
-                                .OrderBy(x => x.Price)
-                                .First().Price,
-                            Title = x.Title,
-                            Slug = x.Slug
-                        })
-                        .ToListAsync();
-                    break;
-
-                default:
-                    products = new List<ProductUiQueryModel>();
-                    break;
-            }
-
-            return products;
+            return model;
         }
         #region PrivateMthods
         private async Task<SeoUiQueryModel> GetSeoAsync(int ownerId, string defaultTitle)
@@ -587,6 +572,84 @@ namespace Query.Service.Ui.Products
 
 
             }
+        }
+
+        public async Task<List<ProductUiQueryModel>> GetBestSellersByCategoryAsync(string categoryName)
+        {
+            var ProductCategory = await _productCategoryRepository.GetByTitle(categoryName);
+            if (ProductCategory == null) return new();
+
+            var result = await _shopContext.Products
+
+        .Where(product =>
+            product.Poduct_Category_Rels
+                .Any(x => x.ProductCategory.Title == categoryName))
+
+
+        .Select(product => new
+        {
+            Product = product,
+
+            TotalSold = product.ProductSells
+                .SelectMany(productSell => productSell.OrderItems)
+                .Where(orderItem =>
+                    orderItem.OrderSeller.Status == OrderSellerStatus.پرداخت_شده ||
+                    orderItem.OrderSeller.Status == OrderSellerStatus.در_حال_آماده_سازی ||
+                    orderItem.OrderSeller.Status == OrderSellerStatus.ارسال_شده)
+                .Sum(orderItem => (int?)orderItem.Count) ?? 0
+        })
+        .Where(x => x.TotalSold >= 0)
+        .OrderByDescending(x => x.TotalSold)
+        .Take(8)
+        .Select(x => new ProductUiQueryModel
+        {
+            ProductId = x.Product.Id,
+
+            Title = x.Product.Title,
+            Slug = x.Product.Slug,
+
+            ImageName = x.Product.ImageName,
+            ImageAlt = x.Product.ImageAlt,
+
+            Category = x.Product.Poduct_Category_Rels
+                .Select(c => c.Product.Title)
+                .FirstOrDefault(),
+
+            CategorySlug = x.Product.Poduct_Category_Rels
+                .Select(c => c.ProductCategory.Slug)
+                .FirstOrDefault(),
+            Id = x.Product.ProductSells
+                .OrderBy(ps => ps.Price)
+                .Select(ps => ps.Id)
+                .FirstOrDefault(),
+
+            SellerTitle = x.Product.ProductSells
+                .OrderBy(ps => ps.Price)
+                .Select(ps => ps.Seller.Title)
+                .FirstOrDefault(),
+
+            SellerSlug = x.Product.ProductSells
+                .OrderBy(ps => ps.Price)
+                .Select(ps => ps.Seller.Slug)
+                .FirstOrDefault(),
+
+            Price = x.Product.ProductSells
+                .OrderBy(ps => ps.Price)
+                .Select(ps => ps.Price)
+                .FirstOrDefault(),
+
+            discountPercent = 0,
+
+            PriceAfterOff = x.Product.ProductSells
+                .OrderBy(ps => ps.Price)
+                .Select(ps => (decimal)ps.Price)
+                .FirstOrDefault()
+        })
+        .ToListAsync();
+
+
+            return result;
+
         }
 
 

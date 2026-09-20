@@ -7,6 +7,10 @@ namespace Shop.Application.Contract.ProductCategory.Query
         Task<bool> CheckCategoryHaveParent(int id);
         Task<ProductCategoryAdminPageQueryModel> GetCategoriesForAdmin(int id);
         Task<List<CategoryTreeItem>> GetCategoriesForAddProduct();
+
+       
     }
+
+
 }
 

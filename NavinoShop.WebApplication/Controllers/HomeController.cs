@@ -5,6 +5,7 @@ using NavinoShop.WebApplication.Models;
 using NavinoShop.WebApplication.Services;
 using Query.Contract.Site.Page;
 using Query.Contract.UI.PostPackage;
+using Query.Contract.UI.Products;
 using Shared.Application.Auth;
 using Site.Application.Contract.SitePageService.Query;
 using Site.Application.Contract.SiteSettingService.Query;

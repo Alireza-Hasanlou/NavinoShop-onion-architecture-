@@ -2121,8 +2121,6 @@ span.custom-checkbox-shine:after {
     font-weight: 700;
     color: #1e1e2e;
     margin-bottom: 20px;
-    display: flex;
-    align-items: center;
     gap: 8px;
 }
 

@@ -1,50 +1,86 @@
 @using Query.Contract.UI.Products
 @using Shared.Ui.Enums
-@model List<ProductUiQueryModel>
-
-@{
-    var selectedSort = IndexPagesProduct.محصولات_منتخب;
-    var sortValue = Context.Request.Query["sort"].ToString();
-
-    if (Enum.TryParse<IndexPagesProduct>(sortValue, out var parsedSort))
-    {
-        selectedSort = parsedSort;
-    }
-}
+@model BestProductUiQueryModel
 
 <section id="featured-products" class="my-5">
     <div class="container">
+
+        <!-- Tabs -->
         <div class="row pb-2 pb-sm-4">
             <div class="col-12 text-center">
                 <div class="btn-group" role="group" id="featured-products-nav">
-                          <a class="btn featured-category-button @(selectedSort == IndexPagesProduct.محصولات_منتخب ? "active" : "")"
-                            
-                              data-sort="@((int)IndexPagesProduct.محصولات_منتخب)">
+                    <button type="button" class="btn active featured-categories" data-val="featured">
                         محصولات منتخب
-                    </a>
-                          <a class="btn featured-category-button @(selectedSort == IndexPagesProduct.تخفیف_خورده ? "active" : "")"
-                            
-                              data-sort="@((int)IndexPagesProduct.تخفیف_خورده)">
+                    </button>
+                    <button type="button" class="btn featured-categories" data-val="on-sale">
                         تخفیف خورده
-                    </a>
-                          <a class="btn featured-category-button @(selectedSort == IndexPagesProduct.پربازدیدترین ? "active" : "")"
-                
-                              data-sort="@((int)IndexPagesProduct.پربازدیدترین)">
+                    </button>
+                    <button type="button" class="btn featured-categories" data-val="most-visited">
                         پربازدیدترین
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
+        <!-- /Tabs -->
+        <!-- Products -->
+        <div class="featured-products-content">
 
-        @if (Model != null && Model.Count > 0)
-        {
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-md-4 featured-product"
-                 data-aos="fade-up" data-aos-duration="1000">
-                @foreach (var product in Model)
+            @* تب: محصولات منتخب *@
+            <div class="featured-product featured">
+                @if (Model?.ChoosenProduct?.Any() == true)
                 {
-                    @await Html.PartialAsync("_ProductPartial", product)
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-md-4"
+                         data-aos="fade-up" data-aos-duration="1000">
+                        @foreach (var product in Model.ChoosenProduct)
+                        {
+                            @await Html.PartialAsync("_ProductPartial", product)
+                        }
+                    </div>
+                }
+                else
+                {
+                    <span>محصولی موجود نیست</span>
                 }
             </div>
-        }
+
+            @* تب: تخفیف خورده *@
+            <div class="featured-product on-sale">
+                @if (Model?.MostDiscountProduct?.Any() == true)
+                {
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-md-4"
+                         data-aos="fade-up" data-aos-duration="1000">
+                        @foreach (var product in Model.MostDiscountProduct)
+                        {
+                            @await Html.PartialAsync("_ProductPartial", product)
+                        }
+                    </div>
+                }
+                else
+                {
+                    <span>محصولی موجود نیست</span>
+                }
+            </div>
+
+            @* تب: پربازدیدترین *@
+            <div class="featured-product most-visited">
+                @if (Model?.MostViewdProduct?.Any() == true)
+                {
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-md-4"
+                         data-aos="fade-up" data-aos-duration="1000">
+                        @foreach (var product in Model.MostViewdProduct)
+                        {
+                            @await Html.PartialAsync("_ProductPartial", product)
+                        }
+                    </div>
+                }
+                else
+                {
+                    <span>محصولی موجود نیست</span>
+                }
+            </div>
+
+        </div>
+        <!-- /Products -->
+
     </div>
 </section>

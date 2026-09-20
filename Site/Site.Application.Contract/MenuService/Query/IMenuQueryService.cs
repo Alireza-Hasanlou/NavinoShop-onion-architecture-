@@ -15,5 +15,13 @@ namespace Site.Application.Contract.MenuService.Query
         Task<List<MenuForUiQueryModel>> GetForFooterAsync();
         Task<List<MenuForUiQueryModel>> GetForBlogAsync();
 
+        Task<List<ProductCategoryUiQueryModel>> GetProductCategoryMenueForIndexAsync();
+    }
+
+    public class ProductCategoryUiQueryModel
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string Slug { get; set; }
     }
 }

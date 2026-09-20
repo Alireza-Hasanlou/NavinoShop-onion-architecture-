@@ -4,6 +4,7 @@ using Shared.Application;
 using Shared.Domain.Enums;
 using Shared.Insfrastructure;
 using Site.Application.Contract.MenuService.Command;
+using Site.Application.Contract.MenuService.Query;
 using Site.Domain.MenuAgg;
 using Site.Infrastructure.Persistence.Context;
 
@@ -51,11 +52,19 @@ internal class MenuRepository : GenericRepository<Menu, int>, IMenuRepository
             Url = s.Url,
             Status = s.Status
         }).SingleOrDefaultAsync(s => s.Id == id);
-
+        
         if (menu == null)
             return new();
         return menu;
     }
 
-
+    public async Task<List<ProductCategoryUiQueryModel>> GetProductCategoryMenueForIndexAsync()
+    {
+        return  await _context.Menus.Where(m => m.Status == MenuStatus.منوی_دسته_بندی_وسط_صفحه && m.Active )
+               .Select(m => new ProductCategoryUiQueryModel
+               {
+                   Id = m.Id,
+                   Title = m.Title,
+               }).ToListAsync();
+    }
 }

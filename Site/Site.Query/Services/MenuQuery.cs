@@ -28,18 +28,18 @@ internal class MenuQuery : IMenuQueryService
             model.PageTitle = "لیست منو های سردسته";
 
             model.Menus = await _menuRepository.GetAllBy(m => m.ParentId == null)
-                .OrderByDescending(x=>x.CreateDate)
+                .OrderByDescending(x => x.CreateDate)
                 .Select(m => new MenuForAdminQueryModel
-            {
-                Active = m.Active,
-                CreationDate = m.CreateDate.ToPersainDate(),
-                Id = m.Id,
-                Number = m.Number,
-                Status = m.Status,
-                Title = m.Title,
-                Url = m.Url,
-                ImageName = FileDirectories.MenuImageDirectory100 + m.ImageName
-            }).ToListAsync();
+                {
+                    Active = m.Active,
+                    CreationDate = m.CreateDate.ToPersainDate(),
+                    Id = m.Id,
+                    Number = m.Number,
+                    Status = m.Status,
+                    Title = m.Title,
+                    Url = m.Url,
+                    ImageName = FileDirectories.MenuImageDirectory100 + m.ImageName
+                }).ToListAsync();
 
         }
         else
@@ -49,18 +49,18 @@ internal class MenuQuery : IMenuQueryService
             model.Status = menuParent.Status;
 
             model.Menus = await _menuRepository.GetAllBy(m => m.ParentId == parentId)
-                .OrderByDescending(x=>x.CreateDate)
+                .OrderByDescending(x => x.CreateDate)
                 .Select(m => new MenuForAdminQueryModel
-            {
-                Active = m.Active,
-                CreationDate = m.CreateDate.ToPersainDate(),
-                Id = m.Id,
-                Number = m.Number,
-                Status = m.Status,
-                Title = m.Title,
-                Url = m.Url,
-                ImageName = FileDirectories.MenuImageDirectory100 + m.ImageName
-            }).ToListAsync();
+                {
+                    Active = m.Active,
+                    CreationDate = m.CreateDate.ToPersainDate(),
+                    Id = m.Id,
+                    Number = m.Number,
+                    Status = m.Status,
+                    Title = m.Title,
+                    Url = m.Url,
+                    ImageName = FileDirectories.MenuImageDirectory100 + m.ImageName
+                }).ToListAsync();
 
         }
         return model;
@@ -74,7 +74,7 @@ internal class MenuQuery : IMenuQueryService
         || b.Status == MenuStatus.منوی_اصلی_وبلاگ_بدون_زیرمنو
         || b.Status == MenuStatus.منوی_اصلی_وبلاگ_بازیرمنو))
             .AsNoTracking()
-            .OrderBy(i=>i.Number)
+            .OrderBy(i => i.Number)
             .ToListAsync();
         foreach (var item in menus)
         {
@@ -92,15 +92,15 @@ internal class MenuQuery : IMenuQueryService
                 menu.Childs = await _menuRepository.GetAllBy(m => m.Active && m.ParentId == item.Id)
                     .AsNoTracking()
                     .Select(m => new MenuForUiQueryModel
-                {
-                    ImageAlt = m.ImageAlt,
-                    Childs = new(),
-                    ImageName = FileDirectories.MenuImageDirectory + m.ImageName,
-                    Number = m.Number,
-                    Title = m.Title,
-                    Url = m.Url,
-                    Status = m.Status
-                }).ToListAsync();
+                    {
+                        ImageAlt = m.ImageAlt,
+                        Childs = new(),
+                        ImageName = FileDirectories.MenuImageDirectory + m.ImageName,
+                        Number = m.Number,
+                        Title = m.Title,
+                        Url = m.Url,
+                        Status = m.Status
+                    }).ToListAsync();
 
             }
 
@@ -275,4 +275,11 @@ internal class MenuQuery : IMenuQueryService
         return model;
     }
 
+    public async Task<List<ProductCategoryUiQueryModel>> GetProductCategoryMenueForIndexAsync()
+    {
+        var menus = await _menuRepository.GetProductCategoryMenueForIndexAsync();
+        if (menus.Count != 4)
+            return new();
+        return menus;
+    }
 }

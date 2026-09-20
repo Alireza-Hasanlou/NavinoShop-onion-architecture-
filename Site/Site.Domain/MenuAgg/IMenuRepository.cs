@@ -1,6 +1,7 @@
 ﻿using Shared.Domain;
 using Shared.Domain.Enums;
 using Site.Application.Contract.MenuService.Command;
+using Site.Application.Contract.MenuService.Query;
 
 namespace Site.Domain.MenuAgg
 {
@@ -9,6 +10,6 @@ namespace Site.Domain.MenuAgg
         Menu GetById(int id);
        Task< EditMenuCommandModel> GetForEdit(int id);
         Task<bool> ExistMainMenu(MenuStatus status);
-       
+        Task<List<ProductCategoryUiQueryModel>> GetProductCategoryMenueForIndexAsync();
     }
 }

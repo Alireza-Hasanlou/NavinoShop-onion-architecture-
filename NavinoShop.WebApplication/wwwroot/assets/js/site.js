@@ -1,4 +1,6 @@
-﻿$('.qty-btn.minus').click(function () {
+﻿
+
+$('.qty-btn.minus').click(function () {
     var input = $(this).siblings('input.quantity-value');
     var val = parseInt(input.val());
     var min = parseInt(input.attr('min')) || 1;
@@ -2587,7 +2589,7 @@ $(document).ready(function () {
         // هایلایت کردن آدرس انتخاب شده
         $(this).closest('.address-item').addClass('border-primary bg-light');
 
-     
+
     });
 
 
@@ -2930,17 +2932,17 @@ $(document).ready(function () {
 
         // به‌روزرسانی شماره ملی
         $('.address-to-send .col-12:contains("شماره ملی")').text(
-            address.nationalCode ?  address.nationalCode : ''
+            address.nationalCode ? address.nationalCode : ''
         );
 
         // به‌روزرسانی کد پستی
         $('.address-to-send .row .col-12:eq(0)').text(
-            address.postalCode ?  address.postalCode : ''
+            address.postalCode ? address.postalCode : ''
         );
 
         // به‌روزرسانی تحویل گیرنده
         let receiverText = '';
-        if (address.fullName) receiverText +=  address.fullName;
+        if (address.fullName) receiverText += address.fullName;
         if (address.phone) receiverText += (receiverText ? ' | ' : '') + address.phone;
         $('.address-to-send .row .col-12:eq(1)').text(receiverText);
     }
@@ -3043,7 +3045,7 @@ $(document).ready(function () {
 /* ChargeWallet */
 
 function chargeWallet() {
-   
+
     const amountInput = document.getElementById('transactionAmountInput');
     const portalSelect = document.getElementById('transactionPortalSelect');
     const descInput = document.getElementById('transactionDescriptionInput');
@@ -3455,3 +3457,21 @@ function chargeWallet() {
     });
 
 })(jQuery);
+
+function loadBestSellingProducts(button) {
+   
+    const categoryTitle = $(button).data("category-title");
+    $.ajax({
+        url: "/Shop/Cg/GetBestSellingProducts",
+        type: "GET",
+        data: {
+            categoryTitle: categoryTitle
+        },
+        success: function (result) {
+            $("#most-sales-products").html(result);
+        },
+        error: function () {
+            console.error("خطا در دریافت محصولات");
+        }
+    });
+}

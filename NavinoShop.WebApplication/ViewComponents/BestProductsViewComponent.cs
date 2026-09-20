@@ -13,16 +13,9 @@ namespace NavinoShop.WebApplication.ViewComponents
             _productUiQueryService = productUiQueryService;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(
-            IndexPagesProduct sort = IndexPagesProduct.محصولات_منتخب)
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            var sortValue = HttpContext.Request.Query["sort"].ToString();
-            if (Enum.TryParse<IndexPagesProduct>(sortValue, out var parsedSort))
-            {
-                sort = parsedSort;
-            }
-
-            var bestProducts = await _productUiQueryService.GetBestProducts(sort);
+            var bestProducts = await _productUiQueryService.GetBestProducts();
             return View(bestProducts);
         }
     }

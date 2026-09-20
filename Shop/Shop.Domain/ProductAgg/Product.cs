@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Shop.Domain.ProductAgg
 {
-    public partial class Product : BaseEntityCreateUpdateActive<int>
+    public class Product : BaseEntityCreateUpdateActive<int>
     {
 
         public Product()
