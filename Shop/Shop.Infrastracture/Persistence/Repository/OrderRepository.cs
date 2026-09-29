@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Shared.Application;
 using Shared.Domain.Enums;
 using Shared.Insfrastructure;
+using Shop.Application.Contract.Order.Query;
 using Shop.Domain.OrderAgg;
 using Shop.Infrastracture.Persistence.Context;
 using System;
@@ -18,6 +20,183 @@ namespace Shop.Infrastracture.Persistence.Repository
         public OrderRepository(ShopContext shopContext) : base(shopContext)
         {
             _shopContext = shopContext;
+        }
+
+        public async Task<OperationResult> CancellOrderByAdminAsync(int orderId)
+        {
+            await using var transaction = await _shopContext.Database.BeginTransactionAsync();
+
+            try
+            {
+
+                var orderExists = await ExistByAsync(x => x.Id == orderId);
+
+                if (!orderExists)
+                    return new OperationResult(false, "سفارش یافت نشد");
+
+
+
+                var hasShippedSeller = await _shopContext.OrderSellers
+                    .AnyAsync(x =>
+                        x.OrderId == orderId &&
+                        x.Status == OrderSellerStatus.ارسال_شده);
+
+                if (hasShippedSeller)
+                    return new OperationResult(
+                        false,
+                        "به دلیل ارسال شدن سفارش توسط یکی از فروشگاه‌ها، امکان لغو سفارش وجود ندارد"
+                    );
+
+
+                
+                var orderAffectedRows = await _shopContext.Orders
+                    .Where(x => x.Id == orderId &&
+                                (x.OrderStatus == OrderStatus.پرداخت_نشده ||
+                                 x.OrderStatus == OrderStatus.پرداخت_شده))
+                    .ExecuteUpdateAsync(setters => setters
+                        .SetProperty(
+                            x => x.OrderStatus,
+                            OrderStatus.لغو_شده_توسط_ادمین
+                        ));
+
+                if (orderAffectedRows == 0)
+                    return new OperationResult(
+                        false,
+                        "وضعیت فعلی سفارش امکان لغو ندارد"
+                    );
+
+
+
+                await _shopContext.OrderSellers
+                    .Where(x => x.OrderId == orderId)
+                    .ExecuteUpdateAsync(setters => setters
+                        .SetProperty(
+                            x => x.Status,
+                            OrderSellerStatus.لغو_شده_توسط_ادمین
+                        ));
+
+
+                await transaction.CommitAsync();
+
+                return new OperationResult(true, "");
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+
+                return new OperationResult(
+                    false,
+                    "خطا در لغو سفارش"
+                );
+            }
+        }
+
+        public async Task<OperationResult> CancellOrderByUserAsync(int orderId)
+        {
+            await using var transaction = await _shopContext.Database.BeginTransactionAsync();
+
+            try
+            {
+
+                var orderExists = await ExistByAsync(x => x.Id == orderId);
+
+                if (!orderExists)
+                    return new OperationResult(false, "سفارش یافت نشد");
+
+
+
+                var hasShippedSeller = await _shopContext.OrderSellers
+                    .AnyAsync(x =>
+                        x.OrderId == orderId &&
+                        x.Status == OrderSellerStatus.ارسال_شده);
+
+                if (hasShippedSeller)
+                    return new OperationResult(
+                        false,
+                        "به دلیل ارسال شدن سفارش توسط یکی از فروشگاه‌ها، امکان لغو سفارش وجود ندارد"
+                    );
+
+
+                // لغو خود سفارش
+                var orderAffectedRows = await _shopContext.Orders
+                    .Where(x => x.Id == orderId &&
+                                (x.OrderStatus == OrderStatus.پرداخت_نشده ||
+                                 x.OrderStatus == OrderStatus.پرداخت_شده))
+                    .ExecuteUpdateAsync(setters => setters
+                        .SetProperty(
+                            x => x.OrderStatus,
+                            OrderStatus.لغو_شده_توسط_مشتری
+                        ));
+
+                if (orderAffectedRows == 0)
+                    return new OperationResult(
+                        false,
+                        "وضعیت فعلی سفارش امکان لغو ندارد"
+                    );
+
+
+
+                await _shopContext.OrderSellers
+                    .Where(x => x.OrderId == orderId)
+                    .ExecuteUpdateAsync(setters => setters
+                        .SetProperty(
+                            x => x.Status,
+                            OrderSellerStatus.لغو_شده_توسط_مشتری
+                        ));
+
+
+                await transaction.CommitAsync();
+
+                return new OperationResult(true, "");
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+
+                return new OperationResult(
+                    false,
+                    "خطا در لغو سفارش"
+                );
+            }
+        }
+
+        public async Task<FactorforordercancellationQueryModel> GetFactorforordercancellationAsync(int orderId, int SellerId)
+        {
+            if (SellerId > 0)
+            {
+                return await _shopContext.Orders
+                    .Where(x => x.Id == orderId)
+                    .Include(o => o.OrderSellers.Where(x => x.SellerId == SellerId))
+                    .ThenInclude(x => x.OrderItems)
+                    .Select(x => new FactorforordercancellationQueryModel
+                    {
+                        OrderId = x.Id,
+                        PaymentPrice = x.PaymentPriceSeller,
+                        CustomerId = x.UserId
+                    })
+                    .SingleOrDefaultAsync();
+            }
+            else
+            {
+                return await _shopContext.Orders
+                    .Where(x => x.Id == orderId)
+                    .Include(o => o.OrderSellers)
+                    .ThenInclude(x => x.OrderItems)
+                    .Select(x => new FactorforordercancellationQueryModel
+                    {
+                        OrderId = x.Id,
+                        PaymentPrice = x.PaymentPrice,
+                        CustomerId = x.UserId
+                    })
+                    .SingleOrDefaultAsync();
+            }
+
+
+        }
+
+        public async Task<Order> GetForEditOrderSellerStatusAsync(int orderId)
+        {
+            return await _shopContext.Orders.Include(x => x.OrderSellers).SingleOrDefaultAsync(x => x.Id == orderId);
         }
 
         public async Task<Order> GetOpenOrderForFinalizePaymentAsync(int userId)
@@ -59,7 +238,7 @@ namespace Shop.Infrastracture.Persistence.Repository
                             x.OrderStatus == OrderStatus.پرداخت_نشده)
                 .Include(x => x.OrderSellers)
                 .ThenInclude(x => x.OrderItems)
-                .Include(x=>x.OrderAddress)
+                .Include(x => x.OrderAddress)
                 .SingleOrDefaultAsync();
             return order;
         }

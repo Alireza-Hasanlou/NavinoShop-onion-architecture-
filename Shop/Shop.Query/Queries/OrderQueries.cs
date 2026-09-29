@@ -18,5 +18,9 @@ namespace Shop.Query.Queries
             _orderRepository = orderRepository;
         }
 
+        public async Task<FactorforordercancellationQueryModel> GetFactorforordercancellation(int OrderId, int SellerId)
+        {
+            return await _orderRepository.GetFactorforordercancellationAsync(OrderId, SellerId);
+        }
     }
 }

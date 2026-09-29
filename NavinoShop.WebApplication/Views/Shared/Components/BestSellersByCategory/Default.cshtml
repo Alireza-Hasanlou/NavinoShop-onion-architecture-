@@ -26,15 +26,8 @@
                         }
                     </div>
                 </div>
-            </div>
-            <div id="most-sales-products">
-                <div class="row g-4">
-                    @foreach (var product in Model.Products)
-                    {
-                        @await Html.PartialAsync("_ProductPartial", product)
-                    }
-                </div>
-            </div>
+            </div> 
+            @await Html.PartialAsync("_ProductPartial", Model.Products)
         </div>
     </section>
 }

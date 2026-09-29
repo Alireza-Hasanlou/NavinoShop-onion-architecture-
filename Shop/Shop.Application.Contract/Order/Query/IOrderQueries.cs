@@ -8,6 +8,13 @@ namespace Shop.Application.Contract.Order.Query
 {
     public interface IOrderQueries
     {
-        
+        Task<FactorforordercancellationQueryModel> GetFactorforordercancellation(int OrderId , int SellerId);
+    }
+    public class FactorforordercancellationQueryModel
+    {
+        public int  OrderId { get; set; }
+        public int PaymentPrice { get; set; }
+        public int CustomerId { get; set; }
+       
     }
 }

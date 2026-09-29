@@ -135,7 +135,7 @@ namespace NavinoShop.WebApplication.Controllers
                     .GetBestSellersByCategoryAsync(categoryTitle);
 
             return PartialView(
-                "_BestSellingProductsPartial",
+                "_ProductPartial",
                 products);
         }
 

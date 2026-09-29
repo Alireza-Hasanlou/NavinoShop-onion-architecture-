@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Query.Contract.UI.UserPanel.Seller;
+using Shared.Application;
 using Shared.Application.Auth;
 using Shared.Domain.Enums;
 using Shop.Application.Contract.Product.Query;
@@ -233,8 +234,11 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
             if (!ok)
                 return NotFound();
             var orderDetails = await _sellerUserPanelQueries.GetOrderDetailsForSellerAsync(SellerId, _userId, OrderId);
+           
 
             return View(orderDetails);
         }
+
+
     }
 }

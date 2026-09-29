@@ -1,6 +1,8 @@
 ﻿using Financial.Domain.TransactionAgg;
 using Financial.infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using Shared.Application;
 using Shared.Insfrastructure;
 using System;
 using System.Collections.Generic;
@@ -22,6 +24,22 @@ namespace Financial.infrastructure.Persistence.Repository
         public Task<Transaction> GetbyAutorityAsync(string autority)
         {
             return _Context.Transactions.SingleOrDefaultAsync(x => x.Authority.Trim().ToLower() == autority.Trim().ToLower());
+        }
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            return await _Context. Database.BeginTransactionAsync();
+        }
+
+        public async Task CommitTransactionAsync(
+            IDbContextTransaction transaction)
+        {
+            await transaction.CommitAsync();
+        }
+
+        public async Task RollbackTransactionAsync(
+            IDbContextTransaction transaction)
+        {
+            await transaction.RollbackAsync();
         }
     }
 }

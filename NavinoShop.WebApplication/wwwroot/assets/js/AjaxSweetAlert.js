@@ -250,6 +250,7 @@ function AjaxSweetWithRedirect(title1, text1, icon1, confirmButtonText1, cancelB
     });
 }
 function AjaxSweetRefresh(title, text, icon, confirmText, cancelText, url) {
+  
     Swal.fire({
         title: title,
         text: text,
@@ -263,15 +264,13 @@ function AjaxSweetRefresh(title, text, icon, confirmText, cancelText, url) {
 
         if (!result.isConfirmed) return;
 
-        Loding();
-
+    
         $.ajax({
             type: "GET",
             url: url
         })
             .done(res => {
-                EndLoading();
-
+             
                 if (res.success) {
                     AlerSweetWithTimer("عملیات موفق", "success", "Center");
 
@@ -282,7 +281,6 @@ function AjaxSweetRefresh(title, text, icon, confirmText, cancelText, url) {
                 }
             })
             .fail(() => {
-                EndLoading();
                 AlerSweetWithTimer("خطا در ارتباط با سرور", "error", "Center");
             });
     });

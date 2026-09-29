@@ -1,4 +1,6 @@
-﻿using Shop.Application.Contract.OrderSeller.Command;
+﻿using Shared.Application;
+using Shared.Domain.Enums;
+using Shop.Application.Contract.OrderSeller.Command;
 using Shop.Domain.OrderAgg;
 using Shop.Domain.OrderSellerAgg;
 using System;
@@ -48,6 +50,16 @@ namespace Shop.Application.Commands
 
             return new PricesAfterAddPost { Success = false, Message = "خطا در انتخاب روش ارسال" };
 
+        }
+
+        public async Task<OperationResult> ChangeOrderSellerStatusAsync(int sellerId, int orderId, OrderSellerStatus status)
+        {
+            int affectedRows = await _orderSellerRepository.ChangeOrderSellerStatusAsync(sellerId, orderId, status);
+
+            if (affectedRows == 0)
+                return new OperationResult(false, "فروشگاه یافت نشد");
+
+            return new OperationResult(true, "");
         }
     }
 }

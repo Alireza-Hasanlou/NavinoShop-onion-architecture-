@@ -37,14 +37,14 @@ namespace Query.Service.Admin.Order
             _cityRepository = cityRepository;
         }
 
-        public async Task<OrderDetailsForAdminQueryModel> GetOrderDetailsForAdminAsync( int orderId)
+        public async Task<OrderDetailsForAdminQueryModel> GetOrderDetailsForAdminAsync(int orderId)
         {
-            if ( orderId <= 0)
+            if (orderId <= 0)
                 return null;
 
             var order = await _shopContext.Orders
       .AsNoTracking()
-      .Where(x =>x.Id == orderId)
+      .Where(x => x.Id == orderId)
       .Include(x => x.OrderAddress)
       .Include(o => o.OrderSellers)
           .ThenInclude(os => os.OrderItems)
@@ -90,6 +90,7 @@ namespace Query.Service.Admin.Order
                     SellerId = s.SellerId,
                     SellerName = s.Seller?.Title ?? "نامشخص",
                     DiscountPrice = s.Price - s.PriceAfterOff,
+                    status=s.Status,
                     Items = s.OrderItems.Select(i => new OrderItemAdminQueryModel
                     {
                         Id = i.Id,
@@ -133,7 +134,9 @@ namespace Query.Service.Admin.Order
             var model = new OrdersForAdminPanelPaging();
 
             IQueryable<Shop.Domain.OrderAgg.Order> orders =
-                _shopContext.Orders.Include(x => x.OrderSellers).AsNoTracking();
+                _shopContext.Orders.Include(x => x.OrderSellers)
+                .ThenInclude(i=>i.OrderItems)
+                .AsNoTracking();
 
             if (status != OrderStatus.همه)
             {

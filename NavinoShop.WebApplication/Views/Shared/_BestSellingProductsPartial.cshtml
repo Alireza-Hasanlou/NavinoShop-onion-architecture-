@@ -31,14 +31,40 @@
                             <a href="product.html">
                                 <h2>@item.Title</h2>
                             </a>
+                            <small class="d-flex align-items-center gap-1 mt-2 mb-2">
+                                <i class="fa-solid fa-shop" "></i>
 
-                            <div class="encode4365gbf265g43d">
-                                @item.Price تومان
-                            </div>
-
-                            <small>
-                                <a>@item.SellerTitle</a>
+                                <a class="text-secondary" href="/Shop/@item.SellerSlug"
+                                   class="text-decoration-none">
+                                    @item.SellerTitle
+                                </a>
                             </small>
+                            @if (item.PriceAfterOff > 0 && item.PriceAfterOff < item.Price)
+                            {
+                                <div class="price-container">
+
+                                    <div class="text-decoration-line-through text-muted">
+                                        @item.Price تومان
+                                    </div>
+
+                                    <div class="encode4365gbf265g43d text-success">
+                                        @item.PriceAfterOff تومان
+                                    </div>
+
+                                    <small class="text-danger">
+                                        @item.discountPercent٪ تخفیف
+                                    </small>
+
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="encode4365gbf265g43d">
+                                    @item.Price تومان
+                                </div>
+                            }
+
+                   
 
                             <div class="rate mt-auto">
                                 ...

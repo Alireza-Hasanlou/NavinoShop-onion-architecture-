@@ -1,4 +1,6 @@
-﻿namespace Query.Contract.UI.UserPanel.Order
+﻿using Shared.Domain.Enums;
+
+namespace Query.Contract.UI.UserPanel.Order
 {
     public class OrderSellerUserPanelQueryModel
     {
@@ -16,6 +18,7 @@
         public int PriceAfterOff { get; set; }
         public int PaymentPrice { get; set; }
         public int DiscountPrice { get; set; }
+        public OrderSellerStatus  status { get; set; }
         public List<OrderItemQueryMoedel> Items { get; set; }
 
     }

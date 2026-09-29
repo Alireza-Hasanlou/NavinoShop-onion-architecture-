@@ -1,44 +1,82 @@
 ﻿@using Query.Contract.UI.Products
 @using Shared.Application
 
-@model ProductUiQueryModel
+@model List<ProductUiQueryModel>
 
-<div class="col-12 col-sm-6 col-lg-3">
+@if (Model.Any())
+{
+    <div id="most-sales-products">
+        <div class="row g-4">
 
-    <div class="encode4326654321vfb">
+            @foreach (var item in Model)
+            {
+                <div class="col-12 col-sm-6 col-lg-3 d-flex">
 
-        <a href="product.html">
-            <div class="image"
-                 style="background-image: url('@FileDirectories.ProductImageDirectory500@Model.ImageName')">
-            </div>
-        </a>
+                    <div class="encode4326654321vfb h-100 w-100 d-flex flex-column">
 
-        <div class="details p-3">
+                        <a href="product.html">
+                            <div class="image"
+                                 style="background-image: url('@FileDirectories.ProductImageDirectory500@item.ImageName')">
+                            </div>
+                        </a>
 
-            <div class="category">
-                <a href="products.html">
-                    @Model.Category
-                </a>
-            </div>
+                        <div class="details p-3 d-flex flex-column flex-grow-1">
 
-            <a href="product.html">
-                <h2>@Model.Title</h2>
-            </a>
+                            <div class="category">
+                                <a href="products.html">
+                                    @item.Category
+                                </a>
+                            </div>
 
-            <div class="encode4365gbf265g43d">
-                @Model.Price تومان
-            </div>
+                            <a href="product.html">
+                                <h2>@item.Title</h2>
+                            </a>
+                            <small class="d-flex align-items-center gap-1 mt-2 mb-2">
+                                <i class="fa-solid fa-shop" "></i>
 
-            <small>
-                <a>@Model.SellerTitle</a>
-            </small>
+                                <a class="text-secondary" href="/Shop/@item.SellerSlug"
+                                   class="text-decoration-none">
+                                    @item.SellerTitle
+                                </a>
+                            </small>
+                            @if (item.PriceAfterOff > 0 && item.PriceAfterOff < item.Price)
+                            {
+                                <div class="price-container">
 
-            <div class="rate">
-                ...
-            </div>
+                                    <div class="text-decoration-line-through text-muted">
+                                        @item.Price تومان
+                                    </div>
+
+                                    <div class="encode4365gbf265g43d text-success">
+                                        @item.PriceAfterOff تومان
+                                    </div>
+
+                                    <small class="text-danger">
+                                        @item.discountPercent٪ تخفیف
+                                    </small>
+
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="encode4365gbf265g43d">
+                                    @item.Price تومان
+                                </div>
+                            }
+
+                   
+
+                            <div class="rate mt-auto">
+                                ...
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
 
         </div>
-
     </div>
-
-</div>
+}

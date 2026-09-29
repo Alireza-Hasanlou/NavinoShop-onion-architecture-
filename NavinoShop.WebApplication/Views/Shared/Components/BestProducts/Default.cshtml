@@ -29,13 +29,7 @@
             <div class="featured-product featured">
                 @if (Model?.ChoosenProduct?.Any() == true)
                 {
-                    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-md-4"
-                         data-aos="fade-up" data-aos-duration="1000">
-                        @foreach (var product in Model.ChoosenProduct)
-                        {
-                            @await Html.PartialAsync("_ProductPartial", product)
-                        }
-                    </div>
+                    @await Html.PartialAsync("_ProductPartial", Model.ChoosenProduct)
                 }
                 else
                 {
@@ -47,17 +41,11 @@
             <div class="featured-product on-sale">
                 @if (Model?.MostDiscountProduct?.Any() == true)
                 {
-                    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-md-4"
-                         data-aos="fade-up" data-aos-duration="1000">
-                        @foreach (var product in Model.MostDiscountProduct)
-                        {
-                            @await Html.PartialAsync("_ProductPartial", product)
-                        }
-                    </div>
+                    @await Html.PartialAsync("_ProductPartial", Model.MostDiscountProduct)
                 }
                 else
                 {
-                    <span>محصولی موجود نیست</span>
+                    <span>محصولی موجود نیست</span>                
                 }
             </div>
 
@@ -65,13 +53,7 @@
             <div class="featured-product most-visited">
                 @if (Model?.MostViewdProduct?.Any() == true)
                 {
-                    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-md-4"
-                         data-aos="fade-up" data-aos-duration="1000">
-                        @foreach (var product in Model.MostViewdProduct)
-                        {
-                            @await Html.PartialAsync("_ProductPartial", product)
-                        }
-                    </div>
+                    @await Html.PartialAsync("_ProductPartial", Model.MostViewdProduct)
                 }
                 else
                 {

@@ -19,8 +19,8 @@ namespace Shop.Application.Contract.Order.Command
         Task<OperationResult> UpsertOrderAddressAsync(int UserId, UpsertOrderAddressCommandModel command);
         Task<OperationResult> SetOrderPaymentType(OrderPayment orderPayment, int userId);
         Task<OperationResult> FinalizePaymentAsync(int UserId);
-
-
+        Task<OperationResult> CancellOrderByUserAsync(int orderId);
+        Task<OperationResult> CancellOrderByAdminAsync(int orderId);
     }
 
     public class UpsertOrderAddressCommandModel

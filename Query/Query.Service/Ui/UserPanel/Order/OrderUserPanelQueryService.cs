@@ -66,14 +66,16 @@ namespace Query.Service.Ui.UserPanel.Order
 
             var order = await _shopContext.Orders
       .AsNoTracking()
-      .Include(o => o.OrderSellers)
+      .Include(o => o.OrderSellers.Where(s => s.Status != OrderSellerStatus.لغو_شده_توسط_مشتری
+                && s.Status != OrderSellerStatus.لغو_شده_توسط_فروشنده
+                && s.Status != OrderSellerStatus.لغو_شده_توسط_ادمین))
           .ThenInclude(os => os.OrderItems)
               .ThenInclude(oi => oi.ProductSell)
                   .ThenInclude(ps => ps.Product)
       .Include(o => o.OrderSellers)
           .ThenInclude(os => os.Seller)
-          .Include(x=>x.OrderAddress)
-          
+          .Include(x => x.OrderAddress)
+
       .FirstOrDefaultAsync(o => o.UserId == userId &&
                                o.OrderStatus == OrderStatus.پرداخت_نشده);
 
@@ -102,7 +104,8 @@ namespace Query.Service.Ui.UserPanel.Order
                 PaymentPriceSeller = order.PaymentPriceSeller,
                 DiscountPrice = order.Price - order.PriceAfterOff,
 
-                OrderSellers = order.OrderSellers.Select(s => new OrderSellerUserPanelQueryModel
+                OrderSellers = order.OrderSellers
+                .Select(s => new OrderSellerUserPanelQueryModel
                 {
                     Id = s.Id,
                     DiscountId = s.DiscountId,
@@ -142,7 +145,7 @@ namespace Query.Service.Ui.UserPanel.Order
                 }
             }
 
-       
+
             result.Address = new OrderAddressQueryModel
             {
                 FullName = order.OrderAddress.FullName,
@@ -161,13 +164,13 @@ namespace Query.Service.Ui.UserPanel.Order
 
         public async Task<OrderUserPanelViewModel> GetOrderDetailsAsync(int userId, int orderId)
         {
-            if (userId <= 0  || orderId <=0)
+            if (userId <= 0 || orderId <= 0)
                 return null;
 
             var order = await _shopContext.Orders
       .AsNoTracking()
-      .Where(x=>x.UserId==userId && x.Id ==orderId)
-      .Include(x=>x.OrderAddress)
+      .Where(x => x.UserId == userId && x.Id == orderId)
+      .Include(x => x.OrderAddress)
       .Include(o => o.OrderSellers)
           .ThenInclude(os => os.OrderItems)
               .ThenInclude(oi => oi.ProductSell)
@@ -178,7 +181,7 @@ namespace Query.Service.Ui.UserPanel.Order
 
             if (order == null)
                 return null;
-           
+
             var result = new OrderUserPanelViewModel
             {
                 OrderId = order.Id,
@@ -192,18 +195,21 @@ namespace Query.Service.Ui.UserPanel.Order
                 PaymentPrice = order.PaymentPrice,
                 OrderPayment = order.OrderPayment,
                 PaymentPriceSeller = order.PaymentPriceSeller,
+                Status = ( order.OrderSellers.Any(s => s.Status != OrderSellerStatus.لغو_شده_توسط_فروشنده
+                && s.Status != OrderSellerStatus.لغو_شده_توسط_ادمین) == true ? order.OrderStatus : OrderStatus.لغو_شده_توسط_ادمین),
                 DiscountPrice = order.Price - order.PriceAfterOff,
 
                 OrderSellers = order.OrderSellers.Select(s => new OrderSellerUserPanelQueryModel
                 {
                     Id = s.Id,
+                    status = s.Status,
                     DiscountId = s.DiscountId,
                     SellerCityId = s.Seller.CityId,
                     DiscountPercent = s.DiscountPercent,
                     PaymentPrice = s.PaymentPrice,
                     Price = s.Price,
                     DiscountTitle = s.DiscountTitle,
-                    ImageName=s.Seller.ImageName,
+                    ImageName = s.Seller.ImageName,
                     PriceAfterOff = s.PriceAfterOff > 0 ? s.PriceAfterOff : s.Price,
                     PostPrice = s.PostPrice,
                     PostTitle = s.PostTitle,
@@ -225,8 +231,8 @@ namespace Query.Service.Ui.UserPanel.Order
                     }).ToList()
                 }).ToList()
             };
-          
-    
+
+
             result.Address = new OrderAddressQueryModel
             {
                 FullName = order.OrderAddress.FullName,
@@ -246,9 +252,9 @@ namespace Query.Service.Ui.UserPanel.Order
         public async Task<List<OrdersForUserPanelQueryService>> GetOrdersAsync(int userId)
         {
             var orders = await _shopContext.Orders.Where(u => u.UserId == userId)
-                .Include(x=>x.OrderSellers)
-                .ThenInclude(x=>x.OrderItems)
-                 .Select(x => new OrdersForUserPanelQueryService(x.Id, x.UpdateDate.ToPersainDate(), x.PaymentPrice,x.OrderStatus))
+                .Include(x => x.OrderSellers)
+                .ThenInclude(x => x.OrderItems)
+                 .Select(x => new OrdersForUserPanelQueryService(x.Id, x.UpdateDate.ToPersainDate(), x.PaymentPrice, x.OrderStatus))
                  .ToListAsync();
             if (orders == null) return new();
             return orders;

@@ -67,6 +67,7 @@ namespace Query.Service.Ui.UserPanel.Seller
             var result = new Contract.UI.UserPanel.Seller.OrderUserPanelViewModel
             {
                 OrderId = order.Id,
+                SellerId=sellerId,
                 OrderAddressId = order.OrderAddressId,
                 DiscountId = order.DiscountId,
                 DiscountPercent = order.DiscountPercent,
@@ -78,6 +79,7 @@ namespace Query.Service.Ui.UserPanel.Seller
                 OrderPayment = order.OrderPayment,
                 PaymentPriceSeller = order.PaymentPriceSeller,
                 DiscountPrice = order.Price - order.PriceAfterOff,
+                OrderSellerStatus= order.OrderSellers.Single(x => x.SellerId == sellerId && x.OrderId == orderId).Status
 
             };
             result.OrderItems = order.OrderSellers.Where(x => x.SellerId == sellerId &&  x.OrderId==orderId)

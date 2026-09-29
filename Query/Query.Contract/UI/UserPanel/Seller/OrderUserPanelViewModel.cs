@@ -6,6 +6,7 @@ namespace Query.Contract.UI.UserPanel.Seller
     public class OrderUserPanelViewModel
     {
         public int OrderId { get; set; }
+        public int SellerId { get; set; }
         public OrderPayment OrderPayment { get; set; }
         public int? OrderAddressId { get; set; }
         public string? DiscountTitle { get; set; }
@@ -13,6 +14,7 @@ namespace Query.Contract.UI.UserPanel.Seller
         public int DiscountPercent { get; set; }
         public int Price { get; set; }
         public int PriceAfterOff { get; set; }
+        public OrderSellerStatus OrderSellerStatus { get; set; }
         public int PaymentPriceSeller { get; set; }
         public int PostPrice { get; set; }
         public int PaymentPrice { get; set; }

@@ -1,14 +1,12 @@
 ﻿@using Query.Contract.UI.UserPanel.Order
 @using Shared.Application
+@using Shared.Domain.Enums;
 @model OrderUserPanelViewModel
 
 <div id="oup-order-detail-page" class="oup-order-detail-page">
-
-
     <!-- =====================================================
          Page Header
          ====================================================== -->
-
     <div class="oup-page-header">
 
         <div class="oup-header-content">
@@ -52,33 +50,171 @@
     <!-- =====================================================
          Payment Status
          ====================================================== -->
+    <!-- Order Status -->
 
-    <div class="oup-payment-status">
+    <div id="oup-seller-status-panel"
+         class="oup-seller-status-panel">
 
-        <div class="oup-payment-status-icon">
-            ✓
+        <div class="oup-seller-status-header">
+
+            <div class="oup-seller-status-header-content">
+
+                <div class="oup-seller-status-icon">
+                    📦
+                </div>
+
+                <div class="oup-seller-status-title">
+
+                    <h2>
+                        وضعیت سفارش
+                    </h2>
+
+                    <span>
+                        وضعیت فعلی سفارش را انتخاب کنید
+                    </span>
+
+                </div>
+
+            </div>
+
         </div>
 
-        <div class="oup-payment-status-content">
+        
+   
+ 
 
-            <strong>
-                پرداخت موفق
-            </strong>
+        <div id="oup-seller-status-panel"
+             class="oup-seller-status-panel">
 
-            <span>
-                پرداخت سفارش با موفقیت انجام شده است.
-            </span>
+            <div class="oup-seller-status-content">
+
+                <div class="oup-seller-status-main">
+
+                    <div class="oup-seller-status-icon">
+
+                        @switch (Model.Status)
+                        {
+                            case OrderStatus.لغو_شده_توسط_مشتری:
+                            case OrderStatus.لغو_شده_توسط_ادمین:
+                            case OrderStatus.پرداخت_نشده:
+
+                                <i class="fa-solid fa-xmark oup-status-danger"></i>
+
+                                break;
+
+                            case OrderStatus.پرداخت_شده:
+                            case OrderStatus.ارسال_شده:
+
+                                <i class="fa-solid fa-check oup-status-success"></i>
+
+                                break;
+
+                            default:
+
+                                <i class="fa-solid fa-circle-info oup-status-default"></i>
+
+                                break;
+                        }
+
+                    </div>
+
+
+                    <div class="oup-seller-status-info">
+
+                        @switch (Model.Status)
+                        {
+                            case OrderStatus.لغو_شده_توسط_مشتری:
+
+                                <strong class="oup-status-danger">
+                                    سفارش توسط شما لغو شده است.
+                                </strong>
+
+                                break;
+
+                            case OrderStatus.لغو_شده_توسط_ادمین:
+
+                                <strong class="oup-status-danger">
+                                    سفارش توسط ادمین لغو شده است.
+                                </strong>
+
+                                break;
+
+                            case OrderStatus.پرداخت_نشده:
+
+                                <strong class="oup-status-danger">
+                                    سفارش در انتظار پرداخت می‌باشد.
+                                </strong>
+
+                                break;
+
+                            case OrderStatus.پرداخت_شده:
+
+                                <strong class="oup-status-success">
+                                    سفارش پرداخت شده و در حال آماده‌سازی برای ارسال است.
+                                </strong>
+
+                                break;
+
+                            case OrderStatus.ارسال_شده:
+
+                                <strong class="oup-status-success">
+                                    سفارش برای شما ارسال شده است.
+                                </strong>
+
+                                break;
+
+                            default:
+
+                                <strong class="oup-status-default">
+                                    وضعیت سفارش مشخص نیست.
+                                </strong>
+
+                                break;
+                        }
+
+                    </div>
+
+
+                    @if (Model.Status == OrderStatus.پرداخت_نشده ||
+                         Model.Status == OrderStatus.پرداخت_شده)
+                    {
+                        <div class="oup-seller-status-action">
+
+                            <a href="javascript:void(0);"
+                               class="oup-cancel-order-button"
+                               data-order-id="@Model.OrderId">
+
+                                <i class="fa-solid fa-ban"></i>
+
+                                <span>لغو سفارش</span>
+
+                            </a>
+
+                        </div>
+                    }
+                    @if (Model.Status == OrderStatus.پرداخت_نشده)
+                    {
+                        <div class="oup-seller-status-action">
+
+                            <a href="/Checkout"
+                               class="oup-cancel-order oup-payment-button">
+
+                                <i class="fa-solid fa-credit-card"></i>
+
+                                <span>پرداخت</span>
+
+                            </a>
+
+                        </div>
+                    }
+
+                </div>
+
+            </div>
 
         </div>
 
-        <div class="oup-payment-status-date">
-
-            سفارش شماره
-            <strong>
-                @Model.OrderId
-            </strong>
-
-        </div>
+        
 
     </div>
 
@@ -247,7 +383,6 @@
                 <!-- =================================================
                      Sellers Loop
                      ================================================== -->
-
                 @if (Model.OrderSellers != null && Model.OrderSellers.Any())
                 {
 
@@ -256,24 +391,36 @@
 
                         <div class="oup-seller-card">
 
-
+                            @if (seller.status == OrderSellerStatus.لغو_شده_توسط_فروشنده)
+                            {
+                                <div class="oup-seller-status-cancelled">
+                                    <i class="fa-solid fa-ban"></i>
+                                    <span>
+                                        لغو شده توسط فروشنده
+                                    </span>
+                                </div>
+                            }
+                            else if (seller.status == OrderSellerStatus.لغو_شده_توسط_ادمین)
+                            {
+                                <div class="oup-seller-status-cancelled">
+                                    <i class="fa-solid fa-ban"></i>
+                                    <span>
+                                        لغو شده توسط ادمین
+                                    </span>
+                                </div>
+                            }
                             <!-- =========================================
                                  Seller Header
                                  ========================================== -->
-
                             <div class="oup-seller-header">
-
 
                                 <div class="oup-seller-info">
 
-
                                     <div class="oup-seller-avatar">
-                                         <img
-                                                        src="@FileDirectories.SellerImageDirectory100@seller.ImageName"
-                                                        alt="@seller.SellerName"
-                                                        asp-append-version="true" />
+                                        <img src="@FileDirectories.SellerImageDirectory100@seller.ImageName"
+                                             alt="@seller.SellerName"
+                                             asp-append-version="true" />
                                     </div>
-
 
                                     <div>
 
@@ -281,14 +428,12 @@
                                             @seller.SellerName
                                         </h3>
 
-
                                         <div class="oup-seller-meta">
 
                                             <span>
                                                 🏪 شناسه فروشنده:
                                                 @seller.SellerId
                                             </span>
-
 
                                             @if (!string.IsNullOrWhiteSpace(seller.PostTitle))
                                             {
@@ -304,6 +449,8 @@
                                 </div>
 
 
+                              
+
 
                                 <div class="oup-seller-price">
 
@@ -317,7 +464,6 @@
 
                                 </div>
 
-
                             </div>
 
 
@@ -325,10 +471,9 @@
                             <!-- =========================================
                                  Seller Discount
                                  ========================================== -->
-
                             @if (seller.DiscountId > 0 ||
-                                 seller.DiscountPercent > 0 ||
-                                 !string.IsNullOrWhiteSpace(seller.DiscountTitle))
+                                                             seller.DiscountPercent > 0 ||
+                                                             !string.IsNullOrWhiteSpace(seller.DiscountTitle))
                             {
 
                                 <div class="oup-seller-discount">
@@ -404,18 +549,16 @@
                                                 @if (!string.IsNullOrWhiteSpace(item.ImageName))
                                                 {
 
-                                                    <img
-                                                        src="@FileDirectories.ProductImageDirectory100@item.ImageName"
-                                                        alt="@item.ImageAlt"
-                                                        asp-append-version="true" />
+                                                    <img src="@FileDirectories.ProductImageDirectory100@item.ImageName"
+                                                         alt="@item.ImageAlt"
+                                                         asp-append-version="true" />
 
                                                 }
                                                 else
                                                 {
 
-                                                    <img
-                                                        src="https://placehold.co/160x160/f7f7f7/777?text=Product"
-                                                        alt="@item.ProductName" />
+                                                    <img src="https://placehold.co/160x160/f7f7f7/777?text=Product"
+                                                         alt="@item.ProductName" />
 
                                                 }
 
@@ -508,7 +651,7 @@
                                         text-align: center;
                                         color: #888;
                                         font-size: 12px;
-                                    ">
+                                        ">
                                         محصولی برای این فروشنده ثبت نشده است.
                                     </div>
 
@@ -593,7 +736,7 @@
                         text-align: center;
                         color: #888;
                         font-size: 13px;
-                    ">
+                        ">
                         هیچ فروشنده‌ای برای این سفارش ثبت نشده است.
                     </div>
 
@@ -617,7 +760,6 @@
             <!-- =================================================
                  Address
                  ================================================== -->
-
             @if (Model.Address != null)
             {
 
@@ -726,7 +868,6 @@
 
 
                         <!-- National Code -->
-
                         @if (!string.IsNullOrWhiteSpace(Model.Address.NationalCode))
                         {
 
@@ -757,10 +898,9 @@
             <!-- =================================================
                  Order Discount
                  ================================================== -->
-
             @if (Model.DiscountId > 0 ||
-                 Model.DiscountPercent > 0 ||
-                 !string.IsNullOrWhiteSpace(Model.DiscountTitle))
+                             Model.DiscountPercent > 0 ||
+                             !string.IsNullOrWhiteSpace(Model.DiscountTitle))
             {
 
                 <section class="oup-sidebar-card">
@@ -990,3 +1130,19 @@
 
 
 </div>
+<script>
+    $(document).on('click', '.oup-cancel-order-button', function () {
+
+        const orderId = $(this).data('order-id');
+
+        AjaxSweetRefresh(
+            "لغو سفارش",
+            "آیا از لغو این سفارش مطمئن هستید؟",
+            "warning",
+            "بله، لغو شود",
+            "انصراف",
+            ` /Profile/Order/CancellOrderByUser?orderId=${orderId}`
+        );
+
+    });
+</script>

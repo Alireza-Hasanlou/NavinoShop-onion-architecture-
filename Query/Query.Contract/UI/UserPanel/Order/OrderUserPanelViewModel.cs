@@ -6,6 +6,7 @@ namespace Query.Contract.UI.UserPanel.Order
     {
         public int OrderId { get; set; }
         public OrderPayment OrderPayment { get; set; }
+        public OrderStatus Status { get; set; }
         public int? OrderAddressId { get; set; }
         public string? DiscountTitle { get; set; }
         public int DiscountId { get; set; }

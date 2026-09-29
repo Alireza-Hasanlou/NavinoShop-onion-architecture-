@@ -67,6 +67,7 @@ namespace Query.Contract.Admin.Order
         public int PriceAfterOff { get; set; }
         public int PaymentPrice { get; set; }
         public int DiscountPrice { get; set; }
+        public OrderSellerStatus status { get; set; }
         public List<OrderItemAdminQueryModel> Items { get; set; }
     }
      public class OrderItemAdminQueryModel

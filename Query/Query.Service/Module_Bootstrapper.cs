@@ -6,6 +6,7 @@ using Financial.Query.Bootstrapper;
 using Microsoft.Extensions.DependencyInjection;
 using PostModule.Query.Bootstrapper;
 using Query.Contract.Admin.Comment;
+using Query.Contract.Admin.Data;
 using Query.Contract.Admin.Email.EmailUser;
 using Query.Contract.Admin.Email.MessageUser;
 using Query.Contract.Admin.Financial.Transaction;
@@ -37,6 +38,7 @@ using Query.Service.Admin.Seller;
 using Query.Service.Admin.Seo;
 using Query.Service.Admin.User;
 using Query.Service.Cart;
+using Query.Service.Data;
 using Query.Service.Site.Page;
 using Query.Service.Ui.Blogs;
 using Query.Service.Ui.Comments;
@@ -86,6 +88,7 @@ namespace Query.Service
             Services.AddTransient<IAdminUserQueryService, AdminUserQueryService>();
             Services.AddTransient<IAdminTransactionQueryService, AdminTransactionQueryService>();
             Services.AddTransient<IOrderAdminQueryService , OrderAdminQueryService>();
+            Services.AddTransient<IAdminDataQueryService,AdminDataQueryService>();
             #endregion
             #region Ui
 

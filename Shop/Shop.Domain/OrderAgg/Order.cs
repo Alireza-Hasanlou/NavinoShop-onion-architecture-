@@ -41,7 +41,7 @@ namespace Shop.Domain.OrderAgg
         {
             get
             {
-                return OrderSellers.Sum(o => o.PaymentPrice);
+                return OrderSellers .Sum(o => o.PaymentPrice);
             }
         }
         public int PostPrice

@@ -1,4 +1,5 @@
-﻿using Shared.Application;
+﻿using Microsoft.EntityFrameworkCore;
+using Shared.Application;
 using Shared.Application.Validations;
 using Shared.Domain.Enums;
 using Shop.Application.Contract.Order.Command;
@@ -22,7 +23,9 @@ namespace Shop.Application.Commands
         private readonly IOrderAddressRepository _orderAddressRepository;
         private readonly IProductSellRepository _productsellRepository;
 
-        public OrderCommands(IOrderRepository orderRepository, IOrderAddressRepository orderAddressRepository, IProductSellRepository productsellRepository)
+        public OrderCommands(IOrderRepository orderRepository,
+            IOrderAddressRepository orderAddressRepository,
+            IProductSellRepository productsellRepository)
         {
             _orderRepository = orderRepository;
             _orderAddressRepository = orderAddressRepository;
@@ -335,9 +338,19 @@ namespace Shop.Application.Commands
 
             if (await _orderRepository.SaveAsync())
                 return new(true);
-            
+
 
             return new(false, "خطا در نهایی کردن پرداخت لطفا با مدیر سایت تماس بگیرید");
         }
+
+
+
+        public async Task<OperationResult> CancellOrderByUserAsync(int orderId) =>
+            await _orderRepository.CancellOrderByUserAsync(orderId);
+
+        public async Task<OperationResult> CancellOrderByAdminAsync(int orderId) =>
+            await _orderRepository.CancellOrderByAdminAsync(orderId);
+
+
     }
 }

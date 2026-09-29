@@ -9,8 +9,8 @@
     <!-- فیلترها -->
     <div class="order-filters">
         <div class="filter-tabs">
-            <button class="filter-tab active" data-tab="paid">پرداخت شده</button>
-            <button class="filter-tab" data-tab="pending">در انتظار</button>
+            <button class="filter-tab active" data-tab="pending">در انتظار</button>
+            <button class="filter-tab " data-tab="paid">پرداخت شده</button>
             <button class="filter-tab" data-tab="delivered">تحویل‌شده</button>
             <button class="filter-tab" data-tab="cancelled">لغو‌شده</button>
         </div>
@@ -27,14 +27,15 @@
 
                 switch (order.status)
                 {
-                    case OrderStatus.پرداخت_شده:
-                        statusClass = "status-paid";
-                        statusText = "پرداخت شده";
-                        break;
                     case OrderStatus.پرداخت_نشده:
                         statusClass = "status-pending";
                         statusText = "در انتظار";
                         break;
+                    case OrderStatus.پرداخت_شده:
+                        statusClass = "status-paid";
+                        statusText = "پرداخت شده";
+                        break;
+                   
                     case OrderStatus.ارسال_شده:
                         statusClass = "status-delivered";
                         statusText = "تحویل‌شده";

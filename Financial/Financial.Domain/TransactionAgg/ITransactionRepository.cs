@@ -1,4 +1,6 @@
-﻿using Shared.Domain;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using Shared.Application;
+using Shared.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +12,12 @@ namespace Financial.Domain.TransactionAgg
     public interface ITransactionRepository : IGenericRepository<Transaction, long>
     {
         Task<Transaction> GetbyAutorityAsync(string autority);
+        Task<IDbContextTransaction> BeginTransactionAsync();
+
+        Task CommitTransactionAsync(
+            IDbContextTransaction transaction);
+
+        Task RollbackTransactionAsync(
+            IDbContextTransaction transaction);
     }
 }

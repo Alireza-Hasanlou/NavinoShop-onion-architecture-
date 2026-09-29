@@ -22,13 +22,19 @@ using Shared.Application.Auth;
 using Shared.Domain.Enums;
 using Shop.Application.Contract.Cart;
 using Shop.Application.Contract.Order.Command;
+using Shop.Application.Contract.Order.Query;
 using Shop.Application.Contract.OrderSeller.Command;
 using Shop.Application.Contract.ProductSell.Command;
+using Shop.Application.Contract.Seller.Command;
+using Shop.Application.Contract.Seller.Query;
+using Shop.Domain.OrderAgg;
+using Shop.Domain.SellerAgg;
 using Store.Application.Contract.StoreProduct.Command;
 using System.Net;
 using System.Text;
 using System.Text.Json;
 using Users.Application.Contract.UserAddressService.Query;
+using Users.Domain.User.Agg;
 
 namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
 {
@@ -56,7 +62,9 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
         private readonly IProductSellCommands _productSellCommands;
         private readonly IWalletQueries _walletQueries;
         private readonly ICartCommands _cartCommands;
+        private readonly ISellerQueries _sellerQueries;
         private readonly IPostQuery _postQuery;
+        private readonly IOrderQueries _orderQueries;
         private readonly SiteData _siteData;
         private readonly IMapper _mapper;
         private int _userId;
@@ -64,9 +72,10 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
         public OrderController(IAuthService authService, IOrderCommands orderCommands, ICartUiQueryService cartUiQueryService,
             IOrderDiscountsQueries orderDiscountsQueries, IUserAddressUiQueryService userAddressUiQueryService,
             IPostCalculateApplication postCalculateApplication, IUserAddressQueryService userAddressQueryService,
-            IOrderUserPanelQueryService orderUserPanelQuery, IOrderDiscountsCommands orderDiscountsCommands,
-            IOrderSellerCommands orderSellerCommands, ITransactionQueries transactionQueries, IStoreProductCommands storeProductCommands, ITransactionCommands transactionCommands,
-            IWalletCommands walletCommands, IProductSellCommands productSellCommands, IWalletQueries walletQueries, ICartCommands cartCommands, IPostQuery postQuery, IOptions<SiteData> siteData, IMapper mapper)
+            IOrderUserPanelQueryService orderUserPanelQuery, IOrderDiscountsCommands orderDiscountsCommands, ISellerQueries sellerQueries,
+            IOrderSellerCommands orderSellerCommands, ITransactionQueries transactionQueries, IStoreProductCommands storeProductCommands,
+            ITransactionCommands transactionCommands, IWalletCommands walletCommands, IProductSellCommands productSellCommands,
+            IWalletQueries walletQueries, ICartCommands cartCommands, IPostQuery postQuery, IOrderQueries orderQueries, IOptions<SiteData> siteData, IMapper mapper)
 
         {
 
@@ -79,6 +88,7 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
             _userAddressQueryService = userAddressQueryService;
             _orderUserPanelQuery = orderUserPanelQuery;
             _orderDiscountsCommands = orderDiscountsCommands;
+            _sellerQueries = sellerQueries;
             _orderSellerCommands = orderSellerCommands;
             _transactionQueries = transactionQueries;
             _storeProductCommands = storeProductCommands;
@@ -88,6 +98,7 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
             _walletQueries = walletQueries;
             _cartCommands = cartCommands;
             _postQuery = postQuery;
+            _orderQueries = orderQueries;
             _siteData = siteData.Value;
             _mapper = mapper;
         }
@@ -117,6 +128,7 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
                 if (order.OrderSellers.Count < 1)
                     return NotFound();
 
+                await _cartCommands.ClearCartAsync(_userId);
                 return View(order);
             }
             ViewData["Error"] = UpsertRes.Message;
@@ -318,7 +330,7 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
                 if (transaction?.Id == 0)
                     return NotFound();
 
-                var transactionRes = await ProcessWalletTransaction(transaction , openOrder);
+                var transactionRes = await ProcessWalletTransaction(transaction, openOrder);
                 if (!transactionRes.Success)
                     return new JsonResult(new { success = false, message = transactionRes.Message });
 
@@ -420,8 +432,150 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("/Profile/Order/ChangeOrderSellerStatus")]
+        public async Task<IActionResult> ChangeOrderSellerStatus(OrderSellerStatus status, int OrderId, int SellerId)
+        {
+            if (OrderId <= 0 || SellerId <= 0)
+                return NotFound();
+
+            var userId = _authService.GetLoginUserId();
+            bool ok = await _sellerQueries.IsSellerForUser(userId, SellerId);
+            if (!ok)
+                return NotFound();
 
 
+            if (status == OrderSellerStatus.لغو_شده_توسط_فروشنده)
+
+            {
+                try
+                {
+                    var order = await _orderQueries.GetFactorforordercancellation(OrderId, SellerId);
+                    var NewTransation = new CreateTransacionCommandModel
+                    {
+                        Authority = "",
+                        Description = " واریز وجه به مشتری بابت لغو سفارش توسط فروشنده",
+                        Portal = TransactionPortal.کیف_پول,
+                        Price = order.PaymentPrice,
+                        TransactionFor = TransactionFor.Wallet,
+                        TransactionSource = TransactionSource.بازگشت_ریز_فاکتور,
+                        TransactionType = TransactionType.واریز,
+                        TransationById = userId,
+                        UserId = order.CustomerId,
+                    };
+                    var transaction = await _transactionCommands.CreateAsync(NewTransation);
+                    long transactionId = Convert.ToInt64(transaction.Data);
+                    var DepositRes = await _walletCommands.DepositAsync(order.CustomerId, order.PaymentPrice, transactionId);
+                    if (DepositRes.Success)
+                        await _transactionCommands.Payment(TransactionStatus.موفق, transactionId, string.Empty);
+                    else
+                        return new JsonResult(new { success = false, message = "خطا در بازگشت وجه به مشتری" });
+                }
+                catch (Exception)
+                {
+                    return new JsonResult(new { success = false, message = "خطا در بازگشت وجه به مشتری" });
+
+                }
+            }
+            OperationResult res = await _orderSellerCommands.ChangeOrderSellerStatusAsync(SellerId, OrderId, status);
+            return new JsonResult(new { success = res.Success, message = res.Message });
+        }
+
+        [Route("/Profile/Order/CancellOrderByUser")]
+        public async Task<IActionResult> CancellOrderByUser(int orderId)
+        {
+            if (orderId < 1)
+                return NotFound();
+
+            try
+            {
+                var order = await _orderQueries
+                    .GetFactorforordercancellation(orderId, 0);
+
+                if (order == null)
+                {
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        message = "سفارش یافت نشد"
+                    });
+                }
+
+
+                var refundResult = await _transactionCommands
+                    .RefundToWalletAsync(
+                        order.PaymentPrice,
+                        order.CustomerId,
+                        "واریز وجه به کیف پول مشتری به علت لغو سفارش توسط مشتری",
+                        order.CustomerId);
+
+                if (!refundResult.Success)
+                {
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        message = refundResult.Message
+                    });
+                }
+
+                long transactionId = Convert.ToInt64(refundResult.Data);
+
+
+                var cancelResult = await _orderCommands
+                    .CancellOrderByUserAsync(orderId);
+
+
+                if (cancelResult.Success)
+                {
+                    await _transactionCommands.Payment(
+                        TransactionStatus.موفق,
+                        transactionId,
+                        string.Empty);
+
+                    return new JsonResult(new
+                    {
+                        success = true,
+                        message = "سفارش با موفقیت لغو و وجه آن به کیف پول شما بازگردانده شد"
+                    });
+                }
+
+
+                var withdrawResult = await _walletCommands
+                    .WithdrawAsync(
+                        order.CustomerId,
+                        order.PaymentPrice,
+                        0);
+
+                if (withdrawResult.Success)
+                {
+                    await _transactionCommands.Payment(
+                        TransactionStatus.نا_موفق,
+                        transactionId,
+                        cancelResult.Message);
+
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        message = "لغو سفارش انجام نشد و وجه به حالت قبل بازگردانده شد"
+                    });
+                }
+
+
+                return new JsonResult(new
+                {
+                    success = false,
+                    message = "لغو سفارش انجام نشد و خطایی در بازگردانی وضعیت مالی رخ داد"
+                });
+            }
+            catch (Exception)
+            {
+                return new JsonResult(new
+                {
+                    success = false,
+                    message = "خطایی در لغو سفارش رخ داد"
+                });
+            }
+        }
 
         #region PrivateMethod
         private async Task<IActionResult> ProcessZarinPalPayment(OrderUserPanelViewModel openOrder, int amount)
@@ -476,7 +630,6 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
                         OperationResult finalizeResult = await _orderCommands.FinalizePaymentAsync(_userId);
                         if (finalizeResult.Success)
                         {
-                            await _cartCommands.ClearCartAsync(_userId);
                             await UpdateInventoryAfterPaymentAsync(openOrder);
                         }
 
@@ -508,7 +661,7 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
             TempData["Error"] = "درگاه سامان در حال پیاده‌سازی است";
             return RedirectToAction("Wallet");
         }
-        private async Task<OperationResult> ProcessWalletTransaction(TransationViewModel transaction , OrderUserPanelViewModel openOrder)
+        private async Task<OperationResult> ProcessWalletTransaction(TransationViewModel transaction, OrderUserPanelViewModel openOrder)
         {
             var deposit = await _walletCommands.WithdrawAsync(transaction.UserId, transaction.Price, transaction.Id);
             if (deposit.Success)
@@ -553,7 +706,7 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
                     if (changeAmountRes.Success)
                     {
 
-                         await _storeProductCommands.CreateAsync(new CreateStoreProductCommandModel
+                        await _storeProductCommands.CreateAsync(new CreateStoreProductCommandModel
                         {
                             Count = item.Quantity,
                             ProdcutSellId = item.ProductSellId,

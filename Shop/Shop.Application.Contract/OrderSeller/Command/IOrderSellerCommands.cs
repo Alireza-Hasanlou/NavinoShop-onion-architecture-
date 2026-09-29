@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Shared.Application;
+using Shared.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +10,7 @@ namespace Shop.Application.Contract.OrderSeller.Command;
 public interface IOrderSellerCommands
 {
     Task<PricesAfterAddPost> AddPostToSellerAsync(AddPostToSellerDto addPostToSellerDto);
+    Task<OperationResult> ChangeOrderSellerStatusAsync(int sellerId, int orderId, OrderSellerStatus status);
 }
 
 public record AddPostToSellerDto(int userId, int orderId, int orderSellerId, int postId, int postPrice, string postTitle);

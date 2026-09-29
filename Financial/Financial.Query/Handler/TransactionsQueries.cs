@@ -36,8 +36,7 @@ namespace Financial.Query.Handler
             pageId++;
             var model = new TransactionListLoading();
             var transations = _transactionRepository.GetAllBy(t => t.UserId == UserId
-            && t.TransactionFor == transactionFor
-            && t.Status == TransactionStatus.موفق);
+            && t.TransactionFor == transactionFor);
             model.GetData(transations, pageId, 3, 5);
             model.transactions = transations
                 .OrderByDescending(d => d.CreateDate)

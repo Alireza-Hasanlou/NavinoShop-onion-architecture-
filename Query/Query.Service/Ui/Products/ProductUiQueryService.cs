@@ -640,13 +640,30 @@ namespace Query.Service.Ui.Products
 
             discountPercent = 0,
 
-            PriceAfterOff = x.Product.ProductSells
-                .OrderBy(ps => ps.Price)
-                .Select(ps => (decimal)ps.Price)
-                .FirstOrDefault()
+            PriceAfterOff = 0
         })
         .ToListAsync();
 
+            var Discounts = await _discountContext.ProductDiscounts
+                .Where(x => x.StartDate.Date <= DateTime.Now.Date
+                 && x.EndDate.Date >= DateTime.Now.Date)
+                .OrderByDescending(x => x.Percent)
+                .ToListAsync();
+
+    
+
+            foreach (var product in result)
+            {
+                var discount = Discounts.FirstOrDefault(x => x.ProductId == product.ProductId);
+    
+                if (discount!=null)
+                {
+
+                        product.PriceAfterOff = (product.Price * (decimal)discount.Percent) / 100;
+                        product.discountPercent = discount.Percent;
+                    
+                }
+            }
 
             return result;
 

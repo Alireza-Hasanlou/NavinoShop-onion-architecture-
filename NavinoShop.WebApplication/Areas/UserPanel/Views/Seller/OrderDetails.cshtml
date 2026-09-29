@@ -1,6 +1,8 @@
 ﻿@using Query.Contract.UI.UserPanel.Seller
 @using Shared.Application
+@using Shared.Domain.Enums
 @model OrderUserPanelViewModel
+
 <div id="oup-order-detail-page" class="oup-order-detail-page">
 
     <!-- =====================================================
@@ -47,27 +49,266 @@
     <!-- =====================================================
          Payment Status
          ====================================================== -->
+    <!-- =====================================================
+     Payment / Seller Order Status
+     ====================================================== -->
+    <!-- Order Status -->
 
-    <div class="oup-payment-status">
+    <div id="oup-seller-status-panel"
+         class="oup-seller-status-panel">
 
-        <div class="oup-payment-status-icon">
-            ✓
+        <div class="oup-seller-status-header">
+
+            <div class="oup-seller-status-header-content">
+
+                <div class="oup-seller-status-icon">
+                    📦
+                </div>
+
+                <div class="oup-seller-status-title">
+
+                    <h2>
+                        وضعیت سفارش
+                    </h2>
+
+                    <span>
+                        وضعیت فعلی سفارش را انتخاب کنید
+                    </span>
+
+                </div>
+
+            </div>
+
         </div>
 
-        <div class="oup-payment-status-content">
+        
+   
+        @{
+            bool isOrderCancelled =
+                Model.OrderSellerStatus == OrderSellerStatus.لغو_شده_توسط_مشتری ||
+                Model.OrderSellerStatus == OrderSellerStatus.لغو_شده_توسط_فروشنده ||
+                Model.OrderSellerStatus == OrderSellerStatus.لغو_شده_توسط_ادمین;
+        }
 
-            <strong>
-                پرداخت موفق
-            </strong>
+        <div id="oup-seller-status-panel"
+             class="oup-seller-status-panel">
 
-            <span>
-                وضعیت پرداخت این سفارش با موفقیت ثبت شده است.
-            </span>
+            @if (isOrderCancelled)
+            {
+                <!-- =================================================
+             Cancelled Order
+             ================================================== -->
+
+                <div class="oup-seller-status-cancelled">
+
+                    <div class="oup-seller-status-cancelled-icon">
+                        <i class="fa-solid fa-ban"></i>
+                    </div>
+
+                    <div class="oup-seller-status-cancelled-content">
+
+                        <strong>
+                            @if (Model.OrderSellerStatus == OrderSellerStatus.لغو_شده_توسط_مشتری)
+                            {
+                                @:لغو شده توسط مشتری
+                            }
+                            else if (Model.OrderSellerStatus == OrderSellerStatus.لغو_شده_توسط_فروشنده)
+                            {
+                                @:لغو شده توسط فروشنده
+                            }
+                            else if (Model.OrderSellerStatus == OrderSellerStatus.لغو_شده_توسط_ادمین)
+                            {
+                                @:لغو شده توسط ادمین
+                            }
+                        </strong>
+
+                        <span>
+                            وضعیت این سفارش لغو شده است و امکان تغییر وضعیت آن وجود ندارد.
+                        </span>
+
+                    </div>
+
+                </div>
+            }
+            else
+            {
+                <!-- =================================================
+             Seller Order Status Header
+             ================================================== -->
+
+                <div class="oup-seller-status-header">
+
+                    <div class="oup-seller-status-header-content">
+
+                        <div class="oup-seller-status-icon">
+                            <i class="fa-solid fa-box"></i>
+                        </div>
+
+                        <div class="oup-seller-status-title">
+
+                            <h2>
+                                وضعیت سفارش
+                            </h2>
+
+                            <span>
+                                وضعیت فعلی سفارش را مشاهده و در صورت نیاز تغییر دهید
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+             Seller Order Status Buttons
+             ================================================== -->
+
+                <div id="oup-seller-status-buttons"
+                     class="oup-seller-status-buttons">
+
+                    <input type="hidden"
+                           value="@Model.SellerId"
+                           id="oup-seller-status-seller-id" />
+
+
+                    <!-- =================================================
+                 پرداخت شده
+                 ================================================== -->
+
+                    <button type="button"
+                            class="oup-seller-status-button
+                        oup-seller-status-button-success
+                        @(Model.OrderSellerStatus == OrderSellerStatus.پرداخت_شده
+                            ? "oup-seller-status-button-active"
+                            : "oup-seller-status-button-inactive")"
+                            data-order-id="@Model.OrderId"
+                            data-seller-id="@Model.SellerId"
+                            data-status="@((int)OrderSellerStatus.پرداخت_شده)"
+                            data-status-title="پرداخت شده">
+
+                        <span class="oup-seller-status-button-icon">
+                            <i class="fa-solid fa-dollar-sign"></i>
+                        </span>
+
+                        <span>
+                            پرداخت شده
+                        </span>
+
+                    </button>
+
+
+                    <!-- =================================================
+                 پرداخت نشده
+                 ================================================== -->
+
+                    <button type="button"
+                            class="oup-seller-status-button
+                        @(Model.OrderSellerStatus == OrderSellerStatus.پرداخت_نشده
+                            ? "oup-seller-status-button-active"
+                            : "oup-seller-status-button-inactive")"
+                            data-order-id="@Model.OrderId"
+                            data-seller-id="@Model.SellerId"
+                            data-status="@((int)OrderSellerStatus.پرداخت_نشده)"
+                            data-status-title="پرداخت نشده">
+
+                        <span class="oup-seller-status-button-icon">
+                            <i class="fa-regular fa-credit-card"></i>
+                        </span>
+
+                        <span>
+                            پرداخت نشده
+                        </span>
+
+                    </button>
+
+
+                    <!-- =================================================
+                 لغو شده توسط فروشنده
+                 ================================================== -->
+
+                    <button type="button"
+                            class="oup-seller-status-button
+                        @(Model.OrderSellerStatus == OrderSellerStatus.لغو_شده_توسط_فروشنده
+                            ? "oup-seller-status-button-active"
+                            : "oup-seller-status-button-inactive")"
+                            data-order-id="@Model.OrderId"
+                            data-seller-id="@Model.SellerId"
+                            data-status="@((int)OrderSellerStatus.لغو_شده_توسط_فروشنده)"
+                            data-status-title="لغو شده توسط فروشنده">
+
+                        <span class="oup-seller-status-button-icon">
+                            <i class="fa-solid fa-store-slash"></i>
+                        </span>
+
+                        <span>
+                            لغو شده توسط فروشنده
+                        </span>
+
+                    </button>
+
+
+                    <!-- =================================================
+                 در حال آماده سازی
+                 ================================================== -->
+
+                    <button type="button"
+                            class="oup-seller-status-button
+                        @(Model.OrderSellerStatus == OrderSellerStatus.در_حال_آماده_سازی
+                            ? "oup-seller-status-button-active"
+                            : "oup-seller-status-button-inactive")"
+                            data-order-id="@Model.OrderId"
+                            data-seller-id="@Model.SellerId"
+                            data-status="@((int)OrderSellerStatus.در_حال_آماده_سازی)"
+                            data-status-title="در حال آماده سازی">
+
+                        <span class="oup-seller-status-button-icon">
+                            <i class="fa-solid fa-gears"></i>
+                        </span>
+
+                        <span>
+                            در حال آماده سازی
+                        </span>
+
+                    </button>
+
+
+                    <!-- =================================================
+                 ارسال شده
+                 ================================================== -->
+
+                    <button type="button"
+                            class="oup-seller-status-button
+                        oup-seller-status-button-success
+                        @(Model.OrderSellerStatus == OrderSellerStatus.ارسال_شده
+                            ? "oup-seller-status-button-active"
+                            : "oup-seller-status-button-inactive")"
+                            data-order-id="@Model.OrderId"
+                            data-seller-id="@Model.SellerId"
+                            data-status="@((int)OrderSellerStatus.ارسال_شده)"
+                            data-status-title="ارسال شده">
+
+                        <span class="oup-seller-status-button-icon">
+                            <i class="fa-solid fa-truck"></i>
+                        </span>
+
+                        <span>
+                            ارسال شده
+                        </span>
+
+                    </button>
+
+                </div>
+            }
 
         </div>
+
+        
 
     </div>
 
+    
 
     <!-- =====================================================
          Main Grid
@@ -252,18 +493,16 @@
                                     @if (!string.IsNullOrWhiteSpace(item.ImageName))
                                     {
 
-                                        <img
-                                            src="@FileDirectories.ProductImageDirectory100@item.ImageName"
-                                            alt="@item.ImageAlt"
-                                            asp-append-version="true" />
+                                        <img src="@FileDirectories.ProductImageDirectory100@item.ImageName"
+                                             alt="@item.ImageAlt"
+                                             asp-append-version="true" />
 
                                     }
                                     else
                                     {
 
-                                        <img
-                                            src="https://placehold.co/160x160/f7f7f7/777?text=Product"
-                                            alt="@item.ProductName" />
+                                        <img src="https://placehold.co/160x160/f7f7f7/777?text=Product"
+                                             alt="@item.ProductName" />
 
                                     }
 
@@ -311,7 +550,7 @@
                                 <div class="oup-product-price">
 
 
-                                    @if (item.PriceAfterOff < item.Price && item.PriceAfterOff>0)
+                                    @if (item.PriceAfterOff < item.Price && item.PriceAfterOff > 0)
                                     {
 
                                         <span class="oup-old-price">
@@ -325,7 +564,7 @@
 
 
                                     <strong>
-                                       @((Model.PriceAfterOff>0)? Model.PriceAfterOff.ToString("N0") : Model.Price.ToString("N0"))
+                                        @((Model.PriceAfterOff > 0) ? Model.PriceAfterOff.ToString("N0") : Model.Price.ToString("N0"))
                                         تومان
 
                                     </strong>
@@ -347,7 +586,7 @@
                             text-align: center;
                             color: #888;
                             font-size: 13px;
-                        ">
+                            ">
 
                             محصولی در این فاکتور ثبت نشده است.
 
@@ -375,7 +614,6 @@
             <!-- =================================================
                  Customer / Receiver Address
                  ================================================== -->
-
             @if (Model.Address != null)
             {
 
@@ -484,7 +722,6 @@
 
 
                         <!-- National Code -->
-
                         @if (!string.IsNullOrWhiteSpace(Model.Address.NationalCode))
                         {
 
@@ -515,10 +752,9 @@
             <!-- =================================================
                  Order Discount
                  ================================================== -->
-
             @if (Model.DiscountId > 0 ||
-                 Model.DiscountPercent > 0 ||
-                 !string.IsNullOrWhiteSpace(Model.DiscountTitle))
+                             Model.DiscountPercent > 0 ||
+                             !string.IsNullOrWhiteSpace(Model.DiscountTitle))
             {
 
                 <section class="oup-sidebar-card">
@@ -748,3 +984,352 @@
 
 
 </div>
+
+<script>
+
+    $(document).on(
+        'click',
+        '#oup-seller-status-buttons .oup-seller-status-button',
+        function () {
+
+            const button = $(this);
+
+            const orderId = button.data('order-id');
+
+            const sellerId =
+                $('#oup-seller-status-seller-id').val();
+
+            const status = button.data('status');
+
+            const statusTitle =
+                button.data('status-title');
+
+
+            /*
+             * اگر همین وضعیت در حال حاضر فعال است،
+             * درخواست ارسال نشود.
+             */
+
+            if (
+                button.hasClass(
+                    'oup-seller-status-button-active'
+                )
+            ) {
+                return;
+            }
+
+
+            /*
+             * Confirmation
+             */
+
+            Swal.fire({
+
+                title: 'تغییر وضعیت سفارش',
+
+                text:
+                    `آیا وضعیت سفارش به «${statusTitle}» تغییر کند؟`,
+
+                icon: 'question',
+
+                showCancelButton: true,
+
+                confirmButtonText: 'بله، تغییر بده',
+
+                cancelButtonText: 'انصراف',
+
+                confirmButtonColor: '#fcb941',
+
+                cancelButtonColor: '#777'
+
+            }).then(function (result) {
+
+                if (!result.isConfirmed) {
+                    return;
+                }
+
+
+                /*
+                 * همه دکمه‌ها
+                 */
+
+                const allButtons =
+                    $('#oup-seller-status-buttons .oup-seller-status-button');
+
+
+                /*
+                 * Loading
+                 */
+
+                allButtons.addClass(
+                    'oup-seller-status-button-loading'
+                );
+
+
+                /*
+                 * AJAX
+                 */
+
+                $.ajax({
+
+                    url: '/Profile/Order/ChangeOrderSellerStatus',
+
+                    type: 'POST',
+
+                    data: {
+
+                        orderId: orderId,
+
+                        status: status,
+
+                        SellerId: sellerId,
+
+                        __RequestVerificationToken:
+                            $('input[name="__RequestVerificationToken"]')
+                                .val()
+
+                    },
+
+
+                    /*
+                     * Success
+                     */
+
+                    success: function (response) {
+
+                        if (!response.success) {
+
+                            allButtons.removeClass(
+                                'oup-seller-status-button-loading'
+                            );
+
+
+                            Swal.fire({
+
+                                title: 'خطا',
+
+                                text:
+                                    response.message ||
+                                    'تغییر وضعیت سفارش انجام نشد.',
+
+                                icon: 'error',
+
+                                confirmButtonColor: '#fcb941'
+
+                            });
+
+                            return;
+                        }
+
+
+                        /*
+                         * اگر وضعیت انتخاب شده یکی از وضعیت‌های
+                         * لغو شده باشد، دیگر دکمه‌ها نباید نمایش داده شوند.
+                         */
+
+                        const isCancelledStatus =
+                            status == @((int)OrderSellerStatus.لغو_شده_توسط_فروشنده)
+                                ||
+                            status == @((int)OrderSellerStatus.لغو_شده_توسط_ادمین)
+                                ||
+                            status == @((int)OrderSellerStatus.لغو_شده_توسط_مشتری);
+
+
+                        if (isCancelledStatus) {
+
+                            /*
+                             * حذف پنل دکمه‌ها
+                             */
+
+                            $('#oup-seller-status-buttons').remove();
+
+
+                            /*
+                             * نمایش پیام لغو
+                             */
+
+                            let cancelledTitle = 'سفارش لغو شده است';
+
+                            if (
+                                status ==
+                                    @((int)OrderSellerStatus.لغو_شده_توسط_فروشنده)
+                                ) {
+
+                                cancelledTitle =
+                                    'لغو شده توسط فروشنده';
+
+                            }
+                            else if (
+                                status ==
+                                    @((int)OrderSellerStatus.لغو_شده_توسط_ادمین)
+                                ) {
+
+                                cancelledTitle =
+                                    'لغو شده توسط ادمین';
+
+                            }
+                            else if (
+                                status ==
+                                    @((int)OrderSellerStatus.لغو_شده_توسط_مشتری)
+                                ) {
+
+                                cancelledTitle =
+                                    'لغو شده توسط مشتری';
+
+                            }
+
+
+                            /*
+                             * ساخت پنل وضعیت لغو شده
+                             */
+
+                            const cancelledHtml = `
+
+                                          
+
+                                        <div class="oup-seller-status-cancelled-icon">
+
+                                            <i class="fa-solid fa-ban"></i>
+
+                                        </div>
+
+                                        <div class="oup-seller-status-cancelled-content">
+
+                                            <strong>
+                                                ${cancelledTitle}
+                                            </strong>
+
+                                            <span>
+                                                وضعیت این سفارش لغو شده است و امکان تغییر وضعیت آن وجود ندارد.
+                                            </span>
+
+                                        </div>
+
+                         
+
+            `;
+
+
+                            $('#oup-seller-status-panel')
+                                .html(cancelledHtml);
+
+
+                            /*
+                             * Success message
+                             */
+
+                            Swal.fire({
+
+                                title: 'وضعیت تغییر کرد',
+
+                                text:
+                                    response.message ||
+                                    'وضعیت سفارش با موفقیت تغییر کرد.',
+
+                                icon: 'success',
+
+                                timer: 1500,
+
+                                showConfirmButton: false
+
+                            });
+
+
+                            return;
+                        }
+
+
+                        /*
+                         * اگر وضعیت لغو نشده باشد،
+                         * وضعیت قبلی همه دکمه‌ها را reset می‌کنیم.
+                         */
+
+                        allButtons
+                            .removeClass(
+                                'oup-seller-status-button-active'
+                            )
+                            .addClass(
+                                'oup-seller-status-button-inactive'
+                            );
+
+
+                        /*
+                         * دکمه انتخاب شده Active شود.
+                         */
+
+                        button
+                            .removeClass(
+                                'oup-seller-status-button-inactive'
+                            )
+                            .addClass(
+                                'oup-seller-status-button-active'
+                            );
+
+
+                        /*
+                         * Loading برداشته شود.
+                         */
+
+                        allButtons.removeClass(
+                            'oup-seller-status-button-loading'
+                        );
+
+
+                        /*
+                         * Success message
+                         */
+
+                        Swal.fire({
+
+                            title: 'وضعیت تغییر کرد',
+
+                            text:
+                                response.message ||
+                                'وضعیت سفارش با موفقیت تغییر کرد.',
+
+                            icon: 'success',
+
+                            timer: 1500,
+
+                            showConfirmButton: false
+
+                        });
+
+                    },
+
+
+                    /*
+                     * Server Error
+                     */
+
+                    error: function () {
+
+                        allButtons.removeClass(
+                            'oup-seller-status-button-loading'
+                        );
+
+
+                        Swal.fire({
+
+                            title: 'خطا',
+
+                            text:
+                                'در ارتباط با سرور مشکلی رخ داد.',
+
+                            icon: 'error',
+
+                            confirmButtonColor: '#fcb941'
+
+                        });
+
+                    }
+
+                });
+
+            });
+
+        }
+    );
+
+    
+</script>

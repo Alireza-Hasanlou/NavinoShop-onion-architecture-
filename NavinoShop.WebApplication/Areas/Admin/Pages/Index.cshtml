@@ -1,6 +1,885 @@
 ﻿@page
 @model NavinoShop.WebApplication.Areas.Admin.Pages.IndexModel
+
 @{
     Layout = "_AdminLayout";
     ViewData["title"] = "صفحه اصلی";
+}
+
+<style>
+
+    /* =========================================================
+           Dashboard Charts
+           ========================================================= */
+
+    .dashboard-charts {
+        margin-top: 22px;
+    }
+
+    .dashboard-chart-card {
+        background: #ffffff;
+        border: 1px solid #edf0f4;
+        border-radius: 16px;
+        padding: 22px 24px;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.045);
+        overflow: hidden;
+    }
+
+    .dashboard-chart-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 8px;
+    }
+
+    .dashboard-chart-title {
+        margin: 0;
+        color: #343a40;
+        font-size: 17px;
+        font-weight: 600;
+        line-height: 1.5;
+    }
+
+    .dashboard-chart-subtitle {
+        margin-top: 5px;
+        color: #9aa0a6;
+        font-size: 12px;
+    }
+
+    .dashboard-chart {
+        position: relative;
+        margin-top: 8px;
+        border-radius: 12px;
+        background: linear-gradient( to bottom, #fafbfd 0%, #ffffff 100% );
+    }
+
+
+    /* =========================================================
+           Monthly Chart
+           ========================================================= */
+
+    .monthly-chart {
+        min-height: 390px;
+    }
+
+
+    /* =========================================================
+           Weekly Chart
+           ========================================================= */
+
+    .weekly-chart {
+        min-height: 390px;
+    }
+
+    .weekly-chart-row {
+        margin-top: 20px;
+    }
+
+
+    /* =========================================================
+           ApexCharts
+           ========================================================= */
+
+    .apexcharts-canvas {
+        margin: 0 auto;
+    }
+
+    .apexcharts-tooltip {
+        border: 1px solid #edf0f4 !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08) !important;
+        border-radius: 10px !important;
+    }
+
+</style>
+
+
+<section class="content">
+
+    @await Component.InvokeAsync("SiteData")
+
+
+    <div class="dashboard-charts">
+
+
+        <!-- =====================================================
+             فروش ماهانه
+             ===================================================== -->
+
+        <div class="dashboard-chart-card">
+
+            <div class="dashboard-chart-header">
+
+                <div>
+
+                    <h3 class="dashboard-chart-title">
+                        فروش ماهانه
+                    </h3>
+
+                    <div class="dashboard-chart-subtitle">
+                        میزان فروش در ۱۲ ماه اخیر
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-chart monthly-chart">
+
+                <div id="monthlySalesChart"></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             فروش هفتگی
+             ===================================================== -->
+
+        <div class="row weekly-chart-row">
+
+            <div class="col-lg-8 col-md-7">
+
+                <div class="dashboard-chart-card">
+
+                    <div class="dashboard-chart-header">
+
+                        <div>
+
+                            <h3 class="dashboard-chart-title">
+                                فروش هفتگی
+                            </h3>
+
+                            <div class="dashboard-chart-subtitle">
+                                تعداد محصولات فروخته شده در روزهای هفته جاری
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="dashboard-chart weekly-chart">
+
+                        <div id="weeklySalesChart"></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script>
+
+        // ========================================================
+        // Document Ready
+        // ========================================================
+
+        $(document).ready(function () {
+
+            loadMonthlySales();
+
+            loadWeeklySales();
+
+        });
+
+
+        // ========================================================
+        // Monthly Sales
+        // ========================================================
+
+        function loadMonthlySales() {
+
+            $.ajax({
+
+                url: '/Admin/Chart/ChartData?handler=MonthlySales',
+
+                type: 'GET',
+
+                success: function (response) {
+
+                    console.log('Monthly Sales:', response);
+
+                    renderMonthlySalesChart(response);
+
+                },
+
+                error: function (xhr, status, error) {
+
+                    console.error(
+                        'خطا در دریافت فروش ماهانه:',
+                        error
+                    );
+
+                }
+
+            });
+
+        }
+
+
+        // ========================================================
+        // Monthly Sales Chart
+        // ========================================================
+
+        function renderMonthlySalesChart(data) {
+
+            var monthlyColor = '#4F7CFF';
+
+
+            var options = {
+
+                series: [
+
+                    {
+
+                        name: 'فروش',
+
+                        data: data.map(function (item) {
+
+                            return item.salesCount;
+
+                        })
+
+                    }
+
+                ],
+
+
+                chart: {
+
+                    height: 360,
+
+                    type: 'area',
+
+                    toolbar: {
+
+                        show: false
+
+                    },
+
+                    zoom: {
+
+                        enabled: false
+
+                    },
+
+                    parentHeightOffset: 0,
+
+                    animations: {
+
+                        enabled: true,
+
+                        easing: 'easeinout',
+
+                        speed: 700
+
+                    }
+
+                },
+
+
+                // =================================================
+                // رنگ نمودار
+                // =================================================
+
+                colors: [
+
+                    monthlyColor
+
+                ],
+
+
+                dataLabels: {
+
+                    enabled: false
+
+                },
+
+
+                // =================================================
+                // خط نمودار
+                // =================================================
+
+                stroke: {
+
+                    curve: 'smooth',
+
+                    width: 3,
+
+                    colors: [
+
+                        monthlyColor
+
+                    ]
+
+                },
+
+
+                // =================================================
+                // نقاط نمودار
+                // =================================================
+
+                markers: {
+
+                    size: 0,
+
+                    colors: [
+
+                        monthlyColor
+
+                    ],
+
+                    strokeColors: '#ffffff',
+
+                    strokeWidth: 2,
+
+                    hover: {
+
+                        size: 7,
+
+                        sizeOffset: 2
+
+                    }
+
+                },
+
+
+                // =================================================
+                // Gradient
+                // =================================================
+
+                fill: {
+
+                    type: 'gradient',
+
+                    colors: [
+
+                        monthlyColor
+
+                    ],
+
+                    gradient: {
+
+                        shadeIntensity: 1,
+
+                        opacityFrom: 0.32,
+
+                        opacityTo: 0.03,
+
+                        stops: [
+
+                            0,
+
+                            85,
+
+                            100
+
+                        ]
+
+                    }
+
+                },
+
+
+                // =================================================
+                // Grid
+                // =================================================
+
+                grid: {
+
+                    show: true,
+
+                    borderColor: '#edf0f4',
+
+                    strokeDashArray: 4,
+
+                    position: 'back',
+
+                    padding: {
+
+                        left: 10,
+
+                        right: 15,
+
+                        top: 0,
+
+                        bottom: 0
+
+                    }
+
+                },
+
+
+                // =================================================
+                // محور X
+                // =================================================
+
+                xaxis: {
+
+                    categories: data.map(function (item) {
+
+                        return getMonthName(item.month);
+
+                    }),
+
+                    axisBorder: {
+
+                        show: false
+
+                    },
+
+                    axisTicks: {
+
+                        show: false
+
+                    },
+
+                    labels: {
+
+                        style: {
+
+                            colors: '#8B929C',
+
+                            fontSize: '12px'
+
+                        }
+
+                    }
+
+                },
+
+
+                // =================================================
+                // محور Y
+                // =================================================
+
+                yaxis: {
+
+                    labels: {
+
+                        style: {
+
+                            colors: '#8B929C',
+
+                            fontSize: '12px'
+
+                        }
+
+                    }
+
+                },
+
+
+                // =================================================
+                // Tooltip
+                // =================================================
+
+                tooltip: {
+
+                    theme: 'light',
+
+                    marker: {
+
+                        show: true
+
+                    },
+
+                    x: {
+
+                        show: true
+
+                    },
+
+                    y: {
+
+                        formatter: function (value) {
+
+                            return value.toLocaleString('fa-IR')
+                                + ' فروش';
+
+                        }
+
+                    }
+
+                }
+
+            };
+
+
+            var chart = new ApexCharts(
+
+                document.querySelector('#monthlySalesChart'),
+
+                options
+
+            );
+
+
+            chart.render();
+
+        }
+
+
+        // ========================================================
+        // نام ماه‌های شمسی
+        // ========================================================
+
+        function getMonthName(month) {
+
+            switch (month) {
+
+                case 1:
+                    return 'فروردین';
+
+                case 2:
+                    return 'اردیبهشت';
+
+                case 3:
+                    return 'خرداد';
+
+                case 4:
+                    return 'تیر';
+
+                case 5:
+                    return 'مرداد';
+
+                case 6:
+                    return 'شهریور';
+
+                case 7:
+                    return 'مهر';
+
+                case 8:
+                    return 'آبان';
+
+                case 9:
+                    return 'آذر';
+
+                case 10:
+                    return 'دی';
+
+                case 11:
+                    return 'بهمن';
+
+                case 12:
+                    return 'اسفند';
+
+                default:
+                    return '';
+
+            }
+
+        }
+
+
+        // ========================================================
+        // Weekly Sales
+        // ========================================================
+
+        function loadWeeklySales() {
+
+            $.ajax({
+
+                url: '/Admin/Chart/ChartData?handler=WeeklySales',
+
+                type: 'GET',
+
+                success: function (response) {
+
+                    console.log('Weekly Sales:', response);
+
+                    renderWeeklySalesChart(response);
+
+                },
+
+                error: function (xhr, status, error) {
+
+                    console.error(
+                        'خطا در دریافت فروش هفتگی:',
+                        error
+                    );
+
+                }
+
+            });
+
+        }
+
+
+        // ========================================================
+        // Weekly Sales Chart
+        // ========================================================
+
+        function renderWeeklySalesChart(data) {
+
+            var weeklyColor = '#7C5CFC';
+
+
+            var options = {
+
+                series: [
+
+                    {
+
+                        name: 'تعداد فروش',
+
+                        data: data.map(function (item) {
+
+                            return item.salesCount;
+
+                        })
+
+                    }
+
+                ],
+
+
+                chart: {
+
+                    height: 360,
+
+                    type: 'bar',
+
+                    toolbar: {
+
+                        show: false
+
+                    },
+
+                    parentHeightOffset: 0,
+
+                    animations: {
+
+                        enabled: true,
+
+                        easing: 'easeinout',
+
+                        speed: 600
+
+                    }
+
+                },
+
+
+                // =================================================
+                // رنگ نمودار
+                // =================================================
+
+                colors: [
+
+                    weeklyColor
+
+                ],
+
+
+                // =================================================
+                // تنظیمات ستون‌ها
+                // =================================================
+
+                plotOptions: {
+
+                    bar: {
+
+                        borderRadius: 8,
+
+                        columnWidth: '42%',
+
+                        distributed: false,
+
+                        dataLabels: {
+
+                            position: 'top'
+
+                        }
+
+                    }
+
+                },
+
+
+                dataLabels: {
+
+                    enabled: false
+
+                },
+
+
+                // =================================================
+                // Grid
+                // =================================================
+
+                grid: {
+
+                    show: true,
+
+                    borderColor: '#edf0f4',
+
+                    strokeDashArray: 4,
+
+                    position: 'back',
+
+                    padding: {
+
+                        left: 10,
+
+                        right: 15
+
+                    }
+
+                },
+
+
+                // =================================================
+                // محور X
+                // =================================================
+
+                xaxis: {
+
+                    categories: data.map(function (item) {
+
+                        return getDayName(item.dayOfWeek);
+
+                    }),
+
+                    axisBorder: {
+
+                        show: false
+
+                    },
+
+                    axisTicks: {
+
+                        show: false
+
+                    },
+
+                    labels: {
+
+                        style: {
+
+                            colors: '#8B929C',
+
+                            fontSize: '12px'
+
+                        }
+
+                    }
+
+                },
+
+
+                // =================================================
+                // محور Y
+                // =================================================
+
+                yaxis: {
+
+                    labels: {
+
+                        style: {
+
+                            colors: '#8B929C',
+
+                            fontSize: '12px'
+
+                        }
+
+                    }
+
+                },
+
+
+                // =================================================
+                // Tooltip
+                // =================================================
+
+                tooltip: {
+
+                    theme: 'light',
+
+                    marker: {
+
+                        show: true
+
+                    },
+
+                    y: {
+
+                        formatter: function (value) {
+
+                            return value.toLocaleString('fa-IR')
+                                + ' فروش';
+
+                        }
+
+                    }
+
+                }
+
+            };
+
+
+            var chart = new ApexCharts(
+
+                document.querySelector('#weeklySalesChart'),
+
+                options
+
+            );
+
+
+            chart.render();
+
+        }
+
+
+        // ========================================================
+        // نام روزهای هفته
+        // ========================================================
+
+        function getDayName(dayOfWeek) {
+
+            switch (dayOfWeek) {
+
+                case 0:
+                    return 'یکشنبه';
+
+                case 1:
+                    return 'دوشنبه';
+
+                case 2:
+                    return 'سه‌شنبه';
+
+                case 3:
+                    return 'چهارشنبه';
+
+                case 4:
+                    return 'پنجشنبه';
+
+                case 5:
+                    return 'جمعه';
+
+                case 6:
+                    return 'شنبه';
+
+                default:
+                    return '';
+
+            }
+
+        }
+
+    </script>
+
 }

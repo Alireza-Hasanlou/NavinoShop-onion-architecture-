@@ -1,0 +1,144 @@
+﻿<div class="row">
+
+    <!-- Users Count -->
+    <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-aqua">
+            <div class="inner">
+                <h3>@Model.UsersCount</h3>
+                <p>کل کاربران</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-users"></i>
+            </div>
+            <a href="/Admin/Users" class="small-box-footer">
+                اطلاعات بیشتر
+                <i class="fa fa-arrow-circle-left"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Sellers Count -->
+    <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-green">
+            <div class="inner">
+                <h3>@Model.SellersCount</h3>
+                <p>فروشندگان فعال</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-user"></i>
+            </div>
+            <a href="/Admin/Sellers" class="small-box-footer">
+                اطلاعات بیشتر
+                <i class="fa fa-arrow-circle-left"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Product Count -->
+    <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-yellow">
+            <div class="inner">
+                <h3>@Model.ProductCount</h3>
+                <p>محصولات فعال</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-shopping-bag"></i>
+            </div>
+            <a href="/Admin/Products" class="small-box-footer">
+                اطلاعات بیشتر
+                <i class="fa fa-arrow-circle-left"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Blog Count -->
+    <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-red">
+            <div class="inner">
+                <h3>@Model.BlogCount</h3>
+                <p>مطالب وبلاگ</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-newspaper-o"></i>
+            </div>
+            <a href="/Admin/Blogs" class="small-box-footer">
+                اطلاعات بیشتر
+                <i class="fa fa-arrow-circle-left"></i>
+            </a>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="row">
+
+    <!-- Registered Users Last Month -->
+    <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-purple">
+            <div class="inner">
+                <h3>@Model.RegisteredUsersOverThePastMonth</h3>
+                <p>ثبت‌نام کاربران در ماه اخیر</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-user-plus"></i>
+            </div>
+            <a href="/Admin/Users" class="small-box-footer">
+                اطلاعات بیشتر
+                <i class="fa fa-arrow-circle-left"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Monthly Sales -->
+    <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-teal">
+            <div class="inner">
+                <h3>@Model.Monthlysales</h3>
+                <p>فروش ماه اخیر</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-shopping-cart"></i>
+            </div>
+            <a href="/Admin/Orders" class="small-box-footer">
+                اطلاعات بیشتر
+                <i class="fa fa-arrow-circle-left"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Monthly Income -->
+    <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-orange">
+            <div class="inner">
+                <h3>@Model.Monthlyincome.ToString("N0")</h3>
+                <p>درآمد ماه اخیر</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-money"></i>
+            </div>
+            <a href="/Admin/Orders" class="small-box-footer">
+                اطلاعات بیشتر
+                <i class="fa fa-arrow-circle-left"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Monthly Product Visits -->
+    <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-maroon">
+            <div class="inner">
+                <h3>@Model.MonthlyProductVisitCount</h3>
+                <p>بازدید محصولات در ماه اخیر</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-eye"></i>
+            </div>
+            <a href="/Admin/Produts" class="small-box-footer">
+                اطلاعات بیشتر
+                <i class="fa fa-arrow-circle-left"></i>
+            </a>
+        </div>
+    </div>
+
+</div>

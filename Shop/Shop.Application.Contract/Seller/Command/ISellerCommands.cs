@@ -21,6 +21,7 @@ namespace Shop.Application.Contract.Seller.Command
         Task<OperationResult> SendSellerChangeRequests(EditSellerQueryModel command);
         Task<OperationResult> AcceptRequestChange(int id);
         Task<OperationResult> RejectRequestChange(int id , string why);
+       
     }
    
 }
