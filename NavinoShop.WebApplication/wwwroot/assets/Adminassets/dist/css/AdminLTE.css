@@ -1540,7 +1540,7 @@ a:focus {
   border-top-color: #3c8dbc;
 }
 .box.box-info {
-  border-top-color: #00c0ef;
+   border-radius:20px;
 }
 .box.box-danger {
   border-top-color: #dd4b39;

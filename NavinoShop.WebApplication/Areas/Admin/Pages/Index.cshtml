@@ -1,4 +1,5 @@
 ﻿@page
+@using Shared.Domain.Enums
 @model NavinoShop.WebApplication.Areas.Admin.Pages.IndexModel
 
 @{
@@ -91,7 +92,7 @@
 
                 <div class="support-messages">
 
-                    @foreach (var message in Model.Messages)
+                    @foreach (var message in Model.Index.Messages)
                     {
                         <div class="support-message" id="message-@message.Id">
 
@@ -103,8 +104,8 @@
 
 
                                     <div class="message-avatar">
-                                       <img src="@message.ImageName" 
-                                       style="width:30px; border-radius:50%" />
+                                        <img src="@message.ImageName"
+                                             style="width:30px; border-radius:50%" />
                                     </div>
 
 
@@ -215,7 +216,75 @@
 
     </div>
 
+    <div class="box box-info">
+        <div class="box-header with-border">
+            <h3 class="box-title">آخرین سفارشات</h3>
 
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+            </div>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+            <div class="table-responsive">
+                <table class="table no-margin">
+                    <thead>
+                        <tr>
+                            <th>شماره</th>
+                            <th>نام مشتری</th>
+                            <th>وضعیت</th>
+                            <th>تاریخ ایجاد</th>
+                            <th>مبلغ</th>
+                            <th>جزییات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var order in Model.Index.LatestOrders)
+                        {
+                            <tr>
+                                <td>@order.OrderId</td>
+                                <td> @order.CustomerName</td>
+                                <td>
+                                    <span class="label
+                                        @(order.Status == OrderStatus.ارسال_شده
+                                            ? "label-success"
+                                            : order.Status == OrderStatus.پرداخت_نشده
+                                                ? "label-warning"
+                                                : order.Status == OrderStatus.پرداخت_شده
+                                                    ? "label-danger"
+                                                    : order.Status == OrderStatus.ارسال_شده
+                                                        ? "label-info"
+                                                        : "label-default")">
+                                        @order.Status.ToString().Replace("_", " ")
+                                    </span>
+                                </td>
+                                <td>@order.CreateAt</td>
+                                <td>@order.Price تومان</td>
+                                <td>
+                                    <a href="/Admin/Orders/OrderDetails/@order.OrderId" class="btn">
+
+                                        <i class="fa-sharp-duotone fa-solid fa-info" style="--fa-primary-color: rgb(30, 48, 80); --fa-secondary-color: rgb(30, 48, 80);"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+
+                       
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.table-responsive -->
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer clearfix">
+            <a href="/Admin/Orders" class="btn btn-sm btn-default btn-flat pull-right">نمایش همه</a>
+        </div>
+        <!-- /.box-footer -->
+    </div>
     <!-- =====================================================
          Charts
          ===================================================== -->
@@ -267,14 +336,9 @@
         <div class="row weekly-chart-row">
 
 
-            <div class="col-lg-4 col-md-5">
+     
 
-                <!-- Create MessageBox Here -->
-
-            </div>
-
-
-            <div class="col-lg-8 col-md-7">
+            <div class="col-lg-12 col-md-12">
 
 
                 <div class="dashboard-chart-card">
@@ -317,8 +381,8 @@
 
 
     </div>
-
-
+    
+   
 </section>
 
 
@@ -335,68 +399,68 @@
 
         const monthTemplate = () => `
 
-                    <div class="days-title">
+                                                    <div class="days-title">
 
-                        <div>ش</div>
-                        <div>ی</div>
-                        <div>د</div>
-                        <div>س</div>
-                        <div>چ</div>
-                        <div>پ</div>
-                        <div>ج</div>
+                                                        <div>ش</div>
+                                                        <div>ی</div>
+                                                        <div>د</div>
+                                                        <div>س</div>
+                                                        <div>چ</div>
+                                                        <div>پ</div>
+                                                        <div>ج</div>
 
-                    </div>
+                                                    </div>
 
 
-                    <div class="days"></div>
+                                                    <div class="days"></div>
 
-                `;
+                                                `;
 
 
         const dpTemplate = () => `
 
-                    <div class="date-picker">
+                                                    <div class="date-picker">
 
 
-                        <div class="head">
+                                                        <div class="head">
 
 
-                            <button type="button">
+                                                            <button type="button">
 
-                                <i class="material-icons">
-                                    chevron_right
-                                </i>
+                                                                <i class="material-icons">
+                                                                    chevron_right
+                                                                </i>
 
-                            </button>
-
-
-                            <div class="title">
-
-                                <h4></h4>
-
-                                <div></div>
-
-                            </div>
+                                                            </button>
 
 
-                            <button type="button">
+                                                            <div class="title">
 
-                                <i class="material-icons">
-                                    chevron_left
-                                </i>
+                                                                <h4></h4>
 
-                            </button>
+                                                                <div></div>
 
-
-                        </div>
+                                                            </div>
 
 
-                        <div class="month"></div>
+                                                            <button type="button">
+
+                                                                <i class="material-icons">
+                                                                    chevron_left
+                                                                </i>
+
+                                                            </button>
 
 
-                    </div>
+                                                        </div>
 
-                `;
+
+                                                        <div class="month"></div>
+
+
+                                                    </div>
+
+                                                `;
 
 
         const calendar =
@@ -823,26 +887,26 @@
 
                 emptyState.innerHTML = `
 
-                            <div class="support-empty-icon">
+                                                            <div class="support-empty-icon">
 
-                                <i class="material-icons">
-                                    mark_email_unread
-                                </i>
+                                                                <i class="material-icons">
+                                                                    mark_email_unread
+                                                                </i>
 
-                            </div>
-
-
-                            <p class="support-empty-title">
-                                پیامی وجود ندارد
-                            </p>
+                                                            </div>
 
 
-                            <p class="support-empty-text">
-                                در حال حاضر درخواست جدیدی
-                                از سمت کاربران ثبت نشده است.
-                            </p>
+                                                            <p class="support-empty-title">
+                                                                پیامی وجود ندارد
+                                                            </p>
 
-                        `;
+
+                                                            <p class="support-empty-text">
+                                                                در حال حاضر درخواست جدیدی
+                                                                از سمت کاربران ثبت نشده است.
+                                                            </p>
+
+                                                        `;
 
 
                 messageContainer.appendChild(
@@ -918,7 +982,7 @@
 
         window.addEventListener(
             'load',
-            function() {
+            function () {
 
 
                 updateSupportMessagesState();
@@ -939,7 +1003,7 @@
 
         window.addEventListener(
             'resize',
-            function() {
+            function () {
 
                 syncSupportBoxHeight();
 

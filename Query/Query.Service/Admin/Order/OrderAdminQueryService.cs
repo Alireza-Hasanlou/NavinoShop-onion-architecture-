@@ -37,6 +37,37 @@ namespace Query.Service.Admin.Order
             _cityRepository = cityRepository;
         }
 
+        public async Task<List<LatestOrdersForIndexPage>> GetLatestOrdersForIndexPageAsync()
+        {
+            var latestOrders = await _shopContext.Orders
+                .Include(x => x.OrderSellers)
+                .ThenInclude(x => x.OrderItems)
+                .AsNoTracking()
+                .OrderByDescending(x => x.CreateDate)
+                .Take(8)
+                .Select(o => new LatestOrdersForIndexPage
+                {
+                    OrderId = o.Id,
+                    CustomerId = o.UserId,
+                    Price = o.PaymentPrice,
+                    Status = o.OrderStatus,
+                    CreateTime = o.CreateDate,
+                    CustomerName = ""
+
+                }).ToListAsync();
+
+            var customerIds = latestOrders.Select(x => x.CustomerId).ToList();
+            var users = await _userRepository.GetUsersByIds(customerIds);
+            foreach (var order in latestOrders)
+            {
+                var user = users.SingleOrDefault(x => x.Id == order.CustomerId);
+                order.CustomerName = !string.IsNullOrEmpty(user.FullName) ? user.FullName : user.Mobile;
+                order.CreateAt = GetTimeAgo(order.CreateTime);
+            }
+
+            return latestOrders;
+        }
+
         public async Task<OrderDetailsForAdminQueryModel> GetOrderDetailsForAdminAsync(int orderId)
         {
             if (orderId <= 0)
@@ -69,7 +100,7 @@ namespace Query.Service.Admin.Order
                 Price = order.Price,
                 PriceAfterOff = order.PriceAfterOff,
                 PaymentPrice = order.PaymentPrice,
-                status=order.OrderStatus,
+                status = order.OrderStatus,
                 OrderPayment = order.OrderPayment,
                 PaymentPriceSeller = order.PaymentPriceSeller,
                 DiscountPrice = order.Price - order.PriceAfterOff,
@@ -90,7 +121,7 @@ namespace Query.Service.Admin.Order
                     SellerId = s.SellerId,
                     SellerName = s.Seller?.Title ?? "نامشخص",
                     DiscountPrice = s.Price - s.PriceAfterOff,
-                    status=s.Status,
+                    status = s.Status,
                     Items = s.OrderItems.Select(i => new OrderItemAdminQueryModel
                     {
                         Id = i.Id,
@@ -123,19 +154,18 @@ namespace Query.Service.Admin.Order
 
             return result;
         }
-
-
-
-
-
-
-        public async Task<OrdersForAdminPanelPaging> GetOrdersAsync(int orderId, int refId, int pageId, OrderStatus status, string filter = "")
+        public async Task<OrdersForAdminPanelPaging> GetOrdersAsync(
+            int orderId,
+            int refId,
+            int pageId,
+            OrderStatus status,
+            string filter = "")
         {
             var model = new OrdersForAdminPanelPaging();
 
             IQueryable<Shop.Domain.OrderAgg.Order> orders =
                 _shopContext.Orders.Include(x => x.OrderSellers)
-                .ThenInclude(i=>i.OrderItems)
+                .ThenInclude(i => i.OrderItems)
                 .AsNoTracking();
 
             if (status != OrderStatus.همه)
@@ -175,7 +205,7 @@ namespace Query.Service.Admin.Order
             model.Filter = filter;
             model.status = status;
             model.refId = refId;
-          
+
 
             model.Orders = await orders
                 .OrderByDescending(x => x.Id)
@@ -216,6 +246,23 @@ namespace Query.Service.Admin.Order
 
 
             return model;
+        }
+
+        private string GetTimeAgo(DateTime createdAtUtc)
+        {
+            DateTime now = DateTime.UtcNow;
+            TimeSpan diff = now - createdAtUtc;
+
+            if (diff.TotalMinutes < 1)
+                return "الان";
+
+            if (diff.TotalMinutes < 60)
+                return $"{(int)diff.TotalMinutes} دقیقه پیش";
+
+            if (diff.TotalHours < 24)
+                return $"{(int)diff.TotalHours} ساعت پیش";
+
+            return $"{(int)diff.TotalDays} روز پیش";
         }
     }
 }
