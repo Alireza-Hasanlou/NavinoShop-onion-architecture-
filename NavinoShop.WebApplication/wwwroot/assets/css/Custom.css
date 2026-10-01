@@ -9590,3 +9590,85 @@ input:checked + .custom-slider {
         transform: rotate(1turn);
     }
 }
+
+/* =========================================================
+           Dashboard Charts
+           ========================================================= */
+
+.dashboard-charts {
+    margin-top: 22px;
+}
+
+.dashboard-chart-card {
+    background: #ffffff;
+    border: 1px solid #edf0f4;
+    border-radius: 16px;
+    padding: 22px 24px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.045);
+    overflow: hidden;
+}
+
+.dashboard-chart-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.dashboard-chart-title {
+    margin: 0;
+    color: #343a40;
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.dashboard-chart-subtitle {
+    margin-top: 5px;
+    color: #9aa0a6;
+    font-size: 12px;
+}
+
+.dashboard-chart {
+    position: relative;
+    margin-top: 8px;
+    border-radius: 12px;
+    background: linear-gradient( to bottom, #fafbfd 0%, #ffffff 100% );
+}
+
+
+/* =========================================================
+           Monthly Chart
+           ========================================================= */
+
+.monthly-chart {
+    min-height: 390px;
+}
+
+
+/* =========================================================
+           Weekly Chart
+           ========================================================= */
+
+.weekly-chart {
+    min-height: 390px;
+}
+
+.weekly-chart-row {
+    margin-top: 20px;
+}
+
+
+/* =========================================================
+           ApexCharts
+   ========================================================= */
+
+.apexcharts-canvas {
+    margin: 0 auto;
+}
+
+.apexcharts-tooltip {
+    border: 1px solid #edf0f4 !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08) !important;
+    border-radius: 10px !important;
+}

@@ -6,97 +6,219 @@
     ViewData["title"] = "صفحه اصلی";
 }
 
-<style>
-
-    /* =========================================================
-           Dashboard Charts
-           ========================================================= */
-
-    .dashboard-charts {
-        margin-top: 22px;
-    }
-
-    .dashboard-chart-card {
-        background: #ffffff;
-        border: 1px solid #edf0f4;
-        border-radius: 16px;
-        padding: 22px 24px;
-        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.045);
-        overflow: hidden;
-    }
-
-    .dashboard-chart-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 8px;
-    }
-
-    .dashboard-chart-title {
-        margin: 0;
-        color: #343a40;
-        font-size: 17px;
-        font-weight: 600;
-        line-height: 1.5;
-    }
-
-    .dashboard-chart-subtitle {
-        margin-top: 5px;
-        color: #9aa0a6;
-        font-size: 12px;
-    }
-
-    .dashboard-chart {
-        position: relative;
-        margin-top: 8px;
-        border-radius: 12px;
-        background: linear-gradient( to bottom, #fafbfd 0%, #ffffff 100% );
-    }
 
 
-    /* =========================================================
-           Monthly Chart
-           ========================================================= */
 
-    .monthly-chart {
-        min-height: 390px;
-    }
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
 
+<script src="https://cdn.jsdelivr.net/npm/moment@2.30.1/min/moment.min.js"></script>
 
-    /* =========================================================
-           Weekly Chart
-           ========================================================= */
+<script src="https://cdn.jsdelivr.net/npm/moment-jalaali@0.10.4/build/moment-jalaali.js"></script>
 
-    .weekly-chart {
-        min-height: 390px;
-    }
-
-    .weekly-chart-row {
-        margin-top: 20px;
-    }
-
-
-    /* =========================================================
-           ApexCharts
-           ========================================================= */
-
-    .apexcharts-canvas {
-        margin: 0 auto;
-    }
-
-    .apexcharts-tooltip {
-        border: 1px solid #edf0f4 !important;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08) !important;
-        border-radius: 10px !important;
-    }
-
-</style>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.30.1/locale/fa.js"></script>
 
 
 <section class="content">
 
+
     @await Component.InvokeAsync("SiteData")
 
+
+    <!-- =====================================================
+         Calendar + Support Messages
+         ===================================================== -->
+
+    <div class="row dashboard-top-row">
+
+
+        <!-- =================================================
+             پیام‌های پشتیبانی
+             ================================================= -->
+
+        <div class="col-md-6 support-wrapper">
+
+
+            <div class="support-box">
+
+
+                <!-- Header -->
+
+                <div class="support-header">
+
+
+                    <div class="support-header-info">
+
+
+                        <div class="support-icon">
+
+                            <i class="material-icons">
+                                support_agent
+                            </i>
+
+                        </div>
+
+
+                        <div class="support-title-wrapper">
+
+                            <h3 class="support-title">
+                                پیام‌های پشتیبانی
+                            </h3>
+
+                            <p class="support-subtitle">
+                                آخرین درخواست‌های کاربران
+                            </p>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- تعداد پیام‌های جدید -->
+
+                    <div class="support-count">
+                        5
+                    </div>
+
+
+                </div>
+
+
+                <!-- =================================================
+                     Messages
+                     ================================================= -->
+
+                <div class="support-messages">
+
+                    @foreach (var message in Model.Messages)
+                    {
+                        <div class="support-message" id="message-@message.Id">
+
+
+                            <div class="message-header">
+
+
+                                <div class="message-user">
+
+
+                                    <div class="message-avatar">
+                                       <img src="@message.ImageName" 
+                                       style="width:30px; border-radius:50%" />
+                                    </div>
+
+
+                                    <div class="message-user-info">
+
+                                        <span class="message-user-name">
+                                            @message.FullName
+                                        </span>
+
+                                        <span class="message-time">
+                                            @message.createdAt
+                                        </span>
+
+                                    </div>
+
+
+                                </div>
+
+
+                                <span class="message-status"></span>
+
+
+                            </div>
+
+
+                            <p class="message-text">
+                                @message.Message
+
+                            </p>
+
+
+                            <div class="message-footer">
+
+
+                                <span class="message-category">
+                                    @message.Subject
+                                </span>
+                                @{
+                                    var title = $"پاسخ به {message.FullName}";
+                                    var inputLabel = "متن پاسخ";
+                                    var placeholder = "پاسخ خود را بنویسید...";
+                                    var smsText = "پاسخ با پیامک";
+                                    var emailText = "پاسخ با ایمیل";
+                                    var cancelText = "لغو";
+
+                                    var smsUrl = "/Admin/UsersMessage/AnswerbySMS";
+                                    var emailUrl = "/Admin/UsersMessage/AnswerbyEmail";
+
+                                    var messageId = message.Id;
+                                    var messageElementId = $"message-{messageId}";
+                                }
+
+                                <a onclick='showReplyAlert({
+                                    title: "@title",
+                                    inputLabel: "@inputLabel",
+                                    placeholder: "@placeholder",
+                                    smsText: "@smsText",
+                                    emailText: "@emailText",
+                                    cancelText: "@cancelText",
+                                    smsUrl: "@smsUrl",
+                                    emailUrl: "@emailUrl",
+                                    messageElementId: "@messageElementId",
+                                    data: {
+                                    messageId: @messageId
+                                    }
+                                    });'
+                                   class="reply-button">
+
+                                    <i class="material-icons">
+                                        reply
+                                    </i>
+
+                                    پاسخ
+
+                                </a>
+
+                            </div>
+
+
+                        </div>
+
+                    }
+
+                  
+
+           
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =================================================
+             تقویم
+             ================================================= -->
+
+        <div class="col-md-6 calendar-wrapper">
+
+            <div class="calendar"></div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         Charts
+         ===================================================== -->
 
     <div class="dashboard-charts">
 
@@ -107,7 +229,9 @@
 
         <div class="dashboard-chart-card">
 
+
             <div class="dashboard-chart-header">
+
 
                 <div>
 
@@ -115,11 +239,13 @@
                         فروش ماهانه
                     </h3>
 
+
                     <div class="dashboard-chart-subtitle">
                         میزان فروش در ۱۲ ماه اخیر
                     </div>
 
                 </div>
+
 
             </div>
 
@@ -130,6 +256,7 @@
 
             </div>
 
+
         </div>
 
 
@@ -139,11 +266,22 @@
 
         <div class="row weekly-chart-row">
 
+
+            <div class="col-lg-4 col-md-5">
+
+                <!-- Create MessageBox Here -->
+
+            </div>
+
+
             <div class="col-lg-8 col-md-7">
+
 
                 <div class="dashboard-chart-card">
 
+
                     <div class="dashboard-chart-header">
+
 
                         <div>
 
@@ -151,11 +289,13 @@
                                 فروش هفتگی
                             </h3>
 
+
                             <div class="dashboard-chart-subtitle">
                                 تعداد محصولات فروخته شده در روزهای هفته جاری
                             </div>
 
                         </div>
+
 
                     </div>
 
@@ -166,719 +306,652 @@
 
                     </div>
 
+
                 </div>
+
 
             </div>
 
+
         </div>
 
+
     </div>
+
 
 </section>
 
 
 @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+
     <script>
 
-        // ========================================================
-        // Document Ready
-        // ========================================================
 
-        $(document).ready(function () {
-
-            loadMonthlySales();
-
-            loadWeeklySales();
-
-        });
+        /* =========================================================
+           Calendar
+           ========================================================= */
 
 
-        // ========================================================
-        // Monthly Sales
-        // ========================================================
+        const monthTemplate = () => `
 
-        function loadMonthlySales() {
+                    <div class="days-title">
 
-            $.ajax({
+                        <div>ش</div>
+                        <div>ی</div>
+                        <div>د</div>
+                        <div>س</div>
+                        <div>چ</div>
+                        <div>پ</div>
+                        <div>ج</div>
 
-                url: '/Admin/Chart/ChartData?handler=MonthlySales',
+                    </div>
 
-                type: 'GET',
 
-                success: function (response) {
+                    <div class="days"></div>
 
-                    console.log('Monthly Sales:', response);
+                `;
 
-                    renderMonthlySalesChart(response);
 
-                },
+        const dpTemplate = () => `
 
-                error: function (xhr, status, error) {
+                    <div class="date-picker">
 
-                    console.error(
-                        'خطا در دریافت فروش ماهانه:',
-                        error
+
+                        <div class="head">
+
+
+                            <button type="button">
+
+                                <i class="material-icons">
+                                    chevron_right
+                                </i>
+
+                            </button>
+
+
+                            <div class="title">
+
+                                <h4></h4>
+
+                                <div></div>
+
+                            </div>
+
+
+                            <button type="button">
+
+                                <i class="material-icons">
+                                    chevron_left
+                                </i>
+
+                            </button>
+
+
+                        </div>
+
+
+                        <div class="month"></div>
+
+
+                    </div>
+
+                `;
+
+
+        const calendar =
+            document.querySelector('.calendar');
+
+
+        if (calendar) {
+
+
+            calendar.innerHTML =
+                dpTemplate();
+
+
+            moment.locale('fa');
+
+
+            const today =
+                moment();
+
+
+            const currentMonth =
+                moment(
+                    today.format('jYYYY/jMM/01'),
+                    'jYYYY/jMM/jDD'
+                );
+
+
+            const vMonth =
+                calendar.querySelector('.month');
+
+
+            const vTitle =
+                calendar.querySelector(
+                    '.head .title h4'
+                );
+
+
+            const vTitleEn =
+                calendar.querySelector(
+                    '.head .title div'
+                );
+
+
+            const manageMonth =
+                (navigate = '') => {
+
+
+                    if (navigate === 'next') {
+
+                        currentMonth.add(
+                            1,
+                            'jMonth'
+                        );
+
+                    }
+                    else if (navigate === 'prev') {
+
+                        currentMonth.subtract(
+                            1,
+                            'jMonth'
+                        );
+
+                    }
+
+
+                    const month =
+                        document.createElement('div');
+
+
+                    month.innerHTML =
+                        monthTemplate();
+
+
+                    const firstDay =
+                        moment(
+                            currentMonth.format(
+                                'jYYYY/jMM/01'
+                            ),
+                            'jYYYY/jMM/jDD'
+                        );
+
+
+                    const daysInMonth =
+                        firstDay.jDaysInMonth();
+
+
+                    const lastDay =
+                        firstDay
+                            .clone()
+                            .add(
+                                daysInMonth - 1,
+                                'days'
+                            );
+
+
+                    vTitle.textContent =
+                        firstDay.format(
+                            'jMMMM jYYYY'
+                        );
+
+
+                    vTitleEn.textContent =
+                        firstDay
+                            .clone()
+                            .locale('en')
+                            .format(
+                                'MMMM YYYY'
+                            );
+
+
+                    const vDays =
+                        month.querySelector(
+                            '.days'
+                        );
+
+
+                    const addDay =
+                        (
+                            date,
+                            disabled = false
+                        ) => {
+
+
+                            const vDay =
+                                document.createElement(
+                                    'div'
+                                );
+
+
+                            const vDayEn =
+                                document.createElement(
+                                    'div'
+                                );
+
+
+                            vDay.textContent =
+                                date.format('jD');
+
+
+                            const isToday =
+                                date.format(
+                                    'jYYYY/jMM/jDD'
+                                ) ===
+                                today.format(
+                                    'jYYYY/jMM/jDD'
+                                );
+
+
+                            vDay.className =
+                                `${isToday ? 'today' : ''} ` +
+                                `${disabled ? 'disable' : ''}`;
+
+
+                            vDayEn.textContent =
+                                date
+                                    .clone()
+                                    .locale('en')
+                                    .format('D');
+
+
+                            vDay.appendChild(
+                                vDayEn
+                            );
+
+
+                            vDays.appendChild(
+                                vDay
+                            );
+
+                        };
+
+
+                    const firstDayOfWeek =
+                        (firstDay.day() + 1) % 7;
+
+
+                    for (
+                        let i =
+                            firstDayOfWeek - 1;
+
+                        i >= 0;
+
+                        i--
+                    ) {
+
+
+                        const date =
+                            firstDay
+                                .clone()
+                                .subtract(
+                                    i + 1,
+                                    'days'
+                                );
+
+
+                        addDay(
+                            date,
+                            true
+                        );
+
+                    }
+
+
+                    for (
+                        let i = 0;
+
+                        i < daysInMonth;
+
+                        i++
+                    ) {
+
+
+                        const date =
+                            firstDay
+                                .clone()
+                                .add(
+                                    i,
+                                    'days'
+                                );
+
+
+                        addDay(date);
+
+                    }
+
+
+                    const lastDayOfWeek =
+                        (lastDay.day() + 1) % 7;
+
+
+                    const remaining =
+                        6 - lastDayOfWeek;
+
+
+                    for (
+                        let i = 1;
+
+                        i <= remaining;
+
+                        i++
+                    ) {
+
+
+                        const date =
+                            lastDay
+                                .clone()
+                                .add(
+                                    i,
+                                    'days'
+                                );
+
+
+                        addDay(
+                            date,
+                            true
+                        );
+
+                    }
+
+
+                    if (navigate === 'next') {
+
+
+                        if (vMonth.children[0]) {
+
+                            vMonth.children[0]
+                                .classList
+                                .add('right');
+
+                        }
+
+
+                        month.classList.add(
+                            'left'
+                        );
+
+                    }
+
+
+                    if (navigate === 'prev') {
+
+
+                        if (vMonth.children[0]) {
+
+                            vMonth.children[0]
+                                .classList
+                                .add('left');
+
+                        }
+
+
+                        month.classList.add(
+                            'right'
+                        );
+
+                    }
+
+
+                    vMonth.appendChild(
+                        month
                     );
 
-                }
 
-            });
+                    setTimeout(() => {
 
-        }
+                        month.className = '';
 
+                        vMonth.style.height =
+                            `${month.clientHeight}px`;
 
-        // ========================================================
-        // Monthly Sales Chart
-        // ========================================================
-
-        function renderMonthlySalesChart(data) {
-
-            var monthlyColor = '#4F7CFF';
+                    }, 20);
 
 
-            var options = {
+                    if (navigate !== '') {
 
-                series: [
 
-                    {
+                        setTimeout(() => {
 
-                        name: 'فروش',
+                            if (vMonth.children[0]) {
 
-                        data: data.map(function (item) {
+                                vMonth.children[0]
+                                    .remove();
 
-                            return item.salesCount;
+                            }
 
-                        })
+                        }, 500);
 
                     }
 
-                ],
+                };
 
 
-                chart: {
+            manageMonth();
 
-                    height: 360,
 
-                    type: 'area',
+            const buttons =
+                calendar.querySelectorAll(
+                    '.head button'
+                );
 
-                    toolbar: {
 
-                        show: false
-
-                    },
-
-                    zoom: {
-
-                        enabled: false
-
-                    },
-
-                    parentHeightOffset: 0,
-
-                    animations: {
-
-                        enabled: true,
-
-                        easing: 'easeinout',
-
-                        speed: 700
-
-                    }
-
-                },
-
-
-                // =================================================
-                // رنگ نمودار
-                // =================================================
-
-                colors: [
-
-                    monthlyColor
-
-                ],
-
-
-                dataLabels: {
-
-                    enabled: false
-
-                },
-
-
-                // =================================================
-                // خط نمودار
-                // =================================================
-
-                stroke: {
-
-                    curve: 'smooth',
-
-                    width: 3,
-
-                    colors: [
-
-                        monthlyColor
-
-                    ]
-
-                },
-
-
-                // =================================================
-                // نقاط نمودار
-                // =================================================
-
-                markers: {
-
-                    size: 0,
-
-                    colors: [
-
-                        monthlyColor
-
-                    ],
-
-                    strokeColors: '#ffffff',
-
-                    strokeWidth: 2,
-
-                    hover: {
-
-                        size: 7,
-
-                        sizeOffset: 2
-
-                    }
-
-                },
-
-
-                // =================================================
-                // Gradient
-                // =================================================
-
-                fill: {
-
-                    type: 'gradient',
-
-                    colors: [
-
-                        monthlyColor
-
-                    ],
-
-                    gradient: {
-
-                        shadeIntensity: 1,
-
-                        opacityFrom: 0.32,
-
-                        opacityTo: 0.03,
-
-                        stops: [
-
-                            0,
-
-                            85,
-
-                            100
-
-                        ]
-
-                    }
-
-                },
-
-
-                // =================================================
-                // Grid
-                // =================================================
-
-                grid: {
-
-                    show: true,
-
-                    borderColor: '#edf0f4',
-
-                    strokeDashArray: 4,
-
-                    position: 'back',
-
-                    padding: {
-
-                        left: 10,
-
-                        right: 15,
-
-                        top: 0,
-
-                        bottom: 0
-
-                    }
-
-                },
-
-
-                // =================================================
-                // محور X
-                // =================================================
-
-                xaxis: {
-
-                    categories: data.map(function (item) {
-
-                        return getMonthName(item.month);
-
-                    }),
-
-                    axisBorder: {
-
-                        show: false
-
-                    },
-
-                    axisTicks: {
-
-                        show: false
-
-                    },
-
-                    labels: {
-
-                        style: {
-
-                            colors: '#8B929C',
-
-                            fontSize: '12px'
-
-                        }
-
-                    }
-
-                },
-
-
-                // =================================================
-                // محور Y
-                // =================================================
-
-                yaxis: {
-
-                    labels: {
-
-                        style: {
-
-                            colors: '#8B929C',
-
-                            fontSize: '12px'
-
-                        }
-
-                    }
-
-                },
-
-
-                // =================================================
-                // Tooltip
-                // =================================================
-
-                tooltip: {
-
-                    theme: 'light',
-
-                    marker: {
-
-                        show: true
-
-                    },
-
-                    x: {
-
-                        show: true
-
-                    },
-
-                    y: {
-
-                        formatter: function (value) {
-
-                            return value.toLocaleString('fa-IR')
-                                + ' فروش';
-
-                        }
-
-                    }
-
-                }
-
-            };
-
-
-            var chart = new ApexCharts(
-
-                document.querySelector('#monthlySalesChart'),
-
-                options
-
+            buttons[0].addEventListener(
+                'click',
+                () => manageMonth('prev')
             );
 
 
-            chart.render();
+            buttons[1].addEventListener(
+                'click',
+                () => manageMonth('next')
+            );
 
         }
 
 
-        // ========================================================
-        // نام ماه‌های شمسی
-        // ========================================================
+        /* =========================================================
+           Support Messages State
+           ========================================================= */
 
-        function getMonthName(month) {
+        function updateSupportMessagesState() {
 
-            switch (month) {
+            const messageContainer =
+                document.querySelector(
+                    '.support-messages'
+                );
 
-                case 1:
-                    return 'فروردین';
+            const supportCount =
+                document.querySelector(
+                    '.support-count'
+                );
 
-                case 2:
-                    return 'اردیبهشت';
 
-                case 3:
-                    return 'خرداد';
+            if (!messageContainer) {
+                return;
+            }
 
-                case 4:
-                    return 'تیر';
 
-                case 5:
-                    return 'مرداد';
+            const messages =
+                messageContainer.querySelectorAll(
+                    '.support-message'
+                );
 
-                case 6:
-                    return 'شهریور';
 
-                case 7:
-                    return 'مهر';
+            /*
+             * بروزرسانی تعداد پیام‌ها
+             */
+            if (supportCount) {
 
-                case 8:
-                    return 'آبان';
+                supportCount.textContent =
+                    messages.length;
 
-                case 9:
-                    return 'آذر';
+            }
 
-                case 10:
-                    return 'دی';
 
-                case 11:
-                    return 'بهمن';
+            /*
+             * حذف Empty State قبلی
+             */
+            const oldEmptyState =
+                messageContainer.querySelector(
+                    '.support-empty'
+                );
 
-                case 12:
-                    return 'اسفند';
 
-                default:
-                    return '';
+            if (oldEmptyState) {
+
+                oldEmptyState.remove();
+
+            }
+
+
+            /*
+             * اگر هیچ پیامی وجود نداشت
+             */
+            if (messages.length === 0) {
+
+
+                const emptyState =
+                    document.createElement('div');
+
+
+                emptyState.className =
+                    'support-empty';
+
+
+                emptyState.innerHTML = `
+
+                            <div class="support-empty-icon">
+
+                                <i class="material-icons">
+                                    mark_email_unread
+                                </i>
+
+                            </div>
+
+
+                            <p class="support-empty-title">
+                                پیامی وجود ندارد
+                            </p>
+
+
+                            <p class="support-empty-text">
+                                در حال حاضر درخواست جدیدی
+                                از سمت کاربران ثبت نشده است.
+                            </p>
+
+                        `;
+
+
+                messageContainer.appendChild(
+                    emptyState
+                );
 
             }
 
         }
 
 
-        // ========================================================
-        // Weekly Sales
-        // ========================================================
+        /* =========================================================
+           Sync Support Box Height With Calendar
+           ========================================================= */
 
-        function loadWeeklySales() {
+        function syncSupportBoxHeight() {
 
-            $.ajax({
 
-                url: '/Admin/Chart/ChartData?handler=WeeklySales',
+            const calendarWrapper =
+                document.querySelector(
+                    '.calendar-wrapper'
+                );
 
-                type: 'GET',
 
-                success: function (response) {
+            const supportBox =
+                document.querySelector(
+                    '.support-box'
+                );
 
-                    console.log('Weekly Sales:', response);
 
-                    renderWeeklySalesChart(response);
+            if (
+                !calendarWrapper ||
+                !supportBox
+            ) {
 
-                },
+                return;
 
-                error: function (xhr, status, error) {
+            }
 
-                    console.error(
-                        'خطا در دریافت فروش هفتگی:',
-                        error
-                    );
 
-                }
+            if (
+                window.innerWidth <= 991
+            ) {
 
-            });
+                supportBox.style.height =
+                    '';
 
-        }
+                return;
 
+            }
 
-        // ========================================================
-        // Weekly Sales Chart
-        // ========================================================
 
-        function renderWeeklySalesChart(data) {
+            const height =
+                calendarWrapper.offsetHeight;
 
-            var weeklyColor = '#7C5CFC';
 
+            if (height > 0) {
 
-            var options = {
-
-                series: [
-
-                    {
-
-                        name: 'تعداد فروش',
-
-                        data: data.map(function (item) {
-
-                            return item.salesCount;
-
-                        })
-
-                    }
-
-                ],
-
-
-                chart: {
-
-                    height: 360,
-
-                    type: 'bar',
-
-                    toolbar: {
-
-                        show: false
-
-                    },
-
-                    parentHeightOffset: 0,
-
-                    animations: {
-
-                        enabled: true,
-
-                        easing: 'easeinout',
-
-                        speed: 600
-
-                    }
-
-                },
-
-
-                // =================================================
-                // رنگ نمودار
-                // =================================================
-
-                colors: [
-
-                    weeklyColor
-
-                ],
-
-
-                // =================================================
-                // تنظیمات ستون‌ها
-                // =================================================
-
-                plotOptions: {
-
-                    bar: {
-
-                        borderRadius: 8,
-
-                        columnWidth: '42%',
-
-                        distributed: false,
-
-                        dataLabels: {
-
-                            position: 'top'
-
-                        }
-
-                    }
-
-                },
-
-
-                dataLabels: {
-
-                    enabled: false
-
-                },
-
-
-                // =================================================
-                // Grid
-                // =================================================
-
-                grid: {
-
-                    show: true,
-
-                    borderColor: '#edf0f4',
-
-                    strokeDashArray: 4,
-
-                    position: 'back',
-
-                    padding: {
-
-                        left: 10,
-
-                        right: 15
-
-                    }
-
-                },
-
-
-                // =================================================
-                // محور X
-                // =================================================
-
-                xaxis: {
-
-                    categories: data.map(function (item) {
-
-                        return getDayName(item.dayOfWeek);
-
-                    }),
-
-                    axisBorder: {
-
-                        show: false
-
-                    },
-
-                    axisTicks: {
-
-                        show: false
-
-                    },
-
-                    labels: {
-
-                        style: {
-
-                            colors: '#8B929C',
-
-                            fontSize: '12px'
-
-                        }
-
-                    }
-
-                },
-
-
-                // =================================================
-                // محور Y
-                // =================================================
-
-                yaxis: {
-
-                    labels: {
-
-                        style: {
-
-                            colors: '#8B929C',
-
-                            fontSize: '12px'
-
-                        }
-
-                    }
-
-                },
-
-
-                // =================================================
-                // Tooltip
-                // =================================================
-
-                tooltip: {
-
-                    theme: 'light',
-
-                    marker: {
-
-                        show: true
-
-                    },
-
-                    y: {
-
-                        formatter: function (value) {
-
-                            return value.toLocaleString('fa-IR')
-                                + ' فروش';
-
-                        }
-
-                    }
-
-                }
-
-            };
-
-
-            var chart = new ApexCharts(
-
-                document.querySelector('#weeklySalesChart'),
-
-                options
-
-            );
-
-
-            chart.render();
-
-        }
-
-
-        // ========================================================
-        // نام روزهای هفته
-        // ========================================================
-
-        function getDayName(dayOfWeek) {
-
-            switch (dayOfWeek) {
-
-                case 0:
-                    return 'یکشنبه';
-
-                case 1:
-                    return 'دوشنبه';
-
-                case 2:
-                    return 'سه‌شنبه';
-
-                case 3:
-                    return 'چهارشنبه';
-
-                case 4:
-                    return 'پنجشنبه';
-
-                case 5:
-                    return 'جمعه';
-
-                case 6:
-                    return 'شنبه';
-
-                default:
-                    return '';
+                supportBox.style.height =
+                    `${height}px`;
 
             }
 
         }
+
+
+        /* =========================================================
+           Initialize
+           ========================================================= */
+
+        updateSupportMessagesState();
+
+
+        window.addEventListener(
+            'load',
+            function() {
+
+
+                updateSupportMessagesState();
+
+
+                syncSupportBoxHeight();
+
+
+                setTimeout(
+                    syncSupportBoxHeight,
+                    200
+                );
+
+
+            }
+        );
+
+
+        window.addEventListener(
+            'resize',
+            function() {
+
+                syncSupportBoxHeight();
+
+            }
+        );
+
+
+        setTimeout(
+            syncSupportBoxHeight,
+            300
+        );
+
 
     </script>
 

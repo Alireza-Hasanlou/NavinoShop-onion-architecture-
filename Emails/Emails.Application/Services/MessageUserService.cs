@@ -36,7 +36,7 @@ namespace Emails.Application.Services
 				messageUser.AnswerEmailSend(mailMessage);
 				await _messageUserRepository.SaveAsync();
 				//
-				// send sms
+				// send Email
 				//
 				return new(true);
 			}

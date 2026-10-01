@@ -285,3 +285,213 @@ function AjaxSweetRefresh(title, text, icon, confirmText, cancelText, url) {
             });
     });
 }
+
+async function showReplyAlert(options) {
+
+    const {
+        title = "پاسخ",
+        inputLabel = "پیام",
+        placeholder = "متن پیام را وارد کنید...",
+
+        smsText = "پاسخ با پیامک",
+        emailText = "پاسخ با ایمیل",
+        cancelText = "لغو",
+
+        smsUrl,
+        emailUrl,
+
+        messageElementId,
+
+        data = {}
+    } = options;
+
+
+    let message = "";
+
+
+    const result = await Swal.fire({
+
+        title: title,
+
+        input: "textarea",
+
+        inputLabel: inputLabel,
+
+        inputPlaceholder: placeholder,
+
+        inputAttributes: {
+            "aria-label": placeholder
+        },
+
+        showCancelButton: true,
+
+        cancelButtonText: cancelText,
+
+        showDenyButton: true,
+
+        denyButtonText: smsText,
+
+        showConfirmButton: true,
+
+        confirmButtonText: emailText,
+
+        reverseButtons: true,
+
+
+        // ایمیل
+        preConfirm: (text) => {
+
+            if (!text || !text.trim()) {
+
+                Swal.showValidationMessage(
+                    "لطفاً متن پیام را وارد کنید."
+                );
+
+                return false;
+            }
+
+            message = text.trim();
+
+            return message;
+        },
+
+
+        // پیامک
+        preDeny: () => {
+
+            const text = Swal.getInput()?.value;
+
+            if (!text || !text.trim()) {
+
+                Swal.showValidationMessage(
+                    "لطفاً متن پیام را وارد کنید."
+                );
+
+                return false;
+            }
+
+            message = text.trim();
+
+            return true;
+        }
+    });
+
+
+    // لغو
+    if (result.isDismissed) {
+        return;
+    }
+
+
+    let url;
+    let type;
+
+
+    // پیامک
+    if (result.isDenied) {
+
+        url = smsUrl;
+        type = "sms";
+    }
+
+    // ایمیل
+    else if (result.isConfirmed) {
+
+        url = emailUrl;
+        type = "email";
+    }
+
+
+    if (!url) {
+
+        console.error("URL عملیات مشخص نشده است.");
+
+        return;
+    }
+
+
+    // در اینجا دیگر از Swal.getInput() استفاده نمی‌کنیم
+    // چون Alert بسته شده است.
+    console.log("URL:", url);
+    console.log("Type:", type);
+    console.log("Message:", message);
+    console.log("Message ID:", data.messageId);
+
+
+    try {
+
+        const response = await $.ajax({
+
+            url: url,
+
+            type: "POST",
+
+            contentType: "application/json; charset=utf-8",
+
+            dataType: "json",
+
+            data: JSON.stringify({
+
+                id: data.messageId,
+
+                message: message
+            })
+        });
+
+
+        // بررسی نتیجه اکشن
+        if (!response || response.ok !== true) {
+
+            throw new Error(
+                "عملیات با موفقیت انجام نشد."
+            );
+        }
+
+
+        // پیام موفقیت
+        await Swal.fire({
+
+            icon: "success",
+
+            title: "موفق",
+
+            text: type === "sms"
+                ? "پاسخ با پیامک ارسال شد."
+                : "پاسخ با ایمیل ارسال شد."
+        });
+
+
+        // مخفی کردن پیام
+        if (messageElementId) {
+
+            const element =
+                document.getElementById(messageElementId);
+
+            if (element) {
+
+                element.style.display = "none";
+            }
+        }
+
+    }
+    catch (xhr) {
+
+        console.error("Reply Error:", xhr);
+
+        console.error("Status:", xhr.status);
+
+        console.error("Response:", xhr.responseText);
+
+
+        Swal.fire({
+
+            icon: "error",
+
+            title: "خطا",
+
+            text: xhr.responseText ||
+                "ارسال پاسخ با خطا مواجه شد."
+        });
+    }
+}
+

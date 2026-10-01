@@ -91,5 +91,52 @@ namespace Query.Service.Admin.Email.MessageUser
             }
             return model;
         }
+
+
+        public async Task<List<UnseenUsersMessageQueryModel>> GetUnseenUsersMessageForIndexAsync()
+        {
+            var Messages = await _messageUserRepository.GetAllBy(x => x.Status == MessageStatus.دیده_نشده)
+                .AsNoTracking()
+                .Select(m => new UnseenUsersMessageQueryModel
+                {
+                    Id = m.Id,
+                    UserId = m.UserId,
+                    Subject = m.Subject,
+                    Message = m.Message,
+                    CreateTime = m.CreateDate,
+                    createdAt = ""
+                }).ToListAsync();
+
+            var usersIds = Messages.Select(x => x.UserId).ToList();
+            var Users = await _userRepository.GetUsersByIds(usersIds);
+
+            foreach (var message in Messages)
+            {
+                var user = Users.SingleOrDefault(x => x.Id == message.UserId);
+                message.FullName = !string.IsNullOrEmpty(user.FullName) ? user.FullName : user.Mobile;
+                message.ImageName = FileDirectories.UserImageDirectory100 + user.ImageName;
+                message.createdAt = GetTimeAgo(message.CreateTime);
+            }
+
+            return Messages;
+        }
+
+        private string GetTimeAgo(DateTime createdAtUtc)
+        {
+            DateTime now = DateTime.UtcNow;
+            TimeSpan diff = now - createdAtUtc;
+
+            if (diff.TotalMinutes < 1)
+                return "now";
+            if (diff.TotalMinutes < 60)
+                return $"{(int)diff.TotalMinutes} دقیقه پیش";
+            if (diff.TotalMinutes < 3600)
+                return $"{(int)diff.TotalMinutes / 60} ساعت پیش";
+            if (diff.TotalMinutes < 86400)
+                return $"{(int)diff.TotalMinutes / 60} ساعت پیش";
+            if (diff.TotalDays < 7)
+                return $"{(int)diff.TotalDays} روز پیش";
+            return createdAtUtc.ToPersainDate();
+        }
     }
 }

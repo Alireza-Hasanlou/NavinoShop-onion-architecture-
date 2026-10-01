@@ -1,9 +1,11 @@
 using Emails.Application.Contract.MessageUserService.Command;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using NavinoShop.WebApplication.Models;
 
 namespace NavinoShop.WebApplication.Areas.Admin.Pages.UsersMessage
 {
+    [IgnoreAntiforgeryToken]
     public class AnswerbySMSModel : PageModel
     {
         private readonly IMessageUserCommandService _messageUserCommandService;
@@ -13,22 +15,20 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.UsersMessage
             _messageUserCommandService = messageUserCommandService;
         }
 
-        public async Task<IActionResult> OnGet(int id, string Message)
+        public async Task<IActionResult> OnPost([FromBody] AnswerMessageModel model)
         {
-            if (id < 0 || string.IsNullOrEmpty(Message))
+            if (model.Id < 1 || string.IsNullOrEmpty(model.Message))
             {
-                TempData["Success"] = false;
-                return RedirectToPage("Inedx");
+                return new JsonResult(new { ok = false });
             }
-            
-            var result = await _messageUserCommandService.AnsweredBySMS(id, Message);
+
+            var result = await _messageUserCommandService.AnsweredBySMS(model.Id, model.Message);
             if (result.Success)
             {
-                TempData["Success"] = true;
-                return RedirectToPage("Inedx");
+                return new JsonResult(new { ok = true });
             }
-            TempData["Success"] = false;
-            return RedirectToPage("Inedx");
+            return new JsonResult(new { ok = false });
         }
+  
     }
 }

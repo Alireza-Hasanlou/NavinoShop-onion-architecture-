@@ -28,6 +28,7 @@ namespace Users.Infrastructure.Persistence.Repository
                 Id = u.Id,
                 FullName = u.FullName,
                 Mobile = u.Mobile,
+                ImageName=u.Avatar
             }).ToListAsync();
         }
 

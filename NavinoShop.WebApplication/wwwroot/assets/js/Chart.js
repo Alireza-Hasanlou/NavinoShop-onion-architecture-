@@ -1,183 +1,698 @@
-﻿$(function () {
-    ChangeYearChart('0');
+﻿// ========================================================
+// Document Ready
+// ========================================================
+
+$(document).ready(function () {
+
+    loadMonthlySales();
+
+    loadWeeklySales();
+
 });
-function ChangeYearChart(y) {
 
-    var chartDiv = $("div#chartIndexDiv");
-    var chartLoading = $("div#chartLoadingIndexDiv");
-    var parent = $("#ParentChartDiv");
-    parent.html("");
-    parent.append(`<canvas id="salesChart" style="height: 300px;"></canvas>`);
-    chartDiv.addClass('display-chart-none');
-    chartLoading.addClass('display-chart-block');
+
+// ========================================================
+// Monthly Sales
+// ========================================================
+
+function loadMonthlySales() {
+
     $.ajax({
-        type: "Post",
-        url: "/Admin/Home/GetChartData",
-        data: {
-            year: y
+
+        url: '/Admin/Chart/ChartData?handler=MonthlySales',
+
+        type: 'GET',
+
+        success: function (response) {
+
+            console.log('Monthly Sales:', response);
+
+            renderMonthlySalesChart(response);
+
+        },
+
+        error: function (xhr, status, error) {
+
+            console.error(
+                'خطا در دریافت فروش ماهانه:',
+                error
+            );
+
         }
-    }).done(function (res) {
-        debugger;
-        var model = JSON.parse(res);
-        $("strong#title-chart-year").text(`فروش سال ${model.Year}`);
-        var buttonsParent = $("p#button-years-chart-year");
-        buttonsParent.html("");
-        model.Years.forEach(x => {
-            var yearTag = `
-            <a onclick="ChangeYearChart('${x}')" class="btn btn-sm btn-info">${x}</a>
-                          `;
-            buttonsParent.append(yearTag);
-        });
-        var salesChartData = {
-            labels: model.Mounth,
-            datasets: [
-                {
-                    label: 'Digital Goods',
-                    fillColor: 'rgba(60,141,188,0.9)',
-                    strokeColor: 'rgba(60,141,188,0.8)',
-                    pointColor: '#3b8bba',
-                    pointStrokeColor: 'rgba(60,141,188,1)',
-                    pointHighlightFill: '#fff',
-                    pointHighlightStroke: 'rgba(60,141,188,1)',
-                    data: model.Prices
-                }
-            ]
-        };
 
-        var salesChartOptions = {
-            // Boolean - If we should show the scale at all
-            showScale: true,
-            // Boolean - Whether grid lines are shown across the chart
-            scaleShowGridLines: false,
-            // String - Colour of the grid lines
-            scaleGridLineColor: 'rgba(0,0,0,.05)',
-            // Number - Width of the grid lines
-            scaleGridLineWidth: 1,
-            // Boolean - Whether to show horizontal lines (except X axis)
-            scaleShowHorizontalLines: true,
-            // Boolean - Whether to show vertical lines (except Y axis)
-            scaleShowVerticalLines: true,
-            // Boolean - Whether the line is curved between points
-            bezierCurve: true,
-            // Number - Tension of the bezier curve between points
-            bezierCurveTension: 0.3,
-            // Boolean - Whether to show a dot for each point
-            pointDot: false,
-            // Number - Radius of each point dot in pixels
-            pointDotRadius: 4,
-            // Number - Pixel width of point dot stroke
-            pointDotStrokeWidth: 1,
-            // Number - amount extra to add to the radius to cater for hit detection outside the drawn point
-            pointHitDetectionRadius: 20,
-            // Boolean - Whether to show a stroke for datasets
-            datasetStroke: true,
-            // Number - Pixel width of dataset stroke
-            datasetStrokeWidth: 2,
-            // Boolean - Whether to fill the dataset with a color
-            datasetFill: true,
-            // String - A legend template
-            legendTemplate: '<ul class=\'<%=name.toLowerCase()%>-legend\'><% for (var i=0; i<datasets.length; i++){%><li><span style=\'background-color:<%=datasets[i].lineColor%>\'></span><%=datasets[i].label%></li><%}%></ul>',
-            // Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
-            maintainAspectRatio: true,
-            // Boolean - whether to make the chart responsive to window resizing
-            responsive: true
-        };
-
-
-        chartDiv.removeClass('display-chart-none');
-        chartLoading.removeClass('display-chart-block');
-        chartDiv.addClass('display-chart-block');
-        chartLoading.addClass('display-chart-none');
-        var salesChartCanvas = $('#salesChart').get(0).getContext('2d');
-        var salesChart = new Chart(salesChartCanvas);
-
-        salesChart.Line(salesChartData, salesChartOptions);
     });
 
 }
-//function ChangeYearChart(year) {
 
 
-//    var salesChartCanvas = $('#salesChart').get(0).getContext('2d');
-//    var salesChart = new Chart(salesChartCanvas);
+// ========================================================
+// Monthly Sales Chart
+// ========================================================
 
-//    var salesChartData = {
-//        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'test'],
-//        datasets: [
-//            {
-//                label: 'Electronics',
-//                fillColor: 'rgb(210, 214, 222)',
-//                strokeColor: 'rgb(210, 214, 222)',
-//                pointColor: 'rgb(210, 214, 222)',
-//                pointStrokeColor: '#c1c7d1',
-//                pointHighlightFill: '#fff',
-//                pointHighlightStroke: 'rgb(220,220,220)',
-//                data: [65, 59, 80, 81, 56, 55, 40, 12]
-//            },
-//            {
-//                label: 'Digital Goods',
-//                fillColor: 'rgba(60,141,188,0.9)',
-//                strokeColor: 'rgba(60,141,188,0.8)',
-//                pointColor: '#3b8bba',
-//                pointStrokeColor: 'rgba(60,141,188,1)',
-//                pointHighlightFill: '#fff',
-//                pointHighlightStroke: 'rgba(60,141,188,1)',
-//                data: [28, 48, 40, 19, 86, 27, 90, 124]
-//            },
-//            {
-//                label: 'Test',
-//                fillColor: 'rgba(100,200,10)',
-//                strokeColor: 'rgba(160,25,210)',
-//                pointColor: '#352bba',
-//                pointStrokeColor: 'rgba(160,25,210)',
-//                pointHighlightFill: '#fff',
-//                pointHighlightStroke: 'rgba(100,200,10)',
-//                data: [28, 10, 40, 74, 86, 100, 90, 124]
-//            }
-//        ]
-//    };
+function renderMonthlySalesChart(data) {
 
-//    var salesChartOptions = {
-//        // Boolean - If we should show the scale at all
-//        showScale: true,
-//        // Boolean - Whether grid lines are shown across the chart
-//        scaleShowGridLines: false,
-//        // String - Colour of the grid lines
-//        scaleGridLineColor: 'rgba(0,0,0,.05)',
-//        // Number - Width of the grid lines
-//        scaleGridLineWidth: 1,
-//        // Boolean - Whether to show horizontal lines (except X axis)
-//        scaleShowHorizontalLines: true,
-//        // Boolean - Whether to show vertical lines (except Y axis)
-//        scaleShowVerticalLines: true,
-//        // Boolean - Whether the line is curved between points
-//        bezierCurve: true,
-//        // Number - Tension of the bezier curve between points
-//        bezierCurveTension: 0.3,
-//        // Boolean - Whether to show a dot for each point
-//        pointDot: false,
-//        // Number - Radius of each point dot in pixels
-//        pointDotRadius: 4,
-//        // Number - Pixel width of point dot stroke
-//        pointDotStrokeWidth: 1,
-//        // Number - amount extra to add to the radius to cater for hit detection outside the drawn point
-//        pointHitDetectionRadius: 20,
-//        // Boolean - Whether to show a stroke for datasets
-//        datasetStroke: true,
-//        // Number - Pixel width of dataset stroke
-//        datasetStrokeWidth: 2,
-//        // Boolean - Whether to fill the dataset with a color
-//        datasetFill: true,
-//        // String - A legend template
-//        legendTemplate: '<ul class=\'<%=name.toLowerCase()%>-legend\'><% for (var i=0; i<datasets.length; i++){%><li><span style=\'background-color:<%=datasets[i].lineColor%>\'></span><%=datasets[i].label%></li><%}%></ul>',
-//        // Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
-//        maintainAspectRatio: true,
-//        // Boolean - whether to make the chart responsive to window resizing
-//        responsive: true
-//    };
+    var monthlyColor = '#4F7CFF';
 
-//    salesChart.Line(salesChartData, salesChartOptions);
-//    //setTimeout(function () {
 
-//    //}, 3000);
-//}
+    var options = {
+
+        series: [
+
+            {
+
+                name: 'فروش',
+
+                data: data.map(function (item) {
+
+                    return item.salesCount;
+
+                })
+
+            }
+
+        ],
+
+
+        chart: {
+
+            height: 360,
+
+            type: 'area',
+
+            toolbar: {
+
+                show: false
+
+            },
+
+            zoom: {
+
+                enabled: false
+
+            },
+
+            parentHeightOffset: 0,
+
+            animations: {
+
+                enabled: true,
+
+                easing: 'easeinout',
+
+                speed: 700
+
+            }
+
+        },
+
+
+        // =================================================
+        // رنگ نمودار
+        // =================================================
+
+        colors: [
+
+            monthlyColor
+
+        ],
+
+
+        dataLabels: {
+
+            enabled: false
+
+        },
+
+
+        // =================================================
+        // خط نمودار
+        // =================================================
+
+        stroke: {
+
+            curve: 'smooth',
+
+            width: 3,
+
+            colors: [
+
+                monthlyColor
+
+            ]
+
+        },
+
+
+        // =================================================
+        // نقاط نمودار
+        // =================================================
+
+        markers: {
+
+            size: 0,
+
+            colors: [
+
+                monthlyColor
+
+            ],
+
+            strokeColors: '#ffffff',
+
+            strokeWidth: 2,
+
+            hover: {
+
+                size: 7,
+
+                sizeOffset: 2
+
+            }
+
+        },
+
+
+        // =================================================
+        // Gradient
+        // =================================================
+
+        fill: {
+
+            type: 'gradient',
+
+            colors: [
+
+                monthlyColor
+
+            ],
+
+            gradient: {
+
+                shadeIntensity: 1,
+
+                opacityFrom: 0.32,
+
+                opacityTo: 0.03,
+
+                stops: [
+
+                    0,
+
+                    85,
+
+                    100
+
+                ]
+
+            }
+
+        },
+
+
+        // =================================================
+        // Grid
+        // =================================================
+
+        grid: {
+
+            show: true,
+
+            borderColor: '#edf0f4',
+
+            strokeDashArray: 4,
+
+            position: 'back',
+
+            padding: {
+
+                left: 10,
+
+                right: 15,
+
+                top: 0,
+
+                bottom: 0
+
+            }
+
+        },
+
+
+        // =================================================
+        // محور X
+        // =================================================
+
+        xaxis: {
+
+            categories: data.map(function (item) {
+
+                return getMonthName(item.month);
+
+            }),
+
+            axisBorder: {
+
+                show: false
+
+            },
+
+            axisTicks: {
+
+                show: false
+
+            },
+
+            labels: {
+
+                style: {
+
+                    colors: '#8B929C',
+
+                    fontSize: '12px'
+
+                }
+
+            }
+
+        },
+
+
+        // =================================================
+        // محور Y
+        // =================================================
+
+        yaxis: {
+
+            labels: {
+
+                style: {
+
+                    colors: '#8B929C',
+
+                    fontSize: '12px'
+
+                }
+
+            }
+
+        },
+
+
+        // =================================================
+        // Tooltip
+        // =================================================
+
+        tooltip: {
+
+            theme: 'light',
+
+            marker: {
+
+                show: true
+
+            },
+
+            x: {
+
+                show: true
+
+            },
+
+            y: {
+
+                formatter: function (value) {
+
+                    return value.toLocaleString('fa-IR')
+                        + ' فروش';
+
+                }
+
+            }
+
+        }
+
+    };
+
+
+    var chart = new ApexCharts(
+
+        document.querySelector('#monthlySalesChart'),
+
+        options
+
+    );
+
+
+    chart.render();
+
+}
+
+
+// ========================================================
+// نام ماه‌های شمسی
+// ========================================================
+
+function getMonthName(month) {
+
+    switch (month) {
+
+        case 1:
+            return 'فروردین';
+
+        case 2:
+            return 'اردیبهشت';
+
+        case 3:
+            return 'خرداد';
+
+        case 4:
+            return 'تیر';
+
+        case 5:
+            return 'مرداد';
+
+        case 6:
+            return 'شهریور';
+
+        case 7:
+            return 'مهر';
+
+        case 8:
+            return 'آبان';
+
+        case 9:
+            return 'آذر';
+
+        case 10:
+            return 'دی';
+
+        case 11:
+            return 'بهمن';
+
+        case 12:
+            return 'اسفند';
+
+        default:
+            return '';
+
+    }
+
+}
+
+
+// ========================================================
+// Weekly Sales
+// ========================================================
+
+function loadWeeklySales() {
+
+    $.ajax({
+
+        url: '/Admin/Chart/ChartData?handler=WeeklySales',
+
+        type: 'GET',
+
+        success: function (response) {
+
+            console.log('Weekly Sales:', response);
+
+            renderWeeklySalesChart(response);
+
+        },
+
+        error: function (xhr, status, error) {
+
+            console.error(
+                'خطا در دریافت فروش هفتگی:',
+                error
+            );
+
+        }
+
+    });
+
+}
+
+
+// ========================================================
+// Weekly Sales Chart
+// ========================================================
+
+function renderWeeklySalesChart(data) {
+
+    var weeklyColor = '#7C5CFC';
+
+
+    var options = {
+
+        series: [
+
+            {
+
+                name: 'تعداد فروش',
+
+                data: data.map(function (item) {
+
+                    return item.salesCount;
+
+                })
+
+            }
+
+        ],
+
+
+        chart: {
+
+            height: 360,
+
+            type: 'bar',
+
+            toolbar: {
+
+                show: false
+
+            },
+
+            parentHeightOffset: 0,
+
+            animations: {
+
+                enabled: true,
+
+                easing: 'easeinout',
+
+                speed: 600
+
+            }
+
+        },
+
+
+        // =================================================
+        // رنگ نمودار
+        // =================================================
+
+        colors: [
+
+            weeklyColor
+
+        ],
+
+
+        // =================================================
+        // تنظیمات ستون‌ها
+        // =================================================
+
+        plotOptions: {
+
+            bar: {
+
+                borderRadius: 8,
+
+                columnWidth: '42%',
+
+                distributed: false,
+
+                dataLabels: {
+
+                    position: 'top'
+
+                }
+
+            }
+
+        },
+
+
+        dataLabels: {
+
+            enabled: false
+
+        },
+
+
+        // =================================================
+        // Grid
+        // =================================================
+
+        grid: {
+
+            show: true,
+
+            borderColor: '#edf0f4',
+
+            strokeDashArray: 4,
+
+            position: 'back',
+
+            padding: {
+
+                left: 10,
+
+                right: 15
+
+            }
+
+        },
+
+
+        // =================================================
+        // محور X
+        // =================================================
+
+        xaxis: {
+
+            categories: data.map(function (item) {
+
+                return getDayName(item.dayOfWeek);
+
+            }),
+
+            axisBorder: {
+
+                show: false
+
+            },
+
+            axisTicks: {
+
+                show: false
+
+            },
+
+            labels: {
+
+                style: {
+
+                    colors: '#8B929C',
+
+                    fontSize: '12px'
+
+                }
+
+            }
+
+        },
+
+
+        // =================================================
+        // محور Y
+        // =================================================
+
+        yaxis: {
+
+            labels: {
+
+                style: {
+
+                    colors: '#8B929C',
+
+                    fontSize: '12px'
+
+                }
+
+            }
+
+        },
+
+
+        // =================================================
+        // Tooltip
+        // =================================================
+
+        tooltip: {
+
+            theme: 'light',
+
+            marker: {
+
+                show: true
+
+            },
+
+            y: {
+
+                formatter: function (value) {
+
+                    return value.toLocaleString('fa-IR')
+                        + ' فروش';
+
+                }
+
+            }
+
+        }
+
+    };
+
+
+    var chart = new ApexCharts(
+
+        document.querySelector('#weeklySalesChart'),
+
+        options
+
+    );
+
+
+    chart.render();
+
+}
+
+
+// ========================================================
+// نام روزهای هفته
+// ========================================================
+
+function getDayName(dayOfWeek) {
+
+    switch (dayOfWeek) {
+
+        case 0:
+            return 'یکشنبه';
+
+        case 1:
+            return 'دوشنبه';
+
+        case 2:
+            return 'سه‌شنبه';
+
+        case 3:
+            return 'چهارشنبه';
+
+        case 4:
+            return 'پنجشنبه';
+
+        case 5:
+            return 'جمعه';
+
+        case 6:
+            return 'شنبه';
+
+        default:
+            return '';
+
+    }
+
+}
