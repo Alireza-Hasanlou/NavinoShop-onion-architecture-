@@ -1,4 +1,5 @@
 ﻿using Blogs.Infrastructure.Persistence.Context;
+using Emails.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using Query.Contract.Admin.Data;
@@ -18,12 +19,15 @@ namespace Query.Service.Data
         private readonly ShopContext _shopContext;
         private readonly UserContext _userContext;
         private readonly BlogDbContext _blogContext;
+        private readonly EmailContext _emailContext;
 
-        public AdminDataQueryService(ShopContext shopContext, UserContext userContext, BlogDbContext blogContext)
+        public AdminDataQueryService(ShopContext shopContext, UserContext userContext,
+            BlogDbContext blogContext, EmailContext emailContext)
         {
             _shopContext = shopContext;
             _userContext = userContext;
             _blogContext = blogContext;
+            _emailContext = emailContext;
         }
 
         public async Task<IEnumerable<MonthlySalesQueryModel>> GetMonthlySalesAsync()
@@ -79,6 +83,29 @@ namespace Query.Service.Data
                 .ToList();
         }
 
+        public async Task<NotificationQueryModel> GetNotificationForAdminAsync()
+        {
+            var now = DateTime.Now.Date;
+            var yesterday = now.AddDays(-1);
+
+            return new NotificationQueryModel
+            {
+                NewMessagesCount = await _emailContext.MessageUsers
+                .Where(x => x.Status == MessageStatus.دیده_نشده)
+                .CountAsync(),
+                NewOrderCount = await _shopContext.Orders
+                .Where(x => x.OrderStatus == OrderStatus.پرداخت_نشده && x.CreateDate.Date <= now && x.CreateDate.Date>= now.AddDays(-5))
+                .CountAsync(),
+                NewRegisteredUsersCount = await _userContext.Users
+                .Where(x => x.CreateDate.Date <= now && x.CreateDate.Date >= yesterday)
+                .CountAsync(),
+                NewRequestForSellCount = await _shopContext.Sellers
+                .Where(x => x.Status == SellerStatus.درخواست_ارسال_شده)
+                .CountAsync(),
+
+            };
+        }
+
         public async Task<SiteDataQueryModel> GetSiteDataAsync()
         {
             var oneMonthAgo = DateAndTime.Now.Date.AddMonths(-1);
@@ -114,7 +141,7 @@ namespace Query.Service.Data
                  .SelectMany(x => x.OrderItems)
                  .ToListAsync();
 
-            var monthlyIncome =  orderSellers.Sum(x=> x.SumPriceAfterOff );   
+            var monthlyIncome = orderSellers.Sum(x => x.SumPriceAfterOff);
 
             var monthlyProductVisitCount = await _shopContext.ProductViews
                 .Where(x => x.CreateDate >= oneMonthAgo)
@@ -137,7 +164,7 @@ namespace Query.Service.Data
         {
             var today = DateAndTime.Now.Date;
 
-          
+
             var daysSinceSaturday = ((int)today.DayOfWeek + 1) % 7;
             var startOfWeek = today.AddDays(-daysSinceSaturday);
             var endOfWeek = startOfWeek.AddDays(7);

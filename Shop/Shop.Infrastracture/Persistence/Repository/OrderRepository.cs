@@ -8,6 +8,7 @@ using Shop.Infrastracture.Persistence.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -48,7 +49,7 @@ namespace Shop.Infrastracture.Persistence.Repository
                     );
 
 
-                
+
                 var orderAffectedRows = await _shopContext.Orders
                     .Where(x => x.Id == orderId &&
                                 (x.OrderStatus == OrderStatus.پرداخت_نشده ||
@@ -103,7 +104,7 @@ namespace Shop.Infrastracture.Persistence.Repository
                 if (!orderExists)
                     return new OperationResult(false, "سفارش یافت نشد");
 
-
+              
 
                 var hasShippedSeller = await _shopContext.OrderSellers
                     .AnyAsync(x =>
@@ -160,38 +161,78 @@ namespace Shop.Infrastracture.Persistence.Repository
             }
         }
 
-        public async Task<FactorforordercancellationQueryModel> GetFactorforordercancellationAsync(int orderId, int SellerId)
+        public async Task<FactorforordercancellationQueryModel> GetFactorforordercancellationAsync(int orderId, int sellerId)
         {
-            if (SellerId > 0)
+            if (sellerId > 0)
             {
-                return await _shopContext.Orders
+                // ==================== حالت فروشنده‌ی خاص ====================
+                var order = await _shopContext.Orders
                     .Where(x => x.Id == orderId)
-                    .Include(o => o.OrderSellers.Where(x => x.SellerId == SellerId))
-                    .ThenInclude(x => x.OrderItems)
                     .Select(x => new FactorforordercancellationQueryModel
                     {
                         OrderId = x.Id,
-                        PaymentPrice = x.PaymentPriceSeller,
-                        CustomerId = x.UserId
+                        CustomerId = x.UserId,
+                        SellerId = sellerId,
+                        PaymentPrice = x.OrderSellers
+                            .Where(os => os.SellerId == sellerId)
+                            .Select(os =>
+                                ((os.OrderItems.Sum(oi =>
+                                    oi.PriceAfterOff > 0
+                                        ? oi.Count * oi.PriceAfterOff
+                                        : oi.Count * oi.Price)
+                                  * (100 - os.DiscountPercent)) / 100)
+                                + os.PostPrice
+                            )
+                            .FirstOrDefault(),
+
+                        Products = x.OrderSellers
+                            .Where(os => os.SellerId == sellerId)
+                            .SelectMany(os => os.OrderItems)
+                            .Select(oi => new SellersProductsQueryModel
+                            {
+                                ProductSellId = oi.ProductSellId,
+                                Count = oi.Count
+                            })
+                            .ToList()
                     })
                     .SingleOrDefaultAsync();
+
+                return order ?? new FactorforordercancellationQueryModel();
             }
             else
             {
-                return await _shopContext.Orders
+                // ==================== حالت کل سفارش ====================
+                var order = await _shopContext.Orders
                     .Where(x => x.Id == orderId)
-                    .Include(o => o.OrderSellers)
-                    .ThenInclude(x => x.OrderItems)
                     .Select(x => new FactorforordercancellationQueryModel
                     {
                         OrderId = x.Id,
-                        PaymentPrice = x.PaymentPrice,
-                        CustomerId = x.UserId
+                        CustomerId = x.UserId,
+                        SellerId = sellerId,
+                        PaymentPrice = (
+                            x.OrderSellers.Sum(os =>
+                                ((os.OrderItems.Sum(oi =>
+                                    oi.PriceAfterOff > 0
+                                        ? oi.Count * oi.PriceAfterOff
+                                        : oi.Count * oi.Price)
+                                  * (100 - os.DiscountPercent)) / 100)
+                                + os.PostPrice)
+                            * (100 - x.DiscountPercent)
+                        ) / 100,
+
+                        Products = x.OrderSellers
+                            .SelectMany(os => os.OrderItems)
+                            .Select(oi => new SellersProductsQueryModel
+                            {
+                                ProductSellId = oi.ProductSellId,
+                                Count = oi.Count
+                            })
+                            .ToList()
                     })
                     .SingleOrDefaultAsync();
+
+                return order ?? new FactorforordercancellationQueryModel();
             }
-
-
         }
 
         public async Task<Order> GetForEditOrderSellerStatusAsync(int orderId)

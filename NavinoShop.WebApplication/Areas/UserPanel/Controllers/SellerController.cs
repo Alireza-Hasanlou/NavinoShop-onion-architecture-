@@ -1,14 +1,20 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Financial.Application.Contract.Transaction.Command;
+using Financial.Application.Contract.WalletService.Commands;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Query.Contract.UI.UserPanel.Seller;
 using Shared.Application;
 using Shared.Application.Auth;
 using Shared.Domain.Enums;
+using Shop.Application.Commands;
+using Shop.Application.Contract.Order.Query;
+using Shop.Application.Contract.OrderSeller.Command;
 using Shop.Application.Contract.Product.Query;
 using Shop.Application.Contract.ProductCategory.Query;
 using Shop.Application.Contract.ProductSell.Command;
 using Shop.Application.Contract.Seller.Command;
 using Shop.Application.Contract.Seller.Query;
+using Store.Application.Contract.StoreProduct.Command;
 using System.Security.Cryptography.Xml;
 using System.Threading.Tasks;
 
@@ -27,11 +33,19 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
         private readonly IProductCategoryQueries _productCategoryQueries;
         private readonly IProductQueries _productQueries;
         private readonly ISellerQueries _sellerQueries;
+        private readonly IOrderQueries _orderQueries;
+        private readonly IWalletCommands _walletCommands;
+        private readonly IOrderSellerCommands _orderSellerCommands;
+        private readonly IStoreProductCommands _storeProductCommands;
+        private readonly ITransactionCommands _transactionCommands;
         private int _userId;
 
         public SellerController(ISellerCommands sellerCommands, IAuthService authService,
-            ISellerUserPanelQueries sellerUserPanelQueries, IProductSellCommands productSellCommands,
-            IProductCategoryQueries productCategoryQueries, IProductQueries productQueries, ISellerQueries sellerQueries)
+            ISellerUserPanelQueries sellerUserPanelQueries, IProductSellCommands productSellCommands, 
+            IProductCategoryQueries productCategoryQueries, IProductQueries productQueries, 
+            ISellerQueries sellerQueries, IOrderQueries orderQueries, IWalletCommands walletCommands, 
+            IOrderSellerCommands orderSellerCommands, IStoreProductCommands storeProductCommands,
+            ITransactionCommands transactionCommands)
         {
             _sellerCommands = sellerCommands;
             _authService = authService;
@@ -40,6 +54,11 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
             _productCategoryQueries = productCategoryQueries;
             _productQueries = productQueries;
             _sellerQueries = sellerQueries;
+            _orderQueries = orderQueries;
+            _walletCommands = walletCommands;
+            _orderSellerCommands = orderSellerCommands;
+            _storeProductCommands = storeProductCommands;
+            _transactionCommands = transactionCommands;
         }
 
         public async Task<IActionResult> MyShops(bool status)
@@ -238,7 +257,87 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
 
             return View(orderDetails);
         }
+        [HttpPost]
+        [Route("/Profile/Order/ChangeOrderSellerStatus")]
+        public async Task<IActionResult> ChangeOrderSellerStatus(OrderSellerStatus status, int OrderId, int SellerId)
+        {
+            if (OrderId <= 0 || SellerId <= 0)
+                return NotFound();
 
+            var userId = _authService.GetLoginUserId();
+            bool ok = await _sellerQueries.IsSellerForUser(userId, SellerId);
+            if (!ok)
+                return NotFound();
+
+
+            if (status == OrderSellerStatus.لغو_شده_توسط_فروشنده)
+
+            {
+                try
+                {
+                    var order = await _orderQueries.GetFactorforordercancellation(OrderId, SellerId);
+                    var NewTransation = new CreateTransacionCommandModel
+                    {
+                        Authority = "",
+                        Description = " واریز وجه به مشتری بابت لغو سفارش توسط فروشنده",
+                        Portal = TransactionPortal.کیف_پول,
+                        Price = order.PaymentPrice,
+                        TransactionFor = TransactionFor.Wallet,
+                        TransactionSource = TransactionSource.بازگشت_ریز_فاکتور,
+                        TransactionType = TransactionType.واریز,
+                        TransationById = userId,
+                        UserId = order.CustomerId,
+                    };
+                    var transaction = await _transactionCommands.CreateAsync(NewTransation);
+                    long transactionId = Convert.ToInt64(transaction.Data);
+                    var DepositRes = await _walletCommands.DepositAsync(order.CustomerId, order.PaymentPrice, transactionId);
+                    if (DepositRes.Success)
+                    {
+                        var paymentRes = await _transactionCommands.Payment(TransactionStatus.موفق, transactionId, string.Empty);
+                        await UpdateInventoryAfterOrdercancellationBySellerAsync(order);
+                    }
+                    else
+                        return new JsonResult(new { success = false, message = "خطا در بازگشت وجه به مشتری" });
+                }
+                catch (Exception)
+                {
+                    return new JsonResult(new { success = false, message = "خطا در بازگشت وجه به مشتری" });
+
+                }
+            }
+            OperationResult res = await _orderSellerCommands.ChangeOrderSellerStatusAsync(SellerId, OrderId, status);
+            return new JsonResult(new { success = res.Success, message = res.Message });
+        }
+
+        private async Task UpdateInventoryAfterOrdercancellationBySellerAsync(FactorforordercancellationQueryModel model)
+        {
+
+            foreach (var item in model.Products)
+            {
+
+                var changeAmountRes = await _productSellCommands.EditProductSellAmountAsync(new EditProductSellAmountCommandModel
+                {
+                    count = item.Count,
+                    SellId = item.ProductSellId,
+                    Type = StoreProductType.افزایش,
+                });
+                if (changeAmountRes.Success)
+                {
+
+                    await _storeProductCommands.CreateAsync(new CreateStoreProductCommandModel
+                    {
+                        Count = item.Count,
+                        ProdcutSellId = item.ProductSellId,
+                        StoreProductType = StoreProductType.افزایش,
+                        StoreId = model.SellerId
+                    });
+
+                }
+
+
+            }
+
+        }
 
     }
 }

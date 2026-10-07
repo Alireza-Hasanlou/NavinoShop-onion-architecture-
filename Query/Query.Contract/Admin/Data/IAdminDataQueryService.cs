@@ -11,6 +11,17 @@ namespace Query.Contract.Admin.Data
         Task<IEnumerable<MonthlySalesQueryModel>> GetMonthlySalesAsync();
         Task<SiteDataQueryModel> GetSiteDataAsync();
         Task<IEnumerable<WeeklySalesQueryModel>> GetWeeklySalesAsync();
+        Task<NotificationQueryModel> GetNotificationForAdminAsync();
+        
+    }
+    public class NotificationQueryModel
+    {
+        public int  NewMessagesCount { get; set; }
+        public int NewRegisteredUsersCount { get; set; }
+        public int NewOrderCount { get; set; }
+        public int NewRequestForSellCount { get; set; }
+
+
     }
     public class MonthlySalesQueryModel
     {

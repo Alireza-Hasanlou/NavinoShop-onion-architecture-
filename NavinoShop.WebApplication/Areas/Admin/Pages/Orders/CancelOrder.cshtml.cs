@@ -6,7 +6,9 @@ using Shared.Application.Auth;
 using Shared.Domain.Enums;
 using Shop.Application.Contract.Order.Command;
 using Shop.Application.Contract.Order.Query;
+using Shop.Application.Contract.ProductSell.Command;
 using Shop.Domain.OrderAgg;
+using Store.Application.Contract.StoreProduct.Command;
 
 namespace NavinoShop.WebApplication.Areas.Admin.Pages.Orders
 {
@@ -17,16 +19,21 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Orders
         private readonly ITransactionCommands _transactionCommands;
         private readonly IOrderCommands _orderCommands;
         private readonly IWalletCommands _walletCommands;
+        private readonly IProductSellCommands _productSellCommands;
+        private readonly IStoreProductCommands _storeProductCommands;
         private readonly IAuthService _authService;
         private int _userId;
 
-        public CancelOrderModel(IOrderQueries orderQueries, ITransactionCommands transactionCommands, 
-            IOrderCommands orderCommands, IWalletCommands walletCommands , IAuthService authService)
+        public CancelOrderModel(IOrderQueries orderQueries, ITransactionCommands transactionCommands,
+            IOrderCommands orderCommands, IWalletCommands walletCommands, IProductSellCommands productSellCommands,
+            IStoreProductCommands storeProductCommands, IAuthService authService)
         {
             _orderQueries = orderQueries;
             _transactionCommands = transactionCommands;
             _orderCommands = orderCommands;
             _walletCommands = walletCommands;
+            _productSellCommands = productSellCommands;
+            _storeProductCommands = storeProductCommands;
             _authService = authService;
         }
 
@@ -79,7 +86,7 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Orders
                         TransactionStatus.موفق,
                         transactionId,
                         string.Empty);
-
+                    await UpdateInventoryAfterOrdercancellationByAdminAsync(order);
                     return new JsonResult(new
                     {
                         success = true,
@@ -123,6 +130,35 @@ namespace NavinoShop.WebApplication.Areas.Admin.Pages.Orders
                     message = "خطایی در لغو سفارش رخ داد"
                 });
             }
+        }
+        private async Task UpdateInventoryAfterOrdercancellationByAdminAsync(FactorforordercancellationQueryModel model)
+        {
+
+            foreach (var item in model.Products)
+            {
+
+                var changeAmountRes = await _productSellCommands.EditProductSellAmountAsync(new EditProductSellAmountCommandModel
+                {
+                    count = item.Count,
+                    SellId = item.ProductSellId,
+                    Type = StoreProductType.افزایش,
+                });
+                if (changeAmountRes.Success)
+                {
+
+                    await _storeProductCommands.CreateAsync(new CreateStoreProductCommandModel
+                    {
+                        Count = item.Count,
+                        ProdcutSellId = item.ProductSellId,
+                        StoreProductType = StoreProductType.افزایش,
+                        StoreId = model.SellerId
+                    });
+
+                }
+
+
+            }
+
         }
     }
 }

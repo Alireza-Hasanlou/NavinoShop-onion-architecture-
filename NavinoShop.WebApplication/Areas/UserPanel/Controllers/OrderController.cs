@@ -432,54 +432,6 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("/Profile/Order/ChangeOrderSellerStatus")]
-        public async Task<IActionResult> ChangeOrderSellerStatus(OrderSellerStatus status, int OrderId, int SellerId)
-        {
-            if (OrderId <= 0 || SellerId <= 0)
-                return NotFound();
-
-            var userId = _authService.GetLoginUserId();
-            bool ok = await _sellerQueries.IsSellerForUser(userId, SellerId);
-            if (!ok)
-                return NotFound();
-
-
-            if (status == OrderSellerStatus.لغو_شده_توسط_فروشنده)
-
-            {
-                try
-                {
-                    var order = await _orderQueries.GetFactorforordercancellation(OrderId, SellerId);
-                    var NewTransation = new CreateTransacionCommandModel
-                    {
-                        Authority = "",
-                        Description = " واریز وجه به مشتری بابت لغو سفارش توسط فروشنده",
-                        Portal = TransactionPortal.کیف_پول,
-                        Price = order.PaymentPrice,
-                        TransactionFor = TransactionFor.Wallet,
-                        TransactionSource = TransactionSource.بازگشت_ریز_فاکتور,
-                        TransactionType = TransactionType.واریز,
-                        TransationById = userId,
-                        UserId = order.CustomerId,
-                    };
-                    var transaction = await _transactionCommands.CreateAsync(NewTransation);
-                    long transactionId = Convert.ToInt64(transaction.Data);
-                    var DepositRes = await _walletCommands.DepositAsync(order.CustomerId, order.PaymentPrice, transactionId);
-                    if (DepositRes.Success)
-                        await _transactionCommands.Payment(TransactionStatus.موفق, transactionId, string.Empty);
-                    else
-                        return new JsonResult(new { success = false, message = "خطا در بازگشت وجه به مشتری" });
-                }
-                catch (Exception)
-                {
-                    return new JsonResult(new { success = false, message = "خطا در بازگشت وجه به مشتری" });
-
-                }
-            }
-            OperationResult res = await _orderSellerCommands.ChangeOrderSellerStatusAsync(SellerId, OrderId, status);
-            return new JsonResult(new { success = res.Success, message = res.Message });
-        }
 
         [Route("/Profile/Order/CancellOrderByUser")]
         public async Task<IActionResult> CancellOrderByUser(int orderId)
@@ -527,11 +479,12 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
 
                 if (cancelResult.Success)
                 {
-                    await _transactionCommands.Payment(
-                        TransactionStatus.موفق,
-                        transactionId,
-                        string.Empty);
+                     await _transactionCommands.Payment(
+                          TransactionStatus.موفق,
+                          transactionId,
+                          string.Empty);
 
+                    await UpdateInventoryAfterOrdercancellationByUserAsync(order);
                     return new JsonResult(new
                     {
                         success = true,
@@ -719,6 +672,36 @@ namespace NavinoShop.WebApplication.Areas.UserPanel.Controllers
             }
 
         }
+        private async Task UpdateInventoryAfterOrdercancellationByUserAsync(FactorforordercancellationQueryModel model)
+        {
+
+            foreach (var item in model.Products)
+            {
+
+                var changeAmountRes = await _productSellCommands.EditProductSellAmountAsync(new EditProductSellAmountCommandModel
+                {
+                    count = item.Count,
+                    SellId = item.ProductSellId,
+                    Type = StoreProductType.افزایش,
+                });
+                if (changeAmountRes.Success)
+                {
+
+                    await _storeProductCommands.CreateAsync(new CreateStoreProductCommandModel
+                    {
+                        Count = item.Count,
+                        ProdcutSellId = item.ProductSellId,
+                        StoreProductType = StoreProductType.افزایش,
+                        StoreId = model.SellerId
+                    });
+
+                }
+
+
+            }
+
+        }
+
         #endregion
     }
 }

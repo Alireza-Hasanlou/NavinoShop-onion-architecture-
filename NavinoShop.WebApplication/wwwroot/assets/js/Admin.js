@@ -1352,3 +1352,105 @@ function EditOrderDiscount(button) {
         }
     });
 }
+
+$(document).ready(function () {
+    debugger;
+    $.ajax({
+        url: '/Admin/Index?handler=Notification',
+        type: 'POST',
+
+        success: function (response) {
+
+            const notification = response.data;
+
+            const $menu = $('#notification-menu');
+            const $count = $('#notification-count');
+            const $header = $('#notification-header');
+
+            $menu.empty();
+
+            const totalCount =
+                notification.newMessagesCount +
+                notification.newRegisteredUsersCount +
+                notification.newOrderCount +
+                notification.newRequestForSellCount;
+
+            // تعداد کل اعلان‌ها
+            $count.text(totalCount);
+
+            // عنوان
+            $header.text(`${totalCount} اعلان جدید`);
+
+            // پیام‌های جدید
+            if (notification.newMessagesCount > 0) {
+
+                $menu.append(`
+                                <li>
+                                            <a href="/Admin/UsersMessage/Index">
+                                        <i class="fa fa-envelope text-aqua"></i>
+                                        ${notification.newMessagesCount} پیام جدید
+                                    </a>
+                                </li>
+                            `);
+            }
+
+            // کاربران ثبت‌نام شده
+            if (notification.newRegisteredUsersCount > 0) {
+
+                $menu.append(`
+                                <li>
+                                    <a href="/Admin/Users">
+                                        <i class="fa fa-users text-aqua"></i>
+                                        ${notification.newRegisteredUsersCount} کاربر جدید ثبت نام کردند
+                                    </a>
+                                </li>
+                            `);
+            }
+
+            // سفارش‌های جدید
+            if (notification.newOrderCount > 0) {
+
+                $menu.append(`
+                                <li>
+                                    <a href="/Admin/Orders">
+                                        <i class="fa fa-shopping-cart text-green"></i>
+                                        ${notification.newOrderCount} سفارش جدید
+                                    </a>
+                                </li>
+                            `);
+            }
+
+            // درخواست‌های فروش
+            if (notification.newRequestForSellCount > 0) {
+
+                $menu.append(`
+                                <li>
+                                            <a href="/Admin/Sellers/SalesRequests">
+                                        <i class="fa fa-plus-circle text-yellow"></i>
+                                        ${notification.newRequestForSellCount} درخواست فروش جدید
+                                    </a>
+                                </li>
+                            `);
+            }
+
+            // اگر هیچ اعلانی وجود نداشت
+            if (totalCount === 0) {
+                $header.text('اعلان جدیدی وجود ندارد');
+
+                $menu.append(`
+                                <li>
+                                    <a href="#">
+                                        <i class="fa fa-check text-green"></i>
+                                        اعلان جدیدی وجود ندارد
+                                    </a>
+                                </li>
+                            `);
+            }
+        },
+
+        error: function (xhr) {
+            console.error('خطا در دریافت اعلان‌ها:', xhr);
+        }
+    });
+
+});
